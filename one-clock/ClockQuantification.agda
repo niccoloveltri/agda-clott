@@ -11,17 +11,10 @@ open import Id
 Const : ∀{ℓ} → Set ℓ → Clock → Set ℓ
 Const A _ = A
 
-next∁ : ∀{ℓ} → (A : Set ℓ)
-  → (κ : Clock) (α : Tick κ) → Const A κ → Const A α
-next∁ _ _ _ x = x
-
-next∁-ass : ∀{ℓ} → (A : Set ℓ)
-  → (κ : Clock) (α : Tick κ) (β : Tick α) (ρ : Const A κ)
-  → next∁ A α β (next∁ A κ α ρ) ≡ next∁ A κ β ρ
-next∁-ass _ _ _ _ _ = refl
-
 ∁ : ∀{ℓ} → Set ℓ → ClTy ℓ
-∁ A = ctx (Const A) (next∁ A) (next∁-ass A)
+∁ A = ctx (Const A) (λ { _ _ → id}) (λ {_ _ _ _ → refl })
+
+-- Clock quantification
 
 record Box {ℓ} (c : ClTy ℓ) : Set ℓ where
   constructor box
@@ -33,47 +26,62 @@ record Box {ℓ} (c : ClTy ℓ) : Set ℓ where
 Box-eq : ∀ {ℓ} {c : ClTy ℓ} {x x' : Box c}
   → let open Box x
         open Box x' renaming (lim to lim')
-  in lim ≡ lim' → x ≡ x'
-Box-eq {x = box l p}{box .l q} refl =
-  cong (box l) (funext (λ κ → funext (r κ)))
-  where
-    r : (κ : Clock) (α : Tick κ) → p κ α ≡ q κ α
-    r κ α = uip 
+  in (∀ κ → lim κ ≡ lim' κ) → x ≡ x'
+Box-eq {x = box l p}{box l' q} r with funext r
+Box-eq {c = _} {box l p} {box .l q} r | refl =
+  cong (box l) (funext (λ _ → funext (λ { _ → uip })))
 
 □ : ∀{ℓ} → ClTy ℓ → ClTy ℓ
 □ c = ∁ (Box c)
 
-□∁-f : ∀{ℓ} (A : Set ℓ)
-  → (κ : Clock) (α : Tick= κ)
-  → (x : Box (∁ A)) → A
-□∁-f A κ α (box x p) = x κ₀
+{-
+record Boxᵀʸ {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) : Set ℓ where
+  constructor box
+  open Ctx c
+  open Ty t
+  field
+    limᵀʸ : (κ : Clock) (ρ : Box c) → A κ (Box.lim ρ κ)
+    restᵀʸ : (κ : Clock) (α : Tick κ) (ρ : Box c)
+      → nextᵀʸ κ α (Box.lim ρ κ) (limᵀʸ κ ρ) ≡ limᵀʸ α ρ
+        [ A α ↓ Box.rest ρ κ α ]
+-}
 
---□∁-nextᶠ : ∀{ℓ} (A : Set ℓ)
---  → (κ : Clock) (α : Tick= κ)
+record Boxᵀʸ {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) (ρ : Box c) : Set ℓ where
+  constructor box
+  open Ctx c
+  open Ty t
+  open Box ρ
+  field
+    limᵀʸ : (κ : Clock) → A κ (lim κ)
+    restᵀʸ : (κ : Clock) (α : Tick κ)
+      → nextᵀʸ κ α (lim κ) (limᵀʸ κ) ≡ limᵀʸ α [ A α ↓ rest κ α ]
 
-□∁-τ : ∀{ℓ} (A : Set ℓ)
-  → (κ : Clock) → Fun (□ (∁ A)) (∁ A) κ
-□∁-τ A κ = pi (□∁-f A κ) {!!}
+□ᵀʸ : ∀{ℓ} (c : Ctx ℓ) → Ty ℓ c → Ty ℓ (□ c)
+□ᵀʸ c t =
+  ty (λ _ → Boxᵀʸ c t) (λ { _ _ _ → id }) (λ { _ _ _ _ _ → refl})
+
+limᵀʸ-eq : ∀ {ℓ} {c : ClTy ℓ} {t : Ty ℓ c} {ρ : Box c}
+  → (b b' : Boxᵀʸ c t ρ)
+  → b ≡ b' → (κ : Clock) → Boxᵀʸ.limᵀʸ b κ ≡ Boxᵀʸ.limᵀʸ b' κ
+limᵀʸ-eq b .b refl κ = refl
+
+-- Type isomorphisms
+
+-- -- □ (∁ A) ≅ ∁ A
 
 □∁ : ∀{ℓ} (A : Set ℓ)
   → ClTm ℓ (□ (∁ A) ⇒ ∁ A)
-□∁ A = tm (□∁-τ A) {!!}
-
-□∁-inv-f : ∀{ℓ} (A : Set ℓ)
-  → (κ : Clock) (α : Tick= κ)
-  → (x : A) → Box (∁ A)
-□∁-inv-f A κ α x = box (λ _ → x) r
-  where
-    r : ∀ κ' α' → _
-    r _ _ = refl
-
-□∁-inv-τ : ∀{ℓ} (A : Set ℓ)
-  → (κ : Clock) → Fun (∁ A) (□ (∁ A)) κ
-□∁-inv-τ A κ = pi (□∁-inv-f A κ) {!!}
+□∁ A =
+  tm (λ κ → pi (λ { α (box x _) → x κ₀ })
+               (λ { _ _ _ → refl }))
+     (λ { _ _ → refl})
 
 □∁-inv : ∀{ℓ} (A : Set ℓ)
   → ClTm ℓ (∁ A ⇒ □ (∁ A))
-□∁-inv A = tm (□∁-inv-τ A) {!!}
+□∁-inv A =
+  tm (λ κ → pi (λ α x → box (λ _ → x) (λ { _ _ → refl}))
+               (λ {_ _ _ → refl}))
+     (λ {_ _ → refl})
 
 
 □∁-iso₁ : ∀{ℓ} (A : Set ℓ) (x : ClTm ℓ (∁ A))
@@ -83,7 +91,86 @@ Box-eq {x = box l p}{box .l q} refl =
 □∁-iso₂ : ∀{ℓ} (A : Set ℓ) (x : ClTm ℓ (□ (∁ A)))
   → ClTm ℓ (app (□∁-inv A) (app (□∁ A) x) ≡[ □ (∁ A) ] x)
 □∁-iso₂ A (tm x nx) = toId {x = app (□∁-inv A) (app (□∁ A) (tm x nx))}{tm x nx}
-  (λ κ → Box-eq (funext (λ κ' → Box.rest (x κ) κ₀ κ')))
+  (λ κ → Box-eq (Box.rest (x κ) κ₀)) --Box-eq (funext (λ κ' → Box.rest (x κ) κ₀ κ')))
+
+-- -- □ (∏ (∁ A) B) ≅ ∏ (∁ A) (□ B)
+
+□∏ : ∀{ℓ} (A : Set ℓ) (t : Ty ℓ (∁ A))
+  → ClTm ℓ (□ (∏ (∁ A) t) ⇒ ∏ (□ (∁ A)) (□ᵀʸ (∁ A) t))
+□∏ A t =
+  tm (λ _ → pi (λ { _ (box g r) → pi (λ { _ (box x q) → box (λ κ → Pi.f (g κ) κ (x κ))
+                                                            (λ {κ α → transOver (Pi.nextᶠ (g κ) κ α (x κ))
+                                                                                 (cong-appOver (q κ α) (cong (λ z → Pi.f z α) (r κ α))) })})
+                                     (λ {_ _ _ → refl }) })
+               (λ {_ _ _ → refl }))
+     (λ {_ _ → refl})
+
+□∏-inv : ∀{ℓ} (A : Set ℓ) (t : Ty ℓ (∁ A))
+  → ClTm ℓ (∏ (□ (∁ A)) (□ᵀʸ (∁ A) t) ⇒ □ (∏ (∁ A) t))
+□∏-inv A (ty B nB aB) = tm τ {!!}
+{-
+  tm (λ κ → pi (λ { α (pi g q) → box (λ κ' → pi (λ {β x → Boxᵀʸ.limᵀʸ (g α (box (λ _ → x) (λ {_ _ → refl}))) β})
+                                                (λ {β γ x → Boxᵀʸ.restᵀʸ (g α (box (λ _ → x) (λ {_ _ → refl}))) β γ}))
+                                     (λ { _ _ → refl})})
+               (λ { α β (pi g q) → Box-eq (funext (λ κ' → Pi-eq (funext (λ γ → funext (λ x → {!!}))))) }))
+               --((λ { α β (pi g q) → Box-eq (funext (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → Boxᵀʸ.limᵀʸ z γ) {x = g α (box (λ _ → x) (λ {_ _ → refl}))}{g β (box (λ _ → x) (λ {_ _ → refl}))} ?))))) })))
+     (λ {κ α → Pi-eq refl })
+-}
+  where
+    open Boxᵀʸ 
+    b : A → Box (∁ A)
+    b x  = box (λ _ → x) (λ {_ _ → refl})
+   
+    l : (κ : Clock) (α : Tick= κ)
+      → (g : Pi (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB)) α)
+      → (κ' : Clock) → Pi (∁ A) (ty B nB aB) κ'
+    l κ α (pi g q) κ' = pi (λ {β x → limᵀʸ (g α (b x)) β}) (λ {β γ x → restᵀʸ (g α (b x)) β γ })
+
+    f : (κ : Clock) (α : Tick= κ)
+      → Pi (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB)) α
+      → Box (∏ (∁ A) (ty B nB aB))
+    f κ α h = box (l κ α h) (λ {_ _ → refl })
+  
+    τ : (κ : Clock) → Fun (∏ (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB))) (□ (∏ (∁ A) (ty B nB aB))) κ
+    τ κ = pi (f κ) (λ {α β (pi g q) → Box-eq (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → limᵀʸ z _) (q α β (b x))))) )})
+
+--next∁ : ∀{ℓ} → (A : Set ℓ)
+--  → (κ : Clock) (α : Tick κ) → Const A κ → Const A α
+--next∁ _ _ _ x = x
+
+--next∁-ass : ∀{ℓ} → (A : Set ℓ)
+--  → (κ : Clock) (α : Tick κ) (β : Tick α) (ρ : Const A κ)
+--  → next∁ A α β (next∁ A κ α ρ) ≡ next∁ A κ β ρ
+--next∁-ass _ _ _ _ _ = refl
+
+
+
+--□∁-f : ∀{ℓ} (A : Set ℓ)
+--  → (κ : Clock) (α : Tick= κ)
+--  → (x : Box (∁ A)) → A
+--□∁-f A κ α (box x p) = x κ₀
+
+--□∁-nextᶠ : ∀{ℓ} (A : Set ℓ)
+--  → (κ : Clock) (α : Tick= κ)
+
+--□∁-τ : ∀{ℓ} (A : Set ℓ)
+--  → (κ : Clock) → Fun (□ (∁ A)) (∁ A) κ
+--□∁-τ A κ = pi (□∁-f A κ) {!!}
+
+
+
+--□∁-inv-f : ∀{ℓ} (A : Set ℓ)
+--  → (κ : Clock) (α : Tick= κ)
+--  → (x : A) → Box (∁ A)
+--□∁-inv-f A κ α x = box (λ _ → x) r
+--  where
+--    r : ∀ κ' α' → _
+--    r _ _ = refl
+
+--□∁-inv-τ : ∀{ℓ} (A : Set ℓ)
+--  → (κ : Clock) → Fun (∁ A) (□ (∁ A)) κ
+--□∁-inv-τ A κ = pi (□∁-inv-f A κ) {!!}
+
 
 {-
 
@@ -109,9 +196,6 @@ Box A = (κ : Clock) → A κ
       → (x : (κ : Clock) → A κ (ρ κ)) → (λ κ → x κ) ≡ (λ κ → x κ)
     r _ _ _ _ _ = refl
 
--- Type isomorphisms
-
--- -- □ (∁ A) ≅ ∁ A
 
 BoxConst-f : ∀{ℓ} (A : Set ℓ)
   → (κ : Clock) (α : Tick= κ) (x : Clock → A) → A

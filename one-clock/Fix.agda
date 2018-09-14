@@ -8,6 +8,43 @@ open import Types
 -- Fixpoints.
 
 fix : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock)
+  → ((α : Tick= κ) → Later A α → A α)
+  → A κ
+dfix : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock)
+  → ((α : Tick= κ) → Later A α → A α)
+  → Later A κ
+fix A κ g = g κ (dfix A κ g)
+force (dfix A κ g) α = fix A α g
+
+fix-eq : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock) 
+  → (g : (α : Tick= κ) → Later A α → A α)
+  → (α : Tick κ)
+  → fix A α g ≡ g α (next⊳ A κ α (dfix A κ g))
+dfix-eq : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock) 
+  → (g : (α : Tick= κ) → Later A α → A α)
+  → (α : Tick κ) {κ' : Clock}
+  → dfix A α g ⊳[ κ' ]≡ next⊳ A κ α (dfix A κ g)
+fix-eq A κ g α = cong (g α) (⊳≡ (dfix-eq A κ g α))
+force-eq (dfix-eq A κ g α) β = funext λ {_ → refl}
+
+fixᵀᵐ : ∀{ℓ} (c : ClTy ℓ) → ClTm ℓ ((⊳ c ⇒ c) ⇒ c)
+fixᵀᵐ (ctx C nC aC) =
+  tm (λ κ → pi (λ { α (pi g ng) → fix C α g })
+               (λ {α β (pi g ng) →
+                   begin
+                 nC α β (g α (dfix C α g))
+                   ≡⟨ ng α β (dfix C α g) ⟩
+                 g β (next⊳ C α β (dfix C α g))
+                   ≡⟨ cong (g β) (sym (⊳≡ (dfix-eq C α g β))) ⟩
+                 g β (dfix C β g)
+                   ∎}))
+     (λ { _ _ → refl })
+
+
+{-
+-- Fixpoints.
+
+fix : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock)
   → ((α : Tick= κ) → Later A (tick α) → A (tick α))
   → A κ
 dfix : ∀{ℓ} (A : Clock → Set ℓ) (κ : Clock)
@@ -56,3 +93,4 @@ fixᵀᵐ : ∀{ℓ} (c : ClTy ℓ) → ClTm ℓ ((⊳ c ⇒ c) ⇒ c)
 fixᵀᵐ c = tm (fix-τ c) (fix-nextᵀᵐ c)
 
 
+-}

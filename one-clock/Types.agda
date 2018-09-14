@@ -17,6 +17,21 @@ syntax PathOver B p u v =
   → u ≡ v [ (λ _ → B) ↓ p ]
 ↓-cst-in {p = refl} q = q
 
+transOver : ∀{ℓ ℓ'} {A : Set ℓ} {B : A → Set ℓ'}
+  → {a a' : A} {p : a ≡ a'}
+  → {b c : B a} {b' : B a'}
+  → c ≡ b
+  → b ≡ b' [ B ↓ p ]
+  → c ≡ b' [ B ↓ p ]
+transOver refl p = p
+
+cong-appOver : ∀{ℓ ℓ'} {A : Set ℓ} {B : A → Set ℓ'}
+  → {a a' : A} (p : a ≡ a')
+  → {f g : (x : A) → B x} 
+  → f ≡ g
+  → f a ≡ g a' [ B ↓ p ]
+cong-appOver refl q = cong-app q _
+
 -- Dependent types. As usual in presheaf semantics, a type in a
 -- context Γ is a presheaf on the category of elements of Γ.
 
@@ -45,6 +60,13 @@ record Tm ℓ (c : Ctx ℓ)(t : Ty ℓ c) : Set ℓ where
 
 -- Contexts as types.
 
+Ctx→Ty : ∀ {ℓ} → Ctx ℓ → (d : Ctx ℓ) → Ty ℓ d
+Ctx→Ty (ctx Γ nΓ aΓ) _ =
+  ty (λ κ _ → Γ κ)
+     (λ {κ α _ → nΓ κ α })
+     (λ {κ α β _ x → ↓-cst-in (aΓ κ α β x) })
+
+{-
 ctx→ty : ∀ {ℓ} (c : Ctx ℓ)(d : Ctx ℓ)
   → (κ : Clock) → Ctx.Γ d κ → Set ℓ
 ctx→ty (ctx Γ _ _) _ κ _ = Γ κ
@@ -61,6 +83,4 @@ ctx→ty-next-ass : ∀ {ℓ} (c d : Ctx ℓ)
              (ctx→ty-next c d α β (Ctx.next d κ α ρ) (ctx→ty-next c d κ α ρ x))
              (ctx→ty-next c d κ β ρ x)
 ctx→ty-next-ass (ctx Γ n a) _ κ α β _ x = ↓-cst-in (a κ α β x)
-
-Ctx→Ty : ∀ {ℓ} → Ctx ℓ → (d : Ctx ℓ) → Ty ℓ d
-Ctx→Ty c d = ty (ctx→ty c d) (ctx→ty-next c d) (ctx→ty-next-ass c d)
+-}

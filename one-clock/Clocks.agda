@@ -19,6 +19,13 @@ Clock = Size
 Tick : Clock → Set
 Tick κ = Size< κ
 
+Size≤ : Clock → Set
+Size≤ κ = Size< (↑ κ)
+
+Tick= : Clock → Set
+Tick= κ = Size≤ κ
+
+{-
 -- Less or equal relation on sizes
 
 data _≤ˢ_ : Size → Size → Set where
@@ -53,3 +60,4 @@ coe-eq : ∀{ℓ} {A : Clock → Set ℓ} {κ : Clock}
   → coe (coe g α) β γ ≡ coe g β γ
 coe-eq g α β (.β , refl≤ˢ) = refl
 coe-eq g α β (.γ , <-≤ˢ γ) = refl
+-}

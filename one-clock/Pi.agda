@@ -19,6 +19,71 @@ record Pi {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) (κ : Clock) : Set ℓ where
   open Ctx c
   open Ty t
   field
+    f : (α : Tick= κ) (x : Γ α) → A α x
+    nextᶠ : (α : Tick= κ) (β : Tick α) (x : Γ α)
+           → nextᵀʸ α β x (f α x) ≡ f β (next α β x) 
+
+Fun : ∀{ℓ} → ClTy ℓ → ClTy ℓ → Clock → Set ℓ
+Fun c d = Pi c (Ctx→Ty d c)
+
+Pi-eq : ∀ {ℓ} {c : ClTy ℓ} {t : Ty ℓ c} {κ : Clock}
+  → {g g' : Pi c t κ}
+  → Pi.f g ≡ Pi.f g' → g ≡ g'
+Pi-eq {κ = κ}{pi f p}{pi .f q} refl =
+  cong (pi f) (funext (λ _ → funext (λ { _ → funext (λ _ → uip) })))
+
+∏ : ∀ {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) → ClTy ℓ
+∏ c t = ctx (Pi c t) (λ { _ _ → id })  (λ { _ _ _ _ → refl })
+
+_⇒_ : ∀ {ℓ} (c d : ClTy ℓ) → ClTy ℓ
+c ⇒ d = ∏ c (Ctx→Ty d c)
+
+app : ∀{ℓ} {c d : ClTy ℓ}
+  → ClTm ℓ (c ⇒ d)
+  → ClTm ℓ c → ClTm ℓ d
+app {_}{ctx A nA aA} {ctx B nB aB} (tm g ng) (tm x nx) =
+  tm (λ κ → Pi.f (g κ) κ (x κ))
+     (λ {κ α →
+        begin
+       nB κ α (Pi.f (g κ) κ (x κ))
+         ≡⟨ Pi.nextᶠ (g κ) κ α (x κ) ⟩
+       Pi.f (g κ) α (nA κ α (x κ))
+         ≡⟨ cong (Pi.f (g κ) α) (nx κ α) ⟩
+       Pi.f (g κ) α (x α)
+         ≡⟨ cong (λ z → Pi.f z α (x α)) (ng κ α) ⟩
+       Pi.f (g α) α (x α)
+         ∎})
+
+I : ∀{ℓ} (c : ClTy ℓ) → ClTm ℓ (c ⇒ c)
+I (ctx A nA aA) =
+  tm (λ κ → pi (λ _ → id) (λ { _ _ _ → refl})) (λ { _ _ → refl })
+
+_⊙_ : ∀{ℓ} {c d e : ClTy ℓ}
+  → ClTm ℓ (d ⇒ e)
+  → ClTm ℓ (c ⇒ d)
+  → ClTm ℓ (c ⇒ e)
+_⊙_ {_}{ctx C nC aC}{ctx D nD aD}{ctx E nE aE}(tm h nh) (tm g ng) =
+  tm (λ κ → pi (λ α x → Pi.f (h κ) α (Pi.f (g κ) α x))
+               (λ {α β x →
+                    begin
+                  nE α β (Pi.f (h κ) α (Pi.f (g κ) α x))
+                    ≡⟨ Pi.nextᶠ (h κ) α β (Pi.f (g κ) α x) ⟩
+                  Pi.f (h κ) β (nD α β (Pi.f (g κ) α x))
+                    ≡⟨ cong (Pi.f (h κ) β) (Pi.nextᶠ (g κ) α β x) ⟩
+                  Pi.f (h κ) β (Pi.f (g κ) β (nC α β x))
+                    ∎}))
+     (λ { κ α → Pi-eq (funext (λ β → funext (λ x →
+         cong₂ (λ y z → Pi.f y β (Pi.f z β x)) (nh κ α) (ng κ α))))})
+
+
+{-
+-- Pi types.
+
+record Pi {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) (κ : Clock) : Set ℓ where
+  constructor pi
+  open Ctx c
+  open Ty t
+  field
     f : (α : Tick= κ) (x : Γ (tick α)) → A (tick α) x
     nextᶠ : (α : Tick= κ) (β : Tick (tick α)) (x : Γ (tick α))
            → nextᵀʸ (tick α) β x (f α x) ≡ f (coeˢ α β) (next (tick α) β x) 
@@ -186,3 +251,4 @@ _⊙_ : ∀{ℓ} {c d e : ClTy ℓ}
 t ⊙ s = tm (Comp-τ t s) (Comp-nextᵀᵐ t s)
 
 
+-}
