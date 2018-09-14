@@ -5,6 +5,11 @@ open import Types
 uip : ∀{ℓ} {A : Set ℓ} → {a a' : A} → {p p' : a ≡ a'} → p ≡ p' 
 uip {p = refl} {refl} = refl
 
+uipOver : ∀{ℓ ℓ'} {A : Set ℓ} {B : A → Set ℓ'}
+  → {a a' : A} {p : a ≡ a'} {b : B a}{b' : B a'}
+  → {q q' : b ≡ b' [ B ↓ p ]} → q ≡ q' 
+uipOver {p = refl} = uip
+
 postulate
   funext : ∀{ℓ ℓ'} {A : Set ℓ}{B : A → Set ℓ'}
     → {f g : (x : A) → B x}

@@ -26,10 +26,17 @@ record Box {ℓ} (c : ClTy ℓ) : Set ℓ where
 Box-eq : ∀ {ℓ} {c : ClTy ℓ} {x x' : Box c}
   → let open Box x
         open Box x' renaming (lim to lim')
+  in lim ≡ lim' → x ≡ x'
+Box-eq {x = box l p}{box .l q} refl =
+  cong (box l) (funext (λ _ → funext (λ { _ → uip })))
+
+
+{-        
   in (∀ κ → lim κ ≡ lim' κ) → x ≡ x'
 Box-eq {x = box l p}{box l' q} r with funext r
 Box-eq {c = _} {box l p} {box .l q} r | refl =
   cong (box l) (funext (λ _ → funext (λ { _ → uip })))
+-}
 
 □ : ∀{ℓ} → ClTy ℓ → ClTy ℓ
 □ c = ∁ (Box c)
@@ -55,6 +62,15 @@ record Boxᵀʸ {ℓ} (c : ClTy ℓ) (t : Ty ℓ c) (ρ : Box c) : Set ℓ where
     limᵀʸ : (κ : Clock) → A κ (lim κ)
     restᵀʸ : (κ : Clock) (α : Tick κ)
       → nextᵀʸ κ α (lim κ) (limᵀʸ κ) ≡ limᵀʸ α [ A α ↓ rest κ α ]
+
+Boxᵀʸ-eq : ∀ {ℓ} {c : ClTy ℓ} {t : Ty ℓ c} {ρ : Box c}
+  → {x x' : Boxᵀʸ c t ρ}
+  → let open Boxᵀʸ x
+        open Boxᵀʸ x' renaming (limᵀʸ to limᵀʸ')
+  in limᵀʸ ≡ limᵀʸ' → x ≡ x'
+Boxᵀʸ-eq {x = box l p}{box .l q} refl =
+  cong (box l) (funext (λ _ → funext λ {_ → uipOver }))
+
 
 □ᵀʸ : ∀{ℓ} (c : Ctx ℓ) → Ty ℓ c → Ty ℓ (□ c)
 □ᵀʸ c t =
@@ -91,7 +107,7 @@ limᵀʸ-eq b .b refl κ = refl
 □∁-iso₂ : ∀{ℓ} (A : Set ℓ) (x : ClTm ℓ (□ (∁ A)))
   → ClTm ℓ (app (□∁-inv A) (app (□∁ A) x) ≡[ □ (∁ A) ] x)
 □∁-iso₂ A (tm x nx) = toId {x = app (□∁-inv A) (app (□∁ A) (tm x nx))}{tm x nx}
-  (λ κ → Box-eq (Box.rest (x κ) κ₀)) --Box-eq (funext (λ κ' → Box.rest (x κ) κ₀ κ')))
+  (λ κ → Box-eq (funext (Box.rest (x κ) κ₀))) --Box-eq (funext (λ κ' → Box.rest (x κ) κ₀ κ')))
 
 -- -- □ (∏ (∁ A) B) ≅ ∏ (∁ A) (□ B)
 
@@ -107,15 +123,26 @@ limᵀʸ-eq b .b refl κ = refl
 
 □∏-inv : ∀{ℓ} (A : Set ℓ) (t : Ty ℓ (∁ A))
   → ClTm ℓ (∏ (□ (∁ A)) (□ᵀʸ (∁ A) t) ⇒ □ (∏ (∁ A) t))
-□∏-inv A (ty B nB aB) = tm τ {!!}
-{-
+□∏-inv A (ty B nB aB) = 
   tm (λ κ → pi (λ { α (pi g q) → box (λ κ' → pi (λ {β x → Boxᵀʸ.limᵀʸ (g α (box (λ _ → x) (λ {_ _ → refl}))) β})
                                                 (λ {β γ x → Boxᵀʸ.restᵀʸ (g α (box (λ _ → x) (λ {_ _ → refl}))) β γ}))
                                      (λ { _ _ → refl})})
-               (λ { α β (pi g q) → Box-eq (funext (λ κ' → Pi-eq (funext (λ γ → funext (λ x → {!!}))))) }))
-               --((λ { α β (pi g q) → Box-eq (funext (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → Boxᵀʸ.limᵀʸ z γ) {x = g α (box (λ _ → x) (λ {_ _ → refl}))}{g β (box (λ _ → x) (λ {_ _ → refl}))} ?))))) })))
+               (λ { α β (pi g q) →
+                 Box-eq (funext (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → Boxᵀʸ.limᵀʸ z _) (q α β (box (λ _ → x) (λ {_ _ → refl})))))))) }))
      (λ {κ α → Pi-eq refl })
--}
+
+
+□∏-iso₂ : ∀{ℓ} (A : Set ℓ) (t : Ty ℓ (∁ A)) (x : ClTm ℓ (□ (∏ (∁ A) t)))
+  → ClTm ℓ (app (□∏-inv A t) (app (□∏ A t) x) ≡[ □ (∏ (∁ A) t) ] x)
+□∏-iso₂ A t (tm g ng) = toId {x = app (□∏-inv A t) (app (□∏ A t) (tm g ng))} {tm g ng}
+  (λ κ → Box-eq (funext (λ κ' → Pi-eq (funext (λ α → funext (λ x → {!Box.rest (g κ) κ' !}))))))
+
+□∏-iso₁ : ∀{ℓ} (A : Set ℓ) (t : Ty ℓ (∁ A)) (x : ClTm ℓ (∏ (□ (∁ A)) (□ᵀʸ (∁ A) t)))
+  → ClTm ℓ (app (□∏ A t) (app (□∏-inv A t) x) ≡[ ∏ (□ (∁ A)) (□ᵀʸ (∁ A) t) ] x)
+□∏-iso₁ A t (tm g ng) = toId {x = app (□∏ A t) (app (□∏-inv A t) (tm g ng))} {tm g ng}
+  (λ κ → Pi-eq (funext (λ α → funext (λ { (box l q) → Boxᵀʸ-eq (funext (λ κ' → {!Boxᵀʸ.restᵀʸ (Pi.f (g κ) α (box l q))!}))}))))
+
+{-
   where
     open Boxᵀʸ 
     b : A → Box (∁ A)
@@ -133,7 +160,7 @@ limᵀʸ-eq b .b refl κ = refl
   
     τ : (κ : Clock) → Fun (∏ (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB))) (□ (∏ (∁ A) (ty B nB aB))) κ
     τ κ = pi (f κ) (λ {α β (pi g q) → Box-eq (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → limᵀʸ z _) (q α β (b x))))) )})
-
+-}
 --next∁ : ∀{ℓ} → (A : Set ℓ)
 --  → (κ : Clock) (α : Tick κ) → Const A κ → Const A α
 --next∁ _ _ _ x = x
