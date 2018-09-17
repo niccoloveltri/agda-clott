@@ -5,6 +5,7 @@ open import Contexts
 open import Types
 open import Pi
 open import Id
+open import LaterModality
 
 -- Constant types
 
@@ -142,25 +143,37 @@ limᵀʸ-eq b .b refl κ = refl
 □∏-iso₁ A t (tm g ng) = toId {x = app (□∏ A t) (app (□∏-inv A t) (tm g ng))} {tm g ng}
   (λ κ → Pi-eq (funext (λ α → funext (λ { (box l q) → Boxᵀʸ-eq (funext (λ κ' → {!Boxᵀʸ.restᵀʸ (Pi.f (g κ) α (box l q))!}))}))))
 
-{-
-  where
-    open Boxᵀʸ 
-    b : A → Box (∁ A)
-    b x  = box (λ _ → x) (λ {_ _ → refl})
-   
-    l : (κ : Clock) (α : Tick= κ)
-      → (g : Pi (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB)) α)
-      → (κ' : Clock) → Pi (∁ A) (ty B nB aB) κ'
-    l κ α (pi g q) κ' = pi (λ {β x → limᵀʸ (g α (b x)) β}) (λ {β γ x → restᵀʸ (g α (b x)) β γ })
+-- -- □ ⊳ A ≅ □ A
 
-    f : (κ : Clock) (α : Tick= κ)
-      → Pi (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB)) α
-      → Box (∏ (∁ A) (ty B nB aB))
-    f κ α h = box (l κ α h) (λ {_ _ → refl })
+□⊳ : ∀{ℓ} (c : ClTy ℓ)
+  → ClTm ℓ (□ c ⇒ □ (⊳ c))
+□⊳ (ctx A nA aA) =
+  tm (λ κ → pi (λ { α (box x q) → box (λ κ' → later (ltr x) q)
+                                      (λ { κ' β → Later-eq (⊳≡ (ltr-eq (λ { _ → funext (q β) }))) })})
+               (λ {_ _ _ → refl}))
+     (λ {_ _ → refl})
+
+□⊳-inv : ∀{ℓ} (c : ClTy ℓ)
+  → ClTm ℓ (□ (⊳ c) ⇒ □ c)
+□⊳-inv (ctx A nA aA) =
+  tm (λ _ → pi (λ { α (box x q) → box (force (Later.L (x κ₀)))
+                                      (Later.nextᴸ (x κ₀))})
+               (λ {_ _ _ → refl}))
+     (λ {_ _ → refl})
+
+□⊳-iso₁ : ∀{ℓ} (c : ClTy ℓ) (x : ClTm ℓ (□ c))
+  → ClTm ℓ (app (□⊳-inv c) (app (□⊳ c) x) ≡[ □ c ] x)
+□⊳-iso₁ c x = toId {x = app (□⊳-inv c) (app (□⊳ c) x)} (λ _ → refl)
   
-    τ : (κ : Clock) → Fun (∏ (□ (∁ A)) (□ᵀʸ (∁ A) (ty B nB aB))) (□ (∏ (∁ A) (ty B nB aB))) κ
-    τ κ = pi (f κ) (λ {α β (pi g q) → Box-eq (λ κ' → Pi-eq (funext (λ γ → funext (λ x → cong (λ z → limᵀʸ z _) (q α β (b x))))) )})
--}
+□⊳-iso₂ : ∀{ℓ} (c : ClTy ℓ) (x : ClTm ℓ (□ (⊳ c)))
+  → ClTm ℓ (app (□⊳ c) (app (□⊳-inv c) x) ≡[ □ (⊳ c) ] x)
+□⊳-iso₂ c (tm x nx) = toId {x = app (□⊳ c) (app (□⊳-inv c) (tm x nx))}
+  (λ κ → Box-eq (funext (λ κ' → Later-eq (⊳≡ (ltr-eq (λ _ →
+    trans (funext (λ { _  → sym (Later.nextᴸ (Box.lim (x κ) κ₀) κ' _) }))
+          (cong (force ∘ Later.L) (Box.rest (x κ) κ₀ κ'))))))))
+
+{-
+
 --next∁ : ∀{ℓ} → (A : Set ℓ)
 --  → (κ : Clock) (α : Tick κ) → Const A κ → Const A α
 --next∁ _ _ _ x = x
@@ -337,4 +350,5 @@ test A x = {!!}
 □∏-inv : ∀{ℓ} (X : Set ℓ) (t : Ty ℓ (∁ X))
   → ClTm ℓ (∏ (□ (∁ X)) (□ᵀʸ (∁ X) t) ⇒ □ (∏ (∁ X) t))
 □∏-inv X t = tm {!!} {!!}
+-}
 -}
