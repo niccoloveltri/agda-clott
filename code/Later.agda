@@ -1,6 +1,7 @@
 
 module Later where
 
+open import Basics
 open import Types
 open import Data.Nat
 open import Data.Fin
@@ -20,6 +21,12 @@ module _ {n : ℕ} (A : Ty n) (i : Fin n) where
     field
       force : (α : TickCtx Δ i) → A.Obj (Δ [ i ↦ α ])
   open ▻
+
+  _∼_ : {Δ : ClockCtx n} (x y : ▻ Δ) → Set
+  x ∼ y = force x ≡ force y
+
+  postulate
+    bisim : {Δ : ClockCtx n} {x y : ▻ Δ} → x ∼ y → x ≡ y
 
   LaterObj : (Δ : ClockCtx n) → Set
   LaterObj Δ =
@@ -52,26 +59,39 @@ module _ {n : ℕ} (A : Ty n) (i : Fin n) where
           (A.Mor (Δ [ i ↦ α ]) _ (force x (transSize<2 {Δ i}{Δ' i} α)))
       ≡⟨ sym A.MorComp ⟩ 
         A.Mor (Δ [ i ↦ α ]) _ (force x (transSize<2 {Δ i}{Δ' i} α))
---      ≡⟨ {!p!} ⟩ 
---        A.Mor (Δ [ i ↦ transSize< α' ]) _
---          (force x (transSize<2 {Δ i}{Δ' i} α'))
-      ≡⟨ {!p!} ⟩ 
-        A.Mor (Δ [ i ↦ transSize< α' ]) _
-          (force x (transSize<2 {Δ i} (transSize< α')))
+      ≡⟨ A.MorComp ⟩
+        A.Mor (Δ [ i ↦ α' ]) _ (A.Mor (Δ [ i ↦ α ] ) _ (force x _))
+      ≡⟨ cong (A.Mor (Δ [ i ↦ α' ]) _) (p _ _) ⟩ 
+        A.Mor (Δ [ i ↦ α' ]) _
+          (force x (transSize<2 {Δ i} α'))
       ∎})
 
-{-
-trans (sym A.MorComp)
-                (trans A.MorComp
-                  (cong (A.Mor _ _) (p α α')))})
--}
+  forceLaterMorId : {Δ : ClockCtx n} {x : ▻ Δ}
+             → force (LaterMor' Δ (coeClockCtx Δ) x) ≡ force x
+  forceLaterMorId = funext (λ {j → A.MorId})
+
+  LaterMorId : {Δ : ClockCtx n} {x : LaterObj Δ}
+             → LaterMor Δ (coeClockCtx Δ) x ≡ x
+  LaterMorId {Δ} {x₁ , x₂} =
+     Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+            (bisim (forceLaterMorId {_} {x₁}))
+
+  forceLaterMorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ} {Δ'' : ClockCtx≤ Δ'} {x : ▻ Δ}
+               → force (LaterMor' Δ _ x) ≡ force (LaterMor' Δ' Δ'' (LaterMor' Δ Δ' x))
+  forceLaterMorComp = funext (λ {j → A.MorComp})
+
+  LaterMorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ} {Δ'' : ClockCtx≤ Δ'} {x : LaterObj Δ}
+               → LaterMor Δ _ x ≡ LaterMor Δ' Δ'' (LaterMor Δ Δ' x)
+  LaterMorComp {_} {_} {_} {x₁ , x₂} =
+    Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+           (bisim (forceLaterMorComp {_} {_} {_} {x₁}))
 
   Later : Ty n
   Later = record
     { Obj = LaterObj
-    ; Mor = {!!}
-    ; MorId = {!!}
-    ; MorComp = {!!}
+    ; Mor = LaterMor
+    ; MorId = LaterMorId
+    ; MorComp = LaterMorComp
     }
 
 
