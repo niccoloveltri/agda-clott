@@ -25,5 +25,9 @@ clock-abs i Γ A (e , p) =
          ,
          λ κ α → trans (p (insertClockCtx i κ Δ) _ (subst (Ctx.Obj Γ) (remove-insert i κ ) x))
                        (cong (e (insertClockCtx i α Δ))
-                       (trans {!cong₂ (λ y z → Ctx.Mor Γ y _ z) ? ?!} (Ctx.MorId Γ))))
+                       (trans (cong₂-dep (λ y z → Ctx.Mor Γ y _ z)
+                                         (trans (sym (remove-insert i κ)) (remove-insert i _))
+                                         (trans (subst-trans (remove-insert i κ) (trans (sym (remove-insert i κ)) (remove-insert i α)))
+                                                (cong (λ y → subst (Ctx.Obj Γ) y x) uip)))
+                              (Ctx.MorId Γ))))
   , {!!}
