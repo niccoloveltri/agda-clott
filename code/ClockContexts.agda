@@ -53,12 +53,12 @@ Tick i = Size< i
 
 TickCtx : {n : ℕ} → ClockCtx n → Fin n → Set
 TickCtx Δ j = Tick (Δ j)
-{-
-remove : ∀{n} → Fin (suc n) → ClockCtx (suc n) → ClockCtx n
-remove zero Δ j = Δ (suc j)
-remove (suc i) Δ zero = Δ zero
-remove (suc i) Δ (suc j) = remove i (Δ ∘ suc) j
--}
+
+removeClock : ∀{n} → Fin (suc n) → ClockCtx (suc n) → ClockCtx n
+removeClock zero Δ j = Δ (suc j)
+removeClock (suc i) Δ zero = Δ zero
+removeClock (suc i) Δ (suc j) = removeClock i (Δ ∘ suc) j
+
 _[_↦_] : {n : ℕ} → ClockCtx n → Fin n → Clock → ClockCtx n
 (Δ [ i ↦ κ ]) j with i ≟ j
 (Δ [ i ↦ κ ]) .i | yes refl = κ
@@ -115,6 +115,16 @@ insertClockCtx-lem : {n : ℕ} (i : Fin (suc n))
 insertClockCtx-lem i κ α Δ Δ' =
   funext (insertClockCtx-lem' i κ α Δ Δ')
 
+remove-insert' : {n : ℕ} {Δ : ClockCtx n} (i : Fin (suc n)) (κ : Clock) (j : Fin n)
+               → Δ j ≡ removeClock i (insertClockCtx i κ Δ) j
+remove-insert' zero κ j = refl
+remove-insert' {zero} {Δ} (suc ()) κ
+remove-insert' {suc n} {Δ} (suc i) κ zero = refl
+remove-insert' {suc n} {Δ} (suc i) κ (suc j) = remove-insert' i κ j
+
+remove-insert : {n : ℕ} {Δ : ClockCtx n} (i : Fin (suc n)) (κ : Clock)
+              → Δ ≡ removeClock i (insertClockCtx i κ Δ)
+remove-insert i κ = funext (remove-insert' i κ)
 
 
 
