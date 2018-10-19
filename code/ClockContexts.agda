@@ -14,18 +14,35 @@ open import Relation.Binary.PropositionalEquality
 
 Clock = Size
 
-
 Size≤ : Size → Set
 Size≤ i = Size< (↑ i)
 
 coeSize : (i : Size) → Size≤ i
 coeSize i = i
 
+test< : {i : Size} → Size< i → Size< i
+test< j = j
+
+test≤ : {i : Size} → Size≤ i → Size≤ i
+test≤ {i} j = test< {↑ (↑ i)} j
+
+{-
+transSize< : {i : Size} {j : Size< i} → Size< j → Size< i
+transSize< k = k
+
+transSize≤ : {i : Size} {j : Size≤ i} → Size≤ j → Size≤ i
+transSize≤ {i}{j} k = transSize< {↑ (↑ i)}{↑ j} k
+-}
+
 transSize≤ : {i : Size} {j : Size≤ i} → Size≤ j → Size≤ i
 transSize≤ k = k
 
 transSize< : {i : Size} {j : Size< i} → Size≤ j → Size< i
-transSize< k = k
+transSize< {i}{j} k = {!transSize≤ {i}{j} k!}
+
+transSize<2 : {i : Size} {j : Size≤ i} → Size< j → Size< i
+transSize<2 k = k
+
 
 ClockCtx : ℕ → Set
 ClockCtx n = Fin n → Clock
