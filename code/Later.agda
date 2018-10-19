@@ -23,6 +23,37 @@ module _ {n : ℕ} (A : Ty n) (i : Fin n) where
   LaterObj : (Δ : ClockCtx n) → Set
   LaterObj Δ =
     Σ (▻ Δ)
+      (λ x → (α : Tick (Δ i)) (α' : Size≤ α)
+        → A.Mor (Δ [ i ↦ α ]) _ (force x α)
+          ≡
+          force x (transSize< {Δ i}{α} α')) 
+
+  LaterMor' : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
+    → ▻ Δ → ▻ Δ'
+  force (LaterMor' Δ Δ' x) α = A.Mor _ _ (force x α)
+
+  LaterMor : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
+    → LaterObj Δ → LaterObj Δ'
+  LaterMor Δ Δ' (x , p) =
+    LaterMor' Δ Δ' x ,
+    (λ {α α' → trans (sym A.MorComp)
+                (trans A.MorComp
+                  (cong (A.Mor _ _) (p α α')))})
+
+  Later : Ty n
+  Later = record
+    { Obj = LaterObj
+    ; Mor = LaterMor
+    ; MorId = {!!}
+    ; MorComp = {!!}
+    }
+
+
+{-
+
+  LaterObj : (Δ : ClockCtx n) → Set
+  LaterObj Δ =
+    Σ (▻ Δ)
       (λ x → (α : Tick (Δ i)) (α' : Size≤ ((Δ [ i ↦ α ]) i))
         → A.Mor (Δ [ i ↦ α ]) ((Δ [ i ↦ α ]) [ i ↦ α' ]≤) (force x α)
           ≡
@@ -43,3 +74,4 @@ module _ {n : ℕ} (A : Ty n) (i : Fin n) where
     ; MorId = {!!}
     ; MorComp = {!!}
     }
+-}
