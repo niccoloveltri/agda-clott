@@ -1,24 +1,13 @@
-module ClockQuantificationType where
+module CloTT.TypeFormers.ClockQuantificationType where
 
-open import Data.Nat
-open import Data.Fin
-open import Size
-open import Basics
 open import Data.Product
-open import ClockContexts
-open import Relation.Binary.PropositionalEquality
-open import Contexts
-open import ClockContexts
-open import ContextOperations
-open import Types
-open import Terms
-open import ClockQuantification
-open import DefinitionalEquality
-open import WeakenClock
-open ≡-Reasoning
+open import Prelude
+open import Presheaves.Presheaves
+open import CloTT.Structure
+open import CloTT.TypeFormers.WeakenClock
+open import CloTT.TypeFormers.ClockQuantification
 
-
-clock-abs : {n : ℕ} (i : Fin (suc n)) (Γ : Ctx n) (A : Ty (suc n)) (e : Tm (WC Γ i) A)
+clock-abs : {n : ℕ} (i : Name (suc n)) (Γ : Ctx n) (A : Ty (suc n)) (e : Tm (WC Γ i) A)
           → Tm Γ (□ A i)
 clock-abs i Γ A (e , p) =
   (λ Δ x → (λ κ → e (insertClockCtx i κ Δ) (subst (Ctx.Obj Γ) (remove-insert i κ ) x))

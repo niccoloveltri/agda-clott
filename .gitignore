@@ -1,0 +1,9 @@
+*.agdai
+*.aux
+*.bbl
+*.blg
+*.log
+*.ptb
+*.gz
+*.DS_Store
+*.pdf

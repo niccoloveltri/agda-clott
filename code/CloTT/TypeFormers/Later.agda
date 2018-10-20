@@ -1,71 +1,78 @@
+{-
+The later modality as a presheaf.
+We start by presenting a modality ▻.
+Given a type A depending on n clocks and a name i, it returns a type ▻ A depending on n clocks.
+The type ▻ A represents A, but lazily evaluated.
+Lazy computations can be forced by providing a resources and these resources are ticks.
+It is defined coinductively and force is how to make observations.
+We define bisimilarity of lazy computations and we postulate that bisimilar computations are equal.
+Lastly, we show that we can turn this into a type.
 
-module Later where
+The structure of this file is as follows:
+1. The ▻ modality
+2. Bisimilarity implies equality
+3. Object part
+4. Morphism part
+5. Preservation of identity
+6. Preservation of composition
+-}
+module CloTT.TypeFormers.Later where
 
-open import Basics
-open import Types
-open import Data.Nat
-open import Data.Fin
-open import Data.Fin.Properties
 open import Data.Product
-open import ClockContexts
-open import Size
-open import Relation.Binary.PropositionalEquality
-open ≡-Reasoning
+open import Prelude
+open import Presheaves.Presheaves
+open import CloTT.Structure
 
-module _ {n : ℕ} (A : Ty n) (i : Fin n) where
+module _ {n : ℕ} (A : Ty n) (i : Name n) where
 
-  module A = Ty A
+  private module A = Ty A
 
+  -- 1. The ▻ modality
   record ▻ (Δ : ClockCtx n) : Set where
     coinductive
     field
       force : (α : TickCtx Δ i) → A.Obj (Δ [ i ↦ α ])
   open ▻
 
+  -- 2. Bisimilarity implies equality
   _∼_ : {Δ : ClockCtx n} (x y : ▻ Δ) → Set
   x ∼ y = force x ≡ force y
 
   postulate
     bisim : {Δ : ClockCtx n} {x y : ▻ Δ} → x ∼ y → x ≡ y
 
+  -- 3. Object part
   LaterObj : (Δ : ClockCtx n) → Set
   LaterObj Δ =
     Σ (▻ Δ)
       (λ x → (α : Tick (Δ i)) (α' : Size≤ α)
         → A.Mor (Δ [ i ↦ α ]) _ (force x α)
           ≡
-          force x (transSize< {Δ i}{α} α')) 
+          force x (transSize<≤ {Δ i} {α} α')) 
 
-  LaterObj' : (Δ : ClockCtx n) → Set
-  LaterObj' Δ =
-    Σ (▻ Δ)
-      (λ x → (α : Tick (Δ i)) (α' : Size< α)
-        → A.Mor (Δ [ i ↦ α ]) _ (force x α)
-          ≡
-          force x (transSize< {Δ i}{α} α'))
-
+  -- 4. Morphism part
   LaterMor' : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
     → ▻ Δ → ▻ Δ'
   force (LaterMor' Δ Δ' x) α =
-    A.Mor (Δ [ i ↦ α ]) _ (force x (transSize<2 {Δ i}{Δ' i} α))
+    A.Mor (Δ [ i ↦ α ]) _ (force x (transSize≤< {Δ i}{Δ' i} α))
 
   LaterMor : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
     → LaterObj Δ → LaterObj Δ'
-  LaterMor Δ Δ' (x , p) =
-    LaterMor' Δ Δ' x ,
-    (λ {α α' →
-      begin
-        A.Mor (Δ' [ i ↦ α ]) _
-          (A.Mor (Δ [ i ↦ α ]) _ (force x (transSize<2 {Δ i}{Δ' i} α)))
-      ≡⟨ sym A.MorComp ⟩ 
-        A.Mor (Δ [ i ↦ α ]) _ (force x (transSize<2 {Δ i}{Δ' i} α))
-      ≡⟨ A.MorComp ⟩
-        A.Mor (Δ [ i ↦ α' ]) _ (A.Mor (Δ [ i ↦ α ] ) _ (force x _))
-      ≡⟨ cong (A.Mor (Δ [ i ↦ α' ]) _) (p _ _) ⟩ 
-        A.Mor (Δ [ i ↦ α' ]) _
-          (force x (transSize<2 {Δ i} α'))
-      ∎})
-
+  proj₁ (LaterMor Δ Δ' (x , p)) = LaterMor' Δ Δ' x
+  proj₂ (LaterMor Δ Δ' (x , p)) α α' =
+    begin
+      A.Mor (Δ' [ i ↦ α ]) _
+        (A.Mor (Δ [ i ↦ α ]) _ (force x (transSize≤< {Δ i}{Δ' i} α)))
+    ≡⟨ sym A.MorComp ⟩ 
+      A.Mor (Δ [ i ↦ α ]) _ (force x (transSize≤< {Δ i}{Δ' i} α))
+    ≡⟨ A.MorComp ⟩
+      A.Mor (Δ [ i ↦ α' ]) _ (A.Mor (Δ [ i ↦ α ] ) _ (force x _))
+    ≡⟨ cong (A.Mor (Δ [ i ↦ α' ]) _) (p _ _) ⟩ 
+      A.Mor (Δ [ i ↦ α' ]) _
+        (force x (transSize≤< {Δ i} α'))
+    ∎
+  
+  -- 5. Preservation of identity
   forceLaterMorId : {Δ : ClockCtx n} {x : ▻ Δ}
              → force (LaterMor' Δ (coeClockCtx Δ) x) ≡ force x
   forceLaterMorId = funext (λ {j → A.MorId})
@@ -76,6 +83,7 @@ module _ {n : ℕ} (A : Ty n) (i : Fin n) where
      Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
             (bisim (forceLaterMorId {_} {x₁}))
 
+  -- 6. Preservation of composition
   forceLaterMorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ} {Δ'' : ClockCtx≤ Δ'} {x : ▻ Δ}
                → force (LaterMor' Δ _ x) ≡ force (LaterMor' Δ' Δ'' (LaterMor' Δ Δ' x))
   forceLaterMorComp = funext (λ {j → A.MorComp})

@@ -1,50 +1,55 @@
+{-
+Clock quantification.
+Given a type A depending on n+1 clocks and a name i for a clock, our goal is to obtain a type □A depending on n clocks.
+How does this work concretely?
+We are given n clocks κ₁, ..., κn.
+To be able to use A, we need to feed it n+1 clocks and thus we need one more clock.
+This clock is inserted at position i.
+Hence, an object is a pair of a clock and an object of A using the original clock context with that one inserted at i.
+-}
+module CloTT.TypeFormers.ClockQuantification where
 
-module ClockQuantification where
-
---open import Presheaves
-open import Types
-open import Data.Nat
-open import Data.Fin
-open import Size
-open import Basics
 open import Data.Product
-open import ClockContexts
-open import Relation.Binary.PropositionalEquality
-open ≡-Reasoning
+open import Prelude
+open import Presheaves.Presheaves
+open import CloTT.Structure
 
-module _ {n : ℕ} (A : Ty (suc n)) (i : Fin (suc n)) where
+module _ {n : ℕ} (A : Ty (suc n)) (i : Name (suc n)) where
 
-  module A = Ty A
+  private module A = Ty A
 
+  -- Object part
   □Obj : ClockCtx n → Set
   □Obj Δ =
     Σ ((κ : Clock) → A.Obj (insertClockCtx i κ Δ))
       (λ x → (κ : Clock) (α : Size≤ κ)
         → A.Mor (insertClockCtx i κ Δ) _ (x κ) ≡ x α)
 
+  -- Morphism part
   □Mor : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
     → □Obj Δ → □Obj Δ'
-  □Mor Δ Δ' (x , p) =
-    (λ κ → A.Mor (insertClockCtx i κ Δ) _ (x κ)) ,
-    (λ κ α →
-      begin
-        A.Mor (insertClockCtx i κ Δ') _
-          (A.Mor (insertClockCtx i κ Δ) _ (x κ))
-      ≡⟨ sym A.MorComp ⟩
-        A.Mor (insertClockCtx i κ Δ) _ (x κ)
-      ≡⟨ A.MorComp ⟩
-        A.Mor (insertClockCtx i α Δ) _
-          (A.Mor (insertClockCtx i κ Δ) _ (x κ))
-      ≡⟨ cong (A.Mor (insertClockCtx i α Δ) _) (p κ α) ⟩
-        A.Mor (insertClockCtx i α Δ) _ (x α)
-      ∎)
+  proj₁ (□Mor Δ Δ' (x , p)) κ = A.Mor (insertClockCtx i κ Δ) _ (x κ)
+  proj₂ (□Mor Δ Δ' (x , p)) κ α =
+    begin
+      A.Mor (insertClockCtx i κ Δ') _
+            (A.Mor (insertClockCtx i κ Δ) _ (x κ))
+    ≡⟨ sym A.MorComp ⟩
+      A.Mor (insertClockCtx i κ Δ) _ (x κ)
+    ≡⟨ A.MorComp ⟩
+      A.Mor (insertClockCtx i α Δ) _
+            (A.Mor (insertClockCtx i κ Δ) _ (x κ))
+    ≡⟨ cong (A.Mor (insertClockCtx i α Δ) _) (p κ α) ⟩
+      A.Mor (insertClockCtx i α Δ) _ (x α)
+    ∎
 
+  -- Preservation of identity
   □MorId : {Δ : ClockCtx n} {x : □Obj Δ}
     → □Mor Δ (coeClockCtx Δ) x ≡ x
   □MorId =
     Σ≡-uip (funext (λ _ → funext (λ _ → uip)))
            (funext (λ _ → A.MorId))
-           
+
+  -- Preservation of composition
   □MorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ} {Δ'' : ClockCtx≤ Δ'}
       → {x : □Obj Δ}
       → □Mor Δ _ x ≡ □Mor Δ' Δ'' (□Mor Δ Δ' x)

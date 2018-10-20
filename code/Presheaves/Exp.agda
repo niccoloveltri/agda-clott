@@ -1,16 +1,18 @@
-module Exp where
+{-
+The exponential in the presheaf category.
+-}
+module Presheaves.Exp where
 
 open import Data.Product
-open import Data.Nat
-open import ClockContexts
-open import Presheaves
-open import Relation.Binary.PropositionalEquality
+open import Prelude
+open import Presheaves.Presheaves
 
 module _ {n : ℕ} (P Q : PSh n) where
 
-  module P = PSh P
-  module Q = PSh Q
-  
+  private module P = PSh P
+  private module Q = PSh Q
+
+  -- Object part
   ExpObj : ClockCtx n → Set
   ExpObj Δ =
     Σ ((Δ' : ClockCtx≤ Δ) → P.Obj Δ' → Q.Obj Δ')
@@ -20,14 +22,17 @@ module _ {n : ℕ} (P Q : PSh n) where
                  ≡
                  f Δ'' (P.Mor Δ' _ x))
 
+  -- Morphism part
   ExpMor : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
     → ExpObj Δ → ExpObj Δ'
   ExpMor Δ Δ' (f , p) = (λ _ → f _) , (λ _ _ → p _ _)
 
+  -- Presevation of identity
   ExpMorId : {Δ : ClockCtx n} {x : ExpObj Δ}
     → ExpMor Δ (coeClockCtx Δ) x ≡ x
   ExpMorId = refl
 
+  -- Preservation of composition
   ExpMorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ}
     → {Δ'' : ClockCtx≤ Δ'}{x : ExpObj Δ}
     → ExpMor Δ _ x ≡ ExpMor Δ' Δ'' (ExpMor Δ Δ' x)

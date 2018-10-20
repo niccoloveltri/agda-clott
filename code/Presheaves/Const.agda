@@ -1,25 +1,29 @@
+{-
+The constant presheaf on A is A on each object and on each morphism the identity.
+-}
+module Presheaves.Const where
 
-module Const where
-
-open import Presheaves
-open import Data.Nat
-open import ClockContexts
-open import Relation.Binary.PropositionalEquality
+open import Prelude
+open import Presheaves.Presheaves
 
 module _ {n : ℕ} (A : Set) where
 
+  -- Object part
   ConstObj : ClockCtx n → Set
   ConstObj _ = A
 
+  -- Morphism part
   ConstMor : (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ)
     → ConstObj Δ → ConstObj Δ'
   ConstMor _ _ x = x
 
+  -- Preservation of identity
   ConstMorId : {Δ : ClockCtx n} {x : A}
     → ConstMor Δ (coeClockCtx Δ) x ≡ x
   ConstMorId = refl
 
-  ConstMorComp : {Δ : ClockCtx n}{Δ' : ClockCtx≤ Δ}
+  -- Preservation of composition
+  ConstMorComp : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ}
     → {Δ'' : ClockCtx≤ Δ'}{x : ConstObj Δ}
     → ConstMor Δ _ x ≡ ConstMor Δ' Δ'' (ConstMor Δ Δ' x)
   ConstMorComp = refl
@@ -31,5 +35,3 @@ module _ {n : ℕ} (A : Set) where
     ; MorId = ConstMorId
     ; MorComp = ConstMorComp
     }
-
-

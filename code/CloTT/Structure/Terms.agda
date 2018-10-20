@@ -1,17 +1,17 @@
-module Terms where
+{-
+A Term is a natural transformation.
+-}
+module CloTT.Structure.Terms where
 
-open import Data.Nat
 open import Data.Product
-open import Relation.Binary.PropositionalEquality
-open import Basics
-open import ClockContexts
-open import Contexts
-open import Types
+open import Prelude
+open import CloTT.Structure.Contexts
+open import CloTT.Structure.Types
 
 module _ {n : ℕ} (Γ : Ctx n) (A : Ty n) where
 
-  module Γ = Ctx Γ
-  module A = Ty A
+  private module Γ = Ctx Γ
+  private module A = Ty A
 
   Tm : Set
   Tm = Σ ((Δ : ClockCtx n) → Γ.Obj Δ → A.Obj Δ)
