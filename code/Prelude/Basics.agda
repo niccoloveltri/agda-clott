@@ -38,6 +38,13 @@ isProp P = {x y : P} → x ≡ y
 
 -- 3. Lemmata about ≡
 
+-- Dependent functions preserve equality
+cong-dep : {A : Set}{P : A → Set}
+  → (f : (a : A) → P a)
+  → {x y : A} 
+  → (e : x ≡ y) → subst P e (f x) ≡ f y
+cong-dep f refl = refl
+
 -- Functions with two arguments preserve equality
 cong₂-dep : {A B : Set}{P : A → Set}
   → (f : (a : A) (p : P a) → B)
