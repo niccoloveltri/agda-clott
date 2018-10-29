@@ -32,14 +32,14 @@ module _ {n : ℕ} (A : Ty n) (i : Name n) where
     coinductive
     field
       force : (α : TickCtx Δ i) → A.Obj (Δ [ i ↦ α ])
-  open ▻
+  open ▻ public
 
   -- 2. Bisimilarity implies equality
-  _∼_ : {Δ : ClockCtx n} (x y : ▻ Δ) → Set
-  x ∼ y = force x ≡ force y
+  Bisim : {Δ : ClockCtx n} (x y : ▻ Δ) → Set
+  Bisim x y = force x ≡ force y
 
   postulate
-    bisim : {Δ : ClockCtx n} {x y : ▻ Δ} → x ∼ y → x ≡ y
+    bisim : {Δ : ClockCtx n} {x y : ▻ Δ} → Bisim x y → x ≡ y
 
   -- 3. Object part
   LaterObj : (Δ : ClockCtx n) → Set
