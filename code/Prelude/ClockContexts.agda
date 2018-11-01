@@ -156,6 +156,7 @@ remove-insert i κ = funext (remove-insert' i κ)
 
 
 
+
 -- Test
 
 open import Data.Vec
