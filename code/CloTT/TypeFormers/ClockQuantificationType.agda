@@ -65,3 +65,23 @@ proj₂ (clock-abs i Γ A (e , p)) Δ Δ' x =
                                                                      (cong (λ y → subst (Ctx.Obj Γ) y x) {y = refl} uip)))
                                                    (sym (cong-dep (λ z → Ctx.Mor Γ Δ _ x) (remove-insert i κ))))))))
 -}
+
+
+clock-application : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n)) (j : Name n)
+  → (e : Tm Γ (□ A i)) → Tm Γ (clock-subst A i j)
+proj₁ (clock-application {n} {Γ} {A} i j (e , _)) Δ x = Ty.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
+proj₂ (clock-application {n} {Γ} {A} i j (e , p)) Δ Δ' x =
+  begin
+    Ctx.Mor A (insertClockCtx i (Δ j) Δ)
+              _
+              (Ctx.Mor A (insertClockCtx i (Δ j) Δ) _
+                         (proj₁ (e Δ x) (Δ j)))
+  ≡⟨ {!!} ⟩
+    Ctx.Mor A (insertClockCtx i (Δ' j) Δ') _
+              (Ctx.Mor A (insertClockCtx i (Δ' j) Δ) _
+                         (proj₁ (e Δ x) (Δ' j)))
+  ≡⟨ cong (λ z → Ctx.Mor A (insertClockCtx i (Δ' j) Δ') _ (proj₁ z (Δ' j))) (p Δ Δ' x) ⟩
+    Ctx.Mor A (insertClockCtx i (Δ' j) Δ')
+              _
+              (proj₁ (e Δ' (Ctx.Mor Γ Δ Δ' x)) (Δ' j))
+  ∎
