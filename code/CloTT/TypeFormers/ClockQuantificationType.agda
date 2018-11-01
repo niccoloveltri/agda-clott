@@ -54,19 +54,6 @@ proj₂ (clock-abs i Γ A (e , p)) Δ Δ' x =
              e (insertClockCtx i κ Δ') (subst (Ctx.Obj Γ) (remove-insert i κ) (Ctx.Mor Γ Δ Δ' x))
            ∎))
 
-{-
-
-  , (λ Δ Δ' x → Σ≡-uip (funext (λ _ → (funext λ _ → uip)))
-                       (funext (λ κ → trans (p (insertClockCtx i κ Δ) _ (subst (Ctx.Obj Γ) (remove-insert i κ) x))
-                                            (cong (e (insertClockCtx i κ Δ')) 
-                                            (trans (cong₂-dep (λ y z → Ctx.Mor Γ y _ z)
-                                                              (sym (remove-insert i κ))
-                                                              (trans (subst-trans (remove-insert i κ) (sym (remove-insert i κ)))
-                                                                     (cong (λ y → subst (Ctx.Obj Γ) y x) {y = refl} uip)))
-                                                   (sym (cong-dep (λ z → Ctx.Mor Γ Δ _ x) (remove-insert i κ))))))))
--}
-
-
 clock-application : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n)) (j : Name n)
   → (e : Tm Γ (□ A i)) → Tm Γ (clock-subst A i j)
 proj₁ (clock-application {n} {Γ} {A} i j (e , _)) Δ x = Ty.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
@@ -76,7 +63,13 @@ proj₂ (clock-application {n} {Γ} {A} i j (e , p)) Δ Δ' x =
               _
               (Ctx.Mor A (insertClockCtx i (Δ j) Δ) _
                          (proj₁ (e Δ x) (Δ j)))
-  ≡⟨ {!!} ⟩
+  ≡⟨ cong (Ctx.Mor A (insertClockCtx i (Δ j) Δ) _) (Ctx.MorId A) ⟩
+    Ctx.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
+  ≡⟨ Ctx.MorComp A ⟩
+    Ctx.Mor A (insertClockCtx i (Δ' j) Δ) _ (Ctx.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j)))
+  ≡⟨ cong (Ctx.Mor A (insertClockCtx i (Δ' j) Δ) _) (proj₂ (e Δ x) (Δ j) (Δ' j)) ⟩
+    Ctx.Mor A (insertClockCtx i (Δ' j) Δ) _ (proj₁ (e Δ x) (Δ' j))
+  ≡⟨ Ctx.MorComp A ⟩
     Ctx.Mor A (insertClockCtx i (Δ' j) Δ') _
               (Ctx.Mor A (insertClockCtx i (Δ' j) Δ) _
                          (proj₁ (e Δ x) (Δ' j)))
