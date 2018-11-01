@@ -65,8 +65,8 @@ fmap₁₂ : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n)
                    (proj₁ (force (proj₁ (proj₁ f Δ x)) α) _
                           (force (proj₁ (proj₁ e Δ x)) α))
            ≡
-           proj₁ (force (proj₁ (proj₁ f Δ x)) α') _
-                 (force (proj₁ (proj₁ e Δ x)) α')
+           proj₁ (force (proj₁ (proj₁ f Δ x)) (transSize<≤ {Δ i} {α} α')) _
+                 (force (proj₁ (proj₁ e Δ x)) (transSize<≤ {Δ i} {α} α'))
 fmap₁₂ Γ A B i (f , p) (e , q) Δ x α α' =
   begin
     Ctx.Mor B (Δ [ i ↦ α ]) _
@@ -75,11 +75,11 @@ fmap₁₂ Γ A B i (f , p) (e , q) Δ x α α' =
   ≡⟨ proj₂ (force (proj₁ (f Δ x)) α) _ _ (force (proj₁ (e Δ x)) α) ⟩
     proj₁ (force (proj₁ (f Δ x)) _) _ (Ctx.Mor A (Δ [ i ↦ α ]) _ (force (proj₁ (e Δ x)) _))
   ≡⟨ cong (proj₁ (force (proj₁ (f Δ x)) _) _) ((proj₂ (e Δ x)) α α') ⟩
-    proj₁ (force (proj₁ (f Δ x)) _) _
-          (force (proj₁ (e Δ x)) _)
-  ≡⟨ {!refl!} ⟩
-    proj₁ (force (proj₁ (f Δ x)) _) _
-                 (force (proj₁ (e Δ x)) _)
+    proj₁ (force (proj₁ (f Δ x)) α) _ (force (proj₁ (e Δ x)) _)
+  ≡⟨ cong (λ z → proj₁ z _ (force (proj₁ (e Δ x)) _)) (sym (proj₂ (f Δ x) _ _)) ⟩ 
+    proj₁ (Ctx.Mor (A ⇒ B) (Δ [ i ↦ α ]) _ (force (proj₁ (f Δ x)) α)) _(force (proj₁ (e Δ x)) _)
+  ≡⟨ cong (λ z → proj₁ z _ (force (proj₁ (e Δ x)) _)) (proj₂ (f Δ x) α α') ⟩
+    proj₁ (force (proj₁ (f Δ x)) (transSize<≤ {Δ i} {α} α')) _ (force (proj₁ (e Δ x)) _)
   ∎
 
 fmap₂ : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n)
@@ -87,8 +87,8 @@ fmap₂ : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n)
          → (Δ : ClockCtx n) (Δ' : ClockCtx≤ Δ) (x : Ctx.Obj Γ Δ)
          → (α : TickCtx Δ' i)
          → Ctx.Mor B (Δ [ i ↦ α ]) _
-                   (proj₁ (force (proj₁ (proj₁ f Δ x)) α) _
-                          (force (proj₁ (proj₁ e Δ x)) α))
+                   (proj₁ (force (proj₁ (proj₁ f Δ x)) (transSize≤< {Δ i} {Δ' i} α)) _
+                          (force (proj₁ (proj₁ e Δ x)) (transSize≤< {Δ i} {Δ' i} α)))
            ≡
            proj₁ (force (proj₁ (proj₁ f Δ' (Ctx.Mor Γ Δ Δ' x))) α) _
                  (force (proj₁ (proj₁ e Δ' (Ctx.Mor Γ Δ Δ' x))) α)
@@ -115,3 +115,4 @@ proj₂ (proj₁ (fmap Γ A B i f e) Δ x) α α' = fmap₁₂ Γ A B i f e Δ x
 proj₂ (fmap Γ A B i f e) Δ Δ' x =
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip)}))
          (bisim B i (funext (λ {α → fmap₂ Γ A B i f e Δ Δ' x α})))
+
