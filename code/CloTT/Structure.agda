@@ -5,3 +5,4 @@ module CloTT.Structure where
   open import CloTT.Structure.ContextOperations public
   open import CloTT.Structure.DefinitionalEquality public
   open import CloTT.Structure.Subst public
+  open import CloTT.Structure.ClockSubst public
