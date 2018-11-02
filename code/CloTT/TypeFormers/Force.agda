@@ -23,8 +23,16 @@ proj₂ (force-tm₁ {n} {Γ} {A} i (e , p) Δ x) κ α =
   begin
     Ty.Mor A (insertClockCtx i κ Δ) _ (Ty.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ κ ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _))
   ≡⟨ sym (Ty.MorComp A) ⟩
-    Ty.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ κ ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _)
-  ≡⟨ {! !} ⟩
+    Ctx.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ κ ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _)
+  ≡⟨ Ty.MorComp A ⟩
+    Ctx.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ α ]) _
+            (Ctx.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ κ ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _))
+  ≡⟨ cong (Ctx.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ α ]) _) (proj₂ (proj₁ (e Δ x) (↑ κ)) _ α) ⟩
+    Ty.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ α ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _)
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A (insertClockCtx i (↑ α) Δ [ i ↦ α ]) _
+            (Ctx.Mor A (insertClockCtx i (↑ κ) Δ [ i ↦ α ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ κ))) _))
+  ≡⟨ cong (λ z → Ty.Mor A (insertClockCtx i (↑ α) Δ [ i ↦ α ]) _ (force (proj₁ z) _)) (proj₂ (e Δ x) (↑ κ) _) ⟩
     Ty.Mor A (insertClockCtx i (↑ α) Δ [ i ↦ α ]) _ (force (proj₁ (proj₁ (e Δ x) (↑ α))) _)
   ∎
 
