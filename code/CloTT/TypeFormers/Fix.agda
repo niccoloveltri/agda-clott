@@ -7,8 +7,6 @@ open import CloTT.Structure
 open import CloTT.TypeFormers.Later
 open import CloTT.TypeFormers.FunctionType
 
-
-{-# TERMINATING #-}
 {-
 fix₁ : {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name n)
           → (f : Tm Γ (Later A i ⇒ A))
@@ -35,6 +33,7 @@ proj₁ (fix Γ A i e) = -- fix₁ Γ A i e
 proj₂ (fix Γ A i e) Δ Δ' x = {!!}
 -}
 
+{-# TERMINATING #-}
 dfix : {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name n)
           → (e : Tm Γ (Later A i ⇒ A)) → Tm Γ (Later A i)
 force (proj₁ (proj₁ (dfix Γ A i (f , p)) Δ x)) α = proj₁ (f Δ x) _ (proj₁ (dfix Γ A i (f , p)) (Δ [ i ↦ α ]) (Ctx.Mor Γ Δ _ x))
@@ -60,7 +59,18 @@ proj₂ (proj₁ (dfix Γ A i (f , p)) Δ x) α α' =
 proj₂ (dfix Γ A i (f , p)) Δ Δ' x =
   Σ≡-uip
     (funext (λ { _ → funext (λ _ → uip) }))
-    (bisim A i (funext λ {α → {!!}}))
+    (bisim A i (funext λ {k →
+      begin
+        Ctx.Mor A (Δ [ i ↦ k ]) _
+          (proj₁ (f Δ x) _
+            (proj₁ (dfix Γ A i (f , p)) (Δ [ i ↦ k ])
+            (Ctx.Mor Γ Δ _ x)))
+      ≡⟨ cong (λ z → force (proj₁ z) _) (proj₂ (dfix Γ A i (f , p)) Δ _ x) ⟩
+        proj₁ (f Δ' (Ctx.Mor Γ Δ Δ' x)) _
+          (proj₁ (dfix Γ A i (f , p)) (Δ' [ i ↦ k ])
+          (Ctx.Mor Γ Δ' _ (Ctx.Mor Γ Δ Δ' x)))
+      ∎
+    }))
 
 fix : {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name n)
           → (e : Tm Γ (Later A i ⇒ A)) → Tm Γ A
