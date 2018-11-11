@@ -63,13 +63,27 @@ eta {tot} (t , p) Δ x =
          (funext (λ Δ' → funext (λ z → sym (cong (λ h → proj₁ h _ z) (p Δ Δ' x)))))
 
 -- Identity and composition
+{-
 id-tm : {b : Bool} (Γ : Ctx b) (A : Ty b) → Tm b Γ (A ⇒ A)
 id-tm {set} Γ A _ = id
 proj₁ (proj₁ (id-tm {tot} Γ A) i γ) j = id
 proj₂ (proj₁ (id-tm {tot} Γ A) i γ) j k x = refl
 proj₂ (id-tm {tot} Γ A) i j γ = refl
+-}
 
+id-tm : {b : Bool} (Γ : Ctx b) (A : Ty b) → Tm b Γ (A ⇒ A)
+id-tm Γ A = lambda Γ A A (var Γ A)
 
+comp-tm : {b : Bool} (Γ : Ctx b) (A B C : Ty b)
+  → Tm b Γ ((B ⇒ C) ⇒ ((A ⇒ B) ⇒ (A ⇒ C)))
+comp-tm Γ A B C = lambda Γ (B ⇒ C) ((A ⇒ B) ⇒ (A ⇒ C))
+                         (lambda (Γ ,, (B ⇒ C)) (A ⇒ B) (A ⇒ C)
+                                 (lambda ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A C (app {_} {((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) ,, A} {B} {C}
+                                             (weaken ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A (B ⇒ C) (weaken (Γ ,, (B ⇒ C)) (A ⇒ B) (B ⇒ C) (var Γ (B ⇒ C))))
+                                             (app {_} {((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) ,, A} {A} {B} (weaken ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A (A ⇒ B) (var (Γ ,, (B ⇒ C)) (A ⇒ B)))
+                                                                                                  (var (((Γ ,, (B ⇒ C)) ,, (A ⇒ B))) A)))))
+
+{-
 comp-tm : {b : Bool} (Γ : Ctx b) (A B C : Ty b)
   → Tm b Γ ((B ⇒ C) ⇒ ((A ⇒ B) ⇒ (A ⇒ C)))
 comp-tm {set} Γ A B C γ g f x = g (f x)
@@ -85,7 +99,7 @@ proj₂ (proj₁ (proj₁ (proj₁ (comp-tm {tot} Γ A B C) i γ) j (g , p)) k (
 proj₂ (proj₁ (proj₁ (comp-tm {tot} Γ A B C) i γ) j (g , p)) k l (f , q) = refl
 proj₂ (proj₁ (comp-tm {tot} Γ A B C) i γ) j k (g , p) = refl
 proj₂ (comp-tm {tot} Γ A B C) i j γ = refl
-
+-}
 
 {-
 comp : {b : Bool} (Γ : Ctx b) (A B C : Ty b)
