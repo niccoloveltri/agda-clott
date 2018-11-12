@@ -41,3 +41,39 @@ module _ {n : ℕ} (A : Ty n) (i : Name (suc n)) where
     ; MorId = WCMorId
     ; MorComp = WCMorComp
     }
+
+subst-tm : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm (WC Γ i) A)
+  → Tm Γ (clock-subst A i j)
+proj₁ (subst-tm Γ A i j t) Δ x = proj₁ t (insertClockCtx i (Δ j) Δ) (Ctx.Mor Γ Δ _ x)
+proj₂ (subst-tm Γ A i j t) Δ Δ' x =
+  begin
+    Ctx.Mor A (insertClockCtx i (Δ j) Δ) _
+            (proj₁ t (insertClockCtx i (Δ j) Δ)
+              (Ctx.Mor Γ Δ _ x))
+  ≡⟨ proj₂ t (insertClockCtx i (Δ j) Δ) _ (Ctx.Mor Γ Δ _ x) ⟩
+     proj₁ t (insertClockCtx i (Δ' j) Δ')
+       (Ctx.Mor Γ (removeClock i (insertClockCtx i (Δ j) Δ)) _
+         (Ctx.Mor Γ Δ _ x))
+  ≡⟨ cong (proj₁ t (insertClockCtx i (Δ' j) Δ')) (sym (Ctx.MorComp Γ)) ⟩
+    proj₁ t (insertClockCtx i (Δ' j) Δ') (Ctx.Mor Γ Δ _ x)
+  ≡⟨ cong (proj₁ t (insertClockCtx i (Δ' j) Δ')) (Ctx.MorComp Γ) ⟩
+    proj₁ t (insertClockCtx i (Δ' j) Δ') (Ctx.Mor Γ Δ' _ (Ctx.Mor Γ Δ Δ' x))
+  ∎
+
+{-
+unsubst-tm : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm Γ (clock-subst A i j))
+  → Tm (WC Γ i) A
+proj₁ (unsubst-tm Γ A i j t) Δ x = Ty.Mor A (insertClockCtx i (removeClock i Δ j) _) _ (proj₁ t (removeClock i Δ) x)
+proj₂ (unsubst-tm Γ A i j t) Δ Δ' x =
+  begin
+    Ctx.Mor A Δ Δ'
+      (Ctx.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
+      (proj₁ t (removeClock i Δ) x))
+  ≡⟨ sym (Ctx.MorComp A) ⟩
+    Ctx.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
+            (proj₁ t (removeClock i Δ) x)
+  ≡⟨ {!proj₂ t (removeClock i Δ) _ x!} ⟩
+    Ctx.Mor A (insertClockCtx i (removeClock i Δ' j) (removeClock i Δ')) _
+              (proj₁ t (removeClock i Δ') (Ctx.Mor Γ (removeClock i Δ) _ x))
+  ∎
+-}
