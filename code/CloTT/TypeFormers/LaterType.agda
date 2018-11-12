@@ -116,3 +116,32 @@ proj₂ (fmap Γ A B i f e) Δ Δ' x =
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip)}))
          (bisim B i (funext (λ {α → fmap₂ Γ A B i f e Δ Δ' x α})))
 
+pure-id : {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name n) (u : Tm Γ (Later A i))
+  → def-eq Γ (Later A i) (fmap Γ A A i (pure Γ (A ⇒ A) (id-tm Γ A) i) u) u 
+pure-id Γ A i u Δ x =
+  Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+         (bisim A i refl)
+
+pure-comp : {n : ℕ} (Γ : Ctx n) (A B C : Ty n) (i : Name n)
+            (g : Tm Γ (Later (B ⇒ C) i)) (f : Tm Γ (Later (A ⇒ B) i)) (u : Tm Γ (Later A i))
+  → def-eq Γ (Later C i)
+           (fmap Γ A C i (fmap Γ (A ⇒ B) (A ⇒ C) i (fmap Γ (B ⇒ C) ((A ⇒ B) ⇒ (A ⇒ C)) i (pure Γ ((B ⇒ C) ⇒ ((A ⇒ B) ⇒ (A ⇒ C))) (comp-tm Γ A B C) i) g) f) u)
+           (fmap Γ B C i g (fmap Γ A B i f u))
+pure-comp Γ A B C i g f u Δ x =
+  Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+         (bisim C i refl)
+
+pure-app : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n) (t : Tm Γ (A ⇒ B)) (u : Tm Γ A)
+  → def-eq Γ (Later B i) (fmap Γ A B i (pure Γ (A ⇒ B) t i) (pure Γ A u i)) (pure Γ B (app {_} {Γ} {A} {B} t u) i)
+pure-app Γ A B i t u Δ x =
+  Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+         (bisim B i refl)
+
+fmap-app : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n) (u : Tm Γ (Later (A ⇒ B) i)) (t : Tm Γ A)
+  → def-eq Γ (Later B i)
+           (fmap Γ A B i u (pure Γ A t i))
+           (fmap Γ (A ⇒ B) B i (pure Γ ((A ⇒ B) ⇒ B) (lambda Γ (A ⇒ B) B (app {_} {Γ ,, (A ⇒ B)} {A} {B} (var Γ (A ⇒ B)) (weaken Γ (A ⇒ B) A t))) i) u)
+fmap-app Γ A B i u t Δ x =
+  Σ≡-uip (funext (λ {_ → funext (λ _ → uip)}))
+         (bisim B i (funext λ {α →
+           (cong (λ {z → proj₁ (force (proj₁ (proj₁ u Δ x)) α) _ (proj₁ t (Δ [ i ↦ α ]) z)}) (Ctx.MorComp Γ))}))

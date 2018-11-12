@@ -56,3 +56,15 @@ eta : {n : ℕ} {Γ : Ctx n} {A B : Ty n} (t : Tm Γ (A ⇒ B))
 eta (t , p) Δ x =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ Δ' → funext (λ z → sym (cong (λ h → proj₁ h _ z) (p Δ Δ' x)))))
+
+id-tm : {n : ℕ} (Γ : Ctx n) (A : Ty n) → Tm Γ (A ⇒ A)
+id-tm Γ A = lambda Γ A A (var Γ A)
+
+comp-tm : {n : ℕ} (Γ : Ctx n) (A B C : Ty n)
+  → Tm Γ ((B ⇒ C) ⇒ ((A ⇒ B) ⇒ (A ⇒ C)))
+comp-tm Γ A B C = lambda Γ (B ⇒ C) ((A ⇒ B) ⇒ (A ⇒ C))
+                         (lambda (Γ ,, (B ⇒ C)) (A ⇒ B) (A ⇒ C)
+                                 (lambda ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A C (app {_} {((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) ,, A} {B} {C}
+                                             (weaken ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A (B ⇒ C) (weaken (Γ ,, (B ⇒ C)) (A ⇒ B) (B ⇒ C) (var Γ (B ⇒ C))))
+                                             (app {_} {((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) ,, A} {A} {B} (weaken ((Γ ,, (B ⇒ C)) ,, (A ⇒ B)) A (A ⇒ B) (var (Γ ,, (B ⇒ C)) (A ⇒ B)))
+                                                                                                  (var (((Γ ,, (B ⇒ C)) ,, (A ⇒ B))) A)))))
