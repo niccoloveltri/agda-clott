@@ -122,10 +122,43 @@ clock-beta Γ A i j t Δ x =
   ≡⟨ Ty.MorId A ⟩
     proj₁ t (insertClockCtx i (Δ j) Δ) (Ctx.Mor Γ Δ _ x)
   ∎
-{-
+
 clock-eta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (e : Tm Γ (□ A i))
   → def-eq Γ (□ A i)
-           (clock-abs i Γ A {!clock-app {_} {Γ} {A} i j e!})
+           (clock-abs i Γ A (unsubst-tm Γ A i j (clock-app {_} {Γ} {A} i j e)))
            e
-clock-eta = {!!}
--}
+clock-eta Γ A i j (e , p) Δ x =
+  Σ≡-uip
+    (funext (λ _ → funext (λ _ → uip)))
+    (funext (λ κ →
+      begin
+        Ty.Mor A
+          (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) (removeClock i (insertClockCtx i κ Δ))) _
+          (Ty.Mor A
+            (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) (removeClock i (insertClockCtx i κ Δ))) _
+            (proj₁
+              (e (removeClock i (insertClockCtx i κ Δ))
+                 (Ctx.Mor Γ Δ _ x))
+                 (removeClock i (insertClockCtx i κ Δ) j)))
+      ≡⟨ sym (Ty.MorComp A) ⟩
+        Ty.Mor A
+          (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) (removeClock i (insertClockCtx i κ Δ))) _
+          (proj₁
+            (e (removeClock i (insertClockCtx i κ Δ))
+            (Ctx.Mor Γ Δ _ x))
+              (removeClock i (insertClockCtx i κ Δ) j))
+      ≡⟨ cong (λ z → Ty.Mor A (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) (removeClock i (insertClockCtx i κ Δ))) _ (proj₁ z (removeClock i (insertClockCtx i κ Δ) j)))
+              (sym (p Δ _ x)) ⟩
+        Ty.Mor A
+        (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) (removeClock i (insertClockCtx i κ Δ))) _
+        (Ty.Mor A
+          (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) Δ) _
+          (proj₁ (e Δ x) (removeClock i (insertClockCtx i κ Δ) j)))
+      ≡⟨ sym (Ty.MorComp A) ⟩
+        Ty.Mor A
+          (insertClockCtx i (removeClock i (insertClockCtx i κ Δ) j) Δ) _
+          (proj₁ (e Δ x) (removeClock i (insertClockCtx i κ Δ) j))
+      ≡⟨ proj₂ (e Δ x) (removeClock i (insertClockCtx i κ Δ) j) _ ⟩
+        proj₁ (e Δ x) κ
+      ∎
+    ))

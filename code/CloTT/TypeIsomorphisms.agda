@@ -48,3 +48,18 @@ module ty-iso₁ {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name (suc n)) where
           proj₁ (x Δ y) κ
         ∎
       ))
+
+module ty-iso₂ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) where
+
+  private X = (□ A i) ⊕ (□ B i)
+  private Y = □ (A ⊕ B) i
+
+  from-sum : Tm Γ (X ⇒ Y)
+  from-sum = lambda Γ X Y (sum-rec  Γ (□ A i) (□ B i) Y
+                                    (clock-abs i (Γ ,, □ A i) (A ⊕ B) (inl (WC (Γ ,, □ A i) i) A B {!!}))
+                                    (clock-abs i (Γ ,, □ B i) (A ⊕ B) (inr (WC (Γ ,, □ B i) i) A B {!!})))
+
+  to-sum : Tm Γ (Y ⇒ X)
+  proj₁ (proj₁ to-sum Δ x) Δ' (y , p) = {!y ∞!}
+  proj₂ (proj₁ to-sum Δ x) Δ' Δ'' (y , p) = {!!}
+  proj₂ to-sum = {!!}
