@@ -9,8 +9,39 @@ open import CloTT.TypeFormers.ClockQuantification
 
 clock-abs : {n : ℕ} (i : Name (suc n)) (Γ : Ctx n) (A : Ty (suc n)) (e : Tm (WC Γ i) A)
           → Tm Γ (□ A i)
-proj₁ (proj₁ (clock-abs i Γ A (e , p)) Δ x) κ =
-  e (insertClockCtx i κ Δ) (subst (Ctx.Obj Γ) (remove-insert i κ) x)
+proj₁ (proj₁ (clock-abs i Γ A (e , p)) Δ x) κ = e (insertClockCtx i κ Δ) (Ctx.Mor Γ Δ _ x)
+proj₂ (proj₁ (clock-abs i Γ A (e , p)) Δ x) κ α =
+  begin
+    Ctx.Mor A (insertClockCtx i κ Δ) _
+            (e (insertClockCtx i κ Δ)
+               (Ctx.Mor Γ Δ _ x))
+  ≡⟨ p (insertClockCtx i κ Δ) _ (Ctx.Mor Γ Δ _ x) ⟩
+    e (insertClockCtx i α Δ)
+      (Ctx.Mor Γ (removeClock i (insertClockCtx i κ Δ)) _
+               (Ctx.Mor Γ Δ _ x))
+  ≡⟨ cong (e (insertClockCtx i α Δ)) (sym (Ctx.MorComp Γ)) ⟩
+    e (insertClockCtx i α Δ) (Ctx.Mor Γ Δ _ x)
+  ∎
+proj₂ (clock-abs i Γ A (e , p)) Δ Δ' x =
+  Σ≡-uip (funext (λ _ → (funext λ _ → uip)))
+         (funext (λ κ →
+           begin
+             Ctx.Mor A (insertClockCtx i κ Δ) _
+                       (e (insertClockCtx i κ Δ)
+                         (Ctx.Mor Γ Δ _ x))
+           ≡⟨ p (insertClockCtx i κ Δ) _ (Ctx.Mor Γ Δ _ x) ⟩
+             e (insertClockCtx i κ Δ')
+               (Ctx.Mor Γ (removeClock i (insertClockCtx i κ Δ)) _
+                        (Ctx.Mor Γ Δ _ x))
+           ≡⟨ cong (e (insertClockCtx i κ Δ')) (sym (Ctx.MorComp Γ)) ⟩
+             e (insertClockCtx i κ Δ') (Ctx.Mor Γ Δ _ x)
+           ≡⟨ cong (e (insertClockCtx i κ Δ')) (Ctx.MorComp Γ) ⟩
+             e (insertClockCtx i κ Δ')
+               (Ctx.Mor Γ Δ' _
+                 (Ctx.Mor Γ Δ Δ' x))
+           ∎
+         ))
+{-  e (insertClockCtx i κ Δ) (subst (Ctx.Obj Γ) (remove-insert i κ) x)
 proj₂ (proj₁ (clock-abs i Γ A (e , p)) Δ x) κ α =
   begin
     Ctx.Mor A (insertClockCtx i κ Δ) _ (e (insertClockCtx i κ Δ) (subst (Ctx.Obj Γ) (remove-insert i κ) x))
@@ -53,11 +84,11 @@ proj₂ (clock-abs i Γ A (e , p)) Δ Δ' x =
                  ∎) ⟩   
              e (insertClockCtx i κ Δ') (subst (Ctx.Obj Γ) (remove-insert i κ) (Ctx.Mor Γ Δ Δ' x))
            ∎))
-
-clock-application : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n)) (j : Name n)
+-}
+clock-app : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n)) (j : Name n)
   → (e : Tm Γ (□ A i)) → Tm Γ (clock-subst A i j)
-proj₁ (clock-application {n} {Γ} {A} i j (e , _)) Δ x = Ty.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
-proj₂ (clock-application {n} {Γ} {A} i j (e , p)) Δ Δ' x =
+proj₁ (clock-app {n} {Γ} {A} i j (e , _)) Δ x = Ty.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
+proj₂ (clock-app {n} {Γ} {A} i j (e , p)) Δ Δ' x =
   begin
     Ctx.Mor A (insertClockCtx i (Δ j) Δ)
               _
@@ -78,3 +109,23 @@ proj₂ (clock-application {n} {Γ} {A} i j (e , p)) Δ Δ' x =
               _
               (proj₁ (e Δ' (Ctx.Mor Γ Δ Δ' x)) (Δ' j))
   ∎
+
+clock-beta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm (WC Γ i) A)
+  → def-eq Γ (clock-subst A i j)
+           (clock-app {_} {Γ} {A} i j (clock-abs i Γ A t))
+           (subst-tm Γ A i j t)
+clock-beta Γ A i j t Δ x =
+  begin
+    Ctx.Mor A (insertClockCtx i (Δ j) Δ) _
+            (proj₁ t (insertClockCtx i (Δ j) Δ)
+                   (Ctx.Mor Γ Δ _ x))
+  ≡⟨ Ty.MorId A ⟩
+    proj₁ t (insertClockCtx i (Δ j) Δ) (Ctx.Mor Γ Δ _ x)
+  ∎
+{-
+clock-eta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (e : Tm Γ (□ A i))
+  → def-eq Γ (□ A i)
+           (clock-abs i Γ A {!clock-app {_} {Γ} {A} i j e!})
+           e
+clock-eta = {!!}
+-}

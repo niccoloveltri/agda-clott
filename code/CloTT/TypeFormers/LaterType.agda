@@ -7,6 +7,9 @@ open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.Later
 open import CloTT.TypeFormers.FunctionType
+open import CloTT.TypeFormers.ClockQuantification
+open import CloTT.TypeFormers.ClockQuantificationType
+open import CloTT.TypeFormers.WeakenClock
 
 -- pure
 
@@ -48,7 +51,11 @@ proj₂ (proj₁ (pure Γ A e  i) Δ x) = pure₁₂ Γ A e i Δ x
 proj₂ (pure Γ A e i) Δ Δ' x = 
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip)}))
          (bisim A i (pure₂ Γ A e i Δ Δ' x))
-
+{-
+□pure : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n))
+  → Tm Γ (□ A i) → Tm Γ (□ (Later A i) i)
+□pure Γ A i e = clock-abs i Γ (Later A i) (pure (WC Γ i) A {!clock-app {_} {Γ} {A} i!} i) -- clock-app {_} {Γ} {A} i )
+-}
 -- fmap (also called _⊛_)
 
 fmap₁₁ : {n : ℕ} (Γ : Ctx n) (A B : Ty n) (i : Name n)
