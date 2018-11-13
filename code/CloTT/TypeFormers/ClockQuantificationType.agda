@@ -162,3 +162,14 @@ clock-eta Γ A i j (e , p) Δ x =
         proj₁ (e Δ x) κ
       ∎
     ))
+
+open import CloTT.TypeFormers.FunctionType
+
+test : {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) (j : Name n)
+  → Tm (WC Γ i) (A ⇒ B) → Tm Γ (□ A i ⇒ □ B i)
+test Γ A B i j f = lambda Γ (□ A i) (□ B i)
+                          (clock-abs i (Γ ,, □ A i) B
+                                     (app {_} {WC (Γ ,, □ A i) i} {A} {B}
+                                          (weaken (WC Γ i) (WC (□ A i) i) (A ⇒ B) f )
+                                          (unsubst-tm (Γ ,, □ A i) A i j
+                                                      (clock-app {_} {Γ ,, □ A i} {A} i j (var Γ (□ A i))))))
