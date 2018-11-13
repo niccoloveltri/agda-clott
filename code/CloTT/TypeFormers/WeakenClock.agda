@@ -60,20 +60,22 @@ proj₂ (subst-tm Γ A i j t) Δ Δ' x =
     proj₁ t (insertClockCtx i (Δ' j) Δ') (Ctx.Mor Γ Δ' _ (Ctx.Mor Γ Δ Δ' x))
   ∎
 
-{-
 unsubst-tm : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm Γ (clock-subst A i j))
   → Tm (WC Γ i) A
 proj₁ (unsubst-tm Γ A i j t) Δ x = Ty.Mor A (insertClockCtx i (removeClock i Δ j) _) _ (proj₁ t (removeClock i Δ) x)
 proj₂ (unsubst-tm Γ A i j t) Δ Δ' x =
   begin
-    Ctx.Mor A Δ Δ'
-      (Ctx.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
+    Ty.Mor A Δ Δ'
+      (Ty.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
       (proj₁ t (removeClock i Δ) x))
   ≡⟨ sym (Ctx.MorComp A) ⟩
-    Ctx.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
+    Ty.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
             (proj₁ t (removeClock i Δ) x)
-  ≡⟨ {!proj₂ t (removeClock i Δ) _ x!} ⟩
-    Ctx.Mor A (insertClockCtx i (removeClock i Δ' j) (removeClock i Δ')) _
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A (insertClockCtx i (removeClock i Δ' j) (removeClock i Δ')) _
+            (Ty.Mor A (insertClockCtx i (removeClock i Δ j) (removeClock i Δ)) _
+              (proj₁ t (removeClock i Δ) x))
+  ≡⟨ cong (Ty.Mor A (insertClockCtx i (removeClock i Δ' j) (removeClock i Δ')) _) (proj₂ t (removeClock i Δ) _ x) ⟩
+    Ty.Mor A (insertClockCtx i (removeClock i Δ' j) (removeClock i Δ')) _
               (proj₁ t (removeClock i Δ') (Ctx.Mor Γ (removeClock i Δ) _ x))
   ∎
--}
