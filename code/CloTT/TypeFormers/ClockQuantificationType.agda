@@ -6,6 +6,7 @@ open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.WeakenClock
 open import CloTT.TypeFormers.ClockQuantification
+open import CloTT.TypeFormers.FunctionType
 
 clock-abs : {n : ℕ} (i : Name (suc n)) (Γ : Ctx n) (A : Ty (suc n)) (e : Tm (WC Γ i) A)
           → Tm Γ (□ A i)
@@ -85,6 +86,8 @@ proj₂ (clock-abs i Γ A (e , p)) Δ Δ' x =
              e (insertClockCtx i κ Δ') (subst (Ctx.Obj Γ) (remove-insert i κ) (Ctx.Mor Γ Δ Δ' x))
            ∎))
 -}
+
+{-
 clock-app : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n)) (j : Name n)
   → (e : Tm Γ (□ A i)) → Tm Γ (clock-subst A i j)
 proj₁ (clock-app {n} {Γ} {A} i j (e , _)) Δ x = Ty.Mor A (insertClockCtx i (Δ j) Δ) _ (proj₁ (e Δ x) (Δ j))
@@ -109,7 +112,36 @@ proj₂ (clock-app {n} {Γ} {A} i j (e , p)) Δ Δ' x =
               _
               (proj₁ (e Δ' (Ctx.Mor Γ Δ Δ' x)) (Δ' j))
   ∎
+-}
 
+clock-app : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name (suc n))
+  → (e : Tm Γ (□ A i)) → Tm (WC Γ i) (clock-subst A i j)
+proj₁ (clock-app Γ A i j (e , p)) Δ x = Ty.Mor A _ _ (proj₁ (e (removeClock i Δ) x) (Δ j))
+proj₂ (clock-app Γ A i j (e , p)) Δ Δ' x =
+  begin
+    Ty.Mor A _ _
+      (Ty.Mor A
+              (insertClockCtx i (Δ j) (removeClock i Δ)) _
+              (proj₁ (e (removeClock i Δ) x) (Δ j)))
+  ≡⟨ sym (Ty.MorComp A) ⟩
+    Ty.Mor A (insertClockCtx i (Δ j) (removeClock i Δ)) _
+           (proj₁ (e (removeClock i Δ) x) (Δ j))
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A _ _
+           (Ty.Mor A _ _
+                   (proj₁ (e (removeClock i Δ) x) (Δ j)))
+  ≡⟨ cong (Ty.Mor A _ _) (proj₂ (e (removeClock i Δ) x) (Δ j) (Δ' j)) ⟩
+    Ty.Mor A _ _ (proj₁ (e (removeClock i Δ) x) (Δ' j))
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A _ _
+           (Ty.Mor A _ _
+           (proj₁ (e (removeClock i Δ) x) (Δ' j)))
+  ≡⟨ cong (λ z → Ty.Mor A _ _ (proj₁ z (Δ' j))) (p _ _ x) ⟩
+    Ty.Mor A (insertClockCtx i (Δ' j) (removeClock i Δ')) _
+           (proj₁ (e (removeClock i Δ') (Ctx.Mor Γ _ _ x)) (Δ' j))
+  ∎
+
+{-
 clock-beta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm (WC Γ i) A)
   → def-eq Γ (clock-subst A i j)
            (clock-app {_} {Γ} {A} i j (clock-abs i Γ A t))
@@ -162,14 +194,4 @@ clock-eta Γ A i j (e , p) Δ x =
         proj₁ (e Δ x) κ
       ∎
     ))
-
-open import CloTT.TypeFormers.FunctionType
-
-test : {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) (j : Name n)
-  → Tm (WC Γ i) (A ⇒ B) → Tm Γ (□ A i ⇒ □ B i)
-test Γ A B i j f = lambda Γ (□ A i) (□ B i)
-                          (clock-abs i (Γ ,, □ A i) B
-                                     (app {_} {WC (Γ ,, □ A i) i} {A} {B}
-                                          (weaken (WC Γ i) (WC (□ A i) i) (A ⇒ B) f )
-                                          (unsubst-tm (Γ ,, □ A i) A i j
-                                                      (clock-app {_} {Γ ,, □ A i} {A} i j (var Γ (□ A i))))))
+-}
