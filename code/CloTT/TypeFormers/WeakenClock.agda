@@ -41,12 +41,35 @@ module _ {n : ℕ} (A : Ty n) (i : Name (suc n)) where
     ; MorId = WCMorId
     ; MorComp = WCMorComp
     }
-{-
+
 subst-tm : {n : ℕ} (Γ : Ctx (suc n)) (A : Ty (suc n)) (i : Name (suc n)) (j : Name (suc n)) (t : Tm Γ A)
   → Tm Γ (clock-subst A i j)
-proj₁ (subst-tm Γ A i j (e , p)) Δ x = {!Ty.Mor A _ _ (proj₁ (e (removeClock i Δ) x) (Δ j))!}
-proj₂ (subst-tm Γ A i j t) Δ Δ' x = {!!}
--}
+proj₁ (subst-tm Γ A i j (e , p)) Δ x =
+  Ty.Mor A (insertClockCtx i (Δ j) (removeClock i Δ)) _
+      (e (insertClockCtx i (Δ j) (removeClock i Δ))
+       (Ctx.Mor Γ _ _ x))
+proj₂ (subst-tm Γ A i j (e , p)) Δ Δ' x =
+  begin
+    Ty.Mor A _ _
+           (Ty.Mor A _ _
+                   (e (insertClockCtx i (Δ j) (removeClock i Δ))
+                      (Ctx.Mor Γ Δ _ x)))
+  ≡⟨ sym (Ty.MorComp A) ⟩
+    Ty.Mor A _ _ (e (insertClockCtx i (Δ j) (removeClock i Δ))
+                    (Ctx.Mor Γ Δ _ x))
+  ≡⟨ p (insertClockCtx i (Δ j) (removeClock i Δ)) _ (Ctx.Mor Γ Δ _ x) ⟩
+    e (Δ' [ i ↦ Δ' j ]) (Ctx.Mor Γ _ _ (Ctx.Mor Γ Δ _ x))
+  ≡⟨ cong (e (Δ' [ i ↦ Δ' j ])) (sym (Ctx.MorComp Γ)) ⟩
+    e (Δ' [ i ↦ Δ' j ]) (Ctx.Mor Γ Δ _ x)
+  ≡⟨ cong (e (Δ' [ i ↦ Δ' j ])) (Ctx.MorComp Γ) ⟩
+    e (Δ' [ i ↦ Δ' j ]) (Ctx.Mor Γ _ _ (Ctx.Mor Γ _ _ x))
+  ≡⟨ sym (p (insertClockCtx i (Δ' j) (removeClock i Δ')) _ (Ctx.Mor Γ Δ _ x)) ⟩
+    Ty.Mor A _ _ (e (insertClockCtx i (Δ' j) (removeClock i Δ'))
+                    (Ctx.Mor Γ Δ _ x))
+  ≡⟨ cong (λ z → Ty.Mor A _ _ (e (insertClockCtx i (Δ' j) (removeClock i Δ')) z)) (Ctx.MorComp Γ) ⟩
+    Ty.Mor A _ _ (e (insertClockCtx i (Δ' j) (removeClock i Δ'))
+                    (Ctx.Mor Γ Δ' _ (Ctx.Mor Γ Δ Δ' x)))
+  ∎
 {-
 subst-tm : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm (WC Γ i) A)
   → Tm Γ (clock-subst A i j)

@@ -158,8 +158,8 @@ proj₂ (clock-subst-ii Γ A i (e , p)) Δ Δ' x =
 clock-beta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name (suc n)) (t : Tm (WC Γ i) A)
   → def-eq (WC Γ i) (clock-subst A i j)
            (clock-app {_} Γ A i j (clock-abs i Γ A t))
-           {!!}
-clock-beta = {!!}
+           (subst-tm (WC Γ i) A i j t)
+clock-beta Γ A i j t Δ x = refl
 
 clock-eta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (e : Tm Γ (□ A i))
   → def-eq Γ (□ A i)
