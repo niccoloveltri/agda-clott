@@ -195,3 +195,20 @@ clock-eta Γ A i j (e , p) Δ x =
       ∎
     ))
 -}
+
+clock-subst-ii : {n : ℕ} (Γ : Ctx (suc n)) (A : Ty (suc n)) (i : Name (suc n)) → Tm Γ (clock-subst A i i) → Tm Γ A 
+proj₁ (clock-subst-ii Γ A i (e , p)) Δ x = Ty.Mor A _ _ (e Δ x)
+proj₂ (clock-subst-ii Γ A i (e , p)) Δ Δ' x =
+  begin
+    Ty.Mor A Δ Δ' (Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x))
+  ≡⟨ sym (Ty.MorComp A) ⟩
+    Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x)
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (Ty.Mor A _ _ (e Δ x))
+  ≡⟨ cong (Ty.Mor A (Δ' [ i ↦ Δ' i ]) _) (p Δ Δ' x) ⟩
+    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (e Δ' (Ctx.Mor Γ Δ Δ' x))
+  ∎
+
+□map : {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) 
+  → Tm (WC Γ i) (A ⇒ B) → Tm Γ (□ A i) → Tm Γ (□ B i)
+□map Γ A B i f e = clock-abs i Γ B (app {_} {WC Γ i} {A} {B} f (clock-subst-ii (WC Γ i) A i (clock-app Γ A i i e)))
