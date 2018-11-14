@@ -44,7 +44,7 @@ module _ {n : ℕ} (A : Ty n) (i : Name (suc n)) where
 {-
 subst-tm : {n : ℕ} (Γ : Ctx (suc n)) (A : Ty (suc n)) (i : Name (suc n)) (j : Name (suc n)) (t : Tm Γ A)
   → Tm Γ (clock-subst A i j)
-proj₁ (subst-tm Γ A i j t) Δ x = proj₁ t (Δ [ i ↦ Δ j ]) (Ctx.Mor Γ Δ _ x)
+proj₁ (subst-tm Γ A i j (e , p)) Δ x = {!Ty.Mor A _ _ (proj₁ (e (removeClock i Δ) x) (Δ j))!}
 proj₂ (subst-tm Γ A i j t) Δ Δ' x = {!!}
 -}
 {-

@@ -141,6 +141,56 @@ proj₂ (clock-app Γ A i j (e , p)) Δ Δ' x =
            (proj₁ (e (removeClock i Δ') (Ctx.Mor Γ _ _ x)) (Δ' j))
   ∎
 
+clock-subst-ii : {n : ℕ} (Γ : Ctx (suc n)) (A : Ty (suc n)) (i : Name (suc n)) → Tm Γ (clock-subst A i i) → Tm Γ A 
+proj₁ (clock-subst-ii Γ A i (e , p)) Δ x = Ty.Mor A _ _ (e Δ x)
+proj₂ (clock-subst-ii Γ A i (e , p)) Δ Δ' x =
+  begin
+    Ty.Mor A Δ Δ' (Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x))
+  ≡⟨ sym (Ty.MorComp A) ⟩
+    Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x)
+  ≡⟨ Ty.MorComp A ⟩
+    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (Ty.Mor A _ _ (e Δ x))
+  ≡⟨ cong (Ty.Mor A (Δ' [ i ↦ Δ' i ]) _) (p Δ Δ' x) ⟩
+    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (e Δ' (Ctx.Mor Γ Δ Δ' x))
+  ∎
+
+
+clock-beta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name (suc n)) (t : Tm (WC Γ i) A)
+  → def-eq (WC Γ i) (clock-subst A i j)
+           (clock-app {_} Γ A i j (clock-abs i Γ A t))
+           {!!}
+clock-beta = {!!}
+
+clock-eta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (e : Tm Γ (□ A i))
+  → def-eq Γ (□ A i)
+           (clock-abs i Γ A (clock-subst-ii (WC Γ i) A i (clock-app Γ A i i e)))
+           e
+clock-eta Γ A i (e , p) Δ x =
+  Σ≡-uip
+    (funext (λ _ → funext (λ _ → uip)))
+    (funext (λ κ →
+      begin
+        Ty.Mor A _ _
+               (Ty.Mor A _ _
+                       (proj₁
+                         (e (removeClock i (insertClockCtx i κ Δ)) (Ctx.Mor Γ Δ _ x))
+                            (insertClockCtx i κ Δ i)))
+      ≡⟨ sym (Ty.MorComp A) ⟩
+        Ty.Mor A _ _
+               (proj₁
+                 (e (removeClock i (insertClockCtx i κ Δ)) (Ctx.Mor Γ Δ _ x))
+                    (insertClockCtx i κ Δ i))
+      ≡⟨ cong (λ z → Ty.Mor A _ _ (proj₁ z (insertClockCtx i κ Δ i))) (sym (p Δ _ x)) ⟩
+        Ty.Mor A _ _
+               (Ty.Mor A _ _
+                       (proj₁ (e Δ x) (insertClockCtx i κ Δ i)))
+      ≡⟨ sym (Ty.MorComp A) ⟩
+        Ty.Mor A _ _ (proj₁ (e Δ x) (insertClockCtx i κ Δ i))
+      ≡⟨ proj₂ (e Δ x) _ _ ⟩
+        proj₁ (e Δ x) κ
+      ∎
+    ))
+
 {-
 clock-beta : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (j : Name n) (t : Tm (WC Γ i) A)
   → def-eq Γ (clock-subst A i j)
@@ -195,19 +245,6 @@ clock-eta Γ A i j (e , p) Δ x =
       ∎
     ))
 -}
-
-clock-subst-ii : {n : ℕ} (Γ : Ctx (suc n)) (A : Ty (suc n)) (i : Name (suc n)) → Tm Γ (clock-subst A i i) → Tm Γ A 
-proj₁ (clock-subst-ii Γ A i (e , p)) Δ x = Ty.Mor A _ _ (e Δ x)
-proj₂ (clock-subst-ii Γ A i (e , p)) Δ Δ' x =
-  begin
-    Ty.Mor A Δ Δ' (Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x))
-  ≡⟨ sym (Ty.MorComp A) ⟩
-    Ty.Mor A (Δ [ i ↦ Δ i ]) _ (e Δ x)
-  ≡⟨ Ty.MorComp A ⟩
-    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (Ty.Mor A _ _ (e Δ x))
-  ≡⟨ cong (Ty.Mor A (Δ' [ i ↦ Δ' i ]) _) (p Δ Δ' x) ⟩
-    Ty.Mor A (Δ' [ i ↦ Δ' i ]) _ (e Δ' (Ctx.Mor Γ Δ Δ' x))
-  ∎
 
 □map : {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) 
   → Tm (WC Γ i) (A ⇒ B) → Tm Γ (□ A i) → Tm Γ (□ B i)
