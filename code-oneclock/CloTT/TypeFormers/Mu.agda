@@ -12,6 +12,7 @@ data Poly : Set₁ where
   ∁ : Set → Poly
   I : Poly
   _⊞_ _⊠_ : Poly → Poly → Poly
+  _⇛_ : Set → Poly → Poly
   ► : Poly → Poly
 
 -- Evaluation of polynomials in presheaves
@@ -23,6 +24,7 @@ evalObj (∁ X) A A-map i = X
 evalObj I A A-map i = A i
 evalObj (P ⊞ Q) A A-map i = evalObj P A A-map i ⊎ evalObj Q A A-map i
 evalObj (P ⊠ Q) A A-map i = evalObj P A A-map i × evalObj Q A A-map i
+evalObj (X ⇛ P) A A-map i = X → evalObj P A A-map i
 evalObj (► P) A A-map i =
   Σ (Later (evalObj P A A-map) i)
     (λ x → (j : Size< i) (k : Size≤ j) → evalMor P A A-map j k (x [ j ]) ≡ x [ k ])
@@ -31,8 +33,10 @@ evalMor I A A-map i j x = A-map i j x
 evalMor (P ⊞ Q) A A-map i j (inj₁ x) = inj₁ (evalMor P A A-map i j x)
 evalMor (P ⊞ Q) A A-map i j (inj₂ x) = inj₂ (evalMor Q A A-map i j x)
 evalMor (P ⊠ Q) A A-map i j (x , y) = evalMor P A A-map i j x , evalMor Q A A-map i j y
+evalMor (X ⇛ P) A A-map i j f x = evalMor P A A-map i j (f x)
 proj₁ (evalMor (► P) A A-map i j (x , p)) = x
 proj₂ (evalMor (► P) A A-map i j (x , p)) = p
+
 
 evalMorId : (P : Poly) (A : PSh)
   → {i : Size} {x : evalObj P (PSh.Obj A) (PSh.Mor A) i} →
@@ -42,6 +46,7 @@ evalMorId I A = PSh.MorId A
 evalMorId (P ⊞ Q) A {x = inj₁ x} = cong inj₁ (evalMorId P A)
 evalMorId (P ⊞ Q) A {x = inj₂ x} = cong inj₂ (evalMorId Q A)
 evalMorId (P ⊠ Q) A = cong₂ _,_ (evalMorId P A) (evalMorId Q A)
+evalMorId (X ⇛ P) A = funext (λ _ → evalMorId P A)
 evalMorId (► P) A = refl
 
 evalMorComp : (P : Poly) (A : PSh)
@@ -54,6 +59,7 @@ evalMorComp I A = PSh.MorComp A
 evalMorComp (P ⊞ Q) A {x = inj₁ x} = cong inj₁ (evalMorComp P A)
 evalMorComp (P ⊞ Q) A {x = inj₂ x} = cong inj₂ (evalMorComp Q A)
 evalMorComp (P ⊠ Q) A = cong₂ _,_ (evalMorComp P A) (evalMorComp Q A)
+evalMorComp (X ⇛ P) A = funext (λ _ → evalMorComp P A)
 evalMorComp (► P) A = refl
 
 eval : Poly → PSh → PSh
@@ -82,6 +88,7 @@ mutual
   eval-μMor P (Q ⊞ R) i j (inj₂ x) = inj₂ (eval-μMor P R i j x)
   proj₁ (eval-μMor P (Q ⊠ R) i j (x , y)) = eval-μMor P Q i j x
   proj₂ (eval-μMor P (Q ⊠ R) i j (x , y)) = eval-μMor P R i j y
+  eval-μMor P (X ⇛ Q) i j f x = eval-μMor P Q i j (f x)
   proj₁ (eval-μMor P (► Q) i j (x , p)) = x
   proj₂ (eval-μMor P (► Q) i j (x , p)) = p
 
@@ -92,6 +99,7 @@ eval-μMor-eq P I = refl
 eval-μMor-eq P (Q ⊞ R) {x = inj₁ x} = cong inj₁ (eval-μMor-eq P Q)
 eval-μMor-eq P (Q ⊞ R) {x = inj₂ x} = cong inj₂ (eval-μMor-eq P R)
 eval-μMor-eq P (Q ⊠ R) = cong₂ _,_ (eval-μMor-eq P Q) (eval-μMor-eq P R)
+eval-μMor-eq P (X ⇛ Q) = funext (λ _ → eval-μMor-eq P Q)
 eval-μMor-eq P (► Q) = refl
 
 μMorId : (P : Poly) {i : Size} {x : μObj P i} → μMor P i i x ≡ x
@@ -102,6 +110,7 @@ eval-μMorId P I = μMorId P
 eval-μMorId P (Q ⊞ R) {x = inj₁ x} = cong inj₁ (eval-μMorId P Q)
 eval-μMorId P (Q ⊞ R) {x = inj₂ y} = cong inj₂ (eval-μMorId P R)
 eval-μMorId P (Q ⊠ R) = cong₂ _,_ (eval-μMorId P Q) (eval-μMorId P R)
+eval-μMorId P (X ⇛ Q) = funext (λ _ → eval-μMorId P Q)
 eval-μMorId P (► Q) = refl
 
 μMorComp : (P : Poly) {i : Size} {j : Size≤ i} {k : Size≤ j}
@@ -115,6 +124,7 @@ eval-μMorComp P I = μMorComp P
 eval-μMorComp P (Q ⊞ R) {x = inj₁ x} = cong inj₁ (eval-μMorComp P Q)
 eval-μMorComp P (Q ⊞ R) {x = inj₂ y} = cong inj₂ (eval-μMorComp P R)
 eval-μMorComp P (Q ⊠ R) = cong₂ _,_ (eval-μMorComp P Q) (eval-μMorComp P R)
+eval-μMorComp P (X ⇛ Q) = funext (λ _ → eval-μMorComp P Q)
 eval-μMorComp P (► Q) = refl
 
 μ : Poly → PSh
@@ -152,6 +162,7 @@ primrec₁₁ P (Q ⊞ R) A i f p j (inj₁ t) = inj₁ (primrec₁₁ P Q A i f
 primrec₁₁ P (Q ⊞ R) A i f p j (inj₂ t) = inj₂ (primrec₁₁ P R A i f p j t)
 proj₁ (primrec₁₁ P (Q ⊠ R) A i f p j (t₁ , t₂)) = primrec₁₁ P Q A i f p j t₁
 proj₂ (primrec₁₁ P (Q ⊠ R) A i f p j (t₁ , t₂)) = primrec₁₁ P R A i f p j t₂
+primrec₁₁ P (X ⇛ Q) A i f p j g x = primrec₁₁ P Q A i f p j (g x)
 proj₁ (primrec₁₁ P (► Q) A i f p j (t , q)) [ k ] = primrec₁₁ P Q A i f p k (t [ k ])
 proj₂ (primrec₁₁ P (► Q) A i f p j (t , q)) k l = primrec₁₂ P Q A i f p k l _ _ (q k l)
 primrec₁₂ P (∁ X) A i f p j k t _ refl = refl
@@ -161,6 +172,7 @@ primrec₁₂ P (Q ⊞ R) A i f p j k (inj₁ t) _ refl = cong inj₁ (primrec�
 primrec₁₂ P (Q ⊞ R) A i f p j k (inj₂ t) _ refl = cong inj₂ (primrec₁₂ P R A i f p j k t _ refl)
 primrec₁₂ P (Q ⊠ R) A i f p j k (t₁ , t₂) _ refl =
   cong₂ _,_ (primrec₁₂ P Q A i f p j k t₁ _ refl) (primrec₁₂ P R A i f p j k t₂ _ refl)
+primrec₁₂ P (X ⇛ Q) A i f p j k g g' r = funext (λ x → primrec₁₂ P Q A i f p j k (g x) (g' x) (cong-app r x))
 primrec₁₂ P (► Q) A i f p j k (t , q) _ refl =
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip)})) (funext (λ { [ l ] → refl }))
 
@@ -176,6 +188,7 @@ primrec₂ P I Γ A (f , p) i j γ k (sup t) =
 primrec₂ P (Q ⊞ R) Γ A f i j γ k (inj₁ t) = cong inj₁ (primrec₂ P Q Γ A f i j γ k t)
 primrec₂ P (Q ⊞ R) Γ A f i j γ k (inj₂ t) = cong inj₂ (primrec₂ P R Γ A f i j γ k t)
 primrec₂ P (Q ⊠ R) Γ A f i j γ k (t₁ , t₂) = cong₂ _,_ (primrec₂ P Q Γ A f i j γ k t₁) (primrec₂ P R Γ A f i j γ k t₂)
+primrec₂ P (X ⇛ Q) Γ A f i j γ k g = funext (λ x → primrec₂ P Q Γ A f i j γ k (g x))
 primrec₂ P (► Q) Γ A f i j γ k (t , q) =
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) (funext (λ { [ l ] → primrec₂ P Q Γ A f i j γ l (t [ l ]) }))
 
@@ -189,3 +202,4 @@ proj₂ (proj₁ (primrec P Γ A (f , p)) i γ) j k (sup t) =
 proj₂ (primrec P Γ A (f , p)) i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (λ { (sup t) → cong₂ (λ a b → proj₁ a k b) (p i j _) (primrec₂ P P Γ A (f , p) i j γ k t) })))
+
