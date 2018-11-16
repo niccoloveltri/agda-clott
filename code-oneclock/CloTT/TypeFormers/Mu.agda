@@ -129,19 +129,64 @@ proj₂ (cons P Γ (t , p)) i j γ = cong sup (trans (eval-μMor-eq P P) (p i j 
 
 -- Elimination rule
 
-primrec₁₁ : (P : Poly) (Γ : Ctx tot) (A : Ty tot)
-  → Tm tot Γ (eval P (μ P ⊗ A) ⇒ A)
-  → (i : Size) (γ : PSh.Obj Γ i) (j : Size≤ i)
-  → μObj P j → PSh.Obj A j
-primrec₁₂ : (P : Poly) (Γ : Ctx tot) (A : Ty tot)
-  → (f : Tm tot Γ (eval P (μ P ⊗ A) ⇒ A))
-  → (i : Size) (γ : PSh.Obj Γ i) (j : Size≤ i) (k : Size≤ j)
-  → (t : μObj P j) → PSh.Mor A j k (primrec₁₁ P Γ A f i γ j t) ≡ primrec₁₁ P Γ A f i γ k (μMor P j k t)
-primrec₂ : (P : Poly) (Γ : Ctx tot) (A : Ty tot)
+primrec₁₁ : (P Q : Poly) (A : Ty tot) (i : Size)
+  → (f : (j : Size≤ i) → evalObj P (ProdObj (μ P) A) (ProdMor (μ P) A) j → PSh.Obj A j)
+  → (p : (j : Size≤ i)(k : Size≤ j)(x : evalObj P (ProdObj (μ P) A) (ProdMor (μ P) A) j)
+       → PSh.Mor A j k (f j x) ≡ f k (evalMor P _ _ j k x))
+  →  (j : Size≤ i) (t : evalObj Q (μObj P) (μMor P) j)
+  → evalObj Q (ProdObj (μ P) A) (ProdMor (μ P) A) j
+primrec₁₂ : (P Q : Poly) (A : Ty tot) (i : Size)
+  → (f : (j : Size≤ i) → evalObj P (ProdObj (μ P) A) (ProdMor (μ P) A) j → PSh.Obj A j)
+  → (p : (j : Size≤ i)(k : Size≤ j)(x : evalObj P (ProdObj (μ P) A) (ProdMor (μ P) A) j)
+       → PSh.Mor A j k (f j x) ≡ f k (evalMor P _ _ j k x))
+  →  (j : Size≤ i) (k : Size≤ j)
+  → (t : evalObj Q (μObj P) (μMor P) j) (t' : evalObj Q (μObj P) (μMor P) k)
+  → (r : evalMor Q (μObj P) (μMor P) j k t ≡ t')
+  → evalMor Q _ _ j k (primrec₁₁ P Q A i f p j t) ≡ primrec₁₁ P Q A i f p k t'
+primrec₁₁ P (∁ X) A i f p j t = t
+proj₁ (primrec₁₁ P I A i f p j (sup t)) = sup t
+proj₂ (primrec₁₁ P I A i f p j (sup t)) = f j (primrec₁₁ P P A i f p j t)
+primrec₁₁ P (Q ⊞ R) A i f p j (inj₁ t) = inj₁ (primrec₁₁ P Q A i f p j t)
+primrec₁₁ P (Q ⊞ R) A i f p j (inj₂ t) = inj₂ (primrec₁₁ P R A i f p j t)
+proj₁ (primrec₁₁ P (Q ⊠ R) A i f p j (t₁ , t₂)) = primrec₁₁ P Q A i f p j t₁
+proj₂ (primrec₁₁ P (Q ⊠ R) A i f p j (t₁ , t₂)) = primrec₁₁ P R A i f p j t₂
+proj₁ (primrec₁₁ P (► Q) A i f p j (t , q)) [ k ] = primrec₁₁ P Q A i f p k (t [ k ])
+proj₂ (primrec₁₁ P (► Q) A i f p j (t , q)) k l = primrec₁₂ P Q A i f p k l _ _ (q k l)
+primrec₁₂ P (∁ X) A i f p j k t _ refl = refl
+primrec₁₂ P I A i f p j k (sup t) _ refl =
+  cong₂ _,_ refl (trans (p j k _) (cong (f k) (primrec₁₂ P P A i f p j k t _ (sym (eval-μMor-eq P P)))))
+primrec₁₂ P (Q ⊞ R) A i f p j k (inj₁ t) _ refl = cong inj₁ (primrec₁₂ P Q A i f p j k t _ refl)
+primrec₁₂ P (Q ⊞ R) A i f p j k (inj₂ t) _ refl = cong inj₂ (primrec₁₂ P R A i f p j k t _ refl)
+primrec₁₂ P (Q ⊠ R) A i f p j k (t₁ , t₂) _ refl =
+  cong₂ _,_ (primrec₁₂ P Q A i f p j k t₁ _ refl) (primrec₁₂ P R A i f p j k t₂ _ refl)
+primrec₁₂ P (► Q) A i f p j k (t , q) _ refl =
+  Σ≡-uip (funext (λ { _ → funext (λ _ → uip)})) (funext (λ { [ l ] → refl }))
+
+primrec₂ : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm tot Γ (eval P (μ P ⊗ A) ⇒ A))
   → (i : Size) (j : Size≤ i) (γ : PSh.Obj Γ i)
-  → ExpMor (μ P) A i j (primrec₁₁ P Γ A f i γ , primrec₁₂ P Γ A f i γ) ≡
-    (primrec₁₁ P Γ A f j (PSh.Mor Γ i j γ) , primrec₁₂ P Γ A f j (PSh.Mor Γ i j γ))
+  → (k : Size≤ j) (t : evalObj Q (μObj P) (μMor P) k)
+  → primrec₁₁ P Q A i (proj₁ (proj₁ f i γ)) (proj₂ (proj₁ f i γ)) k t ≡
+    primrec₁₁ P Q A j (proj₁ (proj₁ f j (PSh.Mor Γ i j γ))) (proj₂ (proj₁ f j (PSh.Mor Γ i j γ))) k t
+primrec₂ P (∁ X) Γ A (f , p) i j γ k t = {!!}
+primrec₂ P I Γ A (f , p) i j γ k t = {!!}
+primrec₂ P (Q ⊞ R) Γ A (f , p) i j γ k t = {!!}
+primrec₂ P (Q ⊠ R) Γ A (f , p) i j γ k t = {!!}
+primrec₂ P (► Q) Γ A (f , p) i j γ k t = {!!}
+
+primrec : (P : Poly) (Γ : Ctx tot) (A : Ty tot)
+  → Tm tot Γ (eval P (μ P ⊗ A) ⇒ A) → Tm tot Γ (μ P ⇒ A)
+proj₁ (proj₁ (primrec P Γ A (f , p)) i γ) j (sup t) =
+  proj₁ (f i γ) j (primrec₁₁ P P A i (proj₁ (f i γ)) (proj₂ (f i γ)) j t)
+proj₂ (proj₁ (primrec P Γ A (f , p)) i γ) j k (sup t) =
+  trans (proj₂ (f i γ) j k _)
+        (cong (proj₁ (f i γ) k) (primrec₁₂ P P A i (proj₁ (f i γ)) (proj₂ (f i γ)) j k t _ (sym (eval-μMor-eq P P))))
+proj₂ (primrec P Γ A (f , p)) i j γ =
+  Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+         (funext (λ k → funext (λ { (sup t) → cong₂ (λ a b → proj₁ a k b) (p i j _) (primrec₂ P P Γ A (f , p) i j γ k t) })))
+
+
+{-
 primrec₁₁' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → Tm tot Γ (eval P (μ P ⊗ A) ⇒ A)
   → (i : Size) (γ : PSh.Obj Γ i) (j : Size≤ i)
@@ -149,43 +194,53 @@ primrec₁₁' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
 primrec₁₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm tot Γ (eval P (μ P ⊗ A) ⇒ A))
   → (i : Size) (γ : PSh.Obj Γ i) (j : Size≤ i) (k : Size≤ j)
-  → (t : evalObj Q (μObj P) (μMor P) j)
-  → evalMor Q _ _ j k (primrec₁₁' P Q Γ A f i γ j t) ≡ primrec₁₁' P Q Γ A f i γ k (evalMor Q _ _ j k t)
-primrec₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
-  → (f : Tm tot Γ (eval P (μ P ⊗ A) ⇒ A))
-  → (i : Size) (j : Size≤ i) (γ : PSh.Obj Γ i)
-  → ExpMor (eval Q (μ P)) (eval Q (Prod (μ P) A)) i j (primrec₁₁' P Q Γ A f i γ , primrec₁₂' P Q Γ A f i γ) ≡
-    (primrec₁₁' P Q Γ A f j (PSh.Mor Γ i j γ) , primrec₁₂' P Q Γ A f j (PSh.Mor Γ i j γ))
-
-primrec₁₁ P Γ A (f , p) i γ j (sup t) = proj₁ (f i γ) j (primrec₁₁' P P Γ A (f , p) i γ j t)
-primrec₁₂ P Γ A (f , p) i γ j k (sup t) =
-  trans (proj₂ (f i γ) j k _) (cong (proj₁ (f i γ) k)
-        (trans (primrec₁₂' P P Γ A (f , p) i γ j k t)
-               (cong (primrec₁₁' P P Γ A (f , p) i γ k) (sym (eval-μMor-eq P P)))))
-primrec₂ P Γ A (f , p) i j γ =
-  Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-         (funext (λ k → funext (λ { (sup x) → cong₂ (λ a b → proj₁ a k (proj₁ b k x)) (p i j γ) (primrec₂' P P Γ A (f , p) i j γ) })))
-
+  → (t : evalObj Q (μObj P) (μMor P) j) (t' : evalObj Q (μObj P) (μMor P) k)
+  → (r : evalMor Q (μObj P) (μMor P) j k t ≡ t')
+  → evalMor Q _ _ j k (primrec₁₁' P Q Γ A f i γ j t) ≡ primrec₁₁' P Q Γ A f i γ k t'
 primrec₁₁' P (∁ X) Γ A f i γ j t = t
-primrec₁₁' P I Γ A f i γ j t = t , primrec₁₁ P Γ A f i γ j t
+proj₁ (primrec₁₁' P I Γ A (f , p) i γ j (sup t)) = sup t
+proj₂ (primrec₁₁' P I Γ A (f , p) i γ j (sup t)) =
+  proj₁ (f i γ) j (primrec₁₁' P P Γ A (f , p) i γ j t) 
 primrec₁₁' P (Q ⊞ R) Γ A f i γ j (inj₁ x) = inj₁ (primrec₁₁' P Q Γ A f i γ j x)
 primrec₁₁' P (Q ⊞ R) Γ A f i γ j (inj₂ x) = inj₂ (primrec₁₁' P R Γ A f i γ j x)
 primrec₁₁' P (Q ⊠ R) Γ A f i γ j (x , y) = (primrec₁₁' P Q Γ A f i γ j x) , (primrec₁₁' P R Γ A f i γ j y)
-primrec₁₁' P (► Q) Γ A f i γ j (t , q) =
-  (λ { [ k ] → primrec₁₁' P Q Γ A f i γ k (t [ k ]) }) ,
-  (λ { k l → trans (primrec₁₂' P Q Γ A f i γ k l (t [ k ])) (cong (primrec₁₁' P Q Γ A f i γ l) (q k l)) })
+proj₁ (primrec₁₁' P (► Q) Γ A f i γ j (t , q)) [ k ] = primrec₁₁' P Q Γ A f i γ k (t [ k ])
+proj₂ (primrec₁₁' P (► Q) Γ A f i γ j (t , q)) k l = primrec₁₂' P Q Γ A f i γ k l (t [ k ]) (t [ l ]) (q k l)
+primrec₁₂' P (∁ X) Γ A f i γ j k t ._ refl = refl
+primrec₁₂' P I Γ A (f , p) i γ j k (sup t) ._ refl =
+  cong₂ _,_ refl (trans (proj₂ (f i γ) j k _)
+                        (cong (proj₁ (f i γ) k) (primrec₁₂' P P Γ A (f , p) i γ j k t _ (sym (eval-μMor-eq P P)))))
+primrec₁₂' P (Q ⊞ R) Γ A f i γ j k (inj₁ x) ._ refl = cong inj₁ (primrec₁₂' P Q Γ A f i γ j k x _ refl)
+primrec₁₂' P (Q ⊞ R) Γ A f i γ j k (inj₂ x) ._ refl = cong inj₂ (primrec₁₂' P R Γ A f i γ j k x _ refl)
+primrec₁₂' P (Q ⊠ R) Γ A f i γ j k (x , y) ._ refl =
+  cong₂ _,_ (primrec₁₂' P Q Γ A f i γ j k x _ refl) (primrec₁₂' P R Γ A f i γ j k y _ refl)
+primrec₁₂' P (► Q) Γ A f i γ j k (t , p) ._ refl = Σ≡-uip (funext (λ { _ → funext (λ _ → uip)})) (funext (λ { [ l ] → refl }))
+-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{-
 primrec₁₂' P (∁ X) Γ A f i γ j k t = refl
-primrec₁₂' P I Γ A f i γ j k t = cong₂ _,_ refl (primrec₁₂ P Γ A f i γ j k t)
+primrec₁₂' P I Γ A f i γ j k t = {!!} --cong₂ _,_ refl (primrec₁₂ P Γ A f i γ j k t)
 primrec₁₂' P (Q ⊞ R) Γ A f i γ j k (inj₁ x) = cong inj₁ (primrec₁₂' P Q Γ A f i γ j k x)
 primrec₁₂' P (Q ⊞ R) Γ A f i γ j k (inj₂ x) = cong inj₂ (primrec₁₂' P R Γ A f i γ j k x)
 primrec₁₂' P (Q ⊠ R) Γ A f i γ j k (x , y) = cong₂ _,_ (primrec₁₂' P Q Γ A f i γ j k x) (primrec₁₂' P R Γ A f i γ j k y)
-primrec₁₂' P (► Q) Γ A f i γ j k (t , p) =
-  Σ≡-uip (funext (λ { _ → funext (λ _ → uip)}))
-         (funext (λ { [ l ] → refl }))
+primrec₁₂' P (► Q) Γ A f i γ j k (t , p) = Σ≡-uip (funext (λ { _ → funext (λ _ → uip)})) (funext (λ { [ l ] → refl }))
 primrec₂' P (∁ X) Γ A f i j γ = refl
-primrec₂' P I Γ A f i j γ =
-  Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-         (funext (λ k → funext (λ x → cong₂ _,_ refl (cong (λ a → proj₁ a k x) (primrec₂ P Γ A f i j γ)))))
+primrec₂' P I Γ A f i j γ = {!!}
+--  Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+--         (funext (λ k → funext (λ x → cong₂ _,_ refl (cong (λ a → proj₁ a k x) (primrec₂ P Γ A f i j γ)))))
 primrec₂' P (Q ⊞ R) Γ A f i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (λ { (inj₁ x) → cong inj₁ (cong (λ a → proj₁ a k x) (primrec₂' P Q Γ A f i j γ)) ;
@@ -197,13 +252,16 @@ primrec₂' P (► Q) Γ A f i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (λ { (x , p) → Σ≡-uip (funext (λ{  _ → funext (λ _ → uip)}))
                                                      (funext (λ { [ l ] → cong (λ a → proj₁ a l (x [ l ])) (primrec₂' P Q Γ A f i j γ) }))})))
+-}
 
+
+{-
 primrec : (P : Poly) (Γ : Ctx tot) (A : Ty tot)
   → Tm tot Γ (eval P (μ P ⊗ A) ⇒ A) → Tm tot Γ (μ P ⇒ A)
 proj₁ (proj₁ (primrec P Γ A f) i γ) = primrec₁₁ P Γ A f i γ
 proj₂ (proj₁ (primrec P Γ A f) i γ) = primrec₁₂ P Γ A f i γ
 proj₂ (primrec P Γ A f) = primrec₂ P Γ A f
-
+-}
 
 
 
