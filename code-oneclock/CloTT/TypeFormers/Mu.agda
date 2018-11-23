@@ -203,3 +203,11 @@ proj₂ (primrec P Γ A (f , p)) i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (λ { (sup t) → cong₂ (λ a b → proj₁ a k b) (p i j _) (primrec₂ P P Γ A (f , p) i j γ k t) })))
 
+
+gStr : Ty tot
+gStr = μ (∁ ℕ ⊠ ► I)
+
+Str : Ty set
+Str = □ gStr
+
+test = {!!}

@@ -29,11 +29,58 @@ data SizeLt (i : Size) : Set where
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
 
+SizeLe : Size → Set
+SizeLe i = SizeLt (↑ i)
+
+elimLt : ∀{ℓ} {A : Size → Set ℓ} {i : Size} (j : SizeLt i)
+  → ((j : Size< i) → A j) → A (size j)
+elimLt [ j ] f = f j
+
 Later : (Size → Set) → Size → Set
 Later A i = (j : SizeLt i) → A (size j)
 
 module _ (A : Ty tot) where
 
+  LaterLim : (i : Size) (x : Later (PSh.Obj A) i) → Set
+  LaterLim i x = (j : SizeLt i)
+    → elimLt j (λ { j' → (k : SizeLe j')
+      → elimLt k (λ k' → PSh.Mor A j' k' (x [ j' ]) ≡ x [ k' ]) })
+
+  LaterLimMor : (i : Size) (j : Size≤ i) (x : Later (PSh.Obj A) i)
+    → LaterLim i x → LaterLim j x
+  LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
+
+  -- 3. Object part
+  ▻Obj : (i : Size) → Set
+  ▻Obj i = Σ (Later (PSh.Obj A) i) (LaterLim i)
+
+  -- 4. Morphism part
+  ▻Mor : (i : Size) (j : Size≤ i)
+    → ▻Obj i → ▻Obj j
+  ▻Mor i j (x , p) = x , LaterLimMor i j x p
+    where
+      p' : LaterLim j x
+      p' [ j ] [ k ] = p [ j ] [ k ]
+
+  -- 5. Preservation of identity
+  ▻MorId : {i : Size} {x : ▻Obj i}
+             → ▻Mor i i x ≡ x
+  ▻MorId = Σ≡-uip (funext (λ { [ j ] → funext (λ { [ k ] → uip }) })) refl
+
+  -- 6. Preservation of composition
+  ▻MorComp : {i : Size} {j : Size≤ i} {k : Size≤ j} {x : ▻Obj i}
+               → ▻Mor i k x ≡ ▻Mor j k (▻Mor i j x)
+  ▻MorComp = Σ≡-uip (funext (λ { [ j ] → funext (λ { [ k ] → uip }) })) refl
+
+  ▻ : Ty tot
+  ▻ = record
+    { Obj = ▻Obj
+    ; Mor = ▻Mor
+    ; MorId = ▻MorId
+    ; MorComp = ▻MorComp
+    }
+
+{-
   -- 3. Object part
   ▻Obj : (i : Size) → Set
   ▻Obj i =
@@ -63,6 +110,14 @@ module _ (A : Ty tot) where
     ; MorId = ▻MorId
     ; MorComp = ▻MorComp
     }
+-}
+
+
+
+
+
+
+
 
 {-
 -- 1. The Later modality
