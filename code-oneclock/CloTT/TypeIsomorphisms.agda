@@ -38,19 +38,19 @@ module ty-iso₂ (Γ : Ctx set) (A : Ty tot) where
 
   f : Tm set Γ (X ⇒ Y)
   proj₁ (f γ (t , p)) i = proj₁ (t ∞) [ i ]
-  proj₂ (f γ (t , p)) i j = proj₂ (t ∞) i j
+  proj₂ (f γ (t , p)) i j = proj₂ (t ∞) [ i ] [ j ]
 
   f-inv : Tm set Γ (Y ⇒ X)
   proj₁ (proj₁ (f-inv γ (t , p)) i) [ j ] = t j
-  proj₂ (proj₁ (f-inv γ (t , p)) i) j k = p j k
+  proj₂ (proj₁ (f-inv γ (t , p)) i) [ j ] [ k ] = p j k
   proj₂ (f-inv γ t) i j =
-    Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+    Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip}) }))
            (funext (λ { [ k ] → refl }))
 
   f-is-iso₁ : ∀ t → def-eq Γ X (app f-inv (app f t)) t
   f-is-iso₁ t γ =
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
-           (funext (λ i → Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+           (funext (λ i → Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip}) }))
                                  (funext (λ { [ j ] → cong (λ a → proj₁ a [ j ]) (proj₂ (t γ) ∞ i) }))))
 
   f-is-iso₂ : ∀ t → def-eq Γ Y (app f (app f-inv t)) t
