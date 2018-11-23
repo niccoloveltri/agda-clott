@@ -5,7 +5,9 @@ open import Data.Product renaming (map to map×)
 open import Prelude
 open import Presheaves
 open import CloTT.Structure
-open import CloTT.TypeFormers
+open import CloTT.TypeFormers.Later
+open import CloTT.TypeFormers.ProductType
+open import CloTT.TypeFormers.FunctionType
 
 -- Grammar for polynomials
 data Poly : Set₁ where
@@ -204,10 +206,3 @@ proj₂ (primrec P Γ A (f , p)) i j γ =
          (funext (λ k → funext (λ { (sup t) → cong₂ (λ a b → proj₁ a k b) (p i j _) (primrec₂ P P Γ A (f , p) i j γ k t) })))
 
 
-gStr : Ty tot
-gStr = μ (∁ ℕ ⊠ ► I)
-
-Str : Ty set
-Str = □ gStr
-
-test = {!!}
