@@ -79,7 +79,7 @@ force-□pure Γ A i (e , p) Δ x =
                  (trans (cong (λ z → Ty.Mor A _ _ (proj₁ (e _ z) _)) (sym (Ctx.MorComp Γ)))
                  (trans (cong (λ z → Ty.Mor A _ _ (proj₁ z _)) (sym (p _ _ x)))
                  (trans (sym (Ty.MorComp A)) (proj₂ (e Δ x) _ _)))))))
-
+{-
 □pure-force : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (e : Tm Γ (□ (Later A i) i))
   → def-eq Γ (□ (Later A i) i)
            (□pure Γ A i (force-tm {_} {Γ} {A} i e))
@@ -96,7 +96,8 @@ force-□pure Γ A i (e , p) Δ x =
                         (trans (cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ (e _ z) _)) _)) (sym (Ctx.MorComp Γ)))
                         (trans (cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ z _)) _)) (sym (p _ _ x)))
                         (trans (sym (Ty.MorComp A))
-                        (trans {!!} (cong (λ z → force (proj₁ z) _) (proj₂ (e Δ x) (↑ ((insertClockCtx i κ Δ [ i ↦ α ]) i)) _)))
+                        (trans {!refl!} (cong (λ z → force (proj₁ z) _) (proj₂ (e Δ x) (↑ ((insertClockCtx i κ Δ [ i ↦ α ]) i)) _)))
                         ))))
         })))
     ))
+-}

@@ -27,6 +27,9 @@ uip {p = refl} {refl} = refl
   → (e : a ≡ a') → subst P e p ≡ p' → (a , p) ≡ (a' , p')
 Σ≡ refl refl = refl
 
+path-prod : {A B : Set} {a₁ a₂ : A} {b₁ b₂ : B} → a₁ ≡ a₂ → b₁ ≡ b₂ → (a₁ , b₁) ≡ (a₂ , b₂)
+path-prod refl refl = refl
+
 isProp : Set → Set
 isProp P = {x y : P} → x ≡ y
 
