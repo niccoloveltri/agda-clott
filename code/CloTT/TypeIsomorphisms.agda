@@ -148,7 +148,21 @@ module ty-iso₂ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) wh
   from-to-sum (x , p) Δ y =
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
-      (funext (λ κ → {!!}))
+      (funext (λ κ →
+        trans (sum-path
+                (λ z → proj₁(proj₁ (proj₁ from-sum Δ y) _ (help-sum z)) κ)
+                (λ z → SumMor A B (insertClockCtx i ∞ Δ) _ z)
+                (λ a →
+                  cong inj₁
+                       (trans (sym (Ty.MorComp A)) (trans (sym (Ty.MorComp A)) (sym (Ty.MorComp A))))
+                )
+                (λ a →
+                  cong inj₂
+                       (trans (sym (Ty.MorComp B)) (trans (sym (Ty.MorComp B)) (sym (Ty.MorComp B))))
+                )
+                (proj₁ (x Δ y) ∞))
+              (proj₂ (x Δ y) ∞ κ)
+      ))
 
 module ty-iso₃ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) where
 
