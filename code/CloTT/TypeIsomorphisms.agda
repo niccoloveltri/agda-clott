@@ -1,6 +1,7 @@
 module CloTT.TypeIsomorphisms where
 
 open import Data.Product
+open import Data.Sum
 open import Prelude
 open import CloTT.Structure
 open import CloTT.TypeFormers
@@ -78,6 +79,11 @@ module ty-iso₂ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) wh
                                                   (inr (WC (Γ ,, □ B i) i ,, B) A B
                                                        (var (WC (Γ ,, □ B i) i) B)))
                                           (var Γ (□ B i))))
+
+  help-sum : {i : Name (suc n)} {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ}
+             → Ctx.Obj (A ⊕ B) (insertClockCtx i ∞ Δ') → Ctx.Obj X Δ'
+  help-sum (inj₁ x) = inj₁ ((λ κ → {!!}) , {!!})
+  help-sum (inj₂ y) = {!!}
 
   to-sum : Tm Γ (Y ⇒ X)
   proj₁ (proj₁ to-sum Δ x) Δ' (y , p) = {!!}

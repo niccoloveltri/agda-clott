@@ -6,6 +6,9 @@ open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.Later
 open import CloTT.TypeFormers.ClockQuantification
+open import CloTT.TypeFormers.LaterType
+open import CloTT.TypeFormers.WeakenClock
+open import CloTT.TypeFormers.ClockQuantificationType
 
 force-tm₁₁ : {n : ℕ} {Γ : Ctx n} {A : Ty (suc n)} (i : Name (suc n))
   → Tm Γ (□ (Later A i ) i)
@@ -60,10 +63,6 @@ proj₂ (force-tm {n} {Γ} {A} i e) Δ Δ' x =
   Σ≡-uip (funext (λ { _ → funext (λ _ → uip)}))
          (funext (λ {κ → force-tm₂ {n} {Γ} {A} i e Δ Δ' x κ}))
 
-open import CloTT.TypeFormers.LaterType
-open import CloTT.TypeFormers.WeakenClock
-open import CloTT.TypeFormers.ClockQuantificationType
-
 □pure : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) → Tm Γ (□ A i) → Tm Γ (□ (Later A i) i)
 □pure Γ A i e = clock-abs i Γ (Later A i) (pure (WC Γ i) A (clock-subst-ii (WC Γ i) A i (clock-app Γ A i i e)) i)
 
@@ -79,7 +78,7 @@ force-□pure Γ A i (e , p) Δ x =
                  (trans (cong (λ z → Ty.Mor A _ _ (proj₁ (e _ z) _)) (sym (Ctx.MorComp Γ)))
                  (trans (cong (λ z → Ty.Mor A _ _ (proj₁ z _)) (sym (p _ _ x)))
                  (trans (sym (Ty.MorComp A)) (proj₂ (e Δ x) _ _)))))))
-{-
+
 □pure-force : {n : ℕ} (Γ : Ctx n) (A : Ty (suc n)) (i : Name (suc n)) (e : Tm Γ (□ (Later A i) i))
   → def-eq Γ (□ (Later A i) i)
            (□pure Γ A i (force-tm {_} {Γ} {A} i e))
@@ -91,13 +90,30 @@ force-□pure Γ A i (e , p) Δ x =
       Σ≡-uip
         (funext (λ {_ → funext (λ _ → uip)}))
         (bisim A i
-          (funext (λ {α → trans (sym (Ty.MorComp A))
-                        (trans (sym (Ty.MorComp A))
-                        (trans (cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ (e _ z) _)) _)) (sym (Ctx.MorComp Γ)))
-                        (trans (cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ z _)) _)) (sym (p _ _ x)))
-                        (trans (sym (Ty.MorComp A))
-                        (trans {!refl!} (cong (λ z → force (proj₁ z) _) (proj₂ (e Δ x) (↑ ((insertClockCtx i κ Δ [ i ↦ α ]) i)) _)))
-                        ))))
+          (funext (λ {α →
+            begin
+              Ty.Mor A _ _
+                     (Ty.Mor A _ _
+                             (Ty.Mor A _ _
+                                     (force(proj₁(proj₁ (e _ (Ctx.Mor Γ _ _ (Ctx.Mor Γ _ _ x))) _)) _)))
+            ≡⟨ sym (Ty.MorComp A) ⟩
+              Ty.Mor A _ _
+                     (Ty.Mor A _ _
+                             (force(proj₁(proj₁ (e _ (Ctx.Mor Γ _ _ (Ctx.Mor Γ _ _ x))) _)) _))
+            ≡⟨ sym (Ty.MorComp A) ⟩
+              Ty.Mor A _ _ (force(proj₁(proj₁ (e _ (Ctx.Mor Γ _ _ (Ctx.Mor Γ _ _ x))) _)) _)
+            ≡⟨ cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ (e _ z) _)) _)) (sym (Ctx.MorComp Γ)) ⟩
+              Ty.Mor A _ _ (force(proj₁(proj₁ (e _ (Ctx.Mor Γ _ _ x)) _)) _)
+            ≡⟨ cong (λ z → Ty.Mor A _ _ (force (proj₁ (proj₁ z _)) _)) (sym (p _ _ x)) ⟩
+              Ty.Mor A _ _ (Ty.Mor A _ _ (force(proj₁(proj₁ (e Δ x) _)) _))
+            ≡⟨ sym (Ty.MorComp A) ⟩
+              Ty.Mor A _ _ (force(proj₁(proj₁ (e Δ x) _)) _)
+            ≡⟨ Ty.MorComp A ⟩
+              Ty.Mor A _ _ (Ty.Mor A _ _ (force(proj₁(proj₁ (e Δ x) _)) _))
+            ≡⟨ cong (λ z → Ty.Mor A _ _ z) (proj₂ (proj₁ (e Δ x) _) _ _) ⟩
+              Ty.Mor A _ _ (force(proj₁(proj₁ (e Δ x) _)) _)
+            ≡⟨ cong (λ z → force (proj₁ z) _) (proj₂ (e Δ x) (↑ ((insertClockCtx i κ Δ [ i ↦ α ]) i)) _) ⟩
+              force (proj₁ (proj₁ (e Δ x) κ)) α
+            ∎
         })))
     ))
--}
