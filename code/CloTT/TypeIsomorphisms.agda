@@ -50,18 +50,6 @@ module ty-iso₁ {n : ℕ} (Γ : Ctx n) (A : Ty n) (i : Name (suc n)) where
         ∎
       ))
 
-{-
-□map : {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n))
-  → Tm (WC Γ i) (A ⇒ B) → Tm Γ (□ A i ⇒ □ B i)
-□map Γ A B i f = lambda Γ (□ A i) (□ B i)
-                          (clock-abs i (Γ ,, □ A i) B
-                                     (app {_} {WC (Γ ,, □ A i) i} {A} {B}
-                                          (weaken (WC Γ i) (WC (□ A i) i) (A ⇒ B) f )
-                                          (unsubst-tm (Γ ,, □ A i) A i {!!}
-                                                      (clock-app {_} {Γ ,, □ A i} {A} i {!!} (var Γ (□ A i))))))
--}
-
-
 module ty-iso₂ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) where
 
   private X = (□ A i) ⊕ (□ B i)
@@ -80,15 +68,87 @@ module ty-iso₂ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) wh
                                                        (var (WC (Γ ,, □ B i) i) B)))
                                           (var Γ (□ B i))))
 
-  help-sum : {i : Name (suc n)} {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ}
-             → Ctx.Obj (A ⊕ B) (insertClockCtx i ∞ Δ') → Ctx.Obj X Δ'
-  help-sum (inj₁ x) = inj₁ ((λ κ → {!!}) , {!!})
-  help-sum (inj₂ y) = {!!}
+  help-sum : {Δ : ClockCtx n} {Δ' : ClockCtx≤ Δ} → Ctx.Obj (A ⊕ B) (insertClockCtx i ∞ Δ') → Ctx.Obj X Δ'
+  help-sum (inj₁ x) = inj₁ ((λ κ → Ty.Mor A _ _ x) , (λ κ α → sym (Ty.MorComp A)))
+  help-sum (inj₂ y) = inj₂ ((λ κ → Ty.Mor B _ _ y) , (λ κ α → sym (Ty.MorComp B)))
 
   to-sum : Tm Γ (Y ⇒ X)
-  proj₁ (proj₁ to-sum Δ x) Δ' (y , p) = {!!}
-  proj₂ (proj₁ to-sum Δ x) Δ' Δ'' (y , p) = {!!}
-  proj₂ to-sum = {!!}
+  proj₁ (proj₁ to-sum Δ x) Δ' (y , p) = help-sum (y ∞)
+  proj₂ (proj₁ to-sum Δ x) Δ' Δ'' (y , p) =
+    sum-path
+      (λ z → Ty.Mor X _ _ (help-sum z))
+      (λ z → help-sum (SumMor A B (insertClockCtx i ∞ Δ') _ z))
+      (λ x → cong inj₁
+         (Σ≡-uip
+           (funext (λ _ → funext (λ _ → uip)))
+           (funext (λ κ → trans (sym (Ty.MorComp A)) (Ty.MorComp A)))
+         ))
+      (λ y → cong inj₂
+         (Σ≡-uip
+           (funext (λ _ → funext (λ _ → uip)))
+           (funext (λ κ → trans (sym (Ty.MorComp B)) (Ty.MorComp B)))
+         ))
+      (y ∞)
+  proj₂ to-sum Δ Δ' x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      refl
+
+  to-from-sum-lem : (Δ : ClockCtx n) (z : Ctx.Obj Γ Δ) (x : Ty.Obj X Δ)
+    → help-sum (proj₁ (proj₁ (proj₁ from-sum Δ z) _ x) ∞) ≡ x
+  to-from-sum-lem Δ z (inj₁ x) =
+    cong inj₁
+         (Σ≡-uip
+           (funext (λ _ → funext (λ _ → uip)))
+           (funext (λ κ →
+             begin
+               Ty.Mor A _ _
+                      (Ty.Mor A _ _
+                              (Ty.Mor A _ _
+                                      (Ty.Mor A _ _ (proj₁ x (insertClockCtx i ∞ _ i)))))
+             ≡⟨ sym (Ty.MorComp A) ⟩
+               Ty.Mor A _ _
+                      (Ty.Mor A _ _
+                              (Ty.Mor A _ _ (proj₁ x (insertClockCtx i ∞ _ i))))
+             ≡⟨ sym (Ty.MorComp A) ⟩
+               Ty.Mor A _ _ (Ty.Mor A _ _ (proj₁ x (insertClockCtx i ∞ _ i)))
+             ≡⟨ sym (Ty.MorComp A) ⟩
+               Ty.Mor A _ _ (proj₁ x (insertClockCtx i ∞ _ i))
+             ≡⟨ proj₂ x (insertClockCtx i ∞ Δ i) _ ⟩
+               proj₁ x κ
+             ∎
+           )))
+  to-from-sum-lem Δ z (inj₂ x) =
+    cong inj₂
+         (Σ≡-uip
+           (funext (λ _ → funext (λ _ → uip)))
+           (funext (λ κ →
+             begin
+               Ty.Mor B _ _
+                      (Ty.Mor B _ _
+                              (Ty.Mor B _ _
+                                      (Ty.Mor B _ _ (proj₁ x (insertClockCtx i ∞ _ i)))))
+             ≡⟨ sym (Ty.MorComp B) ⟩
+               Ty.Mor B _ _
+                      (Ty.Mor B _ _
+                              (Ty.Mor B _ _ (proj₁ x (insertClockCtx i ∞ _ i))))
+             ≡⟨ sym (Ty.MorComp B) ⟩
+               Ty.Mor B _ _ (Ty.Mor B _ _ (proj₁ x (insertClockCtx i ∞ _ i)))
+             ≡⟨ sym (Ty.MorComp B) ⟩
+               Ty.Mor B _ _ (proj₁ x (insertClockCtx i ∞ _ i))
+             ≡⟨ proj₂ x (insertClockCtx i ∞ Δ i) _ ⟩
+               proj₁ x κ
+             ∎
+           )))
+
+  to-from-sum : (x : Tm Γ X) → def-eq Γ X (app {_} {Γ} {Y} {X} to-sum (app {_} {Γ} {X} {Y} from-sum x)) x
+  to-from-sum (x , p) Δ y = to-from-sum-lem Δ y (x Δ y)
+
+  from-to-sum : (y : Tm Γ Y) → def-eq Γ Y (app {_} {Γ} {X} {Y} from-sum (app {_} {Γ} {Y} {X} to-sum y)) y
+  from-to-sum (x , p) Δ y =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → uip)))
+      (funext (λ κ → {!!}))
 
 module ty-iso₃ {n : ℕ} (Γ : Ctx n) (A B : Ty (suc n)) (i : Name (suc n)) where
 

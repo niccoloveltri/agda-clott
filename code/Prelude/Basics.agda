@@ -13,6 +13,7 @@ module Prelude.Basics where
 
 open import Relation.Binary.PropositionalEquality
 open import Data.Product
+open import Data.Sum
 
 -- 1. The main axioms
 postulate funext : ∀{ℓ ℓ'} → Extensionality ℓ ℓ'
@@ -29,6 +30,12 @@ uip {p = refl} {refl} = refl
 
 path-prod : {A B : Set} {a₁ a₂ : A} {b₁ b₂ : B} → a₁ ≡ a₂ → b₁ ≡ b₂ → (a₁ , b₁) ≡ (a₂ , b₂)
 path-prod refl refl = refl
+
+sum-path : {A B C : Set} (f g : A ⊎ B → C)
+         → ((a : A) → f (inj₁ a) ≡ g (inj₁ a))
+         → ((b : B) → f (inj₂ b) ≡ g (inj₂ b))
+         → (x : A ⊎ B) → f x ≡ g x
+sum-path f g Ha Hb = [_,_] Ha Hb
 
 isProp : Set → Set
 isProp P = {x y : P} → x ≡ y
