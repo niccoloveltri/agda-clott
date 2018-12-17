@@ -39,27 +39,29 @@ elimLt [ j ] f = f j
 Later : (Size → Set) → Size → Set
 Later A i = (j : SizeLt i) → A (size j)
 
-module _ (A : Ty tot) where
+module _ (A : Size → Set) (m : (i : Size) (j : Size≤ i) → A i → A j)  where
 
-  LaterLim : (i : Size) (x : Later (PSh.Obj A) i) → Set
+  LaterLim : (i : Size) (x : Later A i) → Set
   LaterLim i x = (j : SizeLt i)
     → elimLt j (λ { j' → (k : SizeLe j')
-      → elimLt k (λ k' → PSh.Mor A j' k' (x [ j' ]) ≡ x [ k' ]) })
+      → elimLt k (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) })
 
-  LaterLimMor : (i : Size) (j : Size≤ i) (x : Later (PSh.Obj A) i)
+  LaterLimMor : (i : Size) (j : Size≤ i) (x : Later A i)
     → LaterLim i x → LaterLim j x
   LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
+  
+module _ (A : Ty tot) where
 
   -- 3. Object part
   ▻Obj : (i : Size) → Set
-  ▻Obj i = Σ (Later (PSh.Obj A) i) (LaterLim i)
+  ▻Obj i = Σ (Later (PSh.Obj A) i) (LaterLim (PSh.Obj A) (PSh.Mor A) i)
 
   -- 4. Morphism part
   ▻Mor : (i : Size) (j : Size≤ i)
     → ▻Obj i → ▻Obj j
-  ▻Mor i j (x , p) = x , LaterLimMor i j x p
+  ▻Mor i j (x , p) = x , LaterLimMor (PSh.Obj A) (PSh.Mor A) i j x p
     where
-      p' : LaterLim j x
+      p' : LaterLim (PSh.Obj A) (PSh.Mor A) j x
       p' [ j ] [ k ] = p [ j ] [ k ]
 
   -- 5. Preservation of identity
