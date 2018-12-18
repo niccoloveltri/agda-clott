@@ -41,6 +41,7 @@ module _ (P Q : PSh) where
   ExpMorComp = refl
   \end{code}
 
+  \AgdaHide{
   \begin{code}
   Exp : PSh
   Exp = record
@@ -50,3 +51,4 @@ module _ (P Q : PSh) where
     ; MorComp = ExpMorComp
     }
   \end{code}
+  }

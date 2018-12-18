@@ -22,6 +22,7 @@ data tag : Set where
   tot : tag
 \end{code}
 
+\AgdaHide{
 \begin{code}
 Σ≡ : {A : Set}{P : A → Set}
   → {a a' : A} {p : P a} {p' : P a'}
@@ -64,3 +65,4 @@ subst-trans : {A : Set}{P : A → Set}
   → subst P e' (subst P e p) ≡ subst P (trans e e') p
 subst-trans refl refl = refl
 \end{code}
+}

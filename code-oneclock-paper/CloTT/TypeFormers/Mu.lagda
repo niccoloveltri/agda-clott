@@ -11,6 +11,8 @@ open import CloTT.TypeFormers.Later
 open import CloTT.TypeFormers.ProductType
 open import CloTT.TypeFormers.FunctionType
 open import CloTT.TypeFormers.WeakenClock
+
+open PSh
 \end{code}
 }
 
@@ -91,9 +93,9 @@ mutual
 \end{code}
 
 \begin{code}
-cons₁' : ∀ P Q i → PSh.Obj (eval Q (μ P)) i → μObj' P Q i
-cons₂' : ∀ P Q i (j : Size< (↑ i))(t : PSh.Obj (eval Q (μ P)) i)
-  → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (PSh.Mor (eval Q (μ P)) i j t)
+cons₁' : ∀ P Q i → Obj (eval Q (μ P)) i → μObj' P Q i
+cons₂' : ∀ P Q i (j : Size< (↑ i))(t : Obj (eval Q (μ P)) i)
+  → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor (eval Q (μ P)) i j t)
 cons₁' P (∁ X) i t = ∁ t
 cons₁' P I i t = I t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
@@ -127,16 +129,16 @@ cons P = cons' P P
 
 \begin{code}
 rec₁₁' : ∀ P Q A i
-  → (f : (j : Size< (↑ i)) → PSh.Obj (eval P A) j → PSh.Obj A j)
-  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : PSh.Obj (eval P A) j)
-       → PSh.Mor A j k (f j x) ≡ f k (PSh.Mor (eval P A) j k x))
-  → (j : Size< (↑ i)) → μObj' P Q j → PSh.Obj (eval Q A) j
+  → (f : (j : Size< (↑ i)) → Obj (eval P A) j → Obj A j)
+  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj (eval P A) j)
+       → Mor A j k (f j x) ≡ f k (Mor (eval P A) j k x))
+  → (j : Size< (↑ i)) → μObj' P Q j → Obj (eval Q A) j
 rec₁₂' : ∀ P Q A i
-  → (f : (j : Size< (↑ i)) → PSh.Obj (eval P A) j → PSh.Obj A j)
-  → (p : (j : Size< (↑ i))(k : Size< (↑ j))(x : PSh.Obj (eval P A) j)
-       → PSh.Mor A j k (f j x) ≡ f k (PSh.Mor (eval P A) j k x))
+  → (f : (j : Size< (↑ i)) → Obj (eval P A) j → Obj A j)
+  → (p : (j : Size< (↑ i))(k : Size< (↑ j))(x : Obj (eval P A) j)
+       → Mor A j k (f j x) ≡ f k (Mor (eval P A) j k x))
   → (j : Size< (↑ i)) (k : Size< (↑ j)) (x : μObj' P Q j)
-  → PSh.Mor (eval Q A) j k (rec₁₁' P Q A i f p j x) ≡ rec₁₁' P Q A i f p k (μMor' P Q j k x)
+  → Mor (eval Q A) j k (rec₁₁' P Q A i f p j x) ≡ rec₁₁' P Q A i f p k (μMor' P Q j k x)
 rec₁₁' P (∁ X) A i f p j (∁ x) = x
 rec₁₁' P I A i f p j (I x) = f j (rec₁₁' P P A i f p j x)
 rec₁₁' P (Q ⊠ R) A i f p j (x ⊠ y) = (rec₁₁' P Q A i f p j x) , (rec₁₁' P R A i f p j y)
@@ -155,10 +157,10 @@ rec₁₂' P (► Q) A i f p j k (► x q) = Σ≡-uip (funext (λ { [ _ ] → f
 \begin{code}
 rec₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm Γ (eval P A ⇒ A))
-  → (i : Size) (j : Size< (↑ i)) (γ : PSh.Obj Γ i)
+  → (i : Size) (j : Size< (↑ i)) (γ : Obj Γ i)
   → (k : Size< (↑ j)) (x : μObj' P Q k)
   → rec₁₁' P Q A i (proj₁ (proj₁ f i γ)) (proj₂ (proj₁ f i γ)) k x ≡
-    rec₁₁' P Q A j (proj₁ (proj₁ f j (PSh.Mor Γ i j γ))) (proj₂ (proj₁ f j (PSh.Mor Γ i j γ))) k x
+    rec₁₁' P Q A j (proj₁ (proj₁ f j (Mor Γ i j γ))) (proj₂ (proj₁ f j (Mor Γ i j γ))) k x
 rec₂' P (∁ X) Γ A f i j γ k (∁ x) = refl
 rec₂' P I Γ A (f , p) i j γ k (I x) = cong₂ (λ a b → proj₁ a k b) (p i j γ) (rec₂' P P Γ A (f , p) i j γ k x)
 rec₂' P (Q ⊠ R) Γ A f i j γ k (x ⊠ y) = cong₂ _,_ (rec₂' P Q Γ A f i j γ k x) (rec₂' P R Γ A f i j γ k y)
@@ -193,16 +195,16 @@ rec P Γ A f =
 
 \begin{code}
 primrec₁₁' : ∀ P Q A i
-  → (f : (j : Size< (↑ i)) → PSh.Obj (eval P (μ P ⊗ A)) j → PSh.Obj A j)
-  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : PSh.Obj (eval P (μ P ⊗ A)) j)
-       → PSh.Mor A j k (f j x) ≡ f k (PSh.Mor (eval P (μ P ⊗ A)) j k x))
-  → (j : Size< (↑ i)) → μObj' P Q j → PSh.Obj (eval Q (μ P ⊗ A)) j
+  → (f : (j : Size< (↑ i)) → Obj (eval P (μ P ⊗ A)) j → Obj A j)
+  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj (eval P (μ P ⊗ A)) j)
+       → Mor A j k (f j x) ≡ f k (Mor (eval P (μ P ⊗ A)) j k x))
+  → (j : Size< (↑ i)) → μObj' P Q j → Obj (eval Q (μ P ⊗ A)) j
 primrec₁₂' : ∀ P Q A i
-  → (f : (j : Size< (↑ i)) → PSh.Obj (eval P (μ P ⊗ A)) j → PSh.Obj A j)
-  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : PSh.Obj (eval P (μ P ⊗ A)) j)
-       → PSh.Mor A j k (f j x) ≡ f k (PSh.Mor (eval P (μ P ⊗ A)) j k x))
+  → (f : (j : Size< (↑ i)) → Obj (eval P (μ P ⊗ A)) j → Obj A j)
+  → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj (eval P (μ P ⊗ A)) j)
+       → Mor A j k (f j x) ≡ f k (Mor (eval P (μ P ⊗ A)) j k x))
   → (j : Size< (↑ i)) (k : Size< (↑ j)) (x : μObj' P Q j)
-  → PSh.Mor (eval Q (μ P ⊗ A)) j k (primrec₁₁' P Q A i f p j x) ≡ primrec₁₁' P Q A i f p k (μMor' P Q j k x)
+  → Mor (eval Q (μ P ⊗ A)) j k (primrec₁₁' P Q A i f p j x) ≡ primrec₁₁' P Q A i f p k (μMor' P Q j k x)
 primrec₁₁' P (∁ X) A i f p j (∁ x) = x
 primrec₁₁' P I A i f p j (I x) = x , f j (primrec₁₁' P P A i f p j x)
 primrec₁₁' P (Q ⊠ R) A i f p j (x ⊠ y) = (primrec₁₁' P Q A i f p j x) , (primrec₁₁' P R A i f p j y)
@@ -221,10 +223,10 @@ primrec₁₂' P (► Q) A i f p j k (► x q) = Σ≡-uip (funext (λ { [ _ ] �
 \begin{code}
 primrec₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm Γ (eval P (μ P ⊗ A) ⇒ A))
-  → (i : Size) (j : Size< (↑ i)) (γ : PSh.Obj Γ i)
+  → (i : Size) (j : Size< (↑ i)) (γ : Obj Γ i)
   → (k : Size< (↑ j)) (x : μObj' P Q k)
   → primrec₁₁' P Q A i (proj₁ (proj₁ f i γ)) (proj₂ (proj₁ f i γ)) k x ≡
-    primrec₁₁' P Q A j (proj₁ (proj₁ f j (PSh.Mor Γ i j γ))) (proj₂ (proj₁ f j (PSh.Mor Γ i j γ))) k x
+    primrec₁₁' P Q A j (proj₁ (proj₁ f j (Mor Γ i j γ))) (proj₂ (proj₁ f j (Mor Γ i j γ))) k x
 primrec₂' P (∁ X) Γ A f i j γ k (∁ x) = refl
 primrec₂' P I Γ A (f , p) i j γ k (I x) = cong (_,_ _) (cong₂ (λ a b → proj₁ a k b) (p i j γ) (primrec₂' P P Γ A (f , p) i j γ k x))
 primrec₂' P (Q ⊠ R) Γ A f i j γ k (x ⊠ y) = cong₂ _,_ (primrec₂' P Q Γ A f i j γ k x) (primrec₂' P R Γ A f i j γ k y)

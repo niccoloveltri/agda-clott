@@ -49,6 +49,7 @@ module _  (P Q : PSh) where
     ∎
   \end{code}
 
+  \AgdaHide{
   \begin{code}
   Prod : PSh
   Prod = record
@@ -58,3 +59,4 @@ module _  (P Q : PSh) where
     ; MorComp = ProdMorComp
     }
   \end{code}
+  }

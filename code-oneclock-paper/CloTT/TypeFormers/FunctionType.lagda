@@ -81,6 +81,7 @@ eta {tot} (t , p) Δ x =
     (funext (λ Δ' → funext (λ z → sym (cong (λ h → proj₁ h _ z) (p Δ Δ' x)))))
 \end{code}
 
+\AgdaHide{
 \begin{code}
 id-tm : {b : tag} (Γ : Ctx b) (A : Ty b) → Tm Γ (A ⇒ A)
 id-tm Γ A = lambda _ _ _ (var _ _)
@@ -101,3 +102,4 @@ comp-tm Γ A B C = lambda _ _ _
                                                            (var _ _))
                                                            (var _ _)))))
 \end{code}
+}

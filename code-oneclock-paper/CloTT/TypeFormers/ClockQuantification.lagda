@@ -7,7 +7,7 @@ open import Prelude
 open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.WeakenClock
-
+open import CloTT.TypeFormers.FunctionType
 open PSh
 \end{code}
 }
@@ -41,4 +41,10 @@ box-beta t i x = refl
 box-eta : {Γ : Ctx set} {A : Ty tot} (t : Tm Γ (□ A))
   → def-eq Γ (□ A) (box Γ A (unbox Γ A t)) t
 box-eta t i = refl 
+\end{code}
+
+\begin{code}
+□map : (Γ : Ctx set) (A B : Ty tot)
+  → Tm (WC Γ) (A ⇒ B) → Tm Γ (□ A) → Tm Γ (□ B)
+□map Γ A B f e = box Γ B (app (WC Γ) A B f (unbox Γ A e))
 \end{code}

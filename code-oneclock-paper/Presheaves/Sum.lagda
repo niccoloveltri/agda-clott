@@ -56,6 +56,7 @@ module _ (P Q : PSh) where
     ∎
   \end{code}
 
+  \AgdaHide{
   \begin{code}
   Sum : PSh
   Sum = record
@@ -65,3 +66,4 @@ module _ (P Q : PSh) where
     ; MorComp = λ {_}{_}{_}{x} → SumMorComp {x = x}
     }
   \end{code}
+  }

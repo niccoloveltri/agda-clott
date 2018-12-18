@@ -33,6 +33,7 @@ module _ (A : Set) where
   ConstMorComp = refl
   \end{code}
 
+  \AgdaHide{
   \begin{code}
   Const : PSh
   Const = record
@@ -42,3 +43,4 @@ module _ (A : Set) where
     ; MorComp = ConstMorComp
     }
   \end{code}
+  }
