@@ -1,4 +1,4 @@
-\documentclass[a4paper,UKenglish]{lipics-v2018}
+\documentclass{amsart}
 
 \usepackage{agda}
 
@@ -48,44 +48,6 @@
 
 \title{Guarded Recursive Type Theory via Sized Types}
 
-\author{Niccol\`o Veltri}{Dummy University Computing Laboratory, [Address], Country}{johnqpublic@dummyuni.org}{https://orcid.org/0000-0002-1825-0097}{[funding]}%mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty.
-
-\author{Niels van der Weide}{iCIS, Radboud Universiteit, The Netherlands}{nweide@cs.ru.nl}{}{}
-
-\authorrunning{J.\,Q. Public and J.\,R. Public}%mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
-
-\Copyright{John Q. Public and Joan R. Public}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
-
-\subjclass{Dummy classification}% mandatory: Please choose ACM 2012 classifications from https://www.acm.org/publications/class-2012 or https://dl.acm.org/ccs/ccs_flat.cfm . E.g., cite as "General and reference $\rightarrow$ General literature" or \ccsdesc[100]{General and reference~General literature}. 
-
-\keywords{Dummy keyword}%mandatory
-
-\category{}%optional, e.g. invited paper
-
-\relatedversion{}%optional, e.g. full version hosted on arXiv, HAL, or other respository/website
-
-\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
-
-\funding{}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
-
-\acknowledgements{I want to thank \dots}%optional
-
-%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\EventEditors{John Q. Open and Joan R. Access}
-\EventNoEds{2}
-\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
-\EventShortTitle{CVIT 2016}
-\EventAcronym{CVIT}
-\EventYear{2016}
-\EventDate{December 24--27, 2016}
-\EventLocation{Little Whinging, United Kingdom}
-\EventLogo{}
-\SeriesVolume{42}
-\ArticleNo{23}
-%\nolinenumbers %uncomment to disable line numbering
-%\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{document}
 
 \maketitle
@@ -99,6 +61,28 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 
 \section{Preliminaries}
 \input{Prelude/Basics}
+\input{Presheaves/Presheaves}
+\input{Presheaves/Const}
+\input{Presheaves/Terminal}
+\input{Presheaves/Product}
+\input{Presheaves/Sum}
+\input{Presheaves/Exp}
+\input{CloTT/Structure/Contexts}
+\input{CloTT/Structure/Types}
+\input{CloTT/Structure/Terms}
+\input{CloTT/Structure/DefinitionalEquality}
+\input{CloTT/Structure/ContextOperations}
+\input{CloTT/Structure/Subst}
+\input{CloTT/TypeFormers/UnitType}
+\input{CloTT/TypeFormers/SumType}
+\input{CloTT/TypeFormers/ProductType}
+\input{CloTT/TypeFormers/FunctionType}
+\input{CloTT/TypeFormers/ClockQuantification}
+\input{CloTT/TypeFormers/Later}
+\input{CloTT/TypeFormers/LaterType}
+\input{CloTT/TypeFormers/WeakenClock}
+\input{CloTT/TypeFormers/Fix}
+\input{CloTT/TypeFormers/Force}
 
 \subsection{Sized Types}
 

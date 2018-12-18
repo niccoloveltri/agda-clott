@@ -19,7 +19,7 @@ proj₁ (proj₁ (pure Γ A (t , _)) i x) [ j ] = t j (Mor Γ i j x)
 proj₂ (proj₁ (pure Γ A (t , p)) i x) [ j ] [ k ] = 
   begin
     Mor A j k (t j (Mor Γ i j x))
-  ≡⟨ p j k (PSh.Mor Γ i j x)  ⟩
+  ≡⟨ p j k (Mor Γ i j x)  ⟩
     t k (Mor Γ j k (Mor Γ i j x))
   ≡⟨ cong (t k) (sym (MorComp Γ)) ⟩
     t k (Mor Γ i k x)
