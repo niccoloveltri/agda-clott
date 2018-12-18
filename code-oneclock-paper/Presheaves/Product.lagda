@@ -7,21 +7,19 @@ open import Prelude
 open import Presheaves.Presheaves
 
 module _  (P Q : PSh) where
-
-  private module P = PSh P
-  private module Q = PSh Q
+  open PSh
 \end{code}
 }
 
   \begin{code}
   ProdObj : Size → Set
-  ProdObj i = P.Obj i × Q.Obj i
+  ProdObj i = Obj P i × Obj Q i
   \end{code}
   
   \begin{code}
   ProdMor : (i : Size) (j : Size< (↑ i))
     → ProdObj i → ProdObj j
-  ProdMor i j = map (P.Mor i j) (Q.Mor i j)
+  ProdMor i j = map (Mor P i j) (Mor Q i j)
   \end{code}
 
   \begin{code}
@@ -29,10 +27,10 @@ module _  (P Q : PSh) where
     → ProdMor i i x ≡ x
   ProdMorId {i} {x} =
     begin
-      (P.Mor i i (proj₁ x) , Q.Mor i i (proj₂ x))
-    ≡⟨ cong (λ z → (z , Q.Mor i i (proj₂ x))) P.MorId ⟩
-      (proj₁ x , Q.Mor i i (proj₂ x))
-    ≡⟨ cong (λ z → (proj₁ x , z)) Q.MorId ⟩
+      (Mor P i i (proj₁ x) , Mor Q i i (proj₂ x))
+    ≡⟨ cong (λ z → (z , _)) (MorId P) ⟩
+      (proj₁ x , Mor Q i i (proj₂ x))
+    ≡⟨ cong (λ z → (_ , z)) (MorId Q) ⟩
       x
     ∎
   \end{code}
@@ -43,11 +41,11 @@ module _  (P Q : PSh) where
     → ProdMor i k x ≡ ProdMor j k (ProdMor i j x)
   ProdMorComp {i} {j} {k} {x} =
     begin
-      (P.Mor i k (proj₁ x) , Q.Mor i k (proj₂ x))
-    ≡⟨ cong (λ z → (z , Q.Mor i k (proj₂ x))) P.MorComp ⟩
-       (P.Mor j k (P.Mor i j (proj₁ x)) , Q.Mor i k (proj₂ x))
-    ≡⟨ cong (λ z → (P.Mor j k (P.Mor i j (proj₁ x)) , z)) Q.MorComp ⟩
-      (P.Mor j k (P.Mor i j (proj₁ x)) , Q.Mor j k (Q.Mor i j (proj₂ x)))
+      (Mor P i k (proj₁ x) , Mor Q i k (proj₂ x))
+    ≡⟨ cong (λ z → (z , _)) (MorComp P) ⟩
+      (Mor P j k (Mor P i j (proj₁ x)) , Mor Q i k (proj₂ x))
+    ≡⟨ cong (λ z → (_ , z)) (MorComp Q) ⟩
+      (Mor P j k (Mor P i j (proj₁ x)) , Mor Q j k (Mor Q i j (proj₂ x)))
     ∎
   \end{code}
 

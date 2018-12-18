@@ -12,7 +12,7 @@ open import CloTT.TypeFormers.ClockQuantification
 }
 
 \begin{code}
-force-tm : (Γ : Ctx set) (A : Ty tot) (t : Tm set Γ (□ (▻ A))) → Tm set Γ (□ A)
+force-tm : (Γ : Ctx set) (A : Ty tot) (t : Tm Γ (□ (▻ A))) → Tm Γ (□ A)
 proj₁ (force-tm Γ A t x) j = proj₁ (proj₁ (t x) ∞) [ j ]
 proj₂ (force-tm Γ A t x) i j =
   begin

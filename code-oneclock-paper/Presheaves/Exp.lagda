@@ -7,27 +7,25 @@ open import Prelude
 open import Presheaves.Presheaves
 
 module _ (P Q : PSh) where
-
-  private module P = PSh P
-  private module Q = PSh Q
+  open PSh
 \end{code}
 }
 
   \begin{code}
   ExpObj : Size → Set
   ExpObj i =
-    Σ ((j : Size< (↑ i)) → P.Obj j → Q.Obj j)
+    Σ ((j : Size< (↑ i)) → Obj P j → Obj Q j)
       (λ f → (j : Size< (↑ i)) (k : Size< (↑ j))
-             (x : P.Obj j)
-               → Q.Mor j k (f j x)
+             (x : Obj P j)
+               → Mor Q j k (f j x)
                  ≡
-                 f k (P.Mor j k x))
+                 f k (Mor P j k x))
   \end{code}
 
   \begin{code}
   ExpMor : (i : Size) (j : Size< (↑ i))
     → ExpObj i → ExpObj j
-  ExpMor i j (f , p) = (λ _ → f _) , (λ _ _ → p _ _)
+  ExpMor i j (f , p) = f , p
   \end{code}
 
   \begin{code}

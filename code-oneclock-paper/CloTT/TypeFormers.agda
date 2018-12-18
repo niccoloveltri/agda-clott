@@ -1,6 +1,5 @@
 module CloTT.TypeFormers where
   open import CloTT.TypeFormers.ClockQuantification public
-  open import CloTT.TypeFormers.ClockQuantificationType public
   open import CloTT.TypeFormers.Fix public
   open import CloTT.TypeFormers.Force public
   open import CloTT.TypeFormers.FunctionType public

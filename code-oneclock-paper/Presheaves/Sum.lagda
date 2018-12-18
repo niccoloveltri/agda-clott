@@ -7,20 +7,18 @@ open import Prelude
 open import Presheaves.Presheaves
 
 module _ (P Q : PSh) where
-
-  private module P = PSh P
-  private module Q = PSh Q
+  open PSh
 \end{code}
 }
   \begin{code}
   SumObj : Size → Set
-  SumObj i = P.Obj i ⊎ Q.Obj i
+  SumObj i = Obj P i ⊎ Obj Q i
   \end{code}
 
   \begin{code}
   SumMor : (i : Size) (j : Size< (↑ i))
     → SumObj i → SumObj j
-  SumMor i j = map (P.Mor i j) (Q.Mor i j)
+  SumMor i j = map (Mor P i j) (Mor Q i j)
   \end{code}
   
   \begin{code}
@@ -28,14 +26,14 @@ module _ (P Q : PSh) where
     → SumMor i i x ≡ x
   SumMorId {i} {inj₁ p} =
     begin
-      inj₁ (P.Mor i i p)
-    ≡⟨ cong inj₁ P.MorId ⟩
+      inj₁ (Mor P i i p)
+    ≡⟨ cong inj₁ (MorId P) ⟩
       inj₁ p
     ∎
   SumMorId {i} {inj₂ q} =
     begin
-      inj₂ (Q.Mor i i q)
-    ≡⟨ cong inj₂ Q.MorId ⟩
+      inj₂ (Mor Q i i q)
+    ≡⟨ cong inj₂ (MorId Q) ⟩
       inj₂ q
     ∎
   \end{code}
@@ -46,15 +44,15 @@ module _ (P Q : PSh) where
     → SumMor i k x ≡ SumMor j k (SumMor i j x)
   SumMorComp {i} {j} {k} {inj₁ p} =
     begin
-      inj₁ (P.Mor i k p)
-    ≡⟨ cong inj₁ P.MorComp ⟩
-      inj₁ (P.Mor j k (P.Mor i j p))
+      inj₁ (Mor P i k p)
+    ≡⟨ cong inj₁ (MorComp P) ⟩
+      inj₁ (Mor P j k (Mor P i j p))
     ∎
   SumMorComp {i} {j} {k} {inj₂ q} =
     begin
-      inj₂ (Q.Mor i k q)
-    ≡⟨ cong inj₂ Q.MorComp ⟩
-      inj₂ (Q.Mor j k (Q.Mor i j q))
+      inj₂ (Mor Q i k q)
+    ≡⟨ cong inj₂ (MorComp Q) ⟩
+      inj₂ (Mor Q j k (Mor Q i j q))
     ∎
   \end{code}
 
