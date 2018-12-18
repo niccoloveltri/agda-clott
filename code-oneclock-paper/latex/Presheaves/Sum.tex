@@ -28,23 +28,9 @@
 \AgdaRecord{PSh}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
 \\
-%
-\\[\AgdaEmptyExtraSkip]%
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaKeyword{private}\AgdaSpace{}%
-\AgdaKeyword{module}\AgdaSpace{}%
-\AgdaModule{P}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaModule{PSh}\AgdaSpace{}%
-\AgdaBound{P}\<%
-\\
-%
-\>[2]\AgdaKeyword{private}\AgdaSpace{}%
-\AgdaKeyword{module}\AgdaSpace{}%
-\AgdaModule{Q}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaModule{PSh}\AgdaSpace{}%
-\AgdaBound{Q}\<%
+\>[2]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaModule{PSh}\<%
 \end{code}
 }
   \begin{code}%
@@ -59,10 +45,12 @@
 \>[2]\AgdaFunction{SumObj}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{P.Obj}\AgdaSpace{}%
+\AgdaField{Obj}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{⊎}}\AgdaSpace{}%
-\AgdaField{Q.Obj}\AgdaSpace{}%
+\AgdaField{Obj}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\<%
 \end{code}
 
@@ -93,10 +81,12 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{P.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{Q.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \end{code}
@@ -134,7 +124,8 @@
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{P.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{)}\<%
@@ -143,7 +134,8 @@
 \>[4]\AgdaOperator{\AgdaFunction{≡⟨}}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaFunction{P.MorId}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{MorId}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟩}}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -165,7 +157,8 @@
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{Q.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{)}\<%
@@ -174,7 +167,8 @@
 \>[4]\AgdaOperator{\AgdaFunction{≡⟨}}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaField{Q.MorId}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{MorId}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟩}}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -239,7 +233,8 @@
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{P.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{)}\<%
@@ -248,15 +243,18 @@
 \>[4]\AgdaOperator{\AgdaFunction{≡⟨}}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaFunction{P.MorComp}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{MorComp}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟩}}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{P.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{P.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{))}\<%
@@ -278,7 +276,8 @@
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{Q.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{)}\<%
@@ -287,15 +286,18 @@
 \>[4]\AgdaOperator{\AgdaFunction{≡⟨}}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaField{Q.MorComp}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{MorComp}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟩}}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{Q.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{Q.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{))}\<%
@@ -304,6 +306,7 @@
 \>[4]\AgdaOperator{\AgdaFunction{∎}}\<%
 \end{code}
 
+  \AgdaHide{
   \begin{code}%
 %
 \>[2]\AgdaFunction{Sum}\AgdaSpace{}%
@@ -348,3 +351,4 @@
 %
 \>[4]\AgdaSymbol{\}}\<%
 \end{code}
+  }
