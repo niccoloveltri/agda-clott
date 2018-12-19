@@ -58,7 +58,7 @@ pure-fmap-pure : (Γ : Ctx tot) (A B : Ty tot)
           → (f : Tm Γ (A ⇒ B)) (t : Tm Γ A)
           → def-eq Γ (▻ B)
                    (fmap Γ A B (pure Γ (A ⇒ B) f) (pure Γ A t))
-                   (pure Γ B (app Γ A B f t))
+                   (pure Γ B (sem-app-map Γ A B f t))
 pure-fmap-pure Γ A B (f , p) (t , q) i x =
   Σ≡-uip
     (funext (λ { [ _ ] → funext (λ { [ _ ] → uip })}))
@@ -103,7 +103,7 @@ fmap-pure-fun : (Γ : Ctx tot) (A B : Ty tot)
                    (fmap Γ (A ⇒ B) B
                          (pure Γ ((A ⇒ B) ⇒ B)
                                (lambda Γ (A ⇒ B) B
-                                       (app (Γ ,, (A ⇒ B)) A B
+                                       (sem-app-map (Γ ,, (A ⇒ B)) A B
                                             (var Γ (A ⇒ B))
                                             (weaken Γ (A ⇒ B) A t))))
                           f)

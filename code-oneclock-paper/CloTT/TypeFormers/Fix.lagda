@@ -37,7 +37,7 @@ proj₂ (dfix Γ A (f , p)) i j γ =
 
 \begin{code}
 fix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (▻ A ⇒ A)) → Tm Γ A
-fix Γ A f = app Γ (▻ A) A f (dfix Γ A f)
+fix Γ A f = sem-app-map Γ (▻ A) A f (dfix Γ A f)
 \end{code}
 
 \begin{code}
@@ -53,6 +53,6 @@ dfix-eq Γ A (f , p) i γ =
 fix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (▻ A ⇒ A))
   → def-eq Γ A
            (fix Γ A f)
-           (app Γ (▻ A) A f (pure Γ A (fix Γ A f)))
+           (sem-app-map Γ (▻ A) A f (pure Γ A (fix Γ A f)))
 fix-eq Γ A f i x = cong (proj₁ (proj₁ f i x) i) (dfix-eq Γ A f i x)
 \end{code}

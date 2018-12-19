@@ -66,23 +66,27 @@ proj₂ (sum-rec {tot} Γ A B C (left , p) (right , q)) i j (x , inj₂ r) =
 \end{code}
 
 \begin{code}
+{-
 sum-rec-inl : {b : tag} (Γ : Ctx b) (A B C : Ty b)
   → (left : Tm (Γ ,, A) C) (right : Tm (Γ ,, B) C)
   → (x : Tm Γ A)
   → def-eq Γ C
-           (subst-Tm _ _ _ (sum-rec Γ A B C left right) (inl Γ A B x))
-           (subst-Tm _ _ _ left x)
+           (sem-subst-tm _ _ _ (sum-rec Γ A B C left right) (inl Γ A B x))
+           (sem-subst-tm _ _ _ left x)
 sum-rec-inl {set} Γ A B C left right x z = refl
 sum-rec-inl {tot} Γ A B C (left , p) (right , q) (x , r) i z = refl
+-}
 \end{code}
 
 \begin{code}
+{-
 sum-rec-inr : {b : tag} (Γ : Ctx b) (A B C : Ty b)
   → (left : Tm (Γ ,, A) C) (right : Tm (Γ ,, B) C)
   → (x : Tm Γ B)
   → def-eq Γ C
-           (subst-Tm _ _ _ (sum-rec Γ A B C left right) (inr Γ A B x))
-           (subst-Tm _ _ _ right x)
+           (sem-subst-tm _ _ _ (sum-rec Γ A B C left right) (inr Γ A B x))
+           (sem-subst-tm _ _ _ right x)
 sum-rec-inr {set} Γ A B C left right x z = refl
 sum-rec-inr {tot} Γ A B C (left , p) (right , q) (x , r) i z = refl
+-}
 \end{code}

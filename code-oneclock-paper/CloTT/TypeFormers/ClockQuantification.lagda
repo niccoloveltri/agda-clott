@@ -46,5 +46,5 @@ box-eta t i = refl
 \begin{code}
 □map : (Γ : Ctx set) (A B : Ty tot)
   → Tm (WC Γ) (A ⇒ B) → Tm Γ (□ A) → Tm Γ (□ B)
-□map Γ A B f e = box Γ B (app (WC Γ) A B f (unbox Γ A e))
+□map Γ A B f e = box Γ B (sem-app-map (WC Γ) A B f (unbox Γ A e))
 \end{code}
