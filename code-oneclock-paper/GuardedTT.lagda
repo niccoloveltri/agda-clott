@@ -200,11 +200,11 @@ record interpret-syntax : Set₂ where
     λ-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → ⟦ lambdaTm (appTm t) ⟧Tm ∼ ⟦ t ⟧Tm
     ⊠-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → ⟦ π₁ [ t₁ & t₂ ] ⟧Tm ∼ ⟦ t₁ ⟧Tm
     ⊠-β₂ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → ⟦ π₂ [ t₁ & t₂ ] ⟧Tm ∼ ⟦ t₂ ⟧Tm
-    ⊠-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⊠ B)) → ⟦ t ⟧Tm ∼ ⟦ [ π₁ t & π₂ t ] ⟧Tm
+    ⊠-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⊠ B)) → ⟦ [ π₁ t & π₂ t ] ⟧Tm ∼ ⟦ t ⟧Tm
     ⊞-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ A)
-        → ⟦ sub l (idsub Γ ,s t) ⟧Tm ∼ ⟦ sub (⊞rec C l r) (idsub Γ ,s in₁ B t) ⟧Tm
+        → ⟦ sub (⊞rec C l r) (idsub Γ ,s in₁ B t) ⟧Tm ∼ ⟦ sub l (idsub Γ ,s t) ⟧Tm
     ⊞-β₂ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ B)
-        → ⟦ sub r (idsub Γ ,s t) ⟧Tm ∼ ⟦ sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ⟧Tm
+        → ⟦ sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ⟧Tm ∼ ⟦ sub r (idsub Γ ,s t) ⟧Tm
     𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → ⟦ sub (unit-rec t) (idsub Γ ,s tt) ⟧Tm ∼ ⟦ t ⟧Tm
     𝟙-η : {Γ : Context ∅} {A : Type ∅} (t : Term Γ 𝟙) → ⟦ t ⟧Tm ∼ ⟦ t ⟧Tm
     □-β : {Γ : Context ∅} {A : Type κ} (t : Term (weakenC Γ) A) → ⟦ unbox-q (box-q t) ⟧Tm ∼ ⟦ t ⟧Tm
@@ -282,19 +282,19 @@ _∼_ sem = def-eq _ _
 ⟦ sem ⟧Tm = ⟦_⟧tm
 λ-β sem t = beta ⟦ t ⟧tm
 λ-η sem t = eta ⟦ t ⟧tm
-⊠-β₁ sem = {!!}
-⊠-β₂ sem = {!!}
-⊠-η sem = {!!}
-⊞-β₁ sem = {!!}
-⊞-β₂ sem = {!!}
-𝟙-β sem = {!!}
-𝟙-η sem = {!!}
-□-β sem = {!!}
-□-η sem = {!!}
-next-id sem = {!!}
-next-comp sem = {!!}
-next-⊛ sem = {!!}
-next-λ sem = {!!}
-fix-f sem = {!!}
+⊠-β₁ sem t₁ t₂ = pr₁-pair _ _ _ ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
+⊠-β₂ sem t₁ t₂ = pr₂-pair _ _ _ ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
+⊠-η sem t = prod-eta _ _ _ ⟦ t ⟧tm
+⊞-β₁ sem l r t = sum-rec-inl _ _ _ _ _ _ ⟦ t ⟧tm
+⊞-β₂ sem l r t = sum-rec-inr _ _ _ _ _ _ ⟦ t ⟧tm
+𝟙-β sem t = Unit-β _ _ ⟦ t ⟧tm
+𝟙-η sem t = Unit-η _ ⟦ t ⟧tm
+□-β sem {Γ} {A} t = box-beta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
+□-η sem {Γ} {A} t = box-eta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
+next-id sem {Γ} {A} t = pure-id-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
+next-comp sem {Γ} {A} {B} {C} g f t = {!!} -- pure-comp-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A ⟦ g ⟧tm ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
+next-⊛ sem f t = pure-fmap-pure _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm
+next-λ sem f t = fmap-pure-fun _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
+fix-f sem f t = {!!}
 fix-u sem = {!!}
 \end{code}

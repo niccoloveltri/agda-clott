@@ -66,11 +66,11 @@ pure-fmap-pure Γ A B (f , p) (t , q) i x =
 \end{code}
 
 \begin{code}
-pure-id-fmap : (Γ : Ctx tot) (A B : Ty tot) (t : Tm Γ (▻ A))
+pure-id-fmap : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ (▻ A))
          → def-eq Γ (▻ A)
                   (fmap Γ A A (pure Γ (A ⇒ A) (id-tm Γ A)) t)
                   t
-pure-id-fmap Γ A B (t , p) i γ =
+pure-id-fmap Γ A (t , p) i γ =
   Σ≡-uip
     (funext (λ { [ _ ] → funext (λ { [ _ ] → uip })}))
     (funext (λ { [ j ] → refl }))         
