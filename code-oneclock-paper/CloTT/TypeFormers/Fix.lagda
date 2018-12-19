@@ -56,3 +56,35 @@ fix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (▻ A ⇒ A))
            (sem-app-map Γ (▻ A) A f (pure Γ A (fix Γ A f)))
 fix-eq Γ A f i x = cong (proj₁ (proj₁ f i x) i) (dfix-eq Γ A f i x)
 \end{code}
+
+\begin{code}
+dfix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (▻ A ⇒ A)) (u : Tm Γ A) (i : Size) (x : Obj Γ i)
+  → def-eq Γ A (sem-app-map Γ (▻ A) A f (pure Γ A u)) u
+  → dfix₁ A i (proj₁ f i x) ≡ proj₁ (pure Γ A u) i x
+dfix-un Γ A (f , p) (u , q) i x r =
+  Σ≡-uip
+    (funext (λ { [ j ] → funext (λ { [ k ] → uip }) }))
+    (funext (λ {[ j ] →
+      begin
+        proj₁ (f i x) j (dfix₁ A j (proj₁ (f i x) , proj₂ (f i x)))
+      ≡⟨ cong (λ z → proj₁ z j (dfix₁ A j z)) (p i j x) ⟩
+        proj₁ (f j (Mor Γ i j x)) j (dfix₁ A j (f j (Mor Γ i j x)))
+      ≡⟨ cong (proj₁ (f j (Mor Γ i j x)) j) (dfix-un Γ A (f , p) (u , q) j (Mor Γ i j x) r) ⟩
+        proj₁ (f j (Mor Γ i j x)) j (proj₁ (pure Γ A (u , q)) j (Mor Γ i j x))
+      ≡⟨ r j (Mor Γ i j x) ⟩
+        u j (Mor Γ i j x)
+      ∎
+    })) -- trans {!dfix-un Γ A (f , p) (u , q) j (Mor Γ i j x) r!} (r j (Mor Γ i j x))}))
+
+fix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (▻ A ⇒ A)) (u : Tm Γ A)
+  → def-eq Γ A (sem-app-map Γ (▻ A) A f (pure Γ A u)) u
+  → def-eq Γ A (fix Γ A f) u
+fix-un Γ A f u p i x =
+  begin
+    proj₁ (fix Γ A f) i x
+  ≡⟨ cong (λ z → proj₁ (proj₁ f i x) i z) (dfix-un Γ A f u i x p) ⟩
+    proj₁ (sem-app-map Γ (▻ A) A f (pure Γ A u)) i x
+  ≡⟨ p i x ⟩
+    proj₁ u i x
+  ∎
+\end{code}

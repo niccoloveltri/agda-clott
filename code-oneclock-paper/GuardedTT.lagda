@@ -268,6 +268,11 @@ mutual
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
 
+test : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ}
+  → def-eq ⟦ Γ ⟧Γ _ ⟦ compmap {Δ} {Γ} {A} {B} {C} ⟧tm (comp-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A)
+test {∅} {Γ} {A} {B} {C} x = refl
+test {κ} {Γ} {A} {B} {C} i x = refl
+
 sem : interpret-syntax
 semClockContext sem = tag
 semType sem = Ty
@@ -292,9 +297,10 @@ _∼_ sem = def-eq _ _
 □-β sem {Γ} {A} t = box-beta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
 □-η sem {Γ} {A} t = box-eta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
 next-id sem {Γ} {A} t = pure-id-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-next-comp sem {Γ} {A} {B} {C} g f t = {!!} -- pure-comp-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A ⟦ g ⟧tm ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
+next-comp sem {Γ} {A} {B} {C} g f t = {!!}
+-- pure-comp-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A ⟦ g ⟧tm ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
 next-⊛ sem f t = pure-fmap-pure _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm
-next-λ sem f t = fmap-pure-fun _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
-fix-f sem f t = {!!}
-fix-u sem = {!!}
+next-λ sem f t = {!!} -- fmap-pure-fun _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
+fix-f sem f = fix-eq _ _ ⟦ f ⟧tm
+fix-u sem f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
 \end{code}
