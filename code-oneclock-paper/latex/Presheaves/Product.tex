@@ -32,18 +32,17 @@
 \>[2]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaModule{PSh}\<%
 \end{code}
-}
 
   \begin{code}%
 %
-\>[2]\AgdaFunction{ProdObj}\AgdaSpace{}%
+\>[2]\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\<%
 \\
 %
-\>[2]\AgdaFunction{ProdObj}\AgdaSpace{}%
+\>[2]\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
@@ -54,7 +53,7 @@
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\<%
 \end{code}
-  
+
   \begin{code}%
 %
 \>[2]\AgdaFunction{ProdMor}\AgdaSpace{}%
@@ -70,10 +69,10 @@
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
 \>[4]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \\
 %
@@ -101,7 +100,7 @@
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
@@ -203,7 +202,7 @@
 \>[4]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaFunction{ProdObj'}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
 %
@@ -335,7 +334,7 @@
 \>[4]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{ProdObj}\<%
+\AgdaFunction{ProdObj'}\<%
 \\
 %
 \>[4]\AgdaSymbol{;}\AgdaSpace{}%
@@ -358,4 +357,34 @@
 %
 \>[4]\AgdaSymbol{\}}\<%
 \end{code}
+<<<<<<< HEAD
+}
+
+\begin{code}%
+\>[0]\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaRecord{PSh}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPostulate{Size}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaFunction{ProdObj}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaField{PSh.Obj}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{×}}\AgdaSpace{}%
+\AgdaField{PSh.Obj}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
+\AgdaBound{i}\<%
+\end{code}
+=======
   }
+>>>>>>> 1e8f49f03d642deca639953d3159a2a0ea1c6beb

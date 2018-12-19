@@ -9,13 +9,15 @@ open import CloTT.Structure.Contexts
 open import CloTT.Structure.Types
 open import CloTT.Structure.Terms
 \end{code}
+}
 
 \begin{code}
 def-eq : {b : tag} (Γ : Ctx b) (A : Ty b) (s t : Tm Γ A) → Set
-def-eq {set} Γ A s t = (x : _) → s x ≡ t x
-def-eq {tot} Γ A (s , _) (t , _) = (i : Size) (x : _) → s i x ≡ t i x
+def-eq {set} Γ A s t = (x : Γ) → s x ≡ t x
+def-eq {tot} Γ A (s , p) (t , q) = (i : Size) (x : PSh.Obj Γ i) → s i x ≡ t i x
 \end{code}
 
+\AgdaHide{
 \begin{code}
 refl-def-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {t : Tm Γ A}
   → def-eq Γ A t t
@@ -41,6 +43,7 @@ def-eq-to-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {s t : Tm Γ A}
 def-eq-to-eq {set} p = funext p
 def-eq-to-eq {tot} p =
   Σ≡-uip
-    (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+    (funext (λ x → funext (λ y → funext (λ z → uip))))
     (funext (λ i → funext (λ x → p i x))) 
 \end{code}
+}

@@ -9,21 +9,20 @@ open import Presheaves.Presheaves
 module _  (P Q : PSh) where
   open PSh
 \end{code}
-}
 
   \begin{code}
-  ProdObj : Size → Set
-  ProdObj i = Obj P i × Obj Q i
+  ProdObj' : Size → Set
+  ProdObj' i = Obj P i × Obj Q i
   \end{code}
-  
+
   \begin{code}
   ProdMor : (i : Size) (j : Size< (↑ i))
-    → ProdObj i → ProdObj j
+    → ProdObj' i → ProdObj' j
   ProdMor i j = map (Mor P i j) (Mor Q i j)
   \end{code}
 
   \begin{code}
-  ProdMorId : {i : Size} {x : ProdObj i}
+  ProdMorId : {i : Size} {x : ProdObj' i}
     → ProdMor i i x ≡ x
   ProdMorId {i} {x} =
     begin
@@ -37,7 +36,7 @@ module _  (P Q : PSh) where
   
   \begin{code}
   ProdMorComp : {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)}
-    → {x : ProdObj i}
+    → {x : ProdObj' i}
     → ProdMor i k x ≡ ProdMor j k (ProdMor i j x)
   ProdMorComp {i} {j} {k} {x} =
     begin
@@ -53,10 +52,19 @@ module _  (P Q : PSh) where
   \begin{code}
   Prod : PSh
   Prod = record
-    { Obj = ProdObj
+    { Obj = ProdObj'
     ; Mor = ProdMor
     ; MorId = ProdMorId
     ; MorComp = ProdMorComp
     }
   \end{code}
+<<<<<<< HEAD
+}
+
+\begin{code}
+ProdObj : (P Q : PSh) → Size → Set
+ProdObj P Q i = PSh.Obj P i × PSh.Obj Q i
+\end{code}
+=======
   }
+>>>>>>> 1e8f49f03d642deca639953d3159a2a0ea1c6beb

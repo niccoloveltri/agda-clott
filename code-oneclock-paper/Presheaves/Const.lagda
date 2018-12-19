@@ -7,7 +7,6 @@ open import Presheaves.Presheaves
 
 module _ (A : Set) where
 \end{code}
-}
 
   \begin{code}
   ConstObj : Size → Set
@@ -35,12 +34,25 @@ module _ (A : Set) where
 
   \AgdaHide{
   \begin{code}
-  Const : PSh
-  Const = record
+  Const' : PSh
+  Const' = record
     { Obj = ConstObj
     ; Mor = ConstMor
     ; MorId = ConstMorId
     ; MorComp = ConstMorComp
     }
   \end{code}
+<<<<<<< HEAD
+}
+
+\begin{code}
+Const : Set → PSh
+\end{code}
+\AgdaHide{
+\begin{code}
+Const A = Const' A
+\end{code}
+}
+=======
   }
+>>>>>>> 1e8f49f03d642deca639953d3159a2a0ea1c6beb

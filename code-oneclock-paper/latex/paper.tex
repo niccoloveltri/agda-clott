@@ -17,6 +17,7 @@
 % (you figure out by the latex compilation errors you get),
 % and you need to define:
 
+\DeclareUnicodeCharacter{915}{$\Gamma$}
 \DeclareUnicodeCharacter{931}{$\Sigma$}
 \DeclareUnicodeCharacter{948}{$\delta$}
 \DeclareUnicodeCharacter{957}{$\nu$}
@@ -33,6 +34,13 @@
 \newcommand{\AB}[1]{\AgdaBound{#1}}
 %\newcommand{\full}[1]{} %for the conference version
 \newcommand{\full}[1]{#1} % for the full version
+
+% New commands for Agda inline code
+\newcommand{\D}{\AgdaDatatype}
+\newcommand{\IC}{\AgdaInductiveConstructor}
+\newcommand{\F}{\AgdaFunction}
+\newcommand{\Ar}{\AgdaArgument}
+\newcommand{\Fi}{\AgdaField}
 
 %This is a template for producing LIPIcs articles. 
 %See lipics-manual.pdf for further information.
@@ -60,43 +68,96 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \cite{atkey2013productive}
 
 \section{Preliminaries}
-\input{Prelude/Basics}
-\input{Presheaves/Presheaves}
-\input{Presheaves/Const}
-\input{Presheaves/Terminal}
-\input{Presheaves/Product}
-\input{Presheaves/Sum}
-\input{Presheaves/Exp}
-\input{CloTT/Structure/Contexts}
-\input{CloTT/Structure/Types}
-\input{CloTT/Structure/Terms}
-\input{CloTT/Structure/DefinitionalEquality}
-\input{CloTT/Structure/ContextOperations}
-\input{CloTT/Structure/Subst}
-\input{CloTT/TypeFormers/UnitType}
-\input{CloTT/TypeFormers/SumType}
-\input{CloTT/TypeFormers/ProductType}
-\input{CloTT/TypeFormers/FunctionType}
-\input{CloTT/TypeFormers/ClockQuantification}
-\input{CloTT/TypeFormers/Later}
-\input{CloTT/TypeFormers/LaterType}
-\input{CloTT/TypeFormers/WeakenClock}
-\input{CloTT/TypeFormers/Fix}
-\input{CloTT/TypeFormers/Force}
+%% \input{Prelude/Basics}
+%% \input{Presheaves/Presheaves}
+%% \input{Presheaves/Const}
+%% \input{Presheaves/Terminal}
+%% \input{Presheaves/Product}
+%% \input{Presheaves/Sum}
+%% \input{Presheaves/Exp}
+%% \input{CloTT/Structure/Contexts}
+%% \input{CloTT/Structure/Types}
+%% \input{CloTT/Structure/Terms}
+%% \input{CloTT/Structure/DefinitionalEquality}
+%% \input{CloTT/Structure/ContextOperations}
+%% \input{CloTT/Structure/Subst}
+%% \input{CloTT/TypeFormers/UnitType}
+%% \input{CloTT/TypeFormers/SumType}
+%% \input{CloTT/TypeFormers/ProductType}
+%% \input{CloTT/TypeFormers/FunctionType}
+%% \input{CloTT/TypeFormers/ClockQuantification}
+%% \input{CloTT/TypeFormers/Later}
+%% \input{CloTT/TypeFormers/LaterType}
+%% \input{CloTT/TypeFormers/WeakenClock}
+%% \input{CloTT/TypeFormers/Fix}
+%% \input{CloTT/TypeFormers/Force}
 
+%% \input{allcode}
 \subsection{Sized Types}
 
 \subsection{Guarded Recursive Type Theory}
 
+\section{Presheaves}
+
+A presheaf is a functor from the category of sizes to \D{Set}.
+
+\input{Presheaves/Presheaves}
+
+Every type \Ar{A} in \D{Set} defines a constant presheaf whose action
+on \Ar{i} is given by \Ar{A}, for any size \Ar{i}.
+\input{Presheaves/Const}
+
+
+Presheaves are the objects of a category whose morphisms are natural
+transformations. This is a cartesian closed category with finite
+coproducts.
+The terminal object is the constant presheaf on the unit type \D{⊤},
+i.e. \D{Terminal} = \D{Const ⊤}. Given two presheaves \Ar{P} and
+\Ar{Q}, we write \D{Prod} \Ar{P} \Ar{Q} for their cartesian
+product. The action of \D{Prod} \Ar{P} \Ar{Q} on a size \Ar{i} is
+defined as follows:
+\input{Presheaves/Product}
+%\Fi{PSh.Obj} \Ar{P i ×} \Fi{PSh.Obj} \Ar{Q i}.
+Coproducts are also defined in a similar pointwise way.
+
+Given two presheaves \Ar{P} and
+\Ar{Q}, we write \D{Exp} \Ar{P} \Ar{Q} for their exponential. 
+ The action of \D{Exp} \Ar{P} \Ar{Q} on a size \Ar{i} is
+defined as follows:
+\input{Presheaves/Exp}
+
 \section{The Model}
 
-\subsection{Clock Contexts}
-
-\subsection{Presheaves}
-
-\section{The Interpretation}
-
 \subsection{Types, Contexts, Terms}
+
+A context in \IC{set} is an element of \D{Set}. A context in \IC{tot}
+is a preasheaf in \D{PSh}.
+
+\input{CloTT/Structure/Contexts}
+
+Since we are modeling a simply typed calculus, types are interpreted
+in the same ways as contexts.
+
+\input{CloTT/Structure/Types}
+
+In \IC{set}, a term of type \Ar{A} in context \Ar{Γ} is a function
+from \Ar{Γ} to \Ar{A}. In \IC{tot}, a term of type \Ar{A} in context
+\Ar{Γ} is a natural transformation between the presheaves \Ar{Γ} and
+\Ar{A}.
+
+\input{CloTT/Structure/Terms}
+
+Two types in \IC{set} are judgementally equal if and only if they are
+isomorphic as elements of \D{Set}. Two types in \IC{tot} are
+judgementally equal if and only if they are isomorphic as elements of
+\D{PSh}.
+
+Two terms in \IC{set} are judgementally equal if and only if they are
+propositionally equal as functions. Two terms in \IC{tot} are
+judgementally equal if and only if they are propositionally equal as
+natural transformations.
+
+\input{CloTT/Structure/DefinitionalEquality}
 
 \subsection{Operations on Contexts}
 
@@ -111,6 +172,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \subsection{Fix}
 
 \subsection{Inductive Types}
+
+\section{The Interpretation}
 
 \section{Conclusion}
 
