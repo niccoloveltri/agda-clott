@@ -56,30 +56,3 @@ proj₂ (pr₂ {tot} Γ A B (x , p)) i j t =
     proj₂ (x j (Mor Γ i j t))
   ∎
 \end{code}
-
-\begin{code}
-pr₁-pair : {b : tag} (Γ : Ctx b) (A B : Ty b) (x : Tm Γ A) (y : Tm Γ B)
-  → def-eq Γ A
-           (pr₁ Γ A B (pair Γ A B x y))
-           x
-pr₁-pair {set} Γ A B x y t = refl
-pr₁-pair {tot} Γ A B x y i t = refl
-\end{code}
-
-\begin{code}
-pr₂-pair : {b : tag} (Γ : Ctx b) (A B : Ty b) (x : Tm Γ A) (y : Tm Γ B)
-  → def-eq Γ B
-           (pr₂ Γ A B (pair Γ A B x y))
-           y
-pr₂-pair {set} Γ A B x y t = refl
-pr₂-pair {tot} Γ A B x y i t = refl
-\end{code}
-
-\begin{code}
-prod-eta : {b : tag} (Γ : Ctx b) (A B : Ty b) (x : Tm Γ (A ⊗ B))
-  → def-eq Γ (A ⊗ B)
-           (pair Γ A B (pr₁ Γ A B x) (pr₂ Γ A B x)) 
-           x
-prod-eta {set} Γ A B x t = refl
-prod-eta {tot} Γ A B x i t = refl
-\end{code}

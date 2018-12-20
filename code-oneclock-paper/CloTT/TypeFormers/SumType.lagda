@@ -64,25 +64,3 @@ proj₂ (sum-rec {tot} Γ A B C (left , p) (right , q)) i j (x , inj₂ r) =
      right j (Mor Γ i j x , Mor B i j r)
    ∎
 \end{code}
-
-\begin{code}
-sum-rec-inl : {b : tag} (Γ : Ctx b) (A B C : Ty b)
-  → (l : Tm (Γ ,, A) C) (r : Tm (Γ ,, B) C)
-  → (x : Tm Γ A)
-  → def-eq Γ C
-           (sem-sub _ _ _ (sum-rec _ _ _ C l r) (sem-subst-tm _ _ _ (sem-idsub Γ) (inl Γ A B x)))
-           (sem-sub _ _ _ l (sem-subst-tm _ _ _ (sem-idsub Γ) x))
-sum-rec-inl {set} Γ A B C l r x z = refl
-sum-rec-inl {tot} Γ A B C l r x i z = refl
-\end{code}
-
-\begin{code}
-sum-rec-inr : {b : tag} (Γ : Ctx b) (A B C : Ty b)
-  → (l : Tm (Γ ,, A) C) (r : Tm (Γ ,, B) C)
-  → (x : Tm Γ B)
-  → def-eq Γ C
-           (sem-sub _ _ _ (sum-rec _ _ _ C l r) (sem-subst-tm _ _ _ (sem-idsub Γ) (inr Γ A B x)))
-           (sem-sub _ _ _ r (sem-subst-tm _ _ _ (sem-idsub Γ) x))
-sum-rec-inr {set} Γ A B C l r x z = refl
-sum-rec-inr {tot} Γ A B C l r x i z = refl
-\end{code}

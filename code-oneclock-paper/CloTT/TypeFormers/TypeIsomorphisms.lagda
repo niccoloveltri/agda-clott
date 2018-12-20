@@ -1,13 +1,19 @@
 \AgdaHide{
 \begin{code}
-module CloTT.TypeIsomorphisms where
+module CloTT.TypeFormers.TypeIsomorphisms where
 
 open import Data.Product
 open import Data.Sum
 open import Prelude
 open import CloTT.Structure
-open import CloTT.TypeFormers
-open import CloTT.TypeFormers.Force
+open import CloTT.TypeFormers.ClockQuantification public
+open import CloTT.TypeFormers.Force public
+open import CloTT.TypeFormers.FunctionType public
+open import CloTT.TypeFormers.Later public
+open import CloTT.TypeFormers.LaterType public
+open import CloTT.TypeFormers.ProductType public
+open import CloTT.TypeFormers.SumType public
+open import CloTT.TypeFormers.WeakenClock public
 
 open PSh
 \end{code}
@@ -54,7 +60,7 @@ module _ (Γ : Ctx set) (A : Ty tot) (B : Ty tot) where
 
 -- Γ ⊢ □ (WC A) ≅ A
 
-\begin{code}
+
 module ty-iso₁ (Γ : Ctx set) (A : Ty set) where
   private X = A
   private Y = □ (WC A)
@@ -73,11 +79,9 @@ module ty-iso₁ (Γ : Ctx set) (A : Ty set) where
     Σ≡-uip
       (funext (λ { _ → funext (λ _ → uip) }))
       (funext (proj₂ (t γ) ∞))
-\end{code}
 
 -- Γ ⊢ □ (⊳ A) ≅ □ A
 
-\begin{code}
 module ty-iso₂ (Γ : Ctx set) (A : Ty tot) where
   private X = □ (▻ A)
   private Y = □ A
@@ -103,11 +107,9 @@ module ty-iso₂ (Γ : Ctx set) (A : Ty tot) where
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
       refl
-\end{code}
 
 -- Γ ⊢ □ (WC A ⇒ B) ≅ (A ⇒ □ B)
 
-\begin{code}
 module ty-iso₃ (Γ : Ctx set) (A : Ty set) (B : Ty tot) where
   X =  □ (WC A ⇒ B)
   Y = A ⇒ □ B
@@ -141,11 +143,9 @@ module ty-iso₃ (Γ : Ctx set) (A : Ty set) (B : Ty tot) where
 
   f-is-iso₂ : ∀ t → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₂ t γ = funext (λ _ → Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
-\end{code}
 
 -- Γ ⊢ □ (A × B) ≅ □ A × □ B
 
-\begin{code}
 module ty-iso₄ (Γ : Ctx set) (A B : Ty tot) where
   X =  □ (A ⊗ B)
   Y = □ A ⊗ □ B
@@ -182,9 +182,7 @@ module ty-iso₄ (Γ : Ctx set) (A B : Ty tot) where
   f-is-iso₂ t γ =
     cong₂ _,_ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
               (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
-\end{code}
 
-\begin{code}
 module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
   X = □ A ⊕ □ B
   Y = □ (A ⊕ B)
@@ -254,4 +252,3 @@ module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
     cong inj₂ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
                       (funext (p ∞)))
   -}
-\end{code}

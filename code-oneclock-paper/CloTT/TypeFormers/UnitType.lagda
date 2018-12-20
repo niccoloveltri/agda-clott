@@ -30,18 +30,4 @@ proj₂ (Unit-rec {tot} Γ A t) i j x =
   ≡⟨ proj₂ t i j (proj₁ x) ⟩
     proj₁ t j (proj₁ (ProdMor Γ Terminal i j x))
   ∎
-
-Unit-β : {b : tag} (Γ : Ctx b) (A : Ty b) (t : Tm Γ A)
-  → def-eq Γ A
-    (sem-sub Γ (Γ ,, Unit) A (Unit-rec Γ A t) (sem-subst-tm Γ Γ Unit (sem-idsub Γ) (⋆ Γ)))
-    t
-Unit-β {set} Γ A t x = refl
-Unit-β {tot} Γ A t i x = refl
-
-Unit-η : {b : tag} (Γ : Ctx b) (t : Tm Γ Unit)
-  → def-eq Γ Unit
-    t
-    (⋆ Γ)
-Unit-η {set} Γ t x = refl
-Unit-η {tot} Γ t i x = refl
 \end{code}
