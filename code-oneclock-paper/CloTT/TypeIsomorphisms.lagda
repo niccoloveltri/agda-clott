@@ -13,6 +13,45 @@ open PSh
 \end{code}
 }
 
+\begin{code}
+□const-tm : (Γ : Ctx set) (A : Ty set) → Tm Γ (□ (WC A) ⇒ A)
+□const-tm Γ A γ (x , _) = x ∞
+
+module _ (Γ : Ctx set) (A : Ty tot) (B : Ty tot) where
+  sum-lem₁ : (t : □ (A ⊕ B)) (x : Obj A ∞)
+    → proj₁ t ∞ ≡ inj₁ x
+    → Σ (□ A) (λ s → (i : Size) → proj₁ t i ≡ inj₁ (proj₁ s i))
+  proj₁ (proj₁ (sum-lem₁ (t , p) x q)) i = Mor A ∞ i x
+  proj₂ (proj₁ (sum-lem₁ (t , p) x q)) i j = sym (MorComp A)
+  proj₂ (sum-lem₁ (t , p) x q) i =
+    begin
+      t i
+    ≡⟨ sym (p ∞ i) ⟩
+      Mor (A ⊕ B) ∞ i (t ∞)
+    ≡⟨ cong (Mor (A ⊕ B) ∞ i) q ⟩
+      inj₁ (Mor A ∞ i x)
+    ∎
+
+  sum-lem₂ : (t : □ (A ⊕ B)) (x : Obj B ∞)
+    → proj₁ t ∞ ≡ inj₂ x
+    → Σ (□ B) (λ s → (i : Size) → proj₁ t i ≡ inj₂ (proj₁ s i))
+  proj₁ (proj₁ (sum-lem₂ (t , p) x q)) i = Mor B ∞ i x
+  proj₂ (proj₁ (sum-lem₂ (t , p) x q)) i j = sym (MorComp B)
+  proj₂ (sum-lem₂ (t , p) x q) i =
+    begin
+      t i
+    ≡⟨ sym (p ∞ i) ⟩
+      Mor (A ⊕ B) ∞ i (t ∞)
+    ≡⟨ cong (Mor (A ⊕ B) ∞ i) q ⟩
+      inj₂ (Mor B ∞ i x)
+    ∎
+  
+  □sum-tm : Tm Γ (□ (A ⊕ B) ⇒ (□ A ⊕ □ B))
+  □sum-tm γ (t , p) with t ∞ | inspect t ∞
+  □sum-tm γ (t , p) | inj₁ x | [ eq ] = inj₁ (proj₁ (sum-lem₁ (t , p) x eq))
+  □sum-tm γ (t , p) | inj₂ y | [ eq ] = inj₂ (proj₁ (sum-lem₂ (t , p) y eq))
+\end{code}
+
 -- Γ ⊢ □ (WC A) ≅ A
 
 \begin{code}
@@ -26,10 +65,10 @@ module ty-iso₁ (Γ : Ctx set) (A : Ty set) where
   f-inv : Tm Γ (Y ⇒ X)
   f-inv γ (x , _) = x ∞
 
-  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (app _ _ _ f-inv (app _ _ _ f t)) t
+  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (sem-app-map _ _ _ f-inv (sem-app-map _ _ _ f t)) t
   f-is-iso₁ t γ = refl
 
-  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (app _ _ _ f (app _ _ _ f-inv t)) t
+  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₂ t γ =
     Σ≡-uip
       (funext (λ { _ → funext (λ _ → uip) }))
@@ -53,13 +92,13 @@ module ty-iso₂ (Γ : Ctx set) (A : Ty tot) where
                             (unbox (Γ ,, Y) A
                                    (var Γ Y))))
 
-  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (app _ _ _ f-inv (app _ _ _ f t)) t
+  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (sem-app-map _ _ _ f-inv (sem-app-map _ _ _ f t)) t
   f-is-iso₁ t γ =
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
            (funext (λ i → Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip}) }))
                                  (funext (λ { [ j ] → cong (λ a → proj₁ a [ j ]) (proj₂ (t γ) ∞ i) }))))
 
-  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (app _ _ _ f (app _ _ _ f-inv t)) t
+  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₂ t γ =
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
@@ -89,18 +128,18 @@ module ty-iso₃ (Γ : Ctx set) (A : Ty set) (B : Ty tot) where
              (box (Γ ,, Y) (WC A ⇒ B)
                   (lambda (WC (Γ ,, Y)) (WC A) B
                           (unbox ((Γ ,, Y) ,, A) B
-                                 (app ((Γ ,, Y) ,, A) A (□ B)
+                                 (sem-app-map ((Γ ,, Y) ,, A) A (□ B)
                                       (weaken (Γ ,, Y) A (A ⇒ □ B)
                                               (var Γ Y))
                                       (var (Γ ,, Y) A)))))
 
-  f-is-iso₁ : ∀ t → def-eq Γ X (app _ _ _ f-inv (app _ _ _ f t)) t
+  f-is-iso₁ : ∀ t → def-eq Γ X (sem-app-map _ _ _ f-inv (sem-app-map _ _ _ f t)) t
   f-is-iso₁ t γ =
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
            (funext (λ i → Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
                                  (funext (λ j → funext (λ x → cong (λ a → proj₁ a j x) (sym (proj₂ (t γ) i j)))))))
 
-  f-is-iso₂ : ∀ t → def-eq Γ Y (app _ _ _ f (app _ _ _ f-inv t)) t
+  f-is-iso₂ : ∀ t → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₂ t γ = funext (λ _ → Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
 \end{code}
 
@@ -136,10 +175,10 @@ module ty-iso₄ (Γ : Ctx set) (A B : Ty tot) where
                                    (pr₂ (Γ ,, Y) (□ A) (□ B)
                                          (var Γ Y)))))
                                          
-  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (app _ _ _ f-inv (app _ _ _ f t)) t
+  f-is-iso₁ : (t : Tm Γ X) → def-eq Γ X (sem-app-map _ _ _ f-inv (sem-app-map _ _ _ f t)) t
   f-is-iso₁ t γ = Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl
 
-  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (app _ _ _ f (app _ _ _ f-inv t)) t
+  f-is-iso₂ : (t : Tm Γ Y) → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₂ t γ =
     cong₂ _,_ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
               (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) })) refl)
@@ -163,7 +202,7 @@ module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
                                     (inr (WC (Γ ,, □ B) ,, B) A B
                                          (var (WC (Γ ,, □ B)) B)))
                             (var Γ (□ B))))
-
+  {-
   sum-lem₁ : (t : □ (A ⊕ B)) (x : Obj A ∞)
     → proj₁ t ∞ ≡ inj₁ x
     → Σ (□ A) (λ s → (i : Size) → proj₁ t i ≡ inj₁ (proj₁ s i))
@@ -197,7 +236,7 @@ module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
   f-inv γ (t , p) | inj₁ x | [ eq ] = inj₁ (proj₁ (sum-lem₁ (t , p) x eq))
   f-inv γ (t , p) | inj₂ y | [ eq ] = inj₂ (proj₁ (sum-lem₂ (t , p) y eq))
   
-  f-is-iso₁ : (t : Tm Γ Y) → def-eq Γ Y (app _ _ _ f (app _ _ _ f-inv t)) t
+  f-is-iso₁ : (t : Tm Γ Y) → def-eq Γ Y (sem-app-map _ _ _ f (sem-app-map _ _ _ f-inv t)) t
   f-is-iso₁ t γ with proj₁ (t γ) ∞ | inspect (proj₁ (t γ)) ∞
   f-is-iso₁ t γ | inj₁ x | [ eq ] =
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
@@ -206,7 +245,7 @@ module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
            (funext (λ i → sym (proj₂ (sum-lem₂ (t γ) y eq) i)))
 
-  f-is-iso₂ : (t : Tm Γ X) → def-eq Γ X (app _ _ _ f-inv (app _ _ _ f t)) t
+  f-is-iso₂ : (t : Tm Γ X) → def-eq Γ X (sem-app-map _ _ _ f-inv (sem-app-map _ _ _ f t)) t
   f-is-iso₂ t γ with t γ
   f-is-iso₂ t γ | inj₁ (x , p) =
     cong inj₁ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
@@ -214,4 +253,5 @@ module ty-iso₅ (Γ : Ctx set) (A B : Ty tot) where
   f-is-iso₂ t γ | inj₂ (y , p) = 
     cong inj₂ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
                       (funext (p ∞)))
+  -}
 \end{code}

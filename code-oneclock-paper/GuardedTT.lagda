@@ -8,114 +8,6 @@ open import CloTT
 \end{code}
 }
 
-data ClockContext : Set where
-  ∅ : ClockContext
-  κ : ClockContext
-
-data Type : ClockContext → Set where
-  𝟙        : Type ∅
-  _⊞_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  _⊠_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  _⟶_    : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  weakenT  : Type ∅ → Type κ
-  later    : Type κ → Type κ
-  clock-q  : Type κ → Type ∅
-
-data Context : ClockContext → Set where
-  •          : {Δ : ClockContext} → Context Δ
-  _,_        : {Δ : ClockContext} → Context Δ → Type Δ → Context Δ
-
-weakenC : Context ∅ → Context κ
-weakenC • = •
-weakenC (Γ , A) = weakenC Γ , weakenT A
-
-data Term   : {Δ : ClockContext} → Context Δ → Type Δ → Set where
-  varTm    : {Δ : ClockContext} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
-  weakenTm  : {Δ : ClockContext} (Γ : Context Δ) (A B : Type Δ) → Term Γ B → Term (Γ , A) B
-  tt        : Term • 𝟙
-  in₁       : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (B : Type Δ) → Term Γ A → Term Γ (A ⊞ B)
-  in₂       : {Δ : ClockContext} {Γ : Context Δ} (A : Type Δ) {B : Type Δ} → Term Γ B → Term Γ (A ⊞ B)
-  ⊞rec      : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (C : Type Δ) → Term (Γ , A) C → Term (Γ , B) C → Term (Γ , (A ⊞ B)) C
-  [_&_]     : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
-  π₁       : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
-  π₂       : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
-  lambdaTm  : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term (Γ , A) B → Term Γ (A ⟶ B)
-  appTm     : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
-  ⇡         : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (weakenC Γ) (weakenT A)
-  ↓         : {Γ : Context ∅} {A : Type ∅} → Term (weakenC Γ) (weakenT A) → Term Γ A
-  box-q     : {Γ : Context ∅} {A : Type κ} → Term (weakenC Γ) A → Term Γ (clock-q A)
-  unbox-q   : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q A) → Term (weakenC Γ) A
-  next      : {Γ : Context κ} {A : Type κ} → Term Γ A → Term Γ (later A)
-  _⊛_       : {Γ : Context κ} {A B : Type κ} → Term Γ (later (A ⟶ B)) → Term Γ (later A) → Term Γ (later B)
-  fix-tm    : {Γ : Context κ} {A : Type κ} → Term Γ (later A ⟶ A) → Term Γ A
-  force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
-
-⟦_⟧Δ : ClockContext → tag
-⟦ ∅ ⟧Δ = set
-⟦ κ ⟧Δ = tot
-
-⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty ⟦ Δ ⟧Δ
-⟦ 𝟙 ⟧A = Unit
-⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
-⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
-⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-⟦ weakenT A ⟧A = WC ⟦ A ⟧A
-⟦ later A ⟧A = ▻(⟦ A ⟧A)
-⟦ clock-q A ⟧A = □(⟦ A ⟧A)
-
-⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx ⟦ Δ ⟧Δ
-⟦ • ⟧Γ = ∙ _
-⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
-
-⟦_⟧weakenC : (Γ : Context ∅) → ⟦ weakenC Γ ⟧Γ ≡ WC ⟦ Γ ⟧Γ
-⟦ • ⟧weakenC = refl
-⟦ Γ , A ⟧weakenC rewrite ⟦ Γ ⟧weakenC = refl
-
-⟦_⟧tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Tm ⟦ Γ ⟧Γ ⟦ A ⟧A
-⟦ varTm Γ A ⟧tm = var ⟦ Γ ⟧Γ ⟦ A ⟧A
-⟦ weakenTm Γ A B t ⟧tm = weaken ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ t ⟧tm
-⟦ tt ⟧tm = ⋆ _
-⟦ in₁ B t ⟧tm = inl _ _ ⟦ B ⟧A ⟦ t ⟧tm
-⟦ in₂ A t ⟧tm = inr _ ⟦ A ⟧A _ ⟦ t ⟧tm
-⟦ ⊞rec C l r ⟧tm = sum-rec _ _ _ ⟦ C ⟧A ⟦ l ⟧tm ⟦ r ⟧tm
-⟦ [ t₁ & t₂ ] ⟧tm = pair _ _ _ ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
-⟦ π₁ t ⟧tm = pr₁ _ _ _ ⟦ t ⟧tm
-⟦ π₂ t ⟧tm = pr₂ _ _ _ ⟦ t ⟧tm
-⟦ lambdaTm t ⟧tm = lambda _ _ _ ⟦ t ⟧tm
-⟦ appTm f t ⟧tm = app _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm
-⟦ ⇡ {Γ} t ⟧tm rewrite ⟦ Γ ⟧weakenC = WC-fun _ _ ⟦ t ⟧tm
-⟦ ↓ {Γ} {A} t ⟧tm = WC-unfun ⟦ Γ ⟧Γ ⟦ A ⟧A (subst (λ z → Tm z (WC ⟦ A ⟧A)) ⟦ Γ ⟧weakenC ⟦ t ⟧tm)
-⟦ box-q {Γ} {A} t ⟧tm = box ⟦ Γ ⟧Γ ⟦ A ⟧A (subst (λ z → Tm z ⟦ A ⟧A) ⟦ Γ ⟧weakenC ⟦ t ⟧tm)
-⟦ unbox-q {Γ} {A} t ⟧tm rewrite ⟦ Γ ⟧weakenC = unbox ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-⟦ next {Γ} {A} t ⟧tm = pure ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
-⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
-⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-
-sub : (Δ : ClockContext) (Γ : Context Δ) (A B : Type Δ)
-  → (t : Term (Γ , A) B) (α : Term Γ A)
-  → Term Γ B
-sub Δ • A B t α = {!t!}
-sub Δ (Γ , x) A B t α = {!t!}
-{-
-sub (varTm Γ A) α = α
-sub (weakenTm Γ A B t) α = t
-sub (in₁ B t) α = in₁ B (sub t α)
-sub (in₂ A t) α = in₂ A (sub t α)
-sub (⊞rec C t₁ t₂) α = {!!}
-sub [ t₁ & t₂ ] α = [ sub t₁ α & sub t₂ α ]
-sub (π₁ t) α = π₁ (sub t α)
-sub (π₂ t) α = π₂ (sub t α)
-sub (lambdaTm t) α = lambdaTm {!!}
-sub (appTm f t) α = appTm (sub f α) (sub t α)
-sub (↓ t) α = ↓ {!!}
-sub (box-q t) α = box-q {!⇡ α!}
-sub (next t) α = next (sub t α)
-sub (f ⊛ t) α = (sub f α) ⊛ (sub t α)
-sub (fix-tm t) α = fix-tm (sub t α)
-sub (force t) α = force (sub t α)
--}
-
 \begin{code}
 data ClockContext : Set where
   ∅ : ClockContext
@@ -165,6 +57,8 @@ mutual
     _⊛_       : {Γ : Context κ} {A B : Type κ} → Term Γ (later (A ⟶ B)) → Term Γ (later A) → Term Γ (later B)
     fix-tm    : {Γ : Context κ} {A : Type κ} → Term Γ (later A ⟶ A) → Term Γ A
     force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
+    □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
+    □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
 
 app-map : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
 app-map {_} {Γ} {A} {B} f x = sub (appTm f) (idsub Γ ,s x)
@@ -267,11 +161,8 @@ mutual
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-
-test : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ}
-  → def-eq ⟦ Γ ⟧Γ _ ⟦ compmap {Δ} {Γ} {A} {B} {C} ⟧tm (comp-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A)
-test {∅} {Γ} {A} {B} {C} x = refl
-test {κ} {Γ} {A} {B} {C} i x = refl
+  ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
+  ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
 
 sem : interpret-syntax
 semClockContext sem = tag
