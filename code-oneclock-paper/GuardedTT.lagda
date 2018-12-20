@@ -16,15 +16,6 @@ open interpret-syntax
 }
 
 \begin{code}
-{-
-TRUEnotFALSE-help : ⊤ ⊎ ⊤ → Set
-TRUEnotFALSE-help (inj₁ x) = ⊤
-TRUEnotFALSE-help (inj₂ y) = ⊥
-
-TRUEnotFALSE : def-eq _ _ ⟦ TRUE ⟧tm ⟦ FALSE ⟧tm → ⊥
-TRUEnotFALSE p = subst TRUEnotFALSE-help (p ⊤.tt) ⊤.tt
--}
-
 sem : interpret-syntax
 semClockContext sem = tag
 semType sem = Ty
@@ -54,4 +45,11 @@ next-⊛ sem = sem-next-⊛
 next-λ sem = sem-next-λ
 fix-f sem = sem-fix-f
 fix-u sem = sem-fix-u
+
+sem-consistent-help : ⊤ ⊎ ⊤ → Set
+sem-consistent-help (inj₁ x) = ⊤
+sem-consistent-help (inj₂ y) = ⊥
+
+sem-consistent : consistent sem
+sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
 \end{code}

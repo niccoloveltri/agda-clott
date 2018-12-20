@@ -124,5 +124,5 @@ record interpret-syntax : Set₂ where
 open interpret-syntax
 
 consistent : interpret-syntax → Set
-consistent sem = _∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE) 
+consistent sem = (_∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE)) → ⊥
 \end{code}
