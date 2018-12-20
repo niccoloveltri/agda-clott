@@ -148,4 +148,36 @@ sem-fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : T
            ⟦ fix-tm f ⟧tm
            ⟦ u ⟧tm
 sem-fix-u f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
+
+sem-sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ idsub Γ' o s ⟧sub ⟦ s ⟧sub
+sem-sub-idl {∅} s x = refl
+sem-sub-idl {κ} s i x = refl
+
+sem-sub-idr : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ s o idsub Γ ⟧sub ⟦ s ⟧sub
+sem-sub-idr {∅} s x = refl
+sem-sub-idr {κ} s i x = refl
+
+sem-sub-assoc : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ Γ₄ : Context Δ} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃) (s₃ : Subst Γ₃ Γ₄)
+  → subst-eq _ _ ⟦ s₃ o (s₂ o s₁) ⟧sub ⟦ (s₃ o s₂) o s₁ ⟧sub
+sem-sub-assoc {∅} s₁ s₂ s₃ x = refl
+sem-sub-assoc {κ} s₁ s₂ s₃ i x = refl
+
+sem-sub-π₁β : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} {t : Term Γ A} (s : Subst Γ Γ')
+  → subst-eq _ _ ⟦ pr (s ,s t) ⟧sub ⟦ s ⟧sub
+sem-sub-π₁β {∅} s x = refl
+sem-sub-π₁β {κ} s i x = refl
+
+sem-sub-εη : {Δ : ClockContext} {Γ : Context Δ} (s : Subst Γ •) → subst-eq _ _ ⟦ s ⟧sub ⟦ ε Γ ⟧sub
+sem-sub-εη {∅} s x = refl
+sem-sub-εη {κ} s i x = refl
+
+sem-sub-,o : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} {t : Term Γ₂ A} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃)
+  → subst-eq _ _ ⟦ (s₂ ,s t) o s₁ ⟧sub ⟦ (s₂ o s₁) ,s sub t s₁ ⟧sub
+sem-sub-,o {∅} s₁ s₂ x = refl
+sem-sub-,o {κ} s₁ s₂ i x = refl
+
+sem-sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
+  → subst-eq _ _ ⟦ pr s ,s sub (varTm Γ A) s ⟧sub ⟦ s ⟧sub
+sem-sub-η {∅} s x = refl
+sem-sub-η {κ} s i x = refl
 \end{code}

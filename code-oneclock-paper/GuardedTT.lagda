@@ -23,6 +23,7 @@ semContext sem = Ctx
 semSubst sem = sem-subst
 semTerm sem = Tm
 _∼_ sem = def-eq _ _
+_≈_ sem = subst-eq _ _
 ⟦ sem ⟧CCtx = ⟦_⟧Δ
 ⟦ sem ⟧Type = ⟦_⟧A
 ⟦ sem ⟧Ctx = ⟦_⟧Γ
@@ -45,6 +46,13 @@ next-⊛ sem = sem-next-⊛
 next-λ sem = sem-next-λ
 fix-f sem = sem-fix-f
 fix-u sem = sem-fix-u
+sub-idl sem = sem-sub-idl
+sub-idr sem = sem-sub-idr
+sub-assoc sem = sem-sub-assoc
+sub-π₁β sem {Δ} {Γ} {Γ'} {A} {t} s = sem-sub-π₁β {_} {_} {_} {_} {t} s
+sub-εη sem = sem-sub-εη
+sub-,o sem {Δ} {Γ₁} {Γ₂} {Γ₃} {A} {t} s = sem-sub-,o {_} {_} {_} {_} {_} {t} s
+sub-η sem = sem-sub-η
 
 sem-consistent-help : ⊤ ⊎ ⊤ → Set
 sem-consistent-help (inj₁ x) = ⊤

@@ -95,6 +95,7 @@ record interpret-syntax : Set₂ where
     semSubst : {Δ : semClockContext} → semContext Δ → semContext Δ → Set
     semTerm : {Δ : semClockContext} → semContext Δ → semType Δ → Set
     _∼_ : {Δ : semClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set -- \sim
+    _≈_ : {Δ : semClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set -- ≈
     ⟦_⟧CCtx : ClockContext → semClockContext
     ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType ⟦ Δ ⟧CCtx
     ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext ⟦ Δ ⟧CCtx
@@ -121,6 +122,17 @@ record interpret-syntax : Set₂ where
       → ⟦ f ⊛ next t ⟧Tm ∼ ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧Tm
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) → ⟦ fix-tm f ⟧Tm ∼ ⟦ app-map f (next (fix-tm f)) ⟧Tm
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : Term Γ A) → ⟦ app-map f (next u) ⟧Tm ∼ ⟦ u ⟧Tm → ⟦ fix-tm f ⟧Tm ∼ ⟦ u ⟧Tm
+    sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → ⟦ idsub Γ' o s ⟧Subst ≈ ⟦ s ⟧Subst
+    sub-idr : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → ⟦ s o idsub Γ ⟧Subst ≈ ⟦ s ⟧Subst
+    sub-assoc : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ Γ₄ : Context Δ} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃) (s₃ : Subst Γ₃ Γ₄)
+      → ⟦ s₃ o (s₂ o s₁) ⟧Subst ≈ ⟦ (s₃ o s₂) o s₁ ⟧Subst
+    sub-π₁β : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} {t : Term Γ A} (s : Subst Γ Γ')
+      → ⟦ pr (s ,s t) ⟧Subst ≈ ⟦ s ⟧Subst
+    sub-εη : {Δ : ClockContext} {Γ : Context Δ} (s : Subst Γ •) → ⟦ s ⟧Subst ≈ ⟦ ε Γ ⟧Subst
+    sub-,o : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} {t : Term Γ₂ A} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃)
+      → ⟦ (s₂ ,s t) o s₁ ⟧Subst ≈ ⟦ (s₂ o s₁) ,s sub t s₁ ⟧Subst
+    sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
+      → ⟦ pr s ,s sub (varTm Γ A) s ⟧Subst ≈ ⟦ s ⟧Subst
 open interpret-syntax
 
 consistent : interpret-syntax → Set
