@@ -2,6 +2,10 @@
 \begin{code}
 module GuardedTT where
 
+open import Data.Unit
+open import Data.Empty
+open import Data.Sum
+open import Data.Product
 open import Prelude
 open import Presheaves
 open import CloTT
@@ -60,6 +64,15 @@ mutual
     □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
     □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
 
+bool : Type ∅
+bool = 𝟙 ⊞ 𝟙
+
+TRUE : Term • bool
+TRUE = in₁ 𝟙 tt
+
+FALSE : Term • bool
+FALSE = in₂ 𝟙 tt
+
 app-map : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
 app-map {_} {Γ} {A} {B} f x = sub (appTm f) (idsub Γ ,s x)
 
@@ -76,6 +89,9 @@ compmap {_} {Γ} {A} {B} {C} =
           (app-map
             (weakenTm _ _ _ (varTm _ _))
             (varTm _ _)))))
+
+□functor : {Γ : Context ∅} {A B : Type κ} → Term (weakenC Γ) (A ⟶ B) → Term Γ (clock-q A) → Term Γ (clock-q B)
+□functor f t = box-q (app-map f (unbox-q t))
 
 record interpret-syntax : Set₂ where
   field
@@ -164,6 +180,34 @@ mutual
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
 
+TRUEnotFALSE-help : ⊤ ⊎ ⊤ → Set
+TRUEnotFALSE-help (inj₁ x) = ⊤
+TRUEnotFALSE-help (inj₂ y) = ⊥
+
+TRUEnotFALSE : def-eq _ _ ⟦ TRUE ⟧tm ⟦ FALSE ⟧tm → ⊥
+TRUEnotFALSE p = subst TRUEnotFALSE-help (p ⊤.tt) ⊤.tt
+
+test : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (later (B ⟶ C))) (f : Term Γ (later (A ⟶ B))) (t : Term Γ (later A))
+  → def-eq ⟦ Γ ⟧Γ
+           ⟦ later C ⟧A
+           ⟦ ((next compmap ⊛ g) ⊛ f) ⊛ t ⟧tm
+           ⟦ g ⊛ (f ⊛ t) ⟧tm
+test g f t i x =
+  Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip })}))
+         (funext (λ { [ j ] → refl}))
+
+open PSh
+
+test2 : {Γ : Context κ} {A B : Type κ} (f : Term Γ (later (A ⟶ B))) (t : Term Γ A)
+  → def-eq ⟦ Γ ⟧Γ
+           ⟦ later B ⟧A
+           ⟦ f ⊛ next t ⟧tm
+           ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧tm
+test2 {Γ} f t i γ =
+  Σ≡-uip
+    (funext (λ { [ _ ] → funext (λ { [ _ ] → uip })}))
+    (funext (λ { [ j ] → cong (λ a → proj₁ (proj₁ (proj₁ ⟦ f ⟧tm i γ) [ j ]) j (proj₁ ⟦ t ⟧tm j a)) (sym (MorId ⟦ Γ ⟧Γ))}))
+
 sem : interpret-syntax
 semClockContext sem = tag
 semType sem = Ty
@@ -188,10 +232,10 @@ _∼_ sem = def-eq _ _
 □-β sem {Γ} {A} t = box-beta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
 □-η sem {Γ} {A} t = box-eta {⟦ Γ ⟧Γ} {⟦ A ⟧A} ⟦ t ⟧tm
 next-id sem {Γ} {A} t = pure-id-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-next-comp sem {Γ} {A} {B} {C} g f t = {!!}
+next-comp sem {Γ} {A} {B} {C} g f t = test g f t
 -- pure-comp-fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ C ⟧A ⟦ g ⟧tm ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
 next-⊛ sem f t = pure-fmap-pure _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm
-next-λ sem f t = {!!} -- fmap-pure-fun _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
+next-λ sem f t = test2 f t -- fmap-pure-fun _ _ _ ⟦ f ⟧tm ⟦ t ⟧tm -- slow to typecheck
 fix-f sem f = fix-eq _ _ ⟦ f ⟧tm
 fix-u sem f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
 \end{code}
