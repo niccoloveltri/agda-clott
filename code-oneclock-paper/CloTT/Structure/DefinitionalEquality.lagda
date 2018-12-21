@@ -47,7 +47,16 @@ def-eq-to-eq {set} p = funext p
 def-eq-to-eq {tot} p =
   Σ≡-uip
     (funext (λ x → funext (λ y → funext (λ z → uip))))
-    (funext (λ i → funext (λ x → p i x))) 
+    (funext (λ i → funext (λ x → p i x)))
+
+eq-to-def-eq-to-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {s t : Tm Γ A}
+  → (p : def-eq Γ A s t) → eq-to-def-eq(def-eq-to-eq p) ≡ p
+eq-to-def-eq-to-eq {set} p = funext (λ _ → uip)
+eq-to-def-eq-to-eq {tot} p = funext (λ _ → funext (λ _ → uip))
+
+def-eq-to-eq-to-def-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {s t : Tm Γ A}
+  → (p : s ≡ t) → def-eq-to-eq(eq-to-def-eq p) ≡ p
+def-eq-to-eq-to-def-eq p = uip
 \end{code}
 }
 
@@ -84,6 +93,17 @@ subst-eq-to-eq {set} p = funext p
 subst-eq-to-eq {tot} p =
   Σ≡-uip
     (funext (λ x → funext (λ y → funext (λ z → uip))))
-    (funext (λ i → funext (λ x → p i x))) 
+    (funext (λ i → funext (λ x → p i x)))
+
+subst-eq-to-eq-to-subst-eq : {b : tag} {Γ Γ' : Ctx b} {s t : sem-subst Γ Γ'}
+  → (p : s ≡ t)
+  → subst-eq-to-eq(eq-to-subst-eq p) ≡ p
+subst-eq-to-eq-to-subst-eq p = uip
+
+eq-to-subst-eq-to-eq : {b : tag} {Γ Γ' : Ctx b} {s t : sem-subst Γ Γ'}
+  → (p : subst-eq Γ Γ' s t)
+  → eq-to-subst-eq(subst-eq-to-eq p) ≡ p
+eq-to-subst-eq-to-eq {set} p = funext (λ _ → uip)
+eq-to-subst-eq-to-eq {tot} p = funext (λ _ → funext (λ _ → uip))
 \end{code}
 }
