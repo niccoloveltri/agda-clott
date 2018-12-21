@@ -8,6 +8,8 @@ open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.Later
 open import CloTT.TypeFormers.ClockQuantification
+
+open PSh
 \end{code}
 }
 

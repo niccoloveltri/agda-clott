@@ -305,6 +305,17 @@ mutual
   ⟦ sum□sum {Γ} A B t ⟧tm-eq γ | inj₂ y | [ eq ] =
     Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
            (funext (λ i → sym (proj₂ (sum-lem₂ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) y eq) i)))
+  ⟦ force-□next t ⟧tm-eq x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → uip)))
+      refl
+  ⟦ □next-force t ⟧tm-eq x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ {_ → uip})))
+      (funext (λ i →
+        Σ≡-uip
+          (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
+          (funext (λ {[ j ] → cong (λ z → proj₁ z [ j ]) (proj₂ (⟦ t ⟧tm x) ∞ i)}))))
 
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq

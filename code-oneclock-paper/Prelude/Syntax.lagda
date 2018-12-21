@@ -113,6 +113,9 @@ sum□ A B = lambdaTm
                    (□functor (lambdaTm (in₁ B (varTm _ _))) (varTm _ _))
                    (□functor (lambdaTm (in₂ A (varTm _ _))) (varTm _ _)))
 
+□next : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q A) → Term Γ (clock-q(later A))
+□next t = box-q (next (unbox-q t))
+
 infix 13 _∼_ _≈_
 
 mutual
@@ -213,6 +216,10 @@ mutual
       → app-map (□sum A B) (app-map (sum□ A B) t) ∼ t
     sum□sum : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (clock-q (A ⊞ B)))
       → app-map (sum□ A B) (app-map (□sum A B) t) ∼ t
+    force-□next : {Γ : Context ∅} {A : Type κ} (t : Term Γ (clock-q A))
+      → force(□next t) ∼ t
+    □next-force : {Γ : Context ∅} {A : Type κ} (t : Term Γ (clock-q (later A)))
+      → □next(force t) ∼ t
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
