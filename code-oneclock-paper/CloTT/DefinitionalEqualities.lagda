@@ -252,7 +252,6 @@ mutual
   ⟦_⟧tm-eq {κ} (sub-sub t s s') i x = refl
   ⟦_⟧tm-eq {∅} (sub-varTm Γ₁ Γ₂ A s) x = refl
   ⟦_⟧tm-eq {κ} (sub-varTm Γ₁ Γ₂ A s) i x = refl
-  ⟦_⟧tm-eq {.∅} (sub-tt s) x = refl
   ⟦_⟧tm-eq {.∅} (sub-unit-rec t s) x = refl
   ⟦_⟧tm-eq {∅} (sub-in₁ B t s) x = refl
   ⟦_⟧tm-eq {κ} (sub-in₁ B t s) i x = refl
@@ -260,24 +259,16 @@ mutual
   ⟦_⟧tm-eq {κ} (sub-in₂ A t s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-[ t₁ & t₂ ] s) x = refl
   ⟦_⟧tm-eq {κ} (sub-[ t₁ & t₂ ] s) i x = refl
-  ⟦_⟧tm-eq {∅} (sub-π₁ t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-π₁ t s) i x = refl
-  ⟦_⟧tm-eq {∅} (sub-π₂ t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-π₂ t s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-lambdaTm t s) x = refl
   ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x =
     Σ≡-uip
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       (funext (λ j → funext (λ z → cong (λ y → proj₁ ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))))
-  ⟦_⟧tm-eq {∅} (sub-appTm t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-appTm t s) i x = refl
   ⟦_⟧tm-eq {.κ} (sub-⇡ t s) i x = refl
-  ⟦_⟧tm-eq {.∅} (sub-↓ t s) x = refl
   ⟦_⟧tm-eq {.∅} (sub-box-q t s) x =
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
       refl
-  ⟦_⟧tm-eq {.κ} (sub-unbox-q t s) i x = refl
   ⟦_⟧tm-eq {.κ} (sub-next t s) i x =
     Σ≡-uip
       (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
