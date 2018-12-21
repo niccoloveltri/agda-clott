@@ -29,8 +29,8 @@ _sem≈_ sem = subst-eq _ _
 ⟦ sem ⟧Ctx = ⟦_⟧Γ
 ⟦ sem ⟧Subst = ⟦_⟧sub
 ⟦ sem ⟧Tm = ⟦_⟧tm
-⟦ sem ⟧∼ = {!!}
-⟦ sem ⟧≈ = {!!}
+⟦ sem ⟧∼ = ⟦_⟧tm-eq
+⟦ sem ⟧≈ = ⟦_⟧sub-eq
 
 {-
 λ-β sem = sem-λ-β
