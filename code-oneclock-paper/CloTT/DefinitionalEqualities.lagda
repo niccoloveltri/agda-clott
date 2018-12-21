@@ -283,6 +283,9 @@ mutual
   ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x = {!!}
   -}
   ⟦_⟧tm-eq {.κ} (sub-fix-tm f s) i x = refl
+  ⟦ sub-force t s ⟧tm-eq x = refl
+  ⟦ sub-□const A s ⟧tm-eq x = refl
+  ⟦ sub-□sum A B s ⟧tm-eq x = refl
 
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq

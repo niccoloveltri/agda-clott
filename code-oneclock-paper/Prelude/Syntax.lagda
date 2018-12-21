@@ -59,9 +59,9 @@ mutual
     next      : {Γ : Context κ} {A : Type κ} → Term Γ A → Term Γ (later A)
     _⊛_       : {Γ : Context κ} {A B : Type κ} → Term Γ (later (A ⟶ B)) → Term Γ (later A) → Term Γ (later B)
     fix-tm    : {Γ : Context κ} {A : Type κ} → Term Γ (later A ⟶ A) → Term Γ A
---    force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
---    □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
---    □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
+    force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
+    □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
+    □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
 
 weaken-to-• : Subst (weakenC •) •
 weaken-to-• = ε (weakenC •)
@@ -190,7 +190,12 @@ mutual
     -}
     sub-fix-tm : {Γ₁ Γ₂ : Context κ} {A : Type κ} (f : Term Γ₁ (later A ⟶ A)) (s : Subst Γ₂ Γ₁)
       → sub (fix-tm f) s ∼ fix-tm (sub f s)
-    
+    sub-force : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (clock-q(later A))) (s : Subst Γ₂ Γ₁)
+      → sub (force t) s ∼ force (sub t s)
+    sub-□const : {Γ₁ Γ₂ : Context ∅} (A : Type ∅) (s : Subst Γ₂ Γ₁)
+      → sub (□const A) s ∼ □const A
+    sub-□sum : {Γ₁ Γ₂ : Context ∅} (A B : Type κ) (s : Subst Γ₂ Γ₁)
+      → sub (□sum A B) s ∼ □sum A B
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
