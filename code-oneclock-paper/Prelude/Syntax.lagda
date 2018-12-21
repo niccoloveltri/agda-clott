@@ -32,6 +32,7 @@ mutual
     _,s_ : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
     _o_ : {Δ : ClockContext} {Γ Γ' Γ'' : Context Δ} → Subst Γ' Γ'' → Subst Γ Γ' → Subst Γ Γ''
     pr : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
+    weakenS : {Γ Γ' : Context ∅} → Subst Γ Γ' → Subst (weakenC Γ) (weakenC Γ')
   
   data Term   : {Δ : ClockContext} → Context Δ → Type Δ → Set where
     sub       : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Term Γ' A → Subst Γ Γ' → Term Γ A
@@ -158,7 +159,14 @@ mutual
       → (s₂ ,s t) o s₁ ≈ (s₂ o s₁) ,s sub t s₁
     sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
       → pr s ,s sub (varTm Γ A) s ≈ s
-
+    weaken-ε : (Γ : Context ∅) → weakenS (ε Γ) ≈ ε (weakenC Γ)
+{-
+ε : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ •
+    idsub : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ Γ
+    _,s_ : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
+    _o_ : {Δ : ClockContext} {Γ Γ' Γ'' : Context Δ} → Subst Γ' Γ'' → Subst Γ Γ' → Subst Γ Γ''
+    pr : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
+-}
 record interpret-syntax : Set₂ where
   field
     semClockContext : Set
