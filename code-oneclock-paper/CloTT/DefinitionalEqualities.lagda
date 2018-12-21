@@ -303,4 +303,11 @@ mutual
   ⟦_⟧sub-eq {Δ} (sub-η s) = sem-sub-η s
   ⟦_⟧sub-eq {Δ} (weaken-o s₁ s₂) i x = refl
   ⟦_⟧sub-eq {Δ} (weaken-idsub Γ) i x = refl
+  ⟦ weaken-ε Γ ⟧sub-eq i x = refl
+  ⟦ weaken-,s s t ⟧sub-eq i x = refl
+  ⟦ weaken-pr s ⟧sub-eq i x = refl
+  ⟦ weaken-•-id ⟧sub-eq i x = refl
+  ⟦ •-weaken-id ⟧sub-eq i x = refl
+  ⟦ weaken-,-id Γ A ⟧sub-eq i x = refl
+  ⟦ ,-weaken-id Γ A ⟧sub-eq i x = refl
 \end{code}
