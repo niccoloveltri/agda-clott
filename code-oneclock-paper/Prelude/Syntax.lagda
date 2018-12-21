@@ -104,6 +104,15 @@ compmap {_} {Γ} {A} {B} {C} =
 □functor : {Γ : Context ∅} {A B : Type κ} → Term (weakenC Γ) (A ⟶ B) → Term Γ (clock-q A) → Term Γ (clock-q B)
 □functor f t = box-q (app-map f (unbox-q t))
 
+const□ : (Γ : Context ∅) (A : Type ∅) → Term Γ (A ⟶ clock-q (weakenT A))
+const□ Γ A = lambdaTm (box-q (sub (varTm (weakenC Γ) (weakenT A)) (weaken-, Γ A)))
+
+sum□ : {Γ : Context ∅} (A B : Type κ) → Term Γ ((clock-q A ⊞ clock-q B) ⟶ clock-q (A ⊞ B))
+sum□ A B = lambdaTm
+             (⊞rec (clock-q (A ⊞ B))
+                   (□functor (lambdaTm (in₁ B (varTm _ _))) (varTm _ _))
+                   (□functor (lambdaTm (in₂ A (varTm _ _))) (varTm _ _)))
+
 infix 13 _∼_ _≈_
 
 mutual
@@ -196,6 +205,14 @@ mutual
       → sub (□const A) s ∼ □const A
     sub-□sum : {Γ₁ Γ₂ : Context ∅} (A B : Type κ) (s : Subst Γ₂ Γ₁)
       → sub (□sum A B) s ∼ □sum A B
+    const□const : {Γ : Context ∅} {A : Type ∅} (t : Term Γ (clock-q (weakenT A)))
+      → app-map (const□ Γ A) (app-map (□const A) t) ∼ t
+    □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)
+      → app-map (□const A) (app-map (const□ Γ A) t) ∼ t
+    □sum□ : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (clock-q A ⊞ clock-q B))
+      → app-map (□sum A B) (app-map (sum□ A B) t) ∼ t
+    sum□sum : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (clock-q (A ⊞ B)))
+      → app-map (sum□ A B) (app-map (□sum A B) t) ∼ t
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s

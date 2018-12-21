@@ -286,6 +286,25 @@ mutual
   ⟦ sub-force t s ⟧tm-eq x = refl
   ⟦ sub-□const A s ⟧tm-eq x = refl
   ⟦ sub-□sum A B s ⟧tm-eq x = refl
+  ⟦ const□const t ⟧tm-eq x =
+    Σ≡-uip
+      (funext (λ { _ → funext (λ _ → uip) }))
+      (funext (proj₂ (⟦ t ⟧tm x) ∞))
+  ⟦ □const□ t ⟧tm-eq x = refl
+  ⟦ □sum□ A B t ⟧tm-eq γ with ⟦ t ⟧tm γ
+  ⟦ □sum□ A B t ⟧tm-eq γ | inj₁ (x , p) =
+    cong inj₁ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+                      (funext (p ∞)))
+  ⟦ □sum□ A B t ⟧tm-eq γ | inj₂ (y , p) =
+    cong inj₂ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+                      (funext (p ∞)))
+  ⟦ sum□sum A B t ⟧tm-eq γ with proj₁ (⟦ t ⟧tm γ) ∞ | inspect (proj₁ (⟦ t ⟧tm γ)) ∞
+  ⟦ sum□sum {Γ} A B t ⟧tm-eq γ | inj₁ x | [ eq ] =
+    Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+           (funext (λ i → sym (proj₂ (sum-lem₁ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) x eq) i)))
+  ⟦ sum□sum {Γ} A B t ⟧tm-eq γ | inj₂ y | [ eq ] =
+    Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
+           (funext (λ i → sym (proj₂ (sum-lem₂ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) y eq) i)))
 
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq
