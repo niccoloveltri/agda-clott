@@ -65,4 +65,7 @@ sem-consistent-help (inj₂ y) = ⊥
 
 sem-consistent : consistent sem
 sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
+
+syntax-consistent : consistent initial-interpretation
+syntax-consistent p = sem-consistent (⟦ sem ⟧∼ p)
 \end{code}
