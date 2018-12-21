@@ -48,7 +48,6 @@ module _  (P Q : PSh) where
     ∎
   \end{code}
 
-  \AgdaHide{
   \begin{code}
   Prod : PSh
   Prod = record
@@ -58,13 +57,9 @@ module _  (P Q : PSh) where
     ; MorComp = ProdMorComp
     }
   \end{code}
-<<<<<<< HEAD
 }
 
 \begin{code}
 ProdObj : (P Q : PSh) → Size → Set
 ProdObj P Q i = PSh.Obj P i × PSh.Obj Q i
 \end{code}
-=======
-  }
->>>>>>> 1e8f49f03d642deca639953d3159a2a0ea1c6beb

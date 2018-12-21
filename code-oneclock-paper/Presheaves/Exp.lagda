@@ -40,7 +40,6 @@ module _ (P Q : PSh) where
   ExpMorComp = refl
   \end{code}
 
-  \AgdaHide{
   \begin{code}
   Exp : PSh
   Exp = record
@@ -50,7 +49,6 @@ module _ (P Q : PSh) where
     ; MorComp = ExpMorComp
     }
   \end{code}
-<<<<<<< HEAD
 }
 \begin{code}
 ExpObj : (P Q : PSh) → Size → Set
@@ -59,6 +57,4 @@ ExpObj P Q i =
     (λ f → (j : Size< (↑ i)) (k : Size< (↑ j)) (x : PSh.Obj P j)
       → PSh.Mor Q j k (f j x) ≡ f k (PSh.Mor P j k x))
 \end{code}
-=======
-  }
->>>>>>> 1e8f49f03d642deca639953d3159a2a0ea1c6beb
+

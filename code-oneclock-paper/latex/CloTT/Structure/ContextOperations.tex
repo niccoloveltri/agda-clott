@@ -36,6 +36,9 @@
 \end{code}
 }
 
+The empty context in \IC{set} is the unit type \D{⊤}, while in
+\IC{tot} is the presheaf \D{Terminal}.
+
 \begin{code}%
 \>[0]\AgdaFunction{∙}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -56,6 +59,9 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Terminal}\<%
 \end{code}
+
+Context extension in \IC{set} is cartesian product, while in \IC{tot}
+is the operation \D{Prod} on presheaves.
 
 \begin{code}%
 \>[0]\AgdaOperator{\AgdaFunction{\AgdaUnderscore{},,\AgdaUnderscore{}}}\AgdaSpace{}%
@@ -92,6 +98,7 @@
 \AgdaBound{A}\<%
 \end{code}
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{var}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -225,3 +232,4 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x₁}\<%
 \end{code}
+}
