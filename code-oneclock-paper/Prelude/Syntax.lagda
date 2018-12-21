@@ -202,15 +202,23 @@ mutual
     sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
       → pr s ,s sub (varTm Γ A) s ≈ s
     -- weaken-ε : (Γ : Context ∅) → weakenS (ε Γ) ≈ ({!!} o ε (weakenC Γ)) -- ε (weakenC Γ)
-    -- weaken-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst Γ' Γ'') (s₂ : Subst Γ Γ') → weakenS (s₁ o s₂) ≈ (weakenS s₁ o weakenS s₂)
+    weaken-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst Γ' Γ'') (s₂ : Subst Γ Γ') → weakenS (s₁ o s₂) ≈ (weakenS s₁ o weakenS s₂)
     -- weaken-pr : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ (Γ' , A)) → weakenS (pr s) ≈ pr {!weakenS s!}
-    -- weaken-idsub : (Γ : Context ∅) → weakenS (idsub Γ) ≈ idsub (weakenC Γ)
+    weaken-idsub : (Γ : Context ∅) → weakenS (idsub Γ) ≈ idsub (weakenC Γ)
     -- weaken-,s : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ Γ') (t : Term Γ A) → weakenS (s ,s t) ≈ {!weakenS s ,s ?!}
 {-
 ε : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ •
     _,s_ : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
     pr : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
 -}
+
+test : Subst (weakenC •) •
+test = ε (weakenC •)
+
+test2 : (Γ : Context ∅) (A : Type ∅) → Subst (weakenC (Γ , A)) (weakenC Γ , weakenT A)
+test2 Γ A = weakenS (pr (idsub (Γ , A))) ,s ⇡ (varTm Γ A)
+
+
 
 record interpret-syntax {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ∼}{ℓ≈} : Set (suc (ℓCC ⊔ ℓTy ⊔ ℓCtx ⊔ ℓSub ⊔ ℓTm ⊔ ℓ∼ ⊔ ℓ≈)) where
   field
