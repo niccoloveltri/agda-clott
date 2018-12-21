@@ -3,6 +3,8 @@
 module CloTT.DefinitionalEqualities where
 
 open import Data.Product
+open import Data.Sum
+open import Data.Unit
 open import Prelude
 open import Prelude.Syntax
 open import Presheaves
@@ -65,6 +67,12 @@ sem-□-β {Γ} {A} t i x = refl
 
 sem-□-η : {Γ : Context ∅} {A : Type κ} (t : Term Γ (clock-q A)) → def-eq ⟦ Γ ⟧Γ ⟦ clock-q A ⟧A ⟦ box-q (unbox-q t) ⟧tm ⟦ t ⟧tm
 sem-□-η t x = refl
+
+sem-⇡-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ ↓ (⇡ t) ⟧tm ⟦ t ⟧tm
+sem-⇡-β t x = refl
+
+sem-⇡-η : {Γ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ) (weakenT A)) → def-eq ⟦ weakenC Γ ⟧Γ ⟦ weakenT A ⟧A ⟦ ⇡ (↓ t) ⟧tm ⟦ t ⟧tm
+sem-⇡-η t = proj₂ ⟦ t ⟧tm ∞
 
 sem-next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (later A)) → def-eq ⟦ Γ ⟧Γ ⟦ later A ⟧A ⟦ next (idmap A) ⊛ t ⟧tm ⟦ t ⟧tm
 sem-next-id t i x =
@@ -148,6 +156,102 @@ sem-fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : T
            ⟦ fix-tm f ⟧tm
            ⟦ u ⟧tm
 sem-fix-u f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
+
+
+mutual
+{-
+  ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
+  ⟦_⟧tm-eq {∅} refl∼ x = refl
+  ⟦_⟧tm-eq {∅} (sym∼ p) x = sym (⟦_⟧tm-eq {∅} p x)
+  ⟦_⟧tm-eq {∅} (trans∼ p q) x = trans (⟦_⟧tm-eq {∅} p x) (⟦_⟧tm-eq {∅} q x)
+  ⟦_⟧tm-eq {∅} (cong-sub {t₂ = t₂}{s₁} p q) x = trans (⟦_⟧tm-eq {∅} p (⟦ s₁ ⟧sub x)) (cong ⟦ t₂ ⟧tm (⟦ q ⟧sub-eq x))
+  ⟦_⟧tm-eq {∅} (cong-unit-rec p) (x , tt) = ⟦ p ⟧tm-eq x
+  ⟦_⟧tm-eq {∅} (cong-in₁ B p) x = cong inj₁ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-in₂ A p) x = cong inj₂ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₁ a) = ⟦ p ⟧tm-eq (x , a)
+  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₂ b) = ⟦ q ⟧tm-eq (x , b)
+  ⟦_⟧tm-eq {∅} cong-[ p & q ] x = cong₂ _,_ (⟦ p ⟧tm-eq x) (⟦ q ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-π₁ p) x = cong proj₁ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-π₂ p) x = cong proj₂ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-lambdaTm p) x = funext (λ a → ⟦ p ⟧tm-eq (x , a))
+  ⟦_⟧tm-eq {∅} (cong-appTm p) (x , a) = cong (λ z → z a) (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {∅} (cong-↓ p) x = ⟦ p ⟧tm-eq ∞ x
+  ⟦_⟧tm-eq {∅} (cong-box-q p) x = Σ≡-uip (funext (λ _ → funext (λ _ → uip))) (funext (λ i → ⟦ p ⟧tm-eq i x))
+  ⟦_⟧tm-eq {∅} (λ-β t) = sem-λ-β t
+  ⟦_⟧tm-eq {∅} (λ-η t) = sem-λ-η t
+  ⟦_⟧tm-eq {∅} (⊠-β₁ t₁ t₂) = sem-⊠-β₁ t₁ t₂
+  ⟦_⟧tm-eq {∅} (⊠-β₂ t₁ t₂) = {!!}
+  ⟦_⟧tm-eq {∅} (⊠-η t) = {!!}
+  ⟦_⟧tm-eq {∅} (⊞-β₁ l r t) = {!!}
+  ⟦_⟧tm-eq {∅} (⊞-β₂ l r t) = {!!}
+  ⟦_⟧tm-eq {∅} (𝟙-β t) = {!!}
+  ⟦_⟧tm-eq {∅} (𝟙-η t) = {!!}
+  ⟦_⟧tm-eq {∅} (□-η t) = {!!}
+  ⟦_⟧tm-eq {∅} (⇡-β t) = {!!}
+  ⟦_⟧tm-eq {κ} p = {!!}
+-}
+
+  ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
+  ⟦_⟧tm-eq {∅} refl∼ x = refl
+  ⟦_⟧tm-eq {κ} refl∼ i x = refl
+  ⟦_⟧tm-eq {∅} (sym∼ p) x = sym (⟦_⟧tm-eq p x)
+  ⟦_⟧tm-eq {κ} (sym∼ p) i x = sym (⟦_⟧tm-eq p i x)
+  ⟦_⟧tm-eq {∅} (trans∼ p q) x = trans (⟦_⟧tm-eq p x) (⟦_⟧tm-eq q x)
+  ⟦_⟧tm-eq {κ} (trans∼ p q) i x = trans (⟦_⟧tm-eq p i x) (⟦_⟧tm-eq q i x)
+  ⟦_⟧tm-eq {∅} (cong-sub {t₂ = t₂} {s₁} p q) x = trans (⟦_⟧tm-eq p (⟦ s₁ ⟧sub x)) (cong ⟦ t₂ ⟧tm (⟦ q ⟧sub-eq x))
+  ⟦_⟧tm-eq {κ} (cong-sub {t₂ = t₂} {s₁} p q) i x = trans (⟦_⟧tm-eq p i (proj₁ ⟦ s₁ ⟧sub i x)) (cong (proj₁ ⟦ t₂ ⟧tm i) (⟦ q ⟧sub-eq i x))
+  ⟦ cong-unit-rec p ⟧tm-eq (x , tt) = ⟦ p ⟧tm-eq x
+  ⟦_⟧tm-eq {∅} (cong-in₁ B p) x = cong inj₁ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-in₁ B p) i x = cong inj₁ (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-in₂ A p) x = cong inj₂ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-in₂ A p) i x = cong inj₂ (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₁ a) = ⟦ p ⟧tm-eq (x , a) 
+  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₂ b) = ⟦ q ⟧tm-eq (x , b) 
+  ⟦_⟧tm-eq {κ} (cong-⊞rec C p q) i (x , inj₁ a) = ⟦ p ⟧tm-eq i (x , a)
+  ⟦_⟧tm-eq {κ} (cong-⊞rec C p q) i (x , inj₂ b) = ⟦ q ⟧tm-eq i (x , b)
+  ⟦_⟧tm-eq {∅} cong-[ p & q ] x = cong₂ _,_ (⟦ p ⟧tm-eq x) (⟦ q ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} cong-[ p & q ] i x = cong₂ _,_ (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-π₁ p) x = cong proj₁ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-π₁ p) i x = cong proj₁ (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-π₂ p) x = cong proj₂ (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-π₂ p)  i x = cong proj₂ (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-lambdaTm p) x = funext (λ a → ⟦ p ⟧tm-eq (x , a))
+  ⟦_⟧tm-eq {κ} (cong-lambdaTm {Γ = Γ} p) i x =
+    Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip)))) (funext (λ j → funext (λ a → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x , a))))
+  ⟦_⟧tm-eq {∅} (cong-appTm p) (x , a) = cong (λ z → z a) (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-appTm p) i (x , a) = cong (λ z → proj₁ z i a) (⟦ p ⟧tm-eq i x)
+  ⟦ cong-⇡ p ⟧tm-eq i x = ⟦ p ⟧tm-eq x
+  ⟦ cong-↓ p ⟧tm-eq x = ⟦ p ⟧tm-eq ∞ x
+  ⟦ cong-box-q p ⟧tm-eq x = Σ≡-uip (funext (λ _ → funext (λ _ → uip))) (funext (λ i → ⟦ p ⟧tm-eq i x))
+  ⟦ cong-unbox-q p ⟧tm-eq i x = cong (λ z → proj₁ z i) (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq (cong-next {Γ = Γ} p) i x =
+    Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ{ [ j ] → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x) }))
+  ⟦_⟧tm-eq (cong- p ⊛ q) i x =
+    Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+           (funext (λ{ [ j ] → cong₂ (λ a b → proj₁ (proj₁ a [ j ]) j (proj₁ b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x) }))
+  ⟦_⟧tm-eq (cong-fix-tm {A = A} p) i x = cong (λ z → proj₁ z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
+  ⟦ λ-β t ⟧tm-eq = sem-λ-β t
+  ⟦ λ-η t ⟧tm-eq = sem-λ-η t
+  ⟦ ⊠-β₁ t₁ t₂ ⟧tm-eq = sem-⊠-β₁ t₁ t₂
+  ⟦ ⊠-β₂ t₁ t₂ ⟧tm-eq = sem-⊠-β₂ t₁ t₂
+  ⟦ ⊠-η t ⟧tm-eq = sem-⊠-η t
+  ⟦ ⊞-β₁ l r t ⟧tm-eq = sem-⊞-β₁ l r t
+  ⟦ ⊞-β₂ l r t ⟧tm-eq = sem-⊞-β₂ l r t
+  ⟦ 𝟙-β t ⟧tm-eq = sem-𝟙-β t
+  ⟦ 𝟙-η t ⟧tm-eq = sem-𝟙-η t
+  ⟦ □-β t ⟧tm-eq = sem-□-β t
+  ⟦ □-η t ⟧tm-eq = sem-□-η t
+  ⟦ ⇡-β t ⟧tm-eq = sem-⇡-β t
+  ⟦ ⇡-η t ⟧tm-eq = sem-⇡-η t
+  ⟦ next-id t ⟧tm-eq = sem-next-id t
+  ⟦ next-comp g f t ⟧tm-eq = sem-next-comp g f t
+  ⟦ next-⊛ f t ⟧tm-eq = sem-next-⊛ f t
+  ⟦ next-λ f t ⟧tm-eq = sem-next-λ f t
+  ⟦ fix-f f ⟧tm-eq = sem-fix-f f
+  ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
+
+  ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
+  ⟦_⟧sub-eq {Δ} p = {!!}
 
 sem-sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ idsub Γ' o s ⟧sub ⟦ s ⟧sub
 sem-sub-idl {∅} s x = refl
