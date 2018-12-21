@@ -190,38 +190,6 @@ sem-sub-η {∅} s x = refl
 sem-sub-η {κ} s i x = refl
 
 mutual
-{-
-  ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
-  ⟦_⟧tm-eq {∅} refl∼ x = refl
-  ⟦_⟧tm-eq {∅} (sym∼ p) x = sym (⟦_⟧tm-eq {∅} p x)
-  ⟦_⟧tm-eq {∅} (trans∼ p q) x = trans (⟦_⟧tm-eq {∅} p x) (⟦_⟧tm-eq {∅} q x)
-  ⟦_⟧tm-eq {∅} (cong-sub {t₂ = t₂}{s₁} p q) x = trans (⟦_⟧tm-eq {∅} p (⟦ s₁ ⟧sub x)) (cong ⟦ t₂ ⟧tm (⟦ q ⟧sub-eq x))
-  ⟦_⟧tm-eq {∅} (cong-unit-rec p) (x , tt) = ⟦ p ⟧tm-eq x
-  ⟦_⟧tm-eq {∅} (cong-in₁ B p) x = cong inj₁ (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-in₂ A p) x = cong inj₂ (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₁ a) = ⟦ p ⟧tm-eq (x , a)
-  ⟦_⟧tm-eq {∅} (cong-⊞rec C p q) (x , inj₂ b) = ⟦ q ⟧tm-eq (x , b)
-  ⟦_⟧tm-eq {∅} cong-[ p & q ] x = cong₂ _,_ (⟦ p ⟧tm-eq x) (⟦ q ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-π₁ p) x = cong proj₁ (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-π₂ p) x = cong proj₂ (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-lambdaTm p) x = funext (λ a → ⟦ p ⟧tm-eq (x , a))
-  ⟦_⟧tm-eq {∅} (cong-appTm p) (x , a) = cong (λ z → z a) (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {∅} (cong-↓ p) x = ⟦ p ⟧tm-eq ∞ x
-  ⟦_⟧tm-eq {∅} (cong-box-q p) x = Σ≡-uip (funext (λ _ → funext (λ _ → uip))) (funext (λ i → ⟦ p ⟧tm-eq i x))
-  ⟦_⟧tm-eq {∅} (λ-β t) = sem-λ-β t
-  ⟦_⟧tm-eq {∅} (λ-η t) = sem-λ-η t
-  ⟦_⟧tm-eq {∅} (⊠-β₁ t₁ t₂) = sem-⊠-β₁ t₁ t₂
-  ⟦_⟧tm-eq {∅} (⊠-β₂ t₁ t₂) = {!!}
-  ⟦_⟧tm-eq {∅} (⊠-η t) = {!!}
-  ⟦_⟧tm-eq {∅} (⊞-β₁ l r t) = {!!}
-  ⟦_⟧tm-eq {∅} (⊞-β₂ l r t) = {!!}
-  ⟦_⟧tm-eq {∅} (𝟙-β t) = {!!}
-  ⟦_⟧tm-eq {∅} (𝟙-η t) = {!!}
-  ⟦_⟧tm-eq {∅} (□-η t) = {!!}
-  ⟦_⟧tm-eq {∅} (⇡-β t) = {!!}
-  ⟦_⟧tm-eq {κ} p = {!!}
--}
-
   ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
   ⟦_⟧tm-eq {∅} refl∼ x = refl
   ⟦_⟧tm-eq {κ} refl∼ i x = refl
