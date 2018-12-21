@@ -278,10 +278,14 @@ mutual
       (funext (λ _ → funext (λ _ → uip)))
       refl
   ⟦_⟧tm-eq {.κ} (sub-unbox-q t s) i x = refl
-  {-
-  ⟦_⟧tm-eq {.κ} (sub-next t s) i x = {!sym (cong proj₁ (proj₂ ⟦ next t ⟧tm i i (proj₁ ⟦ s ⟧sub i x)) -- cong (λ z → proj₁ z i x)!}
-  ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x = {!!}
-  -}
+  ⟦_⟧tm-eq {.κ} (sub-next t s) i x =
+    Σ≡-uip
+      (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
+      (funext (λ {[ j ] → sym (cong (proj₁ ⟦ t ⟧tm j) (proj₂ ⟦ s ⟧sub i j x))}))
+  ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x =
+    Σ≡-uip
+      (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
+      (funext (λ {[ j ] → refl}))
   ⟦_⟧tm-eq {.κ} (sub-fix-tm f s) i x = refl
   ⟦ sub-force t s ⟧tm-eq x = refl
   ⟦ sub-□const A s ⟧tm-eq x = refl

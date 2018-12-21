@@ -194,12 +194,10 @@ mutual
       → sub (box-q t) s ∼ box-q (sub t (weakenS s))
     sub-unbox-q : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (clock-q A)) (s : Subst Γ₂ Γ₁)
       → sub (unbox-q t) (weakenS s) ∼ unbox-q (sub t s)
-    {-
     sub-next : {Γ₁ Γ₂ : Context κ} {A : Type κ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
       → sub (next t) s ∼ next (sub t s)
     sub-⊛ : {Γ₁ Γ₂ : Context κ} {A B : Type κ} (f : Term Γ₁ (later (A ⟶ B))) (t : Term Γ₁ (later A)) (s : Subst Γ₂ Γ₁)
       → sub (f ⊛ t) s ∼ (sub f s) ⊛ (sub t s)
-    -}
     sub-fix-tm : {Γ₁ Γ₂ : Context κ} {A : Type κ} (f : Term Γ₁ (later A ⟶ A)) (s : Subst Γ₂ Γ₁)
       → sub (fix-tm f) s ∼ fix-tm (sub f s)
     sub-force : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (clock-q(later A))) (s : Subst Γ₂ Γ₁)
