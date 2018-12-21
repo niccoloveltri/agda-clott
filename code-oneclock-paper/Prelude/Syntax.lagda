@@ -2,6 +2,8 @@
 \begin{code}
 module Prelude.Syntax where
 
+open import Level
+open import Function
 open import Data.Empty
 \end{code}
 }
@@ -58,6 +60,8 @@ mutual
 --    □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
 --    □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
 
+weakenSA : {Δ : ClockContext} {Γ Γ' : Context Δ} (A : Type Δ) → Subst Γ Γ' → Subst (Γ , A) (Γ' , A)
+weakenSA {_} {Γ} {Γ'} A s = (s o pr (idsub (Γ , A))) ,s varTm Γ A
 
 bool : Type ∅
 bool = 𝟙 ⊞ 𝟙
@@ -140,6 +144,44 @@ mutual
       → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) → fix-tm f ∼ app-map f (next (fix-tm f))
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix-tm f ∼ u
+    sub-sub : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁) (s' : Subst Γ₃ Γ₂)
+      → sub (sub t s) s' ∼ sub t (s o s')
+    sub-varTm : {Δ : ClockContext} (Γ₁ Γ₂ : Context Δ) (A : Type Δ) (s : Subst Γ₂ Γ₁)
+      → sub (varTm Γ₁ A) (weakenSA A s) ∼ varTm Γ₂ A
+    sub-tt : {Γ₁ Γ₂ : Context ∅} (s : Subst Γ₂ Γ₁) → sub tt s ∼ tt
+    sub-unit-rec : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
+      → sub (unit-rec t) (weakenSA 𝟙 s) ∼ unit-rec (sub t s)
+    sub-in₁ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} (B : Type Δ) (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
+      → sub (in₁ B t) s ∼ in₁ B (sub t s)
+    sub-in₂ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} (A : Type Δ) {B : Type Δ} (t : Term Γ₁ B) (s : Subst Γ₂ Γ₁)
+      → sub (in₂ B t) s ∼ in₂ B (sub t s)
+    sub-[_&_] : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t₁ : Term Γ₁ A) (t₂ : Term Γ₁ B) (s : Subst Γ₂ Γ₁)
+      → sub [ t₁ & t₂ ] s ∼ [ sub t₁ s & sub t₂ s ]
+    sub-π₁ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⊠ B)) (s : Subst Γ₂ Γ₁)
+      → sub (π₁ t) s ∼ π₁ (sub t s)
+    sub-π₂ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⊠ B)) (s : Subst Γ₂ Γ₁)
+      → sub (π₂ t) s ∼ π₂ (sub t s)
+    sub-lambdaTm : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term (Γ₁ , A) B) (s : Subst Γ₂ Γ₁)
+      → sub (lambdaTm t) s ∼ lambdaTm (sub t (weakenSA A s))
+    sub-appTm : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⟶ B)) (s : Subst Γ₂ Γ₁)
+      → sub (appTm t) (weakenSA A s) ∼ appTm (sub t s)
+    sub-⇡ : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
+      → sub (⇡ t) (weakenS s) ∼ ⇡(sub t s)
+    sub-↓ : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ₁) (weakenT A)) (s : Subst Γ₂ Γ₁)
+      → sub (↓ t) s ∼ ↓(sub t (weakenS s))
+    sub-box-q : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term (weakenC Γ₁) A) (s : Subst Γ₂ Γ₁)
+      → sub (box-q t) s ∼ box-q (sub t (weakenS s))
+    sub-unbox-q : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (clock-q A)) (s : Subst Γ₂ Γ₁)
+      → sub (unbox-q t) (weakenS s) ∼ unbox-q (sub t s)
+    {-
+    sub-next : {Γ₁ Γ₂ : Context κ} {A : Type κ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
+      → sub (next t) s ∼ next (sub t s)
+    sub-⊛ : {Γ₁ Γ₂ : Context κ} {A B : Type κ} (f : Term Γ₁ (later (A ⟶ B))) (t : Term Γ₁ (later A)) (s : Subst Γ₂ Γ₁)
+      → sub (f ⊛ t) s ∼ (sub f s) ⊛ (sub t s)
+    -}
+    sub-fix-tm : {Γ₁ Γ₂ : Context κ} {A : Type κ} (f : Term Γ₁ (later A ⟶ A)) (s : Subst Γ₂ Γ₁)
+      → sub (fix-tm f) s ∼ fix-tm (sub f s)
+    
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
@@ -159,23 +201,26 @@ mutual
       → (s₂ ,s t) o s₁ ≈ (s₂ o s₁) ,s sub t s₁
     sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
       → pr s ,s sub (varTm Γ A) s ≈ s
-    weaken-ε : (Γ : Context ∅) → weakenS (ε Γ) ≈ ε (weakenC Γ)
+    -- weaken-ε : (Γ : Context ∅) → weakenS (ε Γ) ≈ ({!!} o ε (weakenC Γ)) -- ε (weakenC Γ)
+    -- weaken-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst Γ' Γ'') (s₂ : Subst Γ Γ') → weakenS (s₁ o s₂) ≈ (weakenS s₁ o weakenS s₂)
+    -- weaken-pr : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ (Γ' , A)) → weakenS (pr s) ≈ pr {!weakenS s!}
+    -- weaken-idsub : (Γ : Context ∅) → weakenS (idsub Γ) ≈ idsub (weakenC Γ)
+    -- weaken-,s : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ Γ') (t : Term Γ A) → weakenS (s ,s t) ≈ {!weakenS s ,s ?!}
 {-
 ε : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ •
-    idsub : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ Γ
     _,s_ : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
-    _o_ : {Δ : ClockContext} {Γ Γ' Γ'' : Context Δ} → Subst Γ' Γ'' → Subst Γ Γ' → Subst Γ Γ''
     pr : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
 -}
-record interpret-syntax : Set₂ where
+
+record interpret-syntax {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ∼}{ℓ≈} : Set (suc (ℓCC ⊔ ℓTy ⊔ ℓCtx ⊔ ℓSub ⊔ ℓTm ⊔ ℓ∼ ⊔ ℓ≈)) where
   field
-    semClockContext : Set
-    semType : semClockContext → Set₁
-    semContext : semClockContext → Set₁
-    semSubst : {Δ : semClockContext} → semContext Δ → semContext Δ → Set
-    semTerm : {Δ : semClockContext} → semContext Δ → semType Δ → Set
-    _sem∼_ : {Δ : semClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set -- \sim
-    _sem≈_ : {Δ : semClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set -- ≈
+    semClockContext : Set ℓCC
+    semType : semClockContext → Set ℓTy
+    semContext : semClockContext → Set ℓCtx
+    semSubst : {Δ : semClockContext} → semContext Δ → semContext Δ → Set ℓSub
+    semTerm : {Δ : semClockContext} → semContext Δ → semType Δ → Set ℓTm
+    _sem∼_ : {Δ : semClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ∼ -- \sim
+    _sem≈_ : {Δ : semClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set ℓ≈ -- ≈
     ⟦_⟧CCtx : ClockContext → semClockContext
     ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType ⟦ Δ ⟧CCtx
     ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext ⟦ Δ ⟧CCtx
@@ -186,55 +231,24 @@ record interpret-syntax : Set₂ where
 
 open interpret-syntax
 
-consistent : interpret-syntax → Set
+initial-interpretation : interpret-syntax
+initial-interpretation = record
+  { semClockContext = ClockContext
+  ; semType = Type
+  ; semContext = Context
+  ; semSubst = Subst
+  ; semTerm = Term
+  ; _sem∼_ = _∼_
+  ; _sem≈_ = _≈_
+  ; ⟦_⟧CCtx = id
+  ; ⟦_⟧Type = id
+  ; ⟦_⟧Ctx = id
+  ; ⟦_⟧Subst = id
+  ; ⟦_⟧Tm = id
+  ; ⟦_⟧∼ = id
+  ; ⟦_⟧≈ = id
+  }
+
+consistent : ∀ {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ≈} → interpret-syntax {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{_}{ℓ≈} → Set
 consistent sem = (_sem∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE)) → ⊥
 
-{-
-record interpret-syntax : Set₂ where
-  field
-    semClockContext : Set
-    semType : semClockContext → Set₁
-    semContext : semClockContext → Set₁
-    semSubst : {Δ : semClockContext} → semContext Δ → semContext Δ → Set
-    semTerm : {Δ : semClockContext} → semContext Δ → semType Δ → Set
-    _∼_ : {Δ : semClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set -- \sim
-    _≈_ : {Δ : semClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set -- ≈
-    ⟦_⟧CCtx : ClockContext → semClockContext
-    ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType ⟦ Δ ⟧CCtx
-    ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext ⟦ Δ ⟧CCtx
-    ⟦_⟧Subst : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → semSubst ⟦ Γ ⟧Ctx ⟦ Γ' ⟧Ctx
-    ⟦_⟧Tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm ⟦ Γ ⟧Ctx ⟦ A ⟧Type
-    λ-β : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term (Γ , A) B) → ⟦ appTm (lambdaTm t) ⟧Tm ∼ ⟦ t ⟧Tm
-    λ-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → ⟦ lambdaTm (appTm t) ⟧Tm ∼ ⟦ t ⟧Tm
-    ⊠-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → ⟦ π₁ [ t₁ & t₂ ] ⟧Tm ∼ ⟦ t₁ ⟧Tm
-    ⊠-β₂ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → ⟦ π₂ [ t₁ & t₂ ] ⟧Tm ∼ ⟦ t₂ ⟧Tm
-    ⊠-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⊠ B)) → ⟦ [ π₁ t & π₂ t ] ⟧Tm ∼ ⟦ t ⟧Tm
-    ⊞-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ A)
-        → ⟦ sub (⊞rec C l r) (idsub Γ ,s in₁ B t) ⟧Tm ∼ ⟦ sub l (idsub Γ ,s t) ⟧Tm
-    ⊞-β₂ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ B)
-        → ⟦ sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ⟧Tm ∼ ⟦ sub r (idsub Γ ,s t) ⟧Tm
-    𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → ⟦ sub (unit-rec t) (idsub Γ ,s tt) ⟧Tm ∼ ⟦ t ⟧Tm
-    𝟙-η : {Γ : Context ∅} {A : Type ∅} (t : Term Γ 𝟙) → ⟦ t ⟧Tm ∼ ⟦ tt ⟧Tm
-    □-β : {Γ : Context ∅} {A : Type κ} (t : Term (weakenC Γ) A) → ⟦ unbox-q (box-q t) ⟧Tm ∼ ⟦ t ⟧Tm
-    □-η : {Γ : Context ∅} {A : Type κ} (t : Term Γ (clock-q A)) → ⟦ box-q (unbox-q t) ⟧Tm ∼ ⟦ t ⟧Tm
-    next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (later A)) → ⟦ next (idmap A) ⊛ t ⟧Tm ∼ ⟦ t ⟧Tm
-    next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (later (B ⟶ C))) (f : Term Γ (later (A ⟶ B))) (t : Term Γ (later A))
-      → ⟦ ((next compmap ⊛ g) ⊛ f) ⊛ t  ⟧Tm ∼ ⟦ g ⊛ (f ⊛ t) ⟧Tm
-    next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → ⟦ next f ⊛ next t ⟧Tm ∼ ⟦ next (app-map f t) ⟧Tm
-    next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (later (A ⟶ B))) (t : Term Γ A)
-      → ⟦ f ⊛ next t ⟧Tm ∼ ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧Tm
-    fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) → ⟦ fix-tm f ⟧Tm ∼ ⟦ app-map f (next (fix-tm f)) ⟧Tm
-    fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : Term Γ A) → ⟦ app-map f (next u) ⟧Tm ∼ ⟦ u ⟧Tm → ⟦ fix-tm f ⟧Tm ∼ ⟦ u ⟧Tm
-    sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → ⟦ idsub Γ' o s ⟧Subst ≈ ⟦ s ⟧Subst
-    sub-idr : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → ⟦ s o idsub Γ ⟧Subst ≈ ⟦ s ⟧Subst
-    sub-assoc : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ Γ₄ : Context Δ} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃) (s₃ : Subst Γ₃ Γ₄)
-      → ⟦ s₃ o (s₂ o s₁) ⟧Subst ≈ ⟦ (s₃ o s₂) o s₁ ⟧Subst
-    sub-π₁β : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} {t : Term Γ A} (s : Subst Γ Γ')
-      → ⟦ pr (s ,s t) ⟧Subst ≈ ⟦ s ⟧Subst
-    sub-εη : {Δ : ClockContext} {Γ : Context Δ} (s : Subst Γ •) → ⟦ s ⟧Subst ≈ ⟦ ε Γ ⟧Subst
-    sub-,o : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} {t : Term Γ₂ A} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃)
-      → ⟦ (s₂ ,s t) o s₁ ⟧Subst ≈ ⟦ (s₂ o s₁) ,s sub t s₁ ⟧Subst
-    sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
-      → ⟦ pr s ,s sub (varTm Γ A) s ⟧Subst ≈ ⟦ s ⟧Subst
--}
-\end{code}

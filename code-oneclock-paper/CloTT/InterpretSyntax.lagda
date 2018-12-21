@@ -4,6 +4,7 @@ module CloTT.InterpretSyntax where
 
 open import Prelude
 open import Prelude.Syntax
+open import Data.Product
 open import Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers
@@ -29,6 +30,8 @@ open import CloTT.TypeFormers
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ weakenC Γ ⟧Γ = WC ⟦ Γ ⟧Γ
 
+open PSh
+
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
@@ -36,7 +39,9 @@ mutual
   ⟦ s ,s x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
   ⟦ s o s' ⟧sub = sem-subcomp _ _ _ ⟦ s ⟧sub ⟦ s' ⟧sub
   ⟦ pr {_} {Γ} {Γ'} {A} s ⟧sub = sem-subpr ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ ⟦ A ⟧A ⟦ s ⟧sub
-
+  proj₁ ⟦ weakenS s ⟧sub i = ⟦ s ⟧sub
+  proj₂ ⟦ weakenS s ⟧sub i j x = refl
+  
   ⟦_⟧tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Tm ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ sub t s ⟧tm = sem-sub _ _ _ ⟦ t ⟧tm ⟦ s ⟧sub
   ⟦ varTm Γ A ⟧tm = var ⟦ Γ ⟧Γ ⟦ A ⟧A
