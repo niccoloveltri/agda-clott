@@ -216,7 +216,9 @@ mutual
   ⟦_⟧tm-eq {κ} (cong-π₂ p)  i x = cong proj₂ (⟦ p ⟧tm-eq i x)
   ⟦_⟧tm-eq {∅} (cong-lambdaTm p) x = funext (λ a → ⟦ p ⟧tm-eq (x , a))
   ⟦_⟧tm-eq {κ} (cong-lambdaTm {Γ = Γ} p) i x =
-    Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip)))) (funext (λ j → funext (λ a → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x , a))))
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      (funext (λ j → funext (λ a → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x , a))))
   ⟦_⟧tm-eq {∅} (cong-appTm p) (x , a) = cong (λ z → z a) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-appTm p) i (x , a) = cong (λ z → proj₁ z i a) (⟦ p ⟧tm-eq i x)
   ⟦ cong-⇡ p ⟧tm-eq i x = ⟦ p ⟧tm-eq x
@@ -224,11 +226,18 @@ mutual
   ⟦ cong-box-q p ⟧tm-eq x = Σ≡-uip (funext (λ _ → funext (λ _ → uip))) (funext (λ i → ⟦ p ⟧tm-eq i x))
   ⟦ cong-unbox-q p ⟧tm-eq i x = cong (λ z → proj₁ z i) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq (cong-next {Γ = Γ} p) i x =
-    Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ{ [ j ] → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x) }))
+    Σ≡-uip
+      (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+      (funext (λ{ [ j ] → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x) }))
   ⟦_⟧tm-eq (cong- p ⊛ q) i x =
-    Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
-           (funext (λ{ [ j ] → cong₂ (λ a b → proj₁ (proj₁ a [ j ]) j (proj₁ b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x) }))
+    Σ≡-uip
+      (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+      (funext (λ{ [ j ] → cong₂ (λ a b → proj₁ (proj₁ a [ j ]) j (proj₁ b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x) }))
   ⟦_⟧tm-eq (cong-fix-tm {A = A} p) i x = cong (λ z → proj₁ z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
+  ⟦ cong-force {Γ} {A} {t₁} {t₂} p ⟧tm-eq x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → uip)))
+      (funext (λ j → cong (λ z → proj₁ (proj₁ z ∞) [ j ]) (⟦ p ⟧tm-eq x)))
   ⟦ λ-β t ⟧tm-eq = sem-λ-β t
   ⟦ λ-η t ⟧tm-eq = sem-λ-η t
   ⟦ ⊠-β₁ t₁ t₂ ⟧tm-eq = sem-⊠-β₁ t₁ t₂
