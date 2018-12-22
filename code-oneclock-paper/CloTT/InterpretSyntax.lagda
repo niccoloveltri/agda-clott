@@ -127,4 +127,17 @@ mutual
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
+  proj₁ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j (y , p) = y j
+  proj₂ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j k (y , p) = funext (p j k) 
+  proj₂ ⟦ ⟶weaken A B ⟧tm i j x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      refl
+  proj₁ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j y = y
+  proj₂ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j k (inj₁ y) = refl
+  proj₂ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j k (inj₂ y) = refl
+  proj₂ ⟦ weaken⊞ A B ⟧tm i j x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      refl
 \end{code}

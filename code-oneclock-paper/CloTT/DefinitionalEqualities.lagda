@@ -260,7 +260,7 @@ mutual
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
-  ⟦_⟧tm-eq {κ} (sub-id t) i x = {!refl!}
+  ⟦_⟧tm-eq {κ} (sub-id t) i x = refl
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl
   ⟦_⟧tm-eq {κ} (sub-sub t s s') i x = refl
   ⟦_⟧tm-eq {∅} (sub-varTm Γ₁ Γ₂ A s) x = refl
@@ -326,6 +326,17 @@ mutual
         Σ≡-uip
           (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
           (funext (λ {[ j ] → cong (λ z → proj₁ z [ j ]) (proj₂ (⟦ t ⟧tm x) ∞ i)}))))
+  ⟦ ⟶weaken⟶ A B t ⟧tm-eq i x = funext (λ y → refl)
+  ⟦ weaken⟶weaken A B t ⟧tm-eq i x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      (funext (λ j → funext (λ z → proj₂ (proj₁ ⟦ t ⟧tm i x) i j z)))
+  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x with proj₁ ⟦ t ⟧tm i x
+  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x | inj₁ y = refl
+  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x | inj₂ y = refl
+  ⟦ weaken⊞weaken A B t ⟧tm-eq i x with proj₁ ⟦ t ⟧tm i x
+  ⟦ weaken⊞weaken A B t ⟧tm-eq i x | inj₁ y = refl
+  ⟦ weaken⊞weaken A B t ⟧tm-eq i x | inj₂ y = refl
 
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq

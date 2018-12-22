@@ -31,6 +31,12 @@ mutual
     _⊠_ : {Δ : ClockContext} → Poly Δ → Poly Δ → Poly Δ
     ► : Poly κ → Poly κ
 
+weakenP : Poly ∅ → Poly κ
+weakenP (∁ X) = ∁ (weakenT X)
+weakenP I = I
+weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
+weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
+
 evalP : {Δ : ClockContext} → Poly Δ → Type Δ → Type Δ
 evalP (∁ Y) X = Y
 evalP I X = X
@@ -79,6 +85,8 @@ mutual
     □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
     □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
     cons      : {Δ : ClockContext} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
+    ⟶weaken : (A B : Type ∅) → Term • (((weakenT A) ⟶ (weakenT B)) ⟶ weakenT(A ⟶ B))
+    weaken⊞   : (A B : Type ∅) → Term • (weakenT(A ⊞ B) ⟶ ((weakenT A) ⊞ (weakenT B)))
 
 weaken-to-• : Subst (weakenC •) •
 weaken-to-• = ε (weakenC •)
@@ -132,6 +140,31 @@ sum□ A B = lambdaTm
 
 □next : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q A) → Term Γ (clock-q(later A))
 □next t = box-q (next (unbox-q t))
+
+⊞weaken : (A B : Type ∅) → Term • (((weakenT A) ⊞ (weakenT B)) ⟶ weakenT(A ⊞ B))
+⊞weaken A B = lambdaTm
+                (⊞rec (weakenT (A ⊞ B))
+                      (sub (⇡ (in₁ B (varTm _ _))) (,-weaken • A o weakenSA (weakenT A) •-to-weaken))
+                      (sub (⇡ (in₂ A (varTm _ _))) (,-weaken • B o weakenSA (weakenT B) •-to-weaken)))
+
+split-prod : {Δ : ClockContext} (Γ : Context Δ) (A B C : Type Δ)
+  → Term ((Γ , A) , B) C → Term (Γ , (A ⊠ B)) C
+split-prod Γ A B C t = sub t ((pr (idsub (Γ , (A ⊠ B))) ,s π₁ (varTm _ _)) ,s π₂ (varTm _ _))
+
+⊠weaken : (A B : Type ∅) → Term • (((weakenT A) ⊠ (weakenT B)) ⟶ weakenT(A ⊠ B))
+⊠weaken A B = lambdaTm (split-prod • (weakenT A) (weakenT B) (weakenT(A ⊠ B))
+                                   (sub (⇡ [ weakenTm _ _ _ (varTm _ _) & varTm _ _ ])
+                                        (,-weaken (• , A) B o weakenSA (weakenT B) (,-weaken • A o weakenSA (weakenT A) •-to-weaken))))
+
+weaken⊠ : (A B : Type ∅) → Term • (weakenT(A ⊠ B) ⟶ ((weakenT A) ⊠ (weakenT B)))
+weaken⊠ A B = lambdaTm [ sub (⇡ (π₁ (varTm • (A ⊠ B)))) (,-weaken • (A ⊠ B) o weakenSA (weakenT (A ⊠ B)) •-to-weaken)
+                       & sub (⇡ (π₂ (varTm • (A ⊠ B)))) (,-weaken • (A ⊠ B) o weakenSA (weakenT (A ⊠ B)) •-to-weaken) ]
+
+weaken⟶ : (A B : Type ∅) → Term • (weakenT(A ⟶ B) ⟶ ((weakenT A) ⟶ (weakenT B)))
+weaken⟶ A B = lambdaTm
+              (lambdaTm
+                (sub (⇡ (app-map (weakenTm (• , (A ⟶ B)) A (A ⟶ B) (varTm • (A ⟶ B))) (varTm (• , (A ⟶ B)) A)))
+                     (,-weaken (• , (A ⟶ B)) A o weakenSA (weakenT A) (,-weaken • (A ⟶ B) o weakenSA (weakenT (A ⟶ B)) •-to-weaken))))
 
 infix 13 _∼_ _≈_
 
@@ -230,6 +263,14 @@ mutual
       → force(□next t) ∼ t
     □next-force : {Γ : Context ∅} {A : Type κ} (t : Term Γ (clock-q (later A)))
       → □next(force t) ∼ t
+    ⟶weaken⟶ : (A B : Type ∅) (t : Term • (weakenT (A ⟶ B)))
+      → app-map (⟶weaken A B) (app-map (weaken⟶ A B) t) ∼ t
+    weaken⟶weaken : (A B : Type ∅) (t : Term • (weakenT A ⟶ weakenT B))
+      → app-map (weaken⟶ A B) (app-map (⟶weaken A B) t) ∼ t
+    ⊞weaken⊞ : (A B : Type ∅) (t : Term • (weakenT (A ⊞ B)))
+      → app-map (⊞weaken A B) (app-map (weaken⊞ A B) t) ∼ t
+    weaken⊞weaken : (A B : Type ∅) (t : Term • (weakenT A ⊞ weakenT B))
+      → app-map (weaken⊞ A B) (app-map (⊞weaken A B) t) ∼ t
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
