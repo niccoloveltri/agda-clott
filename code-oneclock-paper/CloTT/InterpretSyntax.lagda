@@ -133,11 +133,4 @@ mutual
     Σ≡-uip
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       refl
-  proj₁ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j y = y
-  proj₂ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j k (inj₁ y) = refl
-  proj₂ (proj₁ ⟦ weaken⊞ A B ⟧tm i x) j k (inj₂ y) = refl
-  proj₂ ⟦ weaken⊞ A B ⟧tm i j x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-      refl
 \end{code}

@@ -331,13 +331,7 @@ mutual
     Σ≡-uip
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       (funext (λ j → funext (λ z → proj₂ (proj₁ ⟦ t ⟧tm i x) i j z)))
-  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x with proj₁ ⟦ t ⟧tm i x
-  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x | inj₁ y = refl
-  ⟦ ⊞weaken⊞ A B t ⟧tm-eq i x | inj₂ y = refl
-  ⟦ weaken⊞weaken A B t ⟧tm-eq i x with proj₁ ⟦ t ⟧tm i x
-  ⟦ weaken⊞weaken A B t ⟧tm-eq i x | inj₁ y = refl
-  ⟦ weaken⊞weaken A B t ⟧tm-eq i x | inj₂ y = refl
-
+  
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq
   ⟦_⟧sub-eq {Δ} (sym≈ p) = sym-subst-eq ⟦ p ⟧sub-eq
