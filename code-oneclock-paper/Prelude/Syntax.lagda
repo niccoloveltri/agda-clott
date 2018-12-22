@@ -184,6 +184,8 @@ mutual
       → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) → fix-tm f ∼ app-map f (next (fix-tm f))
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix-tm f ∼ u
+    sub-id : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (t : Term Γ A)
+      → sub t (idsub Γ) ∼ t
     sub-sub : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁) (s' : Subst Γ₃ Γ₂)
       → sub (sub t s) s' ∼ sub t (s o s')
     sub-varTm : {Δ : ClockContext} (Γ₁ Γ₂ : Context Δ) (A : Type Δ) (s : Subst Γ₂ Γ₁)

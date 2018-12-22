@@ -259,6 +259,8 @@ mutual
   ⟦ next-λ f t ⟧tm-eq = sem-next-λ f t
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
+  ⟦_⟧tm-eq {∅} (sub-id t) x = refl
+  ⟦_⟧tm-eq {κ} (sub-id t) i x = {!refl!}
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl
   ⟦_⟧tm-eq {κ} (sub-sub t s s') i x = refl
   ⟦_⟧tm-eq {∅} (sub-varTm Γ₁ Γ₂ A s) x = refl
