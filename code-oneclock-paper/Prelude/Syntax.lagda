@@ -31,6 +31,13 @@ mutual
     _⊠_ : {Δ : ClockContext} → Poly Δ → Poly Δ → Poly Δ
     ► : Poly κ → Poly κ
 
+evalP : {Δ : ClockContext} → Poly Δ → Type Δ → Type Δ
+evalP (∁ Y) X = Y
+evalP I X = X
+evalP (P ⊞ Q) X = evalP P X ⊞ evalP Q X
+evalP (P ⊠ Q) X = evalP P X ⊠ evalP Q X
+evalP (► P) X = later (evalP P X)
+
 data Context : ClockContext → Set where
   •          : {Δ : ClockContext} → Context Δ
   _,_        : {Δ : ClockContext} → Context Δ → Type Δ → Context Δ
@@ -71,6 +78,7 @@ mutual
     force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
     □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
     □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
+    cons      : {Δ : ClockContext} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
 
 weaken-to-• : Subst (weakenC •) •
 weaken-to-• = ε (weakenC •)

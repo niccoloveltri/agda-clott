@@ -106,10 +106,11 @@ mu {set} P = μset P P
 mu {tot} P = μpsh P P
 \end{code}
 
-cons₁' : ∀ P Q i → Obj (eval Q (μ P)) i → μObj' P Q i
-cons₂' : ∀ P Q i (j : Size< (↑ i))(t : Obj (eval Q (μ P)) i)
-  → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor (eval Q (μ P)) i j t)
-cons₁' P (∁ X) i t = ∁ t
+\begin{code}
+cons₁' : ∀ P Q i → Obj (eval Q (mu P)) i → μObj' P Q i
+cons₂' : ∀ P Q i (j : Size< (↑ i))(t : Obj (eval Q (mu P)) i)
+  → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor (eval Q (mu P)) i j t)
+cons₁' P (∁ps X) i t = ∁ps t
 cons₁' P I i t = I t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
 cons₁' P (Q ⊞ R) i (inj₁ t) = ⊞₁ (cons₁' P Q i t)
@@ -120,20 +121,28 @@ cons₁' P (► Q) i (t , p) = ► c₁ c₂
     c₁ [ j ] = cons₁' P Q j (t [ j ])
     c₂ : LaterLim (μObj' P Q) (μMor' P Q) i c₁
     c₂ [ j ] [ k ] = trans (cons₂' P Q j k (t [ j ])) (cong (cons₁' P Q k) (p [ j ] [ k ]))
-cons₂' P (∁ X) i j t = refl
+cons₂' P (∁ps X) i j t = refl
 cons₂' P I i j t = refl
 cons₂' P (Q ⊠ R) i j (t , u) = cong₂ _⊠_ (cons₂' P Q i j t) (cons₂' P R i j u)
 cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (► Q) i j (t , p) =
   cong₂-dep ► (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+\end{code}
 
-cons' : ∀ P Q Γ → Tm Γ (eval Q (μ P)) → Tm Γ (μ' P Q)
-proj₁ (cons' P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
-proj₂ (cons' P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
+\begin{code}
+conspsh : ∀ P Q Γ → Tm Γ (eval Q (μpsh P P)) → Tm Γ (μpsh P Q)
+proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
+proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
+\end{code}
 
-cons : ∀ P Γ → Tm Γ (eval P (μ P)) → Tm Γ (μ P)
-cons P = cons' P P
+\begin{code}
+{-
+sem-cons : {Δ : tag} {Γ : Ctx Δ} (P : SemPoly Δ) → Tm Γ (eval P (mu P)) → Tm Γ (mu P)
+sem-cons {set} {Γ} P = {!!} -- consset
+sem-cons {tot} {Γ} P = conspsh P P Γ
+-}
+\end{code}
 
 rec₁₁' : ∀ P Q A i
   → (f : (j : Size< (↑ i)) → Obj (eval P A) j → Obj A j)

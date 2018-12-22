@@ -2,6 +2,7 @@
 \begin{code}
 module CloTT.InterpretSyntax where
 
+open import Data.Sum
 open import Data.Product
 open import Data.Unit
 open import Prelude
@@ -43,6 +44,20 @@ mutual
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ weakenC Γ ⟧Γ = WC ⟦ Γ ⟧Γ
 
+consset' : (P Q : Poly ∅) (Γ : Context ∅) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly) -- Tm Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+consset' P (∁ x) Γ t z = ∁s (t z)
+consset' P I Γ t z = I (t z)
+consset' P (Q ⊞ Q₁) Γ t z with (t z)
+consset' P (Q₁ ⊞ Q₂) Γ t z | inj₁ x = ⊞₁ (consset' P Q₁ Γ (λ _ → x) z)
+consset' P (Q₁ ⊞ Q₂) Γ t z | inj₂ y = ⊞₂ (consset' P Q₂ Γ (λ _ → y) z)
+consset' P (Q₁ ⊠ Q₂) Γ t z =
+  consset' P Q₁ Γ (λ z₁ → proj₁ (t z₁)) z ⊠ consset' P Q₂ Γ (λ z₁ → proj₂ (t z₁)) z
+
+{-
+consset : {P : SemPoly set} {Γ : Ctx set} → Tm Γ (eval P (mu P)) → Tm Γ (mu P)
+consset {P} t = consset' P P t
+-}
+
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
@@ -78,6 +93,8 @@ mutual
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
+  ⟦_⟧tm {∅} {Γ} (cons P t) = consset' P P Γ ⟦ t ⟧tm
+  ⟦_⟧tm {κ} {Γ} (cons P t) = {!!} -- sem-cons ⟦ P ⟧poly {!⟦ t ⟧tm!}
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
 \end{code}
