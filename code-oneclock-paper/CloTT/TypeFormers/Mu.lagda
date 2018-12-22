@@ -5,9 +5,11 @@ module CloTT.TypeFormers.Mu where
 open import Data.Sum renaming (map to map⊎)
 open import Data.Product renaming (map to map×)
 open import Prelude
+open import Prelude.Syntax
 open import Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.Later
+open import CloTT.TypeFormers.SumType
 open import CloTT.TypeFormers.ProductType
 open import CloTT.TypeFormers.FunctionType
 open import CloTT.TypeFormers.WeakenClock
@@ -16,25 +18,15 @@ open PSh
 \end{code}
 }
 
-\begin{code}
-data Poly : Set₁ where
-  ∁ : Set → Poly
-  I : Poly
-  _⊞_ : Poly → Poly → Poly
-  _⊠_ : Poly → Poly → Poly
-  ► : Poly → Poly
-\end{code}
+eval : Ty set → Poly ∅ → Ty set
+-- eval (∁ A) X = {!!}
+eval X I = X
+eval X (P ⊞ Q) = eval X P ⊕ eval X Q
+eval X (P ⊠ Q) = eval X P ⊗ eval X Q
 
-\begin{code}
-eval : Poly → PSh → PSh
-eval (∁ X) A = WC X
-eval I A = A
-eval (P ⊞ Q) A = Sum (eval P A) (eval Q A)
-eval (P ⊠ Q) A = Prod (eval P A) (eval Q A)
-eval (► P) A = ▻ (eval P A)
-\end{code}
+data μset (P : Poly ∅) : Set where
+  cons-set : eval (μset P) P → μset P
 
-\begin{code}
 mutual
   data μObj' (P : Poly) : Poly → Size → Set where
     ∁ : ∀{X}{i} → X → μObj' P (∁ X) i
@@ -54,9 +46,7 @@ mutual
     where
       p' : LaterLim (μObj' P Q) (μMor' P Q) j x
       p' [ k ] [ l ] = p [ k ] [ l ]
-\end{code}
 
-\begin{code}
 μMor'Id : (P Q : Poly) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
 μMor'Id P (∁ X) {i} {∁ x} = refl
 μMor'Id P I {i}{I x} = cong I (μMor'Id P P)
@@ -64,9 +54,7 @@ mutual
 μMor'Id P (Q ⊞ R) {i}{⊞₁ x} = cong ⊞₁ (μMor'Id P Q)
 μMor'Id P (Q ⊞ R) {i}{⊞₂ x} = cong ⊞₂ (μMor'Id P R)
 μMor'Id P (► Q) {i}{► x p} = cong₂-dep ► refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
-\end{code}
 
-\begin{code}
 μMor'Comp : (P Q : Poly) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : μObj' P Q i}
   → μMor' P Q i k x ≡ μMor' P Q j k (μMor' P Q i j x)
 μMor'Comp P (∁ X) {x = ∁ x} = refl
@@ -75,9 +63,7 @@ mutual
 μMor'Comp P (Q ⊞ R) {x = ⊞₁ x} = cong ⊞₁ (μMor'Comp P Q)
 μMor'Comp P (Q ⊞ R) {x = ⊞₂ x} = cong ⊞₂ (μMor'Comp P R)
 μMor'Comp P (► Q) {x = ► x p} = cong₂-dep ► refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
-\end{code}
 
-\begin{code}
 μ' : Poly → Poly → Ty tot
 μ' P Q = record
   { Obj = μObj' P Q
@@ -85,14 +71,10 @@ mutual
   ; MorId = μMor'Id P Q
   ; MorComp = μMor'Comp P Q
   }
-\end{code}
 
-\begin{code}
 μ : Poly → Ty tot
 μ P = μ' P P
-\end{code}
 
-\begin{code}
 cons₁' : ∀ P Q i → Obj (eval Q (μ P)) i → μObj' P Q i
 cons₂' : ∀ P Q i (j : Size< (↑ i))(t : Obj (eval Q (μ P)) i)
   → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor (eval Q (μ P)) i j t)
@@ -114,20 +96,14 @@ cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (► Q) i j (t , p) =
   cong₂-dep ► (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
-\end{code}
 
-\begin{code}
 cons' : ∀ P Q Γ → Tm Γ (eval Q (μ P)) → Tm Γ (μ' P Q)
 proj₁ (cons' P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (cons' P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
-\end{code}
 
-\begin{code}
 cons : ∀ P Γ → Tm Γ (eval P (μ P)) → Tm Γ (μ P)
 cons P = cons' P P
-\end{code}
 
-\begin{code}
 rec₁₁' : ∀ P Q A i
   → (f : (j : Size< (↑ i)) → Obj (eval P A) j → Obj A j)
   → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj (eval P A) j)
@@ -152,9 +128,7 @@ rec₁₂' P (Q ⊠ R) A i f p j k (x ⊠ y) = cong₂ _,_ (rec₁₂' P Q A i f
 rec₁₂' P (Q ⊞ R) A i f p j k (⊞₁ x) = cong inj₁ (rec₁₂' P Q A i f p j k x)
 rec₁₂' P (Q ⊞ R) A i f p j k (⊞₂ x) = cong inj₂ (rec₁₂' P R A i f p j k x)
 rec₁₂' P (► Q) A i f p j k (► x q) = Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ { [ l ] → refl }))
-\end{code}
 
-\begin{code}
 rec₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm Γ (eval P A ⇒ A))
   → (i : Size) (j : Size< (↑ i)) (γ : Obj Γ i)
@@ -168,18 +142,14 @@ rec₂' P (Q ⊞ R) Γ A f i j γ k (⊞₁ x) = cong inj₁ (rec₂' P Q Γ A f
 rec₂' P (Q ⊞ R) Γ A f i j γ k (⊞₂ x) = cong inj₂ (rec₂' P R Γ A f i j γ k x)
 rec₂' P (► Q) Γ A f i j γ k (► x q) =
   Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ { [ l ] → rec₂' P Q Γ A f i j γ l (x [ l ]) }))
-\end{code}
 
-\begin{code}
 rec' : ∀ P Q Γ A → Tm Γ (eval P A ⇒ A) → Tm Γ (μ' P Q ⇒ eval Q A)
 proj₁ (proj₁ (rec' P Q Γ A (f , p)) i γ) j x = rec₁₁' P Q A i (proj₁ (f i γ)) (proj₂ (f i γ)) j x
 proj₂ (proj₁ (rec' P Q Γ A (f , p)) i γ) j k x = rec₁₂' P Q A i (proj₁ (f i γ)) (proj₂ (f i γ)) j k x
 proj₂ (rec' P Q Γ A (f , p)) i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (rec₂' P Q Γ A (f , p) i j γ k)))
-\end{code}
 
-\begin{code}
 rec : ∀ P Γ A → Tm Γ (eval P A ⇒ A) → Tm Γ (μ P ⇒ A)
 rec P Γ A f =
   lambda Γ (μ P) A
@@ -191,9 +161,7 @@ rec P Γ A f =
   where
     wk-f : Tm (Γ ,, μ P) (eval P A ⇒ A)
     wk-f = weaken Γ (μ P) (eval P A ⇒ A) f
-\end{code}
 
-\begin{code}
 primrec₁₁' : ∀ P Q A i
   → (f : (j : Size< (↑ i)) → Obj (eval P (μ P ⊗ A)) j → Obj A j)
   → (p : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj (eval P (μ P ⊗ A)) j)
@@ -218,9 +186,7 @@ primrec₁₂' P (Q ⊠ R) A i f p j k (x ⊠ y) = cong₂ _,_ (primrec₁₂' P
 primrec₁₂' P (Q ⊞ R) A i f p j k (⊞₁ x) = cong inj₁ (primrec₁₂' P Q A i f p j k x)
 primrec₁₂' P (Q ⊞ R) A i f p j k (⊞₂ x) = cong inj₂ (primrec₁₂' P R A i f p j k x)
 primrec₁₂' P (► Q) A i f p j k (► x q) = Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ { [ l ] → refl }))
-\end{code}
 
-\begin{code}
 primrec₂' : (P Q : Poly) (Γ : Ctx tot) (A : Ty tot)
   → (f : Tm Γ (eval P (μ P ⊗ A) ⇒ A))
   → (i : Size) (j : Size< (↑ i)) (γ : Obj Γ i)
@@ -234,18 +200,14 @@ primrec₂' P (Q ⊞ R) Γ A f i j γ k (⊞₁ x) = cong inj₁ (primrec₂' P 
 primrec₂' P (Q ⊞ R) Γ A f i j γ k (⊞₂ x) = cong inj₂ (primrec₂' P R Γ A f i j γ k x)
 primrec₂' P (► Q) Γ A f i j γ k (► x q) =
   Σ≡-uip (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) })) (funext (λ { [ l ] → primrec₂' P Q Γ A f i j γ l (x [ l ]) }))
-\end{code}
 
-\begin{code}
 primrec' : ∀ P Q Γ A → Tm Γ (eval P (μ P ⊗ A) ⇒ A) → Tm Γ (μ' P Q ⇒ eval Q (μ P ⊗ A))
 proj₁ (proj₁ (primrec' P Q Γ A (f , p)) i γ) j x = primrec₁₁' P Q A i (proj₁ (f i γ)) (proj₂ (f i γ)) j x
 proj₂ (proj₁ (primrec' P Q Γ A (f , p)) i γ) j k x = primrec₁₂' P Q A i (proj₁ (f i γ)) (proj₂ (f i γ)) j k x
 proj₂ (primrec' P Q Γ A (f , p)) i j γ =
   Σ≡-uip (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
          (funext (λ k → funext (primrec₂' P Q Γ A (f , p) i j γ k)))
-\end{code}
 
-\begin{code}
 primrec : ∀ P Γ A → Tm Γ (eval P (μ P ⊗ A) ⇒ A) → Tm Γ (μ P ⇒ A)
 primrec P Γ A f =
   lambda Γ (μ P) A
@@ -257,4 +219,4 @@ primrec P Γ A f =
   where
     wk-f : Tm (Γ ,, μ P) (eval P (μ P ⊗ A) ⇒ A)
     wk-f = weaken Γ (μ P) (eval P (μ P ⊗ A) ⇒ A) f
-\end{code}
+

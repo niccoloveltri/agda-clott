@@ -19,15 +19,33 @@ open PSh
 ⟦ ∅ ⟧Δ = set
 ⟦ κ ⟧Δ = tot
 
-⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty ⟦ Δ ⟧Δ
-⟦ 𝟙 ⟧A = Unit
-⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
-⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
-⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-⟦ weakenT A ⟧A = WC ⟦ A ⟧A
-⟦ later A ⟧A = ▻(⟦ A ⟧A)
-⟦ clock-q A ⟧A = □(⟦ A ⟧A)
+mutual
+  eval : {Δ : ClockContext} → Poly Δ → Ty ⟦ Δ ⟧Δ → Ty ⟦ Δ ⟧Δ
+  eval (∁ Y) X = ⟦ Y ⟧A
+  eval I X = X
+  eval (P ⊞ Q) X = eval P X ⊕ eval Q X
+  eval (P ⊠ Q) X = eval P X ⊗ eval Q X
+  eval (► P) X = ▻ (eval P X)
 
+  data μset' (P : Poly ∅) : Poly ∅ → Set where
+    ∁ : {X : Type ∅} → ⟦ X ⟧A → μset' P (∁ X)
+    I : μset' P P → μset' P I
+    _⊠_ : {Q R : Poly ∅} → μset' P Q → μset' P R → μset' P (Q ⊠ R)
+    ⊞₁ : {Q R : Poly ∅} → μset' P Q → μset' P (Q ⊞ R)
+    ⊞₂ : {Q R : Poly ∅} → μset' P Q → μset' P (Q ⊞ R)
+    
+  ⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty ⟦ Δ ⟧Δ
+  ⟦ 𝟙 ⟧A = Unit
+  ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
+  ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
+  ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
+  ⟦ weakenT A ⟧A = WC ⟦ A ⟧A
+  ⟦ later A ⟧A = ▻(⟦ A ⟧A)
+  ⟦ clock-q A ⟧A = □(⟦ A ⟧A)
+  ⟦_⟧A {∅} (μ P) = μset' P P
+  ⟦_⟧A {κ} (μ P) = {!!}
+  
+  
 ⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx ⟦ Δ ⟧Δ
 ⟦ • ⟧Γ = ∙ _
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A

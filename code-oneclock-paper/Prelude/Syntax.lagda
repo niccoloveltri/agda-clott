@@ -13,14 +13,23 @@ data ClockContext : Set where
   ∅ : ClockContext
   κ : ClockContext
 
-data Type : ClockContext → Set where
-  𝟙        : Type ∅
-  _⊞_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  _⊠_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  _⟶_    : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
-  weakenT  : Type ∅ → Type κ
-  later    : Type κ → Type κ
-  clock-q  : Type κ → Type ∅
+mutual
+  data Type : ClockContext → Set where
+    𝟙        : Type ∅
+    _⊞_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
+    _⊠_      : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
+    _⟶_    : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
+    weakenT  : Type ∅ → Type κ
+    later    : Type κ → Type κ
+    clock-q  : Type κ → Type ∅
+    μ        : {Δ : ClockContext} → Poly Δ → Type Δ
+
+  data Poly : ClockContext → Set where
+    ∁ : {Δ : ClockContext} → Type Δ → Poly Δ
+    I : {Δ : ClockContext} → Poly Δ
+    _⊞_ : {Δ : ClockContext} → Poly Δ → Poly Δ → Poly Δ
+    _⊠_ : {Δ : ClockContext} → Poly Δ → Poly Δ → Poly Δ
+    ► : Poly κ → Poly κ
 
 data Context : ClockContext → Set where
   •          : {Δ : ClockContext} → Context Δ
