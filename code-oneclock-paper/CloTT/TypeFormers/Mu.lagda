@@ -106,7 +106,6 @@ mu {set} P = μset P P
 mu {tot} P = μpsh P P
 \end{code}
 
-\begin{code}
 cons₁' : ∀ P Q i → Obj (eval Q (mu P)) i → μObj' P Q i
 cons₂' : ∀ P Q i (j : Size< (↑ i))(t : Obj (eval Q (mu P)) i)
   → μMor' P Q i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor (eval Q (mu P)) i j t)
@@ -128,12 +127,13 @@ cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (► Q) i j (t , p) =
   cong₂-dep ► (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
-\end{code}
 
 \begin{code}
+{-
 conspsh : ∀ P Q Γ → Tm Γ (eval Q (μpsh P P)) → Tm Γ (μpsh P Q)
 proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
+-}
 \end{code}
 
 \begin{code}

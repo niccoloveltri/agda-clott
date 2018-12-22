@@ -53,10 +53,31 @@ consset' P (Q₁ ⊞ Q₂) Γ t z | inj₂ y = ⊞₂ (consset' P Q₂ Γ (λ _ 
 consset' P (Q₁ ⊠ Q₂) Γ t z =
   consset' P Q₁ Γ (λ z₁ → proj₁ (t z₁)) z ⊠ consset' P Q₂ Γ (λ z₁ → proj₂ (t z₁)) z
 
-{-
-consset : {P : SemPoly set} {Γ : Ctx set} → Tm Γ (eval P (mu P)) → Tm Γ (mu P)
-consset {P} t = consset' P P t
--}
+cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ evalP Q (μ P) ⟧A i → μObj' ⟦ P ⟧poly ⟦ Q ⟧poly i
+cons₂' : (P Q : Poly κ) (i : Size) (j : Size< (↑ i)) (t : Obj ⟦ evalP Q (μ P) ⟧A i)
+  → μMor' ⟦ P ⟧poly ⟦ Q ⟧poly i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor ⟦ evalP Q (μ P) ⟧A i j t)
+cons₁' P (∁ X) i t = ∁ps t
+cons₁' P I i t = I t
+cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
+cons₁' P (Q ⊞ R) i (inj₁ t) = ⊞₁ (cons₁' P Q i t)
+cons₁' P (Q ⊞ R) i (inj₂ t) = ⊞₂ (cons₁' P R i t)
+cons₁' P (► Q) i (t , p) = ► c₁ c₂
+  where
+    c₁ : Later (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) i
+    c₁ [ j ] = cons₁' P Q j (t [ j ])
+    c₂ : LaterLim (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly) i c₁
+    c₂ [ j ] [ k ] = trans (cons₂' P Q j k (t [ j ])) (cong (cons₁' P Q k) (p [ j ] [ k ]))
+cons₂' P (∁ X) i j t = refl
+cons₂' P I i j t = refl
+cons₂' P (Q ⊠ R) i j (t , u) = cong₂ _⊠_ (cons₂' P Q i j t) (cons₂' P R i j u)
+cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
+cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
+cons₂' P (► Q) i j (t , p) =
+  cong₂-dep ► (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+
+conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
+proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
+proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
 
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
@@ -94,7 +115,7 @@ mutual
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦_⟧tm {∅} {Γ} (cons P t) = consset' P P Γ ⟦ t ⟧tm
-  ⟦_⟧tm {κ} {Γ} (cons P t) = {!!} -- sem-cons ⟦ P ⟧poly {!⟦ t ⟧tm!}
+  ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
 \end{code}
