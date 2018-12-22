@@ -44,7 +44,8 @@ mutual
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ weakenC Γ ⟧Γ = WC ⟦ Γ ⟧Γ
 
-consset' : (P Q : Poly ∅) (Γ : Context ∅) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly) -- Tm Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+{-
+consset' : (P Q : Poly ∅) (Γ : Context ∅) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
 consset' P (∁ x) Γ t z = ∁s (t z)
 consset' P I Γ t z = I (t z)
 consset' P (Q ⊞ Q₁) Γ t z with (t z)
@@ -52,6 +53,14 @@ consset' P (Q₁ ⊞ Q₂) Γ t z | inj₁ x = ⊞₁ (consset' P Q₁ Γ (λ _ 
 consset' P (Q₁ ⊞ Q₂) Γ t z | inj₂ y = ⊞₂ (consset' P Q₂ Γ (λ _ → y) z)
 consset' P (Q₁ ⊠ Q₂) Γ t z =
   consset' P Q₁ Γ (λ z₁ → proj₁ (t z₁)) z ⊠ consset' P Q₂ Γ (λ z₁ → proj₂ (t z₁)) z
+-}
+
+consset' : (P Q : Poly ∅) → ⟦ evalP Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
+consset' P (∁ x) t = ∁s t -- ∁s t
+consset' P I t = I t -- I t
+consset' P (Q ⊞ Q₁) (inj₁ x) = ⊞₁ (consset' P Q x)
+consset' P (Q ⊞ Q₁) (inj₂ y) = ⊞₂ (consset' P Q₁ y)
+consset' P (Q₁ ⊠ Q₂) t = consset' P Q₁ (proj₁ t) ⊠ consset' P Q₂ (proj₂ t)
 
 cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ evalP Q (μ P) ⟧A i → μObj' ⟦ P ⟧poly ⟦ Q ⟧poly i
 cons₂' : (P Q : Poly κ) (i : Size) (j : Size< (↑ i)) (t : Obj ⟦ evalP Q (μ P) ⟧A i)
@@ -114,7 +123,7 @@ mutual
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-  ⟦_⟧tm {∅} {Γ} (cons P t) = consset' P P Γ ⟦ t ⟧tm
+  ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A

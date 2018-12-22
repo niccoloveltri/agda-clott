@@ -238,6 +238,8 @@ mutual
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
       (funext (λ j → cong (λ z → proj₁ (proj₁ z ∞) [ j ]) (⟦ p ⟧tm-eq x)))
+  ⟦_⟧tm-eq {∅} (cong-cons {.∅} p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-cons {.κ} p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
   ⟦ λ-β t ⟧tm-eq = sem-λ-β t
   ⟦ λ-η t ⟧tm-eq = sem-λ-η t
   ⟦ ⊠-β₁ t₁ t₂ ⟧tm-eq = sem-⊠-β₁ t₁ t₂
@@ -290,6 +292,8 @@ mutual
   ⟦ sub-force t s ⟧tm-eq x = refl
   ⟦ sub-□const A s ⟧tm-eq x = refl
   ⟦ sub-□sum A B s ⟧tm-eq x = refl
+  ⟦_⟧tm-eq {∅} (sub-cons t s) x = refl
+  ⟦_⟧tm-eq {κ} (sub-cons t s) i x = refl
   ⟦ const□const t ⟧tm-eq x =
     Σ≡-uip
       (funext (λ { _ → funext (λ _ → uip) }))
