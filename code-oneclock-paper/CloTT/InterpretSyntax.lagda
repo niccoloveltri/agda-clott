@@ -88,6 +88,19 @@ conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ 
 proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
 
+primrec-set' : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
+  → Tm ⟦ Γ ⟧Γ (eval ⟦ P ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A) ⇒ ⟦ A ⟧A)
+  → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ eval ⟦ Q ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A)) 
+primrec-set' P (∁ X) Γ A t x (∁s y) = y
+primrec-set' P I Γ A t x (I y) = y , t x (primrec-set' P P Γ A t x y )
+primrec-set' P (Q₁ ⊞ Q₂) Γ A t x (⊞₁ y) = inj₁ (primrec-set' P Q₁ Γ A t x y)
+primrec-set' P (Q₁ ⊞ Q₂) Γ A t x (⊞₂ y) = inj₂ (primrec-set' P Q₂ Γ A t x y)
+proj₁ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂)) = primrec-set' P Q₁ Γ A t x y₁
+proj₂ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂)) = primrec-set' P Q₂ Γ A t x y₂
+
+primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅) → Tm ⟦ Γ ⟧Γ (eval ⟦ P ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A) ⇒ ⟦ A ⟧A) → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-set P Γ A t x z = t x (primrec-set' P P Γ A t x z)
+
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
