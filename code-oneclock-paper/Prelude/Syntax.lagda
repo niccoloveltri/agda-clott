@@ -83,7 +83,7 @@ mutual
     fix-tm    : {Γ : Context κ} {A : Type κ} → Term Γ (later A ⟶ A) → Term Γ A
     force     : {Γ : Context ∅} {A : Type κ} → Term Γ (clock-q(later A)) → Term Γ (clock-q A)
     cons      : {Δ : ClockContext} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
-    primrec   : {Δ : ClockContext} {P : Poly Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ (evalP P (μ P ⊠ A) ⟶ A) → Term Γ (μ P ⟶ A)
+    primrec   : {Δ : ClockContext} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
     □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
     □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
     ⟶weaken : (A B : Type ∅) → Term • (((weakenT A) ⟶ (weakenT B)) ⟶ weakenT(A ⟶ B))
@@ -114,6 +114,32 @@ app-map {_} {Γ} {A} {B} f x = sub (appTm f) (idsub Γ ,s x)
 
 idmap : {Δ : ClockContext} {Γ : Context Δ} (A : Type Δ) → Term Γ (A ⟶ A)
 idmap {_} {Γ} A = lambdaTm (varTm Γ A)
+
+⊞map : {Δ : ClockContext} {Γ : Context Δ} {A₁ B₁ A₂ B₂ : Type Δ}
+  → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊞ B₁) ⟶ (A₂ ⊞ B₂))
+⊞map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
+  lambdaTm (⊞rec (A₂ ⊞ B₂)
+                 (in₁ B₂ (app-map (weakenTm Γ A₁ (A₁ ⟶ A₂) f) (varTm Γ A₁)))
+                 (in₂ A₂ (app-map (weakenTm Γ B₁ (B₁ ⟶ B₂) g) (varTm Γ B₁))))
+
+⊠map : {Δ : ClockContext} {Γ : Context Δ} {A₁ B₁ A₂ B₂ : Type Δ}
+  → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊠ B₁) ⟶ (A₂ ⊠ B₂))
+⊠map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
+  lambdaTm [ app-map (weakenTm Γ (A₁ ⊠ B₁) (A₁ ⟶ A₂) f) (π₁ (varTm Γ (A₁ ⊠ B₁)))
+           & app-map (weakenTm Γ (A₁ ⊠ B₁) (B₁ ⟶ B₂) g) (π₂ (varTm Γ (A₁ ⊠ B₁))) ]
+
+►map : {Γ : Context κ} {A B : Type κ}
+  → Term Γ (A ⟶ B) → Term Γ (later A ⟶ later B)
+►map {Γ} {A} {B} f =
+  lambdaTm (weakenTm Γ (later A) (later (A ⟶ B)) (next f) ⊛ varTm Γ (later A))
+
+Pmap : {Δ : ClockContext} (P : Poly Δ) {Γ : Context Δ} {A B : Type Δ}
+  → Term Γ (A ⟶ B) → Term Γ (evalP P A ⟶ evalP P B)
+Pmap (∁ X) f = idmap X
+Pmap I f = f
+Pmap (P ⊞ Q) f = ⊞map (Pmap P f) (Pmap Q f)
+Pmap (P ⊠ Q) f = ⊠map (Pmap P f) (Pmap Q f)
+Pmap (► P) f = ►map (Pmap P f)
 
 compmap : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} → Term Γ ((B ⟶ C) ⟶ ((A ⟶ B) ⟶ (A ⟶ C)))
 compmap {_} {Γ} {A} {B} {C} =
@@ -214,6 +240,8 @@ mutual
     cong-fix-tm  : {Γ : Context κ} {A : Type κ} {t₁ t₂ : Term Γ (later A ⟶ A)} → t₁ ∼ t₂ → fix-tm t₁ ∼ fix-tm t₂
     cong-force : {Γ : Context ∅} {A : Type κ} {t₁ t₂ : Term Γ (clock-q(later A))} → t₁ ∼ t₂ → force t₁ ∼ force t₂
     cong-cons : {Δ : ClockContext} {Γ : Context Δ} {P : Poly Δ} {t₁ t₂ : Term Γ (evalP P (μ P))} → t₁ ∼ t₂ → cons P t₁ ∼ cons P t₂
+    {-cong-primrec : {Δ : ClockContext} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ (evalP P (μ P ⊠ A) ⟶ A)}
+      → t₁ ∼ t₂ → primrec P t₁ ∼ primrec P t₂-}
     λ-β : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term (Γ , A) B) → appTm (lambdaTm t) ∼ t
     λ-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → lambdaTm (appTm t) ∼ t
     ⊠-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → π₁ [ t₁ & t₂ ] ∼ t₁
@@ -237,6 +265,8 @@ mutual
       → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) → fix-tm f ∼ app-map f (next (fix-tm f))
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (later A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix-tm f ∼ u
+    primrec-cons : {Δ : ClockContext} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)) (a : Term Γ (evalP P (μ P)))
+      → app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
     sub-id : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (t : Term Γ A)
       → sub t (idsub Γ) ∼ t
     sub-sub : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁) (s' : Subst Γ₃ Γ₂)
@@ -271,6 +301,8 @@ mutual
       → sub (□sum A B) s ∼ □sum A B
     sub-cons : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {P : Poly Δ} (t : Term Γ₁ (evalP P (μ P))) (s : Subst Γ₂ Γ₁)
       → sub (cons P t) s ∼ cons P (sub t s)
+    {-sub-primrec : {Δ : ClockContext} (P : Poly Δ) {Γ₁ Γ₂ : Context Δ} {A : Type Δ} (t : Term Γ₁ (evalP P (μ P ⊠ A) ⟶ A)) (s : Subst Γ₂ Γ₁)
+      → sub (primrec P t) s ∼ primrec P (sub t s)-}
     const□const : {Γ : Context ∅} {A : Type ∅} (t : Term Γ (clock-q (weakenT A)))
       → app-map (const□ Γ A) (app-map (□const A) t) ∼ t
     □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)

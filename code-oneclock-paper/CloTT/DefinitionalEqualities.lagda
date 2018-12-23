@@ -259,6 +259,11 @@ mutual
   ⟦ next-λ f t ⟧tm-eq = sem-next-λ f t
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
+  ⟦_⟧tm-eq {∅} (primrec-cons (∁ X) t a) x = refl
+  ⟦_⟧tm-eq {∅} (primrec-cons I t a) x = {!!}
+  ⟦_⟧tm-eq {∅} (primrec-cons (Q₁ ⊞ Q₂) t a) x = {!!}
+  ⟦_⟧tm-eq {∅} (primrec-cons (Q₁ ⊠ Q₂) t a) x = {!!}
+  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = {!!}
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
   ⟦_⟧tm-eq {κ} (sub-id t) i x = refl
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl
