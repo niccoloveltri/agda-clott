@@ -207,11 +207,28 @@ weaken⊠ A B = lambdaTm [ sub (⇡ (π₁ (varTm • (A ⊠ B)))) (,-weaken •
                        & sub (⇡ (π₂ (varTm • (A ⊠ B)))) (,-weaken • (A ⊠ B) o weakenSA (weakenT (A ⊠ B)) •-to-weaken) ]
 
 weaken⟶ : (A B : Type ∅) → Term • (weakenT(A ⟶ B) ⟶ ((weakenT A) ⟶ (weakenT B)))
-weaken⟶ A B = lambdaTm
-              (lambdaTm
-                (sub (⇡ (app-map (weakenTm (• , (A ⟶ B)) A (A ⟶ B) (varTm • (A ⟶ B))) (varTm (• , (A ⟶ B)) A)))
-                     (,-weaken (• , (A ⟶ B)) A o weakenSA (weakenT A) (,-weaken • (A ⟶ B) o weakenSA (weakenT (A ⟶ B)) •-to-weaken))))
+weaken⟶ A B =
+  lambdaTm (lambdaTm
+           (sub (⇡ (app-map (weakenTm (• , (A ⟶ B)) A (A ⟶ B) (varTm • (A ⟶ B))) (varTm (• , (A ⟶ B)) A)))
+                (,-weaken (• , (A ⟶ B)) A o weakenSA (weakenT A) (,-weaken • (A ⟶ B) o weakenSA (weakenT (A ⟶ B)) •-to-weaken))))
+{-
+subst-μ-help : {Δ : ClockContext} (Γ : Context Δ) (A B : Type Δ)
+  → Subst (Γ , (A ⊠ B)) (Γ , A)
+subst-μ-help = {!!}
 
+weaken-evalP : {Γ : Context ∅} (P : Poly ∅) (A : Type ∅)
+  → Term (weakenC Γ) (weakenT (evalP P A) ⟶ evalP (weakenP P) (weakenT A))
+weaken-evalP {Γ} P A = lambdaTm (sub (varTm (weakenC Γ) _) {!!})
+
+weakenμ : (P : Poly ∅) → Term • (μ (weakenP P) ⟶ weakenT (μ P))
+weakenμ P =
+  primrec (weakenP P)
+          (lambdaTm (sub (⇡ (cons P (varTm • _)))
+                         ((,-weaken • (evalP P (μ P)) o
+                           (weakenSA (weakenT (evalP P (μ P))) •-to-weaken o
+                           {!!})) o
+                           subst-μ-help • (evalP (weakenP P) (μ (weakenP P))) (evalP (weakenP P) (weakenT (μ P))))))
+-}
 infix 13 _∼_ _≈_
 
 mutual
