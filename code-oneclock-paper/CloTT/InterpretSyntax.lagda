@@ -88,9 +88,9 @@ conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ 
 proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
 
-primrec-set' : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
-  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
-  → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P ⊠ A) ⟧A)
+primrec-set' : (P Q : Poly ∅) (Γ : Ctx set) (A : Type ∅)
+  → Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P ⊠ A) ⟧A)
 primrec-set' P (∁ X) Γ A t x (∁s y) = y
 primrec-set' P I Γ A t x (I y) = y , t x (primrec-set' P P Γ A t x y)
 primrec-set' P (Q₁ ⊞ Q₂) Γ A t x (⊞₁ y) = inj₁ (primrec-set' P Q₁ Γ A t x y)
@@ -101,7 +101,30 @@ proj₂ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂)) = primrec-set'
 primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
   → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
-primrec-set P Γ A t x z = t x (primrec-set' P P Γ A t x z)
+primrec-set P Γ A t =
+  lambda _ _ _
+         (sem-app-map _ _ _
+                      (weaken _ _ _ t)
+                      (sem-app-map _ _ _
+                                   (primrec-set' P P (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) _ (weaken _ _ _ t))
+                                   (var _ _)))
+
+primrec-psh' : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ)
+  → Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P ⊠ A) ⟧A)
+primrec-psh' P Q Γ A t = {!!}
+
+primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
+  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-psh P Γ A t =
+  lambda ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly) ⟦ A ⟧A
+         (sem-app-map (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) ⟦ evalP P (μ P ⊠ A) ⟧A ⟦ A ⟧A
+                       (weaken ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly) ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A t)
+                       (sem-app-map (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) (μpsh ⟦ P ⟧poly ⟦ P ⟧poly) ⟦ evalP P (μ P ⊠ A) ⟧A
+                                    (primrec-psh' P P (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) _
+                                                  (weaken ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly) ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A t))
+                                    (var ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly))))
 
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
@@ -141,7 +164,7 @@ mutual
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦_⟧tm {∅} (primrec {_} {P} {Γ} {A} t) = primrec-set P Γ A ⟦ t ⟧tm
-  ⟦_⟧tm {κ} {Γ} (primrec t) = {!!}
+  ⟦_⟧tm {κ} (primrec {_} {P} {Γ} {A} t) = primrec-psh P Γ A ⟦ t ⟧tm
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
   proj₁ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j (y , p) = y j
