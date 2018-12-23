@@ -123,8 +123,8 @@ primrec-psh'₁₁ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₁ z) = inj₁ (primrec-p
 primrec-psh'₁₁ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₂ z) = inj₂ (primrec-psh'₁₁ P Q₂ Γ A t i x j z)
 proj₁ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₁ Γ A t i x j z₁
 proj₂ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₂ Γ A t i x j z₂
-proj₁ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) k = {!!} 
-proj₂ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) = {!!}
+proj₁ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q Γ A t i x k (z₁ [ k ]) 
+proj₂ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) [ k₁ ] [ k₂ ] = trans (primrec-psh'₁₂ P Q Γ A t i x k₁ (z₁ [ k₁ ]) k₂) (cong (primrec-psh'₁₁ P Q Γ A t i x k₂) (z₂ [ k₁ ] [ k₂ ]))
 primrec-psh'₁₂ P (∁ X) Γ A t i x j (∁ps z) k = refl
 primrec-psh'₁₂ P I Γ A (t , p) i x j (I z) k =
   cong (λ z → (_ , z))
@@ -133,10 +133,10 @@ primrec-psh'₁₂ P I Γ A (t , p) i x j (I z) k =
 primrec-psh'₁₂ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₁ z) k = cong inj₁ (primrec-psh'₁₂ P Q₁ Γ A t i x j z k)
 primrec-psh'₁₂ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₂ z) k = cong inj₂ (primrec-psh'₁₂ P Q₂ Γ A t i x j z k)
 primrec-psh'₁₂ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂) k = cong₂ (_,_) (primrec-psh'₁₂ P Q₁ Γ A t i x j z₁ k) (primrec-psh'₁₂ P Q₂ Γ A t i x j z₂ k)
-primrec-psh'₁₂ P (► Q) Γ A t i x j z k =
+primrec-psh'₁₂ P (► Q) Γ A t i x j (► z₁ z₂) k =
   Σ≡-uip
-    {!!}
-    {!!}
+    (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+    (funext (λ { [ l ] → refl }))
 
 primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
@@ -151,7 +151,10 @@ primrec-psh'₂ P I Γ A t i j x k (I z) =
 primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) = cong inj₁ (primrec-psh'₂ P Q₁ Γ A t i j x k z)
 primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) = cong inj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z)
 primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) = cong₂ (_,_) (primrec-psh'₂ P Q₁ Γ A t i j x k z₁) (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)
-primrec-psh'₂ P (► Q) Γ A t i j x k (► z₁ z₂) = {!!}
+primrec-psh'₂ P (► Q) Γ A t i j x k (► z₁ z₂) =
+  Σ≡-uip
+    (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+    (funext (λ { [ l ] → primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ])}))
 
 primrec-psh' : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ)
   → Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
