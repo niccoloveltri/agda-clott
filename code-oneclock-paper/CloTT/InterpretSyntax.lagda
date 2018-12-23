@@ -89,16 +89,18 @@ proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
 
 primrec-set' : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
-  → Tm ⟦ Γ ⟧Γ (eval ⟦ P ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A) ⇒ ⟦ A ⟧A)
-  → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ eval ⟦ Q ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A)) 
+  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P ⊠ A) ⟧A)
 primrec-set' P (∁ X) Γ A t x (∁s y) = y
-primrec-set' P I Γ A t x (I y) = y , t x (primrec-set' P P Γ A t x y )
+primrec-set' P I Γ A t x (I y) = y , t x (primrec-set' P P Γ A t x y)
 primrec-set' P (Q₁ ⊞ Q₂) Γ A t x (⊞₁ y) = inj₁ (primrec-set' P Q₁ Γ A t x y)
 primrec-set' P (Q₁ ⊞ Q₂) Γ A t x (⊞₂ y) = inj₂ (primrec-set' P Q₂ Γ A t x y)
 proj₁ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂)) = primrec-set' P Q₁ Γ A t x y₁
 proj₂ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂)) = primrec-set' P Q₂ Γ A t x y₂
 
-primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅) → Tm ⟦ Γ ⟧Γ (eval ⟦ P ⟧poly (mu ⟦ P ⟧poly ⊗ ⟦ A ⟧A) ⇒ ⟦ A ⟧A) → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
+  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x z = t x (primrec-set' P P Γ A t x z)
 
 mutual
@@ -138,6 +140,8 @@ mutual
   ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
+  ⟦_⟧tm {∅} (primrec {_} {P} {Γ} {A} t) = primrec-set P Γ A ⟦ t ⟧tm
+  ⟦_⟧tm {κ} {Γ} (primrec t) = {!!}
   ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
   proj₁ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j (y , p) = y j
