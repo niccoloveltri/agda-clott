@@ -453,11 +453,8 @@ stream' A = μ ((∁ (weakenT A)) ⊠ ► I)
 stream : Type ∅ → Type ∅
 stream A = clock-q (stream' A)
 
-head-help : (A : Type ∅) → Term (weakenC •) (stream' A ⟶ weakenT A)
-head-help A = primrec _ (lambdaTm (π₁(π₁ (varTm _ _))))
-
 head : (A : Type ∅) → Term • (stream A ⟶ A)
-head A = lambdaTm (↓ (sub (app-map (weakenTm _ _ _ (head-help A)) (varTm _ _))
+head A = lambdaTm (↓ (sub (app-map (weakenTm _ _ _ (primrec _ (lambdaTm (π₁(π₁ (varTm _ _)))))) (varTm _ _))
                   ((pr (idsub (weakenC • , weakenT (clock-q (μ (∁ (weakenT A) ⊠ ► I))))) ,s sub (unbox-q (varTm • (stream A)))
                        (,-weaken • (clock-q (μ (∁ (weakenT A) ⊠ ► I))))) o weaken-, • (stream A))))
 
