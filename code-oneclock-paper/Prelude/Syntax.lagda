@@ -437,3 +437,31 @@ sub-↓ t s =
 
 sub-tt : {Γ₁ Γ₂ : Context ∅} (s : Subst Γ₂ Γ₁) → sub tt s ∼ tt
 sub-tt s = 𝟙-η (sub tt s)
+
+nat : Type ∅
+nat = μ ((∁ 𝟙) ⊞ I)
+
+Z : Term • nat
+Z = cons _ (in₁ _ tt)
+
+S : Term • (nat ⟶ nat)
+S = lambdaTm (cons _ (in₂ _ (varTm • nat)))
+
+stream' : Type ∅ → Type κ
+stream' A = μ ((∁ (weakenT A)) ⊠ ► I)
+
+stream : Type ∅ → Type ∅
+stream A = clock-q (stream' A)
+
+head-help : (A : Type ∅) → Term (weakenC •) (stream' A ⟶ weakenT A)
+head-help A = primrec _ (lambdaTm (π₁(π₁ (varTm _ _))))
+
+head : (A : Type ∅) → Term • (stream A ⟶ A)
+head A = lambdaTm (↓ (sub (app-map (weakenTm _ _ _ (head-help A)) (varTm _ _))
+                  ((pr (idsub (weakenC • , weakenT (clock-q (μ (∁ (weakenT A) ⊠ ► I))))) ,s sub (unbox-q (varTm • (stream A)))
+                       (,-weaken • (clock-q (μ (∁ (weakenT A) ⊠ ► I))))) o weaken-, • (stream A))))
+
+tail : (A : Type ∅) → Term • (stream A ⟶ stream A)
+tail A = lambdaTm (force (box-q
+                         (app-map (primrec ((∁ (weakenT A)) ⊠ ► I) {weakenC (• , stream A)} (lambdaTm (π₂(π₁(varTm _ _)))))
+                                  (unbox-q (varTm _ _)))))
