@@ -109,10 +109,59 @@ primrec-set P Γ A t =
                                    (primrec-set' P P (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) _ (weaken _ _ _ t))
                                    (var _ _)))
 
+primrec-psh'₁₁ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
+  → (i : Size) (x : Obj Γ i) (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
+  → Obj ⟦ evalP Q (μ P ⊠ A) ⟧A j
+primrec-psh'₁₂ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
+  → (i : Size) (x : Obj Γ i) (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
+  → Mor ⟦ evalP Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q Γ A t i x j z)
+    ≡
+    primrec-psh'₁₁ P Q Γ A t i x k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
+primrec-psh'₁₁ P (∁ X) Γ A t i x j (∁ps z) = z
+primrec-psh'₁₁ P I Γ A t i x j (I z) = z , proj₁(proj₁ t i x) j (primrec-psh'₁₁ P P Γ A t i x j z)
+primrec-psh'₁₁ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₁ z) = inj₁ (primrec-psh'₁₁ P Q₁ Γ A t i x j z)
+primrec-psh'₁₁ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₂ z) = inj₂ (primrec-psh'₁₁ P Q₂ Γ A t i x j z)
+proj₁ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₁ Γ A t i x j z₁
+proj₂ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₂ Γ A t i x j z₂
+proj₁ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) k = {!!} 
+proj₂ (primrec-psh'₁₁ P (► Q) Γ A t i x j (► z₁ z₂)) = {!!}
+primrec-psh'₁₂ P (∁ X) Γ A t i x j (∁ps z) k = refl
+primrec-psh'₁₂ P I Γ A (t , p) i x j (I z) k =
+  cong (λ z → (_ , z))
+       (trans (proj₂ (t i x) j k (primrec-psh'₁₁ P P Γ A (t , p) i x j z))
+              (cong (proj₁ (t i x) k) (primrec-psh'₁₂ P P Γ A (t , p) i x j z k)))
+primrec-psh'₁₂ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₁ z) k = cong inj₁ (primrec-psh'₁₂ P Q₁ Γ A t i x j z k)
+primrec-psh'₁₂ P (Q₁ ⊞ Q₂) Γ A t i x j (⊞₂ z) k = cong inj₂ (primrec-psh'₁₂ P Q₂ Γ A t i x j z k)
+primrec-psh'₁₂ P (Q₁ ⊠ Q₂) Γ A t i x j (z₁ ⊠ z₂) k = cong₂ (_,_) (primrec-psh'₁₂ P Q₁ Γ A t i x j z₁ k) (primrec-psh'₁₂ P Q₂ Γ A t i x j z₂ k)
+primrec-psh'₁₂ P (► Q) Γ A t i x j z k =
+  Σ≡-uip
+    {!!}
+    {!!}
+
+primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
+  → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
+  → primrec-psh'₁₁ P Q Γ A t i x k z
+    ≡
+    primrec-psh'₁₁ P Q Γ A t j (Mor Γ i j x) k z
+primrec-psh'₂ P (∁ X) Γ A t i j x k (∁ps z) = refl
+primrec-psh'₂ P I Γ A t i j x k (I z) =
+  cong (λ q → (_ , q))
+       (trans (cong (λ q → proj₁ q k (primrec-psh'₁₁ P P Γ A t i x k z)) (proj₂ t i j x))
+              (cong (proj₁ (proj₁ t j (Mor Γ i j x)) k) (primrec-psh'₂ P P Γ A t i j x k z)))
+primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) = cong inj₁ (primrec-psh'₂ P Q₁ Γ A t i j x k z)
+primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) = cong inj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z)
+primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) = cong₂ (_,_) (primrec-psh'₂ P Q₁ Γ A t i j x k z₁) (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)
+primrec-psh'₂ P (► Q) Γ A t i j x k (► z₁ z₂) = {!!}
+
 primrec-psh' : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ)
   → Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
   → Tm Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P ⊠ A) ⟧A)
-primrec-psh' P Q Γ A t = {!!}
+proj₁ (proj₁ (primrec-psh' P Q Γ A t) i x) j z = primrec-psh'₁₁ P Q Γ A t i x j z
+proj₂ (proj₁ (primrec-psh' P Q Γ A t) i x) j k z = primrec-psh'₁₂ P Q Γ A t i x j z k
+proj₂ (primrec-psh' P Q Γ A t) i j x =
+  Σ≡-uip
+    (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+    (funext (λ k → funext (λ z → primrec-psh'₂ P Q Γ A t i j x k z)))
 
 primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
   → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
