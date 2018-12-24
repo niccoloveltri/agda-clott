@@ -1,14 +1,9 @@
-\AgdaHide{
-\begin{code}
 module Prelude.Syntax where
 
 open import Level
 open import Function
 open import Data.Empty
-\end{code}
-}
 
-\begin{code}
 data ClockContext : Set where
   ∅ : ClockContext
   κ : ClockContext
