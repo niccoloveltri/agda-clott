@@ -189,6 +189,53 @@ sem-sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (
 sem-sub-η {∅} s x = refl
 sem-sub-η {κ} s i x = refl
 
+sem-primrec-set : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
+  → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
+  → (x : ⟦ Γ ⟧Γ) (a : ⟦ evalP Q (μ P) ⟧A)
+  → primrec-set' P Q ⟦ Γ ⟧Γ A ⟦ t ⟧tm x (consset' P Q a) ≡ (a , ⟦ Pmap Q (primrec P t) ⟧tm x a)
+sem-primrec-set P (∁ X) Γ A t x a = refl
+sem-primrec-set P I Γ A t x a = refl
+sem-primrec-set P (Q ⊞ R) Γ A t x (inj₁ a) =
+  cong₂ _,_ (cong (inj₁ ∘ proj₁) (sem-primrec-set P Q Γ A t x a))
+            (cong (inj₁ ∘ proj₂) (sem-primrec-set P Q Γ A t x a))
+sem-primrec-set P (Q ⊞ R) Γ A t x (inj₂ a) =
+  cong₂ _,_ (cong (inj₂ ∘ proj₁) (sem-primrec-set P R Γ A t x a))
+            (cong (inj₂ ∘ proj₂) (sem-primrec-set P R Γ A t x a))
+sem-primrec-set P (Q ⊠ R) Γ A t x (a₁ , a₂) =
+  cong₂ _,_ (cong₂ _,_ (cong proj₁ (sem-primrec-set P Q Γ A t x a₁))
+                       (cong proj₁ (sem-primrec-set P R Γ A t x a₂)))
+            (cong₂ _,_ (cong proj₂ (sem-primrec-set P Q Γ A t x a₁))
+                       (cong proj₂ (sem-primrec-set P R Γ A t x a₂)))
+
+sem-primrec-psh : (P Q : Poly κ) (Γ : Context κ) (A : Type κ)
+  → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
+  → (i : Size) (x : Obj ⟦ Γ ⟧Γ i) (j : Size< (↑ i)) (a : Obj ⟦ evalP Q (μ P) ⟧A j)
+  → primrec-psh'₁₁ P Q ⟦ Γ ⟧Γ A ⟦ t ⟧tm i x j (cons₁' P Q j a) ≡ (a , proj₁ (proj₁ ⟦ Pmap Q (primrec P t) ⟧tm i x) j a)
+sem-primrec-psh P (∁ X) Γ A t i x j a = refl
+sem-primrec-psh P I Γ A t i x j a = refl
+sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₁ a) =
+  cong₂ _,_ (cong (inj₁ ∘ proj₁) (sem-primrec-psh P Q Γ A t i x j a))
+            (trans (cong (inj₁ ∘ proj₂) (sem-primrec-psh P Q Γ A t i x j a))
+                   (cong (λ z → inj₁ (proj₁ z j a)) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₂ a) =
+  cong₂ _,_ (cong (inj₂ ∘ proj₁) (sem-primrec-psh P R Γ A t i x j a))
+            (trans (cong (inj₂ ∘ proj₂) (sem-primrec-psh P R Γ A t i x j a))
+                   (cong (λ z → inj₂ (proj₁ z j a)) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x)))
+sem-primrec-psh P (Q ⊠ R) Γ A t i x j (a₁ , a₂) =
+  cong₂ _,_ (cong₂ _,_ (cong proj₁ (sem-primrec-psh P Q Γ A t i x j a₁))
+                       (cong proj₁ (sem-primrec-psh P R Γ A t i x j a₂)))
+            (cong₂ _,_ (trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x j a₁))
+                              (cong (λ z → proj₁ z j a₁) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+                       (trans (cong proj₂ (sem-primrec-psh P R Γ A t i x j a₂))
+                              (cong (λ z → proj₁ z j a₂) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x))))
+sem-primrec-psh P (► Q) Γ A t i x j (a , p) =
+  cong₂ _,_ (Σ≡-uip (funext (λ { [ k ] → funext (λ {[ _ ] → uip})}))
+                    (funext (λ { [ k ] → cong proj₁ (sem-primrec-psh P Q Γ A t i x k (a [ k ])) })))
+            (Σ≡-uip (funext (λ { [ k ] → funext (λ { [ _ ] → uip }) }))
+                    (funext (λ { [ k ] → trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x k (a [ k ])))
+                                               (cong (λ z → proj₁ z k (a [ k ])) (trans (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i k x)
+                                                                                        (cong (proj₁ ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))})))
+
 mutual
   ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
   ⟦_⟧tm-eq {∅} refl∼ x = refl
@@ -259,11 +306,8 @@ mutual
   ⟦ next-λ f t ⟧tm-eq = sem-next-λ f t
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
-  ⟦_⟧tm-eq {∅} (primrec-cons (∁ X) t a) x = refl
-  ⟦_⟧tm-eq {∅} (primrec-cons I t a) x = {!!}
-  ⟦_⟧tm-eq {∅} (primrec-cons (Q₁ ⊞ Q₂) t a) x = {!!}
-  ⟦_⟧tm-eq {∅} (primrec-cons (Q₁ ⊠ Q₂) t a) x = {!!}
-  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = {!!}
+  ⟦_⟧tm-eq {∅} (primrec-cons P t a) x = cong (⟦ t ⟧tm x) (sem-primrec-set P P _ _ t x (⟦ a ⟧tm x))
+  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (proj₁ (proj₁ ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (proj₁ ⟦ a ⟧tm i x))
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
   ⟦_⟧tm-eq {κ} (sub-id t) i x = refl
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl

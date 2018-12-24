@@ -94,13 +94,7 @@ proj₂ (proj₂ (primrec-set' P (Q₁ ⊠ Q₂) Γ A t x (y₁ ⊠ y₂))) = pr
 primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
   → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
-primrec-set P Γ A t =
-  lambda _ _ _
-         (sem-app-map _ _ _
-                      (weaken _ _ _ t)
-                      (sem-app-map _ _ _
-                                   (primrec-set' P P (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) _ (weaken _ _ _ t))
-                                   (var _ _)))
+primrec-set P Γ A t x a = t x (primrec-set' P P ⟦ Γ ⟧Γ A t x a)
 
 primrec-psh'₁₁ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
   → (i : Size) (x : Obj Γ i) (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
@@ -189,6 +183,18 @@ primrec-psh'₂ P (► Q) Γ A t i j x k (► z₁ z₂) =
           (funext (λ {[ _ ] → funext (λ {[ _ ] → uip})}))
           (funext (λ {[ l ] → cong proj₂ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))})))
 
+
+primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
+  → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+proj₁ (proj₁ (primrec-psh P Γ A (f , p)) i x) j y = proj₁ (f i x) j (primrec-psh'₁₁ P P ⟦ Γ ⟧Γ A (f , p) i x j y)
+proj₂ (proj₁ (primrec-psh P Γ A (f , p)) i x) j k y = trans (proj₂ (f i x) j k _) (cong (proj₁ (f i x) k) (primrec-psh'₁₂ P P ⟦ Γ ⟧Γ A (f , p) i x j y k))
+proj₂ (primrec-psh P Γ A (f , p)) i j x =
+  Σ≡-uip
+    (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+    (funext (λ k → funext (λ z → cong₂ (λ a b → proj₁ a k b) (p i j x) (primrec-psh'₂ P P ⟦ Γ ⟧Γ A (f , p) i j x k z))))
+
+{-
 primrec-psh' : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ)
   → Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
   → Tm Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A)
@@ -209,6 +215,8 @@ primrec-psh P Γ A t =
                        (sem-app-map (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) (μpsh ⟦ P ⟧poly ⟦ P ⟧poly) ⟦ evalP P (μ P) ⊠ evalP P A ⟧A
                                     (primrec-psh' P P (⟦ Γ ⟧Γ ,, mu ⟦ P ⟧poly) A (weaken ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly) ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A t))
                                     (var ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly))))
+-}
+
 
 {-
 primrec-psh'₁₁ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
@@ -280,6 +288,7 @@ primrec-psh P Γ A t =
                                                   (weaken ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly) ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A t))
                                     (var ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly))))
 -}
+
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
