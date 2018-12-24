@@ -236,6 +236,22 @@ sem-primrec-psh P (► Q) Γ A t i x j (a , p) =
                                                (cong (λ z → proj₁ z k (a [ k ])) (trans (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i k x)
                                                                                         (cong (proj₁ ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))})))
 
+μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i)
+  → μweaken-help P Q (weakenμ-help P Q i x) i ≡ x
+μweakenμ-help P (∁ X) i (∁ps x) = refl
+μweakenμ-help P I i (I x) = cong I (μweakenμ-help P P i x)
+μweakenμ-help P (Q₁ ⊞ Q₂) i (⊞₁ x) = cong ⊞₁ (μweakenμ-help P Q₁ i x)
+μweakenμ-help P (Q₁ ⊞ Q₂) i (⊞₂ x) = cong ⊞₂ (μweakenμ-help P Q₂ i x)
+μweakenμ-help P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) = cong₂ _⊠_ (μweakenμ-help P Q₁ i x₁) (μweakenμ-help P Q₂ i x₂)
+
+weakenμweaken-help : (P Q : Poly ∅) (i : Size) (x : μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+  → weakenμ-help P Q i (μweaken-help P Q x i) ≡ x
+weakenμweaken-help P (∁ X) i (∁s x) = refl
+weakenμweaken-help P I i (I x) = cong I (weakenμweaken-help P P i x)
+weakenμweaken-help P (Q₁ ⊞ Q₂) i (⊞₁ x) = cong ⊞₁ (weakenμweaken-help P Q₁ i x)
+weakenμweaken-help P (Q₁ ⊞ Q₂) i (⊞₂ x) = cong ⊞₂ (weakenμweaken-help P Q₂ i x)
+weakenμweaken-help P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) = cong₂ _⊠_ (weakenμweaken-help P Q₁ i x₁) (weakenμweaken-help P Q₂ i x₂)
+
 mutual
   ⟦_⟧tm-eq : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
   ⟦_⟧tm-eq {∅} refl∼ x = refl
@@ -387,6 +403,8 @@ mutual
     Σ≡-uip
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       (funext (λ j → funext (λ z → proj₂ (proj₁ ⟦ t ⟧tm i x) i j z)))
+  ⟦ μweakenμ P t ⟧tm-eq i x = μweakenμ-help P P i (proj₁ ⟦ t ⟧tm i x)
+  ⟦ weakenμweaken P t ⟧tm-eq i x = weakenμweaken-help P P i (proj₁ ⟦ t ⟧tm i x)
   
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq

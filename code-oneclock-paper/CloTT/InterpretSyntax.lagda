@@ -216,6 +216,24 @@ proj₂ (primrec-psh P Γ A t) i j x =
 μweaken-eq P (Q₁ ⊠ Q₂) (x₁ ⊠ x₂) i j k =
   cong₂ (_⊠_) (μweaken-eq P Q₁ x₁ i j k) (μweaken-eq P Q₂ x₂ i j k)
 
+weakenμ-help : (P Q : Poly ∅) → (i : Size) → μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i → μset ⟦ P ⟧poly ⟦ Q ⟧poly
+weakenμ-help P (∁ X) i (∁ps x) = ∁s x
+weakenμ-help P I i (I x) = I (weakenμ-help P P i x)
+weakenμ-help P (Q₁ ⊞ Q₂) i (⊞₁ x) = ⊞₁ (weakenμ-help P Q₁ i x)
+weakenμ-help P (Q₁ ⊞ Q₂) i (⊞₂ x) = ⊞₂ (weakenμ-help P Q₂ i x)
+weakenμ-help P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) = weakenμ-help P Q₁ i x₁ ⊠ weakenμ-help P Q₂ i x₂
+
+weakenμ-eq : (P Q : Poly ∅) (i : Size) (x : μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i) (j : Size< (↑ i))
+  → weakenμ-help P Q i x
+    ≡
+    weakenμ-help P Q j (μMor' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i j x)
+weakenμ-eq P (∁ X) i (∁ps x) j = refl
+weakenμ-eq P I i (I x) j = cong I (weakenμ-eq P P i x j)
+weakenμ-eq P (Q₁ ⊞ Q₂) i (⊞₁ x) j = cong ⊞₁ (weakenμ-eq P Q₁ i x j)
+weakenμ-eq P (Q₁ ⊞ Q₂) i (⊞₂ x) j = cong ⊞₂ (weakenμ-eq P Q₂ i x j)
+weakenμ-eq P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) j =
+  cong₂ (_⊠_) (weakenμ-eq P Q₁ i x₁ j) (weakenμ-eq P Q₂ i x₂ j)
+
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
@@ -266,6 +284,12 @@ mutual
   proj₁ (proj₁ ⟦ μweaken P ⟧tm i x) j y = μweaken-help P P y j
   proj₂ (proj₁ ⟦ μweaken P ⟧tm i x) j k y = μweaken-eq P P y i j k
   proj₂ ⟦ μweaken P ⟧tm i j x =
+    Σ≡-uip
+      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+      refl
+  proj₁ (proj₁ ⟦ weakenμ P ⟧tm i x) j y = weakenμ-help P P j y
+  proj₂ (proj₁ ⟦ weakenμ P ⟧tm i x) j k y = weakenμ-eq P P j y k
+  proj₂ ⟦ weakenμ P ⟧tm i j x =
     Σ≡-uip
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       refl
