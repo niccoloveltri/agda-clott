@@ -78,6 +78,19 @@ proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
 proj₂ (conspsh P Q Γ (t , p)) i j γ = trans (cons₂' P Q i j (t i γ)) (cong (cons₁' P Q j) (p i j γ))
 
 
+primrec-set' : (P Q : Poly ∅) (A : Type ∅)
+  → ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+  → (⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A)
+primrec-set' P (∁ X) A y (∁s z) = z , z
+primrec-set' P I A y (I z) = z , y (primrec-set' P P A y z)
+primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₁ z) = inj₁ (proj₁ (primrec-set' P Q₁ A y z)) , inj₁ (proj₂ (primrec-set' P Q₁ A y z))
+primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₂ z) = inj₂ (proj₁ (primrec-set' P Q₂ A y z)) , inj₂ (proj₂ (primrec-set' P Q₂ A y z))
+proj₁ (proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₁ (primrec-set' P Q₁ A y z₁) 
+proj₂ (proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₁ (primrec-set' P Q₂ A y z₂)
+proj₁ (proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₂ (primrec-set' P Q₁ A y z₁)
+proj₂ (proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₂ (primrec-set' P Q₂ A y z₂)
+{-
 primrec-set' : (P Q : Poly ∅) (Γ : Ctx set) (A : Type ∅)
   → Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
   → Tm Γ (μset ⟦ P ⟧poly ⟦ Q ⟧poly ⇒ ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A)
@@ -95,6 +108,12 @@ primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
   → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x a = t x (primrec-set' P P ⟦ Γ ⟧Γ A t x a)
+-}
+
+primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
+  → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-set P Γ A t x a = t x (primrec-set' P P A (t x) a)
 
 primrec-psh'₁₁ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
   → (i : Size) (x : Obj Γ i) (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)

@@ -192,7 +192,7 @@ sem-sub-η {κ} s i x = refl
 sem-primrec-set : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
   → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
   → (x : ⟦ Γ ⟧Γ) (a : ⟦ evalP Q (μ P) ⟧A)
-  → primrec-set' P Q ⟦ Γ ⟧Γ A ⟦ t ⟧tm x (consset' P Q a) ≡ (a , ⟦ Pmap Q (primrec P t) ⟧tm x a)
+  → primrec-set' P Q A (⟦ t ⟧tm x) (consset' P Q a) ≡ (a , ⟦ Pmap Q (primrec P t) ⟧tm x a) -- (a , ⟦ Pmap Q (primrec P t) ⟧tm x a)
 sem-primrec-set P (∁ X) Γ A t x a = refl
 sem-primrec-set P I Γ A t x a = refl
 sem-primrec-set P (Q ⊞ R) Γ A t x (inj₁ a) =
@@ -285,8 +285,10 @@ mutual
     Σ≡-uip
       (funext (λ _ → funext (λ _ → uip)))
       (funext (λ j → cong (λ z → proj₁ (proj₁ z ∞) [ j ]) (⟦ p ⟧tm-eq x)))
-  ⟦_⟧tm-eq {∅} (cong-cons {.∅} p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {κ} (cong-cons {.κ} p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-cons p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-cons p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {∅} (cong-primrec P {Γ} {A} p) x = funext (λ a → cong (λ z → z (primrec-set' P P A z a)) (⟦ p ⟧tm-eq x)) -- cong (primrec-set P Γ A) -- (⟦ p ⟧tm-eq x)
+  ⟦_⟧tm-eq {κ} (cong-primrec P p) i x = {!!}
   ⟦ λ-β t ⟧tm-eq = sem-λ-β t
   ⟦ λ-η t ⟧tm-eq = sem-λ-η t
   ⟦ ⊠-β₁ t₁ t₂ ⟧tm-eq = sem-⊠-β₁ t₁ t₂
@@ -345,6 +347,8 @@ mutual
   ⟦ sub-□sum A B s ⟧tm-eq x = refl
   ⟦_⟧tm-eq {∅} (sub-cons t s) x = refl
   ⟦_⟧tm-eq {κ} (sub-cons t s) i x = refl
+  ⟦_⟧tm-eq {∅} (sub-primrec P t s) x = refl
+  ⟦_⟧tm-eq {κ} (sub-primrec P t s) i x = {!!}
   ⟦ const□const t ⟧tm-eq x =
     Σ≡-uip
       (funext (λ { _ → funext (λ _ → uip) }))
