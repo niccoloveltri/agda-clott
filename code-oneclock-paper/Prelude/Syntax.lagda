@@ -87,6 +87,7 @@ mutual
     □const    : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
     □sum      : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
     ⟶weaken : (A B : Type ∅) → Term • (((weakenT A) ⟶ (weakenT B)) ⟶ weakenT(A ⟶ B))
+    μweaken   : (P : Poly ∅) → Term • (weakenT (μ P) ⟶ μ (weakenP P))
 
 weaken-to-• : Subst (weakenC •) •
 weaken-to-• = ε (weakenC •)
