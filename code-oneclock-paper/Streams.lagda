@@ -42,10 +42,12 @@ tl : {Γ : Context ∅} {A : Type ∅} → Term Γ (Str A) → Term Γ (Str A)
 tl xs = force (box-q (g-tl (unbox-q xs))) 
 
 oddrec : {Γ : Context ∅} {A : Type ∅} → Term (weakenC Γ , (weakenT (Str A) ⟶ later (g-Str A))) (weakenT (Str A) ⟶ g-Str A)
-oddrec {Γ} {A} =
+oddrec =
   let s = ,-weaken _ _ o weakenSA _ (pr (idsub _))
+      f = weakenTm _ _ _ (varTm _ _)
+      xs = varTm _ _
   in
-  lambdaTm (cons _ [ sub (⇡ (hd (varTm _ _))) s & sub (varTm _ _) (pr (pr (idsub _)) ,s app-map (weakenTm _ _ _ (varTm _ _)) (sub (⇡ (tl (varTm _ _))) s))  ])
+  lambdaTm (cons _ [ sub (⇡ (hd xs)) s & app-map f (sub (⇡ (tl xs)) s) ])
 
 odd : {Γ : Context ∅} {A : Type ∅} → Term Γ (Str A) → Term Γ (Str A)
 odd xs = box-q (app-map (pfix-tm oddrec) (⇡ xs))
