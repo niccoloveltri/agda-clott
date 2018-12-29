@@ -337,6 +337,39 @@ mutual
       → app-map (μweaken P) (app-map (weakenμ P) t) ∼ t
     weakenμweaken : (P : Poly ∅) (t : Term • (weakenT (μ P)))
       → app-map (weakenμ P) (app-map (μweaken P) t) ∼ t
+    ⇡↓ : {Γ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ) (weakenT A)) → ⇡(↓ t) ∼ t
+    ↓⇡ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → ↓(⇡ t) ∼ t
+    ⇡varTm : (Γ : Context ∅) (A : Type ∅) → ⇡(varTm Γ A) ∼ sub (varTm (weakenC Γ) (weakenT A)) (weaken-, Γ A)
+    ↓varTm : (Γ : Context ∅) (A : Type ∅) → ↓(sub (varTm (weakenC Γ) (weakenT A)) (weaken-, Γ A)) ∼ varTm Γ A
+    ⇡sub : {Γ Γ' : Context ∅} {A : Type ∅} (t : Term Γ' A) (s : Subst Γ Γ') → ⇡(sub t s) ∼ sub (⇡ t) (weakenS s)
+    ↓sub : {Γ Γ' : Context ∅} {A : Type ∅} (t : Term (weakenC Γ') (weakenT A)) (s : Subst Γ Γ') → ↓(sub t (weakenS s)) ∼ sub (↓ t) s
+    ⇡π₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → ⇡(π₁ t) ∼ π₁ (app-map (sub (weaken⊠ _ _) (ε (weakenC Γ))) (⇡ t))
+    ⇡π₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → ⇡(π₂ t) ∼ π₂ (app-map (sub (weaken⊠ _ _) (ε (weakenC Γ))) (⇡ t))
+    ↓π₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (weakenC Γ) (weakenT (A ⊠ B))) → π₁(↓ t) ∼ ↓(π₁(app-map (sub (weaken⊠ _ _) (ε (weakenC Γ))) t))
+    ↓π₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (weakenC Γ) (weakenT (A ⊠ B))) → π₂(↓ t) ∼ ↓(π₂(app-map (sub (weaken⊠ _ _) (ε (weakenC Γ))) t))
+    ⇡pair : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t₁ : Term Γ A) (t₂ : Term Γ B) → ⇡ [ t₁ & t₂ ] ∼ app-map (sub (⊠weaken _ _) (ε (weakenC Γ))) [ ⇡ t₁ & ⇡ t₂ ]
+    ↓pair : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t₁ : Term (weakenC Γ) (weakenT A)) (t₂ : Term (weakenC Γ) (weakenT B))
+      → [ ↓ t₁ & ↓ t₂ ] ∼ ↓ (app-map (sub (⊠weaken _ _) (ε (weakenC Γ))) [ t₁ & t₂ ])
+    ⇡in₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ A) → ⇡(in₁ B t) ∼ app-map (sub (⊞weaken _ _) (ε (weakenC Γ))) (in₁ (weakenT B) (⇡ t))
+    ⇡in₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ B) → ⇡(in₂ A t) ∼ app-map (sub (⊞weaken _ _) (ε (weakenC Γ))) (in₂ (weakenT A) (⇡ t))
+    ↓in₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (weakenC Γ) (weakenT A)) → in₁ B (↓ t) ∼ ↓(app-map (sub (⊞weaken _ _) (ε (weakenC Γ))) (in₁ (weakenT B) t))
+    ↓in₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (weakenC Γ) (weakenT B)) → in₂ A (↓ t) ∼ ↓(app-map (sub (⊞weaken _ _) (ε (weakenC Γ))) (in₂ (weakenT A) t))
+    ⇡⊞rec : {Γ : Context ∅} {A B : Type ∅} (C : Type ∅) (l : Term (Γ , A) C) (r : Term (Γ , B) C)
+      → ⇡(⊞rec C l r)
+        ∼
+        sub (⊞rec (weakenT C)
+                  (sub (⇡ l) (,-weaken Γ A))
+                  (sub (⇡ r) (,-weaken Γ B)))
+            ((pr (idsub (weakenC Γ , weakenT (A ⊞ B))) ,s app-map (sub (weaken⊞ _ _) (ε (weakenC Γ , weakenT (A ⊞ B)))) (varTm (weakenC Γ) (weakenT (A ⊞ B)))) o weaken-, Γ (A ⊞ B))
+    ↓⊞rec : {Γ : Context ∅} {A B : Type ∅} (C : Type ∅) (l : Term (weakenC (Γ , A)) (weakenT C)) (r : Term (weakenC (Γ , B)) (weakenT C))
+      → ⊞rec C (↓ l) (↓ r)
+        ∼
+        ↓ (sub (⊞rec (weakenT C) (sub l (,-weaken Γ A)) (sub r (,-weaken Γ B)))
+               (weakenS (pr (idsub (Γ , (A ⊞ B)))) ,s app-map (sub (weaken⊞ _ _) (ε (weakenC (Γ , (A ⊞ B))))) (⇡ (varTm Γ (A ⊞ B)))))
+    ⇡lambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (Γ , A) B) → ⇡ (lambdaTm t) ∼ app-map (sub (⟶weaken _ _) (ε (weakenC Γ))) (lambdaTm (sub (⇡ t) (,-weaken Γ A)))
+    ↓lambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (weakenC (Γ , A)) (weakenT B)) → lambdaTm (↓ t) ∼ ↓ (app-map (sub (⟶weaken _ _) (ε (weakenC Γ))) (lambdaTm (sub t (,-weaken Γ A))))
+    ⇡app : {Γ : Context ∅} {A B : Type ∅} (t : Term Γ (A ⟶ B)) → ⇡ (appTm t) ∼ sub (appTm (app-map (sub (weaken⟶ _ _) (ε (weakenC Γ))) (⇡ t))) (weaken-, Γ A)
+    ↓app : {Γ : Context ∅} {A B : Type ∅} (t : Term (weakenC Γ) (weakenT (A ⟶ B))) → appTm (↓ t) ∼ ↓ (sub (appTm (app-map (sub (weaken⟶ _ _) (ε (weakenC Γ))) t)) (weaken-, Γ A))
 
   data _≈_ : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s

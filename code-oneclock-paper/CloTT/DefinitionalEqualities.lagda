@@ -405,6 +405,30 @@ mutual
       (funext (λ j → funext (λ z → proj₂ (proj₁ ⟦ t ⟧tm i x) i j z)))
   ⟦ μweakenμ P t ⟧tm-eq i x = μweakenμ-help P P i (proj₁ ⟦ t ⟧tm i x)
   ⟦ weakenμweaken P t ⟧tm-eq i x = weakenμweaken-help P P i (proj₁ ⟦ t ⟧tm i x)
+  ⟦ ⇡↓ t ⟧tm-eq i x = proj₂ ⟦ t ⟧tm ∞ i x
+  ⟦ ↓⇡ t ⟧tm-eq x = refl
+  ⟦ ⇡varTm Γ A ⟧tm-eq i x = refl
+  ⟦ ↓varTm Γ A ⟧tm-eq x = refl
+  ⟦ ⇡sub t s ⟧tm-eq i x = refl
+  ⟦ ↓sub t s ⟧tm-eq x = refl
+  ⟦ ⇡π₁ t ⟧tm-eq i x = refl
+  ⟦ ⇡π₂ t ⟧tm-eq i x = refl
+  ⟦ ↓π₁ t ⟧tm-eq x = refl
+  ⟦ ↓π₂ t ⟧tm-eq x = refl
+  ⟦ ⇡pair t₁ t₂ ⟧tm-eq i x = refl
+  ⟦ ↓pair t₁ t₂ ⟧tm-eq x = refl
+  ⟦ ⇡in₁ t ⟧tm-eq i x = refl
+  ⟦ ⇡in₂ t ⟧tm-eq i x = refl
+  ⟦ ↓in₁ t ⟧tm-eq x = refl
+  ⟦ ↓in₂ t ⟧tm-eq x = refl
+  ⟦ ⇡⊞rec C l r ⟧tm-eq i (x , inj₁ y) = refl
+  ⟦ ⇡⊞rec C l r ⟧tm-eq i (x , inj₂ y) = refl
+  ⟦ ↓⊞rec C l r ⟧tm-eq (x , inj₁ y) = refl
+  ⟦ ↓⊞rec C l r ⟧tm-eq (x , inj₂ y) = refl
+  ⟦ ⇡lambda t ⟧tm-eq i x = refl
+  ⟦ ↓lambda t ⟧tm-eq x = refl
+  ⟦ ⇡app t ⟧tm-eq i x = refl
+  ⟦ ↓app t ⟧tm-eq x = refl
   
   ⟦_⟧sub-eq : {Δ : ClockContext} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → subst-eq _ _ ⟦ s₁ ⟧sub ⟦ s₂ ⟧sub
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq
