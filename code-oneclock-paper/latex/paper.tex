@@ -1,4 +1,4 @@
-\documentclass{amsart}
+\documentclass[a4paper,UKenglish,cleveref, autoref,numberwithinsect]{lipics-v2018}
 
 \usepackage{agda}
 
@@ -10,6 +10,8 @@
 \usepackage{amssymb}
 \usepackage{bbm}
 
+\usepackage{newunicodechar}
+
 % This handles the translation of unicode to latex:
 
 
@@ -17,13 +19,13 @@
 % (you figure out by the latex compilation errors you get),
 % and you need to define:
 
-\DeclareUnicodeCharacter{915}{$\Gamma$}
-\DeclareUnicodeCharacter{931}{$\Sigma$}
-\DeclareUnicodeCharacter{948}{$\delta$}
-\DeclareUnicodeCharacter{957}{$\nu$}
-\DeclareUnicodeCharacter{8718}{$\blacksquare$}
-\DeclareUnicodeCharacter{8759}{::}
-\DeclareUnicodeCharacter{9659}{$\vartriangleright$}
+\newunicodechar{⊤}{$\top$}
+\newunicodechar{≡}{$\equiv$}
+\newunicodechar{₁}{$_1$}
+\newunicodechar{Γ}{$\Gamma$}
+\newunicodechar{Σ}{$\Sigma$}
+\newunicodechar{λ}{$\lambda$}
+\newunicodechar{∙}{$\cdot$}
 
 % Add more as you need them (shouldn't happen often).
 
@@ -41,6 +43,8 @@
 \newcommand{\F}{\AgdaFunction}
 \newcommand{\Ar}{\AgdaArgument}
 \newcommand{\Fi}{\AgdaField}
+
+\newcommand{\remove}[1]{}
 
 %This is a template for producing LIPIcs articles. 
 %See lipics-manual.pdf for further information.
@@ -98,7 +102,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \subsection{Guarded Recursive Type Theory}
 
 \section{Presheaves}
-
 A presheaf is a functor from the category of sizes to \D{Set}.
 
 \input{Presheaves/Presheaves}
@@ -116,6 +119,7 @@ i.e. \D{Terminal} = \D{Const ⊤}. Given two presheaves \Ar{P} and
 \Ar{Q}, we write \D{Prod} \Ar{P} \Ar{Q} for their cartesian
 product. The action of \D{Prod} \Ar{P} \Ar{Q} on a size \Ar{i} is
 defined as follows:
+\remove{
 \input{Presheaves/Product}
 %\Fi{PSh.Obj} \Ar{P i ×} \Fi{PSh.Obj} \Ar{Q i}.
 Coproducts are also defined in a similar pointwise way.
@@ -125,11 +129,10 @@ Given two presheaves \Ar{P} and
  The action of \D{Exp} \Ar{P} \Ar{Q} on a size \Ar{i} is
 defined as follows:
 \input{Presheaves/Exp}
-
+}
 \section{The Model}
 
 \subsection{Types, Contexts, Terms}
-
 A context in \IC{set} is an element of \D{Set}. A context in \IC{tot}
 is a preasheaf in \D{PSh}.
 
@@ -162,7 +165,6 @@ natural transformations.
 We write \D{∙} for the empty context and \Ar{Γ} \D{,,} \Ar{A} for the
 extension of the context \Ar{Γ} with the type \Ar{A}. We have
 the usual variable, weakening and substitutution operations.
-
 %\subsection{Operations on Contexts}
 %\subsection{Substitution}
 
