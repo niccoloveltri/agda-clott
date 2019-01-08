@@ -1,0 +1,84 @@
+Some choices:
+1. We can write a conference paper+technical report
+2. We can write conference paper+appendix.
+I prefer 1.
+Furthermore, it's important to make the Agda code as readable as possible.
+For the definition of Tm: I think we need to use syntactic sugar of ∑-types. Current definition of Tm is kinda hard to read, I think
+
+I suggest the following structure for the introduction (each point is a paragraph, which should be expanded):
+- TT is usually about terminating computations
+- However, we want productive computations (here we should also say something about functional programming languages. Automatic checks of productivity for the functions. I think then it becomes more interesting for a wider audience, because it's not just about TT, but also about FP. We should also say why productive computations are better, eg note coinductive types)
+- First approach: sized types
+- Second approach: guarded recursion (we should say: many approaches, and we use Atkey&McBride)
+- <there should be something here> Note that sized types are implemented in Agda, but guarded recursion is not implemented (as far as I know)
+- Our approach is twofold: provide deep embedding and semantics of guarded recursion via sized types (Note: to provide a verified programming language with guarded recursion)
+- We use presheaf semantics. This gives the operations of MLTT, but not box, later and µ (for which the polynomials also use later). Also, the term fix is intteresting. This is 'why is it difficult' 
+- We talk about the benefits of this. 'What are the good things of our work'
+- List of contributions
+- Subsection on related work
+
+Why:
+- Shows strength of sized types
+- Combinators for sized types
+- Steps towards verified programming language with guarded recursion
+- New model of guarded recursion
+
+Contributions:
+- Deep Embedding
+- Shallow embedding
+- Guarded recursion via sized types
+- Everything is formalized
+
+Section 2: Preliminaries
+In section 2.1: Sized Types
+We discuss sized types and all the rules about them we need
+
+In section 2.2: Guarded Recursion
+We informally discuss the Atkey&McBride type theory. We give all the rules for terms, types, and contexts. We restrict to at most 1 clock in the clock context. We need to say that in that section, also in introduction
+
+Section 3: Presheaves
+We give the code for presheaves and describe in words what they are.
+We define all the operations
+(Note that FSCD papers can be at most 15 pages including references. That means: at this part, we will most likely cut a lot. To be honest, I don't think this is the most interesting part of our paper, because it's just standard presheaf semantics. We can give one operation (product) as an example to get familiar with the definitions.
+We need to note that we have constant, product, sum, function.
+
+Section 4: The Model
+Here the starting point are the 4 difficult things: µ, box, later, fix. I don't think it's necessary to talk about the interpretation of lambda, function spaces. We can say that in 1 sentence. Perhaps for a full version we can give details about it, but for the conference version it's not really needed.
+So, we need:
+4.1: Context, Types, Terms
+We define the interpretation of clockcontexts, contexts, types, and terms.
+4.2 Clock Quantification
+This is the simplest one, I think
+4.3 Later
+4.4 Fix
+4.5 µ
+
+4.2-4.5 is the technical core of our paper and deserve the most space. These need to be explained well and require some detail
+
+Section 5: Deep Embedding
+We provide the basics of the deep embedding. So, Syntax.agda needs to be literate and we cut most complicated definitions.
+We say what an interpretation is.
+Then we give a part of the interpretation.
+
+Section 6: conclusion
+
+I think we will have around 2 pages for the introduction. 1 page for bibliography (probably around 15 references?) and conclusion.
+We need around 1~2 pages to explain sized types and (informally), guarded recursive type theory
+So, we have around 10 pages for the actual content.
+The stuff on presheaves: it feels kinda like a short section now. Perhaps we need to move this to preliminaries. But, I think around 1 page should be doable.
+I think we have around 9 pages to talk about µ, Fix, Clock quantification, Later, and the interpretation.
+This way, we have enough space. We need to think about how to explain those well.
+
+When looking at the code:
+- Clock quantification seems simple enough
+- Fix also is doable, but we need: function type and apply (so, requires some preliminaries)
+- Later is quite difficult and involved
+- µ obviously is quite difficult and involved. The definition of µ is managable, but the definition of primrec was difficult.
+
+Deep embedding: I dunno yet what to say about it
+
+So, plan for the 3 work days:
+Day 1:
+- write introduction and presheaves
+- write preliminaries (you already wrote a bunch of rules for that once)
+- Make plan for section 4 and 5.
