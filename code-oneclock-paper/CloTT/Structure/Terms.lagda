@@ -4,6 +4,7 @@ module CloTT.Structure.Terms where
 
 open import Data.Product
 open import Prelude
+open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.Types
 \end{code}

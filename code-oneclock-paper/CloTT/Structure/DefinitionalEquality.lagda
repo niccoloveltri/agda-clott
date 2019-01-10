@@ -5,6 +5,7 @@ module CloTT.Structure.DefinitionalEquality where
 open import Data.Product
 open import Prelude
 open import Presheaves
+open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.Types
 open import CloTT.Structure.Terms

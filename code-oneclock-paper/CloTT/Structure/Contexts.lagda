@@ -3,6 +3,7 @@
 module CloTT.Structure.Contexts where
 
 open import Prelude
+open import CloTT.Structure.ClockContexts
 open import Presheaves public
 \end{code}
 }

@@ -5,6 +5,7 @@ module CloTT.Structure.Subst where
 open import Data.Unit
 open import Data.Product
 open import Prelude
+open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.ContextOperations
 open import CloTT.Structure.Types

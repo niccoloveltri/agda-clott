@@ -40,12 +40,6 @@ uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
 uip {A} {x} {y} {refl} {refl} = refl
 \end{code}
 
-\begin{code}
-data tag : Set where
-  set : tag
-  tot : tag
-\end{code}
-
 \AgdaHide{
 \begin{code}
 Σ≡ : {A : Set}{P : A → Set}
