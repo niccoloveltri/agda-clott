@@ -14,9 +14,9 @@ open PSh
 
 \begin{code}
 □ : Ty tot → Ty set
-□ A = Σ ((i : Size) → Obj A i)
-        (λ x → (i : Size) (j : Size< (↑ i))
-             → Mor A i j (x i) ≡ x j)
+□ A = Σ[ f ∈ ((i : Size) → Obj A i) ]
+        ((i : Size) (j : Size< (↑ i))
+          → Mor A i j (f i) ≡ f j)
 \end{code}
 
 \begin{code}

@@ -6,8 +6,9 @@ open import Data.Sum
 open import Prelude
 open import Presheaves.Presheaves
 
+open PSh
+
 module _ (P Q : PSh) where
-  open PSh
 \end{code}
 }
   \begin{code}
