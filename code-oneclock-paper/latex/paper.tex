@@ -93,6 +93,8 @@
 
 \bibliographystyle{plainurl}% the recommnded bibstyle
 
+\usepackage{cleveref}
+
 \title{Guarded Recursive Type Theory via Sized Types}
 
 \begin{document}
@@ -104,9 +106,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
  \end{abstract}
 
 \section{Introduction}
+\label{sec:intro}
 \cite{atkey2013productive}
 
 \section{Preliminaries}
+\label{sec:prelim}
 \input{Prelude/Basics}
 %% \input{Presheaves/Presheaves}
 %% \input{Presheaves/Const}
@@ -135,10 +139,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 %\subsection{Sized Types}
 
 \section{Deep Embedding}
+\label{sec:syntax}
 \input{Prelude/Syntax}
 
 \section{Presheaf Semantics}
+\label{sec:presheaf_sem}
 \subsection{Presheaves}
+\label{sec:presheaves}
 \input{Presheaves/Presheaves}
 
 \input{Presheaves/Const}
@@ -152,6 +159,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \input{Presheaves/Exp}
 
 \subsection{Kripke Semantics}
+\label{sec:kripke}
 A context in \IC{set} is an element of \D{Set}. A context in \IC{tot}
 is a preasheaf in \D{PSh}.
 
