@@ -8,13 +8,36 @@ open import Size
 \end{code}
 }
 
+We work in Martin-L\"of type theory extended with functional
+extensionality, uniqueness of identity proofs (\F{uip}) and sized
+types.  Practically, we work in Agda, which supports sized types and
+where \F{uip} holds by default. In this section we give a brief
+overview of these principles and we introduce the basic
+type-theoretical definitions thet we employ in our formalization.
+
+We write \Ar{=} for judgemental equality and \Ar{≡} for propositional
+equality. Implicit arguments of functions are delimited by curly
+brackets. We write \F{Set} and \F{Set₁} for the first and second
+universe of types. We do not use higher universes.
+
+The principle of functional extensionality states that two parallel
+functions \Ar{f} and \Ar{g} are equal whenever \Ar{f x} and \Ar{g x}
+are equal for all inputs \Ar{x}. This principle is not provable in
+Agda, so we need to postulate it.
+
 \begin{code}
 postulate
   funext : {A : Set} {B : A → Set} {f g : (x : A) → B x}
     → ((x : A) → f x ≡ g x) → f ≡ g
+\end{code}
 
+Uniqueness of identity proofs states that there exist at most one
+identity proof between any two terms. Agda natively supports this
+principle, so we can easily construct a proof for it.
+
+\begin{code}
 uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
-uip {p = refl} {refl} = refl
+uip {A} {x} {y} {refl} {refl} = refl
 \end{code}
 
 \begin{code}
