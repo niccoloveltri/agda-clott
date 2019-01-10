@@ -14,13 +14,8 @@ data ClockContext : Set where
   κ : ClockContext
 \end{code}
 
-\AgdaHide{
 \begin{code}
 mutual
-\end{code}
-}
-
-\begin{code}
   data Type : ClockContext → Set where
     𝟙 : Type ∅
     _⊞_ : {Δ : ClockContext} → Type Δ → Type Δ → Type Δ
@@ -30,9 +25,7 @@ mutual
     later : Type κ → Type κ
     clock-q : Type κ → Type ∅
     μ : {Δ : ClockContext} → Poly Δ → Type Δ
-\end{code}
 
-\begin{code}
   data Poly : ClockContext → Set where
     ∁ : {Δ : ClockContext} → Type Δ → Poly Δ
     I : {Δ : ClockContext} → Poly Δ
@@ -65,13 +58,8 @@ data Context : ClockContext → Set where
   weakenC : Context ∅ → Context κ
 \end{code}
 
-\AgdaHide{
 \begin{code}
 mutual
-\end{code}
-}
-
-\begin{code}
   data Subst : {Δ : ClockContext} → Context Δ → Context Δ → Set where
     ε : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ •
     idsub : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ Γ
@@ -81,9 +69,7 @@ mutual
     weakenS : {Γ Γ' : Context ∅} → Subst Γ Γ' → Subst (weakenC Γ) (weakenC Γ')
     •-to-weaken : Subst • (weakenC •)
     ,-weaken : (Γ : Context ∅) (A : Type ∅) → Subst (weakenC Γ , weakenT A) (weakenC (Γ , A))
-\end{code}
 
-\begin{code}  
   data Term : {Δ : ClockContext} → Context Δ → Type Δ → Set where
     sub : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Term Γ' A → Subst Γ Γ' → Term Γ A
     varTm : {Δ : ClockContext} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
