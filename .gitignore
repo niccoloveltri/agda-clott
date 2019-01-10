@@ -7,3 +7,5 @@
 *.gz
 *.DS_Store
 *.pdf
+*.out
+*.vtc
