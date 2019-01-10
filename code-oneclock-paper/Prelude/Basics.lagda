@@ -9,10 +9,11 @@ open import Size
 }
 
 \begin{code}
-postulate funext : ∀{ℓ ℓ'} → Extensionality ℓ ℓ'
+postulate
+  funext : {A : Set} {B : A → Set} {f g : (x : A) → B x}
+    → ((x : A) → f x ≡ g x) → f ≡ g
 
-uip : ∀{ℓ} {A : Set ℓ} → {a a' : A}
-  → {p p' : a ≡ a'} → p ≡ p' 
+uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
 uip {p = refl} {refl} = refl
 \end{code}
 
