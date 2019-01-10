@@ -63,7 +63,7 @@ mutual
   data Subst : {Δ : ClockContext} → Context Δ → Context Δ → Set where
     ε : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ •
     idsub : {Δ : ClockContext} (Γ : Context Δ) → Subst Γ Γ
-    _,s_ : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
+    _,s_ : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
     _o_ : {Δ : ClockContext} {Γ Γ' Γ'' : Context Δ} → Subst Γ' Γ'' → Subst Γ Γ' → Subst Γ Γ''
     pr : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
     weakenS : {Γ Γ' : Context ∅} → Subst Γ Γ' → Subst (weakenC Γ) (weakenC Γ')
