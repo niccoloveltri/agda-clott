@@ -16,6 +16,10 @@ open PSh
 \begin{code}
 pure : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ A) → Tm Γ (▻ A)
 proj₁ (proj₁ (pure Γ A (t , _)) i x) [ j ] = t j (Mor Γ i j x)
+\end{code}
+
+\AgdaHide{
+\begin{code}
 proj₂ (proj₁ (pure Γ A (t , p)) i x) [ j ] [ k ] = 
   begin
     Mor A j k (t j (Mor Γ i j x))
@@ -29,12 +33,17 @@ proj₂ (pure Γ A (t , p)) i j x =
     (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
     (funext (λ { [ k ] → cong (t k) (MorComp Γ) }))
 \end{code}
+}
 
 \begin{code}
 fmap : (Γ : Ctx tot) (A B : Ty tot) 
           → (f : Tm Γ (▻ (A ⇒ B))) (t : Tm Γ (▻ A))
           → Tm Γ (▻ B)
 proj₁ (proj₁ (fmap Γ A B (f , _) (t , _)) i x) [ j ] = proj₁ (proj₁ (f i x) [ j ]) j (proj₁ (t i x) [ j ])
+\end{code}
+
+\AgdaHide{
+\begin{code}
 proj₂ (proj₁ (fmap Γ A B (f , p) (t , q)) i x) [ j ] [ k ] =
   begin
     Mor B j k (proj₁ (proj₁ (f i x) [ j ]) j (proj₁ (t i x) [ j ]))
@@ -52,3 +61,4 @@ proj₂ (fmap Γ A B (f , p) (e , q)) i j x =
     (funext (λ { [ _ ] → funext (λ { [ _ ] → uip })}))
     (funext (λ { [ k ] → cong₂ (λ a b → proj₁ (proj₁ a [ k ]) k (proj₁ b [ k ])) (p i j x) (q i j x) }))
 \end{code}
+}

@@ -6,11 +6,14 @@ open import Prelude
 \end{code}
 }
 
-The objects of the topos of trees are presheaves on the first ordinal $\omega$.
-We take a slightly different approach: rather than using $\omega$, we use Agda's built-in type \AD{Size}.
-Since sizes are partially ordered, they form a category.
+Recall that the topos of trees consists presheaves on the first ordinal $\omega$.
+We take a slightly different approach: we use presheaves on Agda's built-in type \AD{Size} instead.
+Note that sizes indeed form a category, since they are partially ordered.
 
-Presheaves are defined as a record.
+Presheaves are defined as a record \AD{PSh}.
+Each field represents a part of the data.
+The fields \AFi{Obj} and \AFi{Mor} represent the actions on objects and morphisms respectively.
+There also are two laws, \AFi{MorId} and \AFi{MorComp}, which represent the functor laws.
 \begin{code}
 record PSh : Set₁ where
   field
@@ -23,6 +26,3 @@ record PSh : Set₁ where
       → {x : Obj i}
       → Mor i k x ≡ Mor j k (Mor i j x)
 \end{code}
-We have a field \AFi{Obj}, which represents the action on objects.
-The field \AFi{Mor} represents the action on morphisms.
-Lastly, we have two laws, \AFi{MorId} and \AFi{MorComp}, which represent the functor laws.

@@ -8,7 +8,9 @@ open import Presheaves.Presheaves
 \end{code}
 }
 
+One particular constant presheaf of interest, is the terminal presheaf.
+On each size, it gives the unit type \AB{⊤}.
+
 \begin{code}
-Terminal : PSh
 Terminal = Const ⊤
 \end{code}

@@ -10,7 +10,7 @@ open PSh
 
 module _ (P Q : PSh) where
 \end{code}
-}
+
   \begin{code}
   SumObj : Size → Set
   SumObj i = Obj P i ⊎ Obj Q i
@@ -56,15 +56,24 @@ module _ (P Q : PSh) where
       inj₂ (Mor Q j k (Mor Q i j q))
     ∎
   \end{code}
+}
 
-  \AgdaHide{
-  \begin{code}
-  Sum : PSh
-  Sum = record
-    { Obj = SumObj
-    ; Mor = SumMor
-    ; MorId = SumMorId
-    ; MorComp = λ {_}{_}{_}{x} → SumMorComp {x = x}
-    }
-  \end{code}
+In addition, there are several constructions to make presheaves from other presheaves.
+The first two are defined pointwise.
+We can take the sum of presheaves by taking the sum on each coordinate.
+For the morphisms, we use functoriality of taking sums.
+
+\begin{code}
+Sum : PSh → PSh → PSh
+\end{code}
+
+\AgdaHide{
+\begin{code}
+Sum P Q = record
+  { Obj = SumObj P Q
+  ; Mor = SumMor P Q
+  ; MorId = SumMorId P Q
+  ; MorComp = λ {_}{_}{_}{x} → SumMorComp P Q {x = x}
   }
+\end{code}
+}

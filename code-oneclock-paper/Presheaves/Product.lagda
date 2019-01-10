@@ -11,18 +11,18 @@ module _  (P Q : PSh) where
 \end{code}
 
   \begin{code}
-  ProdObj' : Size → Set
-  ProdObj' i = Obj P i × Obj Q i
+  ProdObj : Size → Set
+  ProdObj i = Obj P i × Obj Q i
   \end{code}
 
   \begin{code}
   ProdMor : (i : Size) (j : Size< (↑ i))
-    → ProdObj' i → ProdObj' j
+    → ProdObj i → ProdObj j
   ProdMor i j = map (Mor P i j) (Mor Q i j)
   \end{code}
 
   \begin{code}
-  ProdMorId : {i : Size} {x : ProdObj' i}
+  ProdMorId : {i : Size} {x : ProdObj i}
     → ProdMor i i x ≡ x
   ProdMorId {i} {x} =
     begin
@@ -36,7 +36,7 @@ module _  (P Q : PSh) where
   
   \begin{code}
   ProdMorComp : {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)}
-    → {x : ProdObj' i}
+    → {x : ProdObj i}
     → ProdMor i k x ≡ ProdMor j k (ProdMor i j x)
   ProdMorComp {i} {j} {k} {x} =
     begin
@@ -47,19 +47,22 @@ module _  (P Q : PSh) where
       (Mor P j k (Mor P i j (proj₁ x)) , Mor Q j k (Mor Q i j (proj₂ x)))
     ∎
   \end{code}
-
-  \begin{code}
-  Prod : PSh
-  Prod = record
-    { Obj = ProdObj'
-    ; Mor = ProdMor
-    ; MorId = ProdMorId
-    ; MorComp = ProdMorComp
-    }
-  \end{code}
 }
 
+The product is defined similarly.
+On each size, we take the product and for the morphisms, we use the functoriality of the product.
+
 \begin{code}
-ProdObj : (P Q : PSh) → Size → Set
-ProdObj P Q i = PSh.Obj P i × PSh.Obj Q i
+Prod : PSh → PSh → PSh
 \end{code}
+
+\AgdaHide{
+\begin{code}
+Prod P Q = record
+  { Obj = ProdObj P Q
+  ; Mor = ProdMor P Q
+  ; MorId = ProdMorId P Q
+  ; MorComp = ProdMorComp P Q
+  }
+\end{code}
+}

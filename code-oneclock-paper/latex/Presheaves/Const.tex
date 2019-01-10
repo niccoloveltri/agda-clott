@@ -23,7 +23,7 @@
 \AgdaPrimitiveType{Set}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
 \end{code}
-}
+
 
   \begin{code}%
 \>[0][@{}l@{\AgdaIndent{1}}]%
@@ -35,7 +35,7 @@
 \\
 %
 \>[2]\AgdaFunction{ConstObj}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{A}\<%
 \end{code}
@@ -63,8 +63,8 @@
 \\
 %
 \>[2]\AgdaFunction{ConstMor}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{x}\<%
@@ -141,44 +141,59 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\<%
 \end{code}
+}
 
-  \AgdaHide{
-  \begin{code}%
-%
-\>[2]\AgdaFunction{Const}\AgdaSpace{}%
+There are several operations on presheaves.
+We do not discuss them in detail since their definitions can be readily found in the literature.
+
+The first operation takes a constant presheaf.
+Given a set \AB{A}, we define a presheaf which sends each size to \AB{A}.
+Morphisms are sent to the identity function and then the functor laws hold by reflexivity.
+
+\begin{code}%
+\>[0]\AgdaFunction{Const}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%
-\\
-%
-\>[2]\AgdaFunction{Const}\AgdaSpace{}%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{Const}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaKeyword{record}\<%
 \\
-\>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaSymbol{\{}\AgdaSpace{}%
+\>[0][@{}l@{\AgdaIndent{0}}]%
+\>[2]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{ConstObj}\<%
+\AgdaFunction{ConstObj}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{Mor}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{ConstMor}\<%
+\AgdaFunction{ConstMor}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorId}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{ConstMorId}\<%
+\AgdaFunction{ConstMorId}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorComp}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{ConstMorComp}\<%
+\AgdaFunction{ConstMorComp}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
-\>[4]\AgdaSymbol{\}}\<%
+\>[2]\AgdaSymbol{\}}\<%
 \end{code}
-  }
+}

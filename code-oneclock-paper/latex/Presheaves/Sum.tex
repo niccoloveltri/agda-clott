@@ -20,6 +20,11 @@
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
+\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaModule{PSh}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaKeyword{module}\AgdaSpace{}%
 \AgdaModule{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
@@ -27,14 +32,10 @@
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaRecord{PSh}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaKeyword{open}\AgdaSpace{}%
-\AgdaModule{PSh}\<%
 \end{code}
-}
+
   \begin{code}%
-%
+\>[0][@{}l@{\AgdaIndent{1}}]%
 \>[2]\AgdaFunction{SumObj}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSpace{}%
@@ -305,50 +306,70 @@
 %
 \>[4]\AgdaOperator{\AgdaFunction{∎}}\<%
 \end{code}
+}
 
-  \AgdaHide{
-  \begin{code}%
-%
-\>[2]\AgdaFunction{Sum}\AgdaSpace{}%
+In addition, there are several constructions to make presheaves from other presheaves.
+The first two are defined pointwise.
+We can take the sum of presheaves by taking the sum on each coordinate.
+For the morphisms, we use functoriality of taking sums.
+
+\begin{code}%
+\>[0]\AgdaFunction{Sum}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
+\AgdaRecord{PSh}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaRecord{PSh}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%
-\\
-%
-\>[2]\AgdaFunction{Sum}\AgdaSpace{}%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{Sum}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaKeyword{record}\<%
 \\
-\>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaSymbol{\{}\AgdaSpace{}%
+\>[0][@{}l@{\AgdaIndent{0}}]%
+\>[2]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{SumObj}\<%
+\AgdaFunction{SumObj}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{Mor}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{SumMor}\<%
+\AgdaFunction{SumMor}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorId}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{SumMorId}\<%
+\AgdaFunction{SumMorId}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\<%
 \\
 %
-\>[4]\AgdaSymbol{;}\AgdaSpace{}%
+\>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorComp}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaSymbol{λ}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{\AgdaUnderscore{}}\AgdaSymbol{\}\{}\AgdaBound{\AgdaUnderscore{}}\AgdaSymbol{\}\{}\AgdaBound{\AgdaUnderscore{}}\AgdaSymbol{\}\{}\AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{SumMorComp}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\<%
 \\
 %
-\>[4]\AgdaSymbol{\}}\<%
+\>[2]\AgdaSymbol{\}}\<%
 \end{code}
-  }
+}
