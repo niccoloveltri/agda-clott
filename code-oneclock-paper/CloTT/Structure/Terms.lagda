@@ -26,4 +26,5 @@ Tm {tot} Γ A =
       → Mor A i j (θ i x) ≡ θ j (Mor Γ i j x))
 \end{code}
 
-A natural transformation consists of a component
+We define natural transformations as a sigma type.
+The first component is the map and the second is the commutativity requirement.
