@@ -16,13 +16,27 @@
 \\
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaKeyword{import}\AgdaSpace{}%
+\AgdaModule{CloTT.Structure.ClockContexts}\<%
+\\
+\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaKeyword{import}\AgdaSpace{}%
 \AgdaModule{CloTT.Structure.Contexts}\<%
 \\
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaKeyword{import}\AgdaSpace{}%
 \AgdaModule{CloTT.Structure.Types}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
+\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaModule{PSh}\<%
 \end{code}
 }
+
+A term of type $A$ in context $\Gamma$, is just a morphism from $A$ to $\Gamma$.
+Again we need to distinguish two cases, because morphisms between sets are something different than morphisms between presheaves.
+For sets, we just use functions.
+For presheaves, we use natural transformations instead.
 
 \begin{code}%
 \>[0]\AgdaFunction{Tm}\AgdaSpace{}%
@@ -57,24 +71,24 @@
 \AgdaSymbol{=}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaRecord{Σ}%
-\>[35I]\AgdaSymbol{((}\AgdaBound{i}\AgdaSpace{}%
+\>[2]\AgdaFunction{Σ[}\AgdaSpace{}%
+\AgdaBound{θ}\AgdaSpace{}%
+\AgdaFunction{∈}\AgdaSpace{}%
+\AgdaSymbol{((}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{PSh.Obj}\AgdaSpace{}%
+\AgdaField{Obj}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{PSh.Obj}\AgdaSpace{}%
+\AgdaField{Obj}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSymbol{)}\<%
+\AgdaBound{i}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaFunction{]}\<%
 \\
-\>[.]\<[35I]%
-\>[4]\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{f}%
-\>[47I]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
+\>[2][@{}l@{\AgdaIndent{0}}]%
+\>[4]\AgdaSymbol{((}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{j}\AgdaSpace{}%
@@ -84,25 +98,27 @@
 \AgdaBound{i}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaField{PSh.Obj}\AgdaSpace{}%
+\AgdaField{Obj}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[47I]%
-\>[9]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{PSh.Mor}\AgdaSpace{}%
+\>[4][@{}l@{\AgdaIndent{0}}]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaField{Mor}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{f}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{θ}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{≡}}\AgdaSpace{}%
-\AgdaBound{f}\AgdaSpace{}%
+\AgdaBound{θ}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{PSh.Mor}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{))}\<%
 \end{code}
+
+A natural transformation consists of a component
