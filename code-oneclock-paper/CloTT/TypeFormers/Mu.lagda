@@ -17,6 +17,9 @@ open import CloTT.TypeFormers.WeakenClock
 open PSh
 \end{code}
 }
+To define guarded recursive types, we first need to define the semantics of polynomials.
+The reason why we cannot use the syntactic ones, is because we need to use inhabitants of \AD{Ty} in the constant polynomial.
+This leads to the following definition.
 
 \begin{code}
 data SemPoly : tag → Set₁ where
@@ -26,6 +29,9 @@ data SemPoly : tag → Set₁ where
     _⊞_ _⊠_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ► : SemPoly tot → SemPoly tot
 \end{code}
+
+Note that we can evaluate polynomials into functors on types.
+This is defined by induction on the polynomial.
 
 \begin{code}
 eval : {Δ : tag} → SemPoly Δ → Ty Δ → Ty Δ
