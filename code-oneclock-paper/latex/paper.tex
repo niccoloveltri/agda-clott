@@ -215,7 +215,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \input{Presheaves/Exp}
 
 \subsection{Kripke Semantics}
-\label{sec:kripke}
+%\label{sec:kripke}
 \input{CloTT/Structure/ClockContexts}
 
 \input{CloTT/Structure/Contexts}
@@ -224,26 +224,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 
 \input{CloTT/Structure/Terms}
 
-Two types in \IC{set} are judgementally equal if and only if they are
-isomorphic as elements of \D{Set}. Two types in \IC{tot} are
-judgementally equal if and only if they are isomorphic as elements of
-\D{PSh}.
-
-Two terms in \IC{set} are judgementally equal if and only if they are
-propositionally equal as functions. Two terms in \IC{tot} are
-judgementally equal if and only if they are propositionally equal as
-natural transformations.
+\input{CloTT/Structure/Subst}
 
 \input{CloTT/Structure/DefinitionalEquality}
 
-We write \D{∙} for the empty context and \Ar{Γ} \D{,,} \Ar{A} for the
-extension of the context \Ar{Γ} with the type \Ar{A}. We have
-the usual variable, weakening and substitutution operations.
-
-\input{CloTT/Structure/ContextOperations}
-\input{CloTT/Structure/Subst}
-%\subsection{Operations on Contexts}
-%\subsection{Substitution}
+%\input{CloTT/Structure/ContextOperations} Context operations and simple type forrmers are not interesting. There is not much to tell about them, so a remark suffices.
 
 \section{Modelling Guarded Recursion}
 \subsection{Later}
