@@ -29,6 +29,11 @@
 \end{code}
 }
 
+The first type constructor we discuss, is later.
+Intuitively, inhabitants of $\blacktriangleright$ \AB{A} are inhabitants of \AB{A}, but available one time step from now.
+For this reason, the main ingredient of defining the later modality is blocking computations.
+This is done in several steps and first we define a type \AD{SizeLt}
+
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{SizeLt}\AgdaSpace{}%
@@ -49,9 +54,12 @@
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{SizeLt}\AgdaSpace{}%
 \AgdaBound{i}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
+\end{code}
+
+From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
+Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
+
+\begin{code}%
 \>[0]\AgdaFunction{size}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -69,6 +77,39 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \end{code}
+
+The type $\blacktriangleright$ \AB{A} is also defined in several steps.
+In each step, we take more structure of the presheaf \AB{A} into account.
+
+Given a family of types over sizes, we can define later as follows.
+
+\begin{code}%
+\>[0]\AgdaFunction{Later}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaPostulate{Size}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPostulate{Size}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaFunction{Later}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{j}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{SizeLt}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{size}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSymbol{)}\<%
+\end{code}
+
+However, this it not yet sufficient.
+Note that types are presheaves and not just families of sizes.
 
 \begin{code}%
 \>[0]\AgdaFunction{elimLt}\AgdaSpace{}%
@@ -110,31 +151,6 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\<%
-\end{code}
-
-\begin{code}%
-\>[0]\AgdaFunction{Later}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaPostulate{Size}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPostulate{Size}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\<%
-\\
-\>[0]\AgdaFunction{Later}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SizeLt}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{size}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{)}\<%
 \end{code}
 
 \AgdaHide{
@@ -457,43 +473,56 @@
 \AgdaSymbol{\})}\AgdaSpace{}%
 \AgdaSymbol{\}))}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
-%
-\>[2]\AgdaFunction{▻}\AgdaSpace{}%
+\end{code}
+}
+
+We can also define an action on the morphisms and show this preserves identity and composition.
+All in all, we get
+
+\begin{code}%
+\>[0]\AgdaFunction{▻}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaInductiveConstructor{tot}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaFunction{Ty}\AgdaSpace{}%
 \AgdaInductiveConstructor{tot}\<%
-\\
-%
-\>[2]\AgdaFunction{▻}%
-\>[336I]\AgdaSymbol{=}\AgdaSpace{}%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{▻}\AgdaSpace{}%
+\AgdaBound{A}%
+\>[340I]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaKeyword{record}\<%
 \\
-\>[.]\<[336I]%
+\>[.]\<[340I]%
 \>[4]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{▻Obj}\<%
+\AgdaFunction{▻Obj}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
 \>[4]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{Mor}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{▻Mor}\<%
+\AgdaFunction{▻Mor}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
 \>[4]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorId}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{▻MorId}\<%
+\AgdaFunction{▻MorId}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
 \>[4]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{MorComp}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{▻MorComp}\<%
+\AgdaFunction{▻MorComp}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
 \>[4]\AgdaSymbol{\}}\<%
