@@ -40,12 +40,13 @@
 \end{code}
 }
 
-Lastly, we define the context operations.
-Since their definitions are standard, we do not discuss them in detail and just briefly discuss how they are defined.
-
+To interpret simple type theory, we also need to give the context operations and type formers.
+Since their definitions are standard, we do not discuss them formally.
 For each operation, we need to make a case distinction based on the clock context.
-For example, the empty context \AB{∙} is defined to be the unit type if the clock context is empty and otherwise it is the terminal presheaf.
+The empty context is interpreted with the unit type and terminal presheaf and for context extension we use the product.
+For the variable rule, we use the second projection and for weakening, we use the first projection.
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{∙}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -55,10 +56,7 @@ For example, the empty context \AB{∙} is defined to be the unit type if the cl
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
 \AgdaBound{b}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 \>[0]\AgdaFunction{∙}\AgdaSpace{}%
 \AgdaInductiveConstructor{set}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -69,9 +67,6 @@ For example, the empty context \AB{∙} is defined to be the unit type if the cl
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Terminal}\<%
 \end{code}
-}
-
-Context extension is defined in almost the same way but instead we use the product for sets and presheaves.
 
 \begin{code}%
 \>[0]\AgdaOperator{\AgdaFunction{\AgdaUnderscore{},,\AgdaUnderscore{}}}\AgdaSpace{}%
@@ -88,10 +83,7 @@ Context extension is defined in almost the same way but instead we use the produ
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
 \AgdaBound{b}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 \>[0]\AgdaOperator{\AgdaFunction{\AgdaUnderscore{},,\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{set}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -110,11 +102,6 @@ Context extension is defined in almost the same way but instead we use the produ
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\<%
 \end{code}
-}
-
-For the variable rule, we define a term rather than a context.
-This is done with the second projection.
-If the clock context is non-empty, then we also need to show this map is natural and that holds by reflexivity.
 
 \begin{code}%
 \>[0]\AgdaFunction{var}\AgdaSpace{}%
@@ -136,10 +123,7 @@ If the clock context is non-empty, then we also need to show this map is natural
 \AgdaOperator{\AgdaFunction{,,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{A}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 \>[0]\AgdaFunction{var}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{set}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -172,9 +156,6 @@ If the clock context is non-empty, then we also need to show this map is natural
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\<%
 \end{code}
-}
-
-The last operation we need, is weakening and again this is about terms.
 
 \begin{code}%
 \>[0]\AgdaFunction{weaken}\AgdaSpace{}%
@@ -201,10 +182,7 @@ The last operation we need, is weakening and again this is about terms.
 \AgdaOperator{\AgdaFunction{,,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{B}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 \>[0]\AgdaFunction{weaken}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{set}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%

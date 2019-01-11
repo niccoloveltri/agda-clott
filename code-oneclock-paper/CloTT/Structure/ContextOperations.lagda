@@ -13,25 +13,24 @@ open import CloTT.Structure.Terms
 \end{code}
 }
 
-%The empty context in \IC{set} is the unit type \D{⊤}, while in
-%\IC{tot} is the presheaf \D{Terminal}.
+To interpret simple type theory, we also need to give the context operations and type formers.
+Since their definitions are standard, we do not discuss them formally.
+For each operation, we need to make a case distinction based on the clock context.
+The empty context is interpreted with the unit type and terminal presheaf and for context extension we use the product.
+For the variable rule, we use the second projection and for weakening, we use the first projection.
 
 \AgdaHide{
 \begin{code}
-∙ : (b : tag) → Ctx b 
+∙ : (b : tag) → Ctx b
 ∙ set = ⊤
 ∙ tot = Terminal
 \end{code}
-}
-%Context extension in \IC{set} is cartesian product, while in \IC{tot}
-%is the operation \D{Prod} on presheaves.
-\AgdaHide{
+
 \begin{code}
 _,,_ : {b : tag} → Ctx b → Ty b → Ctx b
 _,,_ {set} Γ A = Γ × A
 _,,_ {tot} Γ A = Prod Γ A
 \end{code}
-
 
 \begin{code}
 var : {b : tag} (Γ : Ctx b) (A : Ty b) → Tm (Γ ,, A) A
@@ -41,8 +40,7 @@ proj₂ (var {tot} Γ A) i j (γ , x) = refl
 \end{code}
 
 \begin{code}
-weaken : {b : tag} (Γ : Ctx b) (A B : Ty b)
-  → Tm Γ B → Tm (Γ ,, A) B
+weaken : {b : tag} (Γ : Ctx b) (A B : Ty b) → Tm Γ B → Tm (Γ ,, A) B
 weaken {set} Γ A B t (x , _) = t x
 proj₁ (weaken {tot} Γ A B (t , p)) i (x₁ , x₂) = t i x₁
 proj₂ (weaken {tot} Γ A B (t , p)) i j (x₁ , x₂) = p i j x₁
