@@ -8,10 +8,13 @@ open import Data.Empty
 \end{code}
 }
 
-We now give a description of the object type theory, which is a simple
-type theory with guarded recursion. It can be seen as a variant of
-Clouston et al.'s guarded lambda calculus or Atkey and McBride's type
-system but allowing the presence of at most one clock in context.
+We now give a description of the object type theory. This is a simple
+type theory with guarded recursion that can be seen as a variant of
+Atkey and McBride's type system \cite{atkey2013productive} but
+allowing the presence of at most one clock in context.
+In Atkey and McBride's system, judgements are parametrized by a clock
+context. In our case, the clock context can either be empty or contain
+a single clock \IC{κ}.
 
 \begin{code}
 data ClockContext : Set where
@@ -25,17 +28,55 @@ mutual
 \end{code}
 }
 
+Types depend on a clock context. 
+
+\begin{AgdaAlign}
 \begin{code}
   data Type : ClockContext → Set where
+\end{code}
+
+We have the unit type which exists only in the empty clock context. We
+have products, coproducts and function spaces which exist in all clock
+contexts.
+
+\begin{code}
     𝟙 : Type ∅
     _⊞_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
     _⊠_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
     _⟶_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
-    weakenT : Type ∅ → Type κ
+\end{code}
+
+In addition to the usual simple type formers, there are types that
+allow us to specify guarded recursive and coinductive types. We have
+the later modality, which takes a type in the \IC{κ} clock context and
+returns a type in the \IC{κ} clock context.
+We have clock quantification, which takes a type in the \IC{κ} clock
+context and returns a type in the \IC{∅} clock context. We also have a
+weakening type former, which embeds any type in the \IC{∅} clock context
+into types in the \IC{κ} clock context.
+
+\begin{code}
     later : Type κ → Type κ
     clock-q : Type κ → Type ∅
+    weakenT : Type ∅ → Type κ
+\end{code}
+
+Finally we have guarded recursive types which exist in all clock
+contexts. 
+
+\begin{code}
     μ : ∀ {Δ} → Poly Δ → Type Δ
 \end{code}
+\end{AgdaAlign}
+
+A guarded recursive type in a clock context \Ar{Δ} takes an element of
+\F{Poly Δ} as its input. We call these elements polynomials. Each
+polynomial \Ar{P} corresponds to a functor, and \IC{μ} \Ar{P} is the
+least fixed point of \Ar{P}. Typically for this fixpoint to exists one
+considers strictly positive functors. Here we consider a restricted
+grammar for functors, consisting of constant functors, the identity
+functor, products, coproducts, the later modality.
+
 
 \begin{code}
   data Poly : ClockContext → Set where
@@ -76,23 +117,9 @@ mutual
 \end{code}
 }
 \begin{code}
-  data Subst : ∀ {Δ} → Context Δ → Context Δ → Set where
-    ε : ∀ {Δ} (Γ : Context Δ) → Subst Γ •
-    idsub : ∀ {Δ} (Γ : Context Δ) → Subst Γ Γ
-    _,s_ : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ}
-      → Subst Γ Γ' → Term Γ A → Subst Γ (Γ' , A)
-    _o_ : ∀ {Δ} {Γ Γ' Γ'' : Context Δ} → Subst Γ' Γ'' → Subst Γ Γ' → Subst Γ Γ''
-    pr : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} → Subst Γ (Γ' , A) → Subst Γ Γ'
-    weakenS : {Γ Γ' : Context ∅} → Subst Γ Γ' → Subst (weakenC Γ) (weakenC Γ')
-    •-to-weaken : Subst • (weakenC •)
-    ,-weaken : (Γ : Context ∅) (A : Type ∅)
-      → Subst (weakenC Γ , weakenT A) (weakenC (Γ , A))
-\end{code}
-
-\AgdaHide{
-\begin{code}
   data Term : ∀ {Δ} → Context Δ → Type Δ → Set where
-    sub : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} → Term Γ' A → Subst Γ Γ' → Term Γ A
+    sub : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
+      → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
     varTm : ∀ {Δ} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
     tt : {Γ : Context ∅} → Term Γ 𝟙
     unit-rec : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (Γ , 𝟙) A
@@ -121,12 +148,29 @@ mutual
     primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
       → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
     □const : {Γ : Context ∅} (A : Type ∅) → Term Γ (clock-q (weakenT A) ⟶ A)
-    □sum : {Γ : Context ∅} (A B : Type κ) → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
-    ⟶weaken : (A B : Type ∅) → Term • (((weakenT A) ⟶ (weakenT B)) ⟶ weakenT(A ⟶ B))
+    □sum : {Γ : Context ∅} (A B : Type κ)
+      → Term Γ (clock-q (A ⊞ B) ⟶ (clock-q A ⊞ clock-q B))
+    ⟶weaken : (A B : Type ∅)
+      → Term • (((weakenT A) ⟶ (weakenT B)) ⟶ weakenT(A ⟶ B))
     μweaken : (P : Poly ∅) → Term • (weakenT (μ P) ⟶ μ (weakenP P))
     weakenμ : (P : Poly ∅) → Term • (μ (weakenP P) ⟶ weakenT (μ P))
 \end{code}
-}
+
+\begin{code}
+  data Subst : ∀ {Δ} → Context Δ → Context Δ → Set where
+    ε : ∀ {Δ} (Γ : Context Δ) → Subst Γ •
+    idsub : ∀ {Δ} (Γ : Context Δ) → Subst Γ Γ
+    _,s_ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
+      → Subst Γ₁ Γ₂ → Term Γ₁ A → Subst Γ₁ (Γ₂ , A)
+    _o_ : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} → Subst Γ₂ Γ₃ → Subst Γ₁ Γ₂ → Subst Γ₁ Γ₃
+    pr : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} → Subst Γ₁ (Γ₂ , A) → Subst Γ₁ Γ₂
+    weakenS : {Γ₁ Γ₂ : Context ∅} → Subst Γ₁ Γ₂ → Subst (weakenC Γ₁) (weakenC Γ₂)
+    •-to-weaken : Subst • (weakenC •)
+    ,-weaken : (Γ : Context ∅) (A : Type ∅)
+      → Subst (weakenC Γ , weakenT A) (weakenC (Γ , A))
+\end{code}
+
+
 
 \AgdaHide{
 \begin{code}
