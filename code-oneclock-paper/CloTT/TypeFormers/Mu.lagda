@@ -74,6 +74,13 @@ For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{
 The constructors for this are in the data type \AD{μObj'}.
 The morphism part \AD{μMor'} is defined by induction.
 
+The type family \AD{μObj'} depends on two polynomials \AB{P} and
+\AB{Q}: \AB{P} is the 
+
+In the end we will take \AB{P} and \AB{Q} to be the same
+polynomial, but it is important to consider two distinct polynomials
+in the definition. This allows us to remember the 
+
 \begin{code}
   data μObj' (P : SemPoly tot) : SemPoly tot → Size → Set where
     ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ps X) i
