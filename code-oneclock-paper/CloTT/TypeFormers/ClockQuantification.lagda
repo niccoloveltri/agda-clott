@@ -14,7 +14,7 @@ open PSh
 
 Following \cite{Mogelberg14}, clock quantification is modelled by
 taking limits. Given a type \Ar{A} in the semantic clock
-context \IC{tot}, i.e. a presheaf, we take \F{□} \Ar{A} to be the limit of \Ar{A}.
+context \IC{tot}, \ie a presheaf, we take \F{□} \Ar{A} to be the limit of \Ar{A}.
 Formally the limit is constructed as a $\Sigma$-type. 
 
 %%given a type \Ar{A} in the semantic clock
