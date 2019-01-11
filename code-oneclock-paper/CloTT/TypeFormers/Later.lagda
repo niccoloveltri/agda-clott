@@ -31,8 +31,7 @@ size [ j ] = j
 
 The type $\blacktriangleright$ \AB{A} is also defined in several steps.
 In each step, we take more structure of the presheaf \AB{A} into account.
-
-Given a family of types over sizes, we can define later as follows.
+Just using the action on actions, we define a first appoximation of later as follows.
 
 \begin{code}
 Later : (Size → Set) → Size → Set
@@ -40,10 +39,12 @@ Later A i = (j : SizeLt i) → A (size j)
 \end{code}
 
 However, this it not yet sufficient.
-Note that types are presheaves and not just families of sizes.
+Note that inhabitants of \AF{Later} \AB{A} are just maps \AB{A} (\AF{size} \AB{j}) to \AB{A}.
+
+We state this as an equality.
 
 \begin{code}
-elimLt : ∀{ℓ} {A : Size → Set ℓ} {i : Size} (j : SizeLt i)
+elimLt : {A : Size → Set₁} {i : Size} (j : SizeLt i)
   → ((j : Size< i) → A j) → A (size j)
 elimLt [ j ] f = f j
 \end{code}
@@ -60,6 +61,8 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
     → elimLt j (λ { j' → (k : SizeLt (↑ j'))
       → elimLt k (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) })
 \end{code}
+
+Note that 
 
 \AgdaHide{
 \begin{code}
