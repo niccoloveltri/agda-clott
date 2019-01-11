@@ -13,15 +13,13 @@ open PSh
 }
 
 Following \cite{Mogelberg14}, clock quantification is modelled by
-taking limits. Given a type \Ar{A} in the semantic clock
-context \IC{tot}, \ie a presheaf, we take \F{□} \Ar{A} to be the limit of \Ar{A}.
-Formally the limit is constructed as a $\Sigma$-type. 
-
-%%given a type \Ar{A} in the semantic clock
-%%context \IC{tot}, i.e. a presheaf, we take \F{□} \Ar{A} to consist of
-%%an element \Ar{f i} in \Fi{Obj} \Ar{A i} for all sizes \Ar{i},
-%%together with a proof that the restriction of \Ar{f i} to a size
-%%\Ar{j} smaller than \Ar{i} is equal to \Ar{f j}.
+taking limits. Given a type \Ar{A} in the semantic clock context
+\IC{tot}, i.e. a presheaf, we take \F{□} \Ar{A} to be the limit of
+\Ar{A}.  Formally the limit of \Ar{A} is constructed as a
+$\Sigma$-type. The first component is given by for each size \Ar{i} an
+element \Ar{f i} in \Fi{Obj} \Ar{A i}. The second component is a proof
+that the restriction of \Ar{f i} to a size \Ar{j} smaller than \Ar{i}
+is equal to \Ar{f j}.
 
 \begin{code}
 □ : Ty tot → Ty set
