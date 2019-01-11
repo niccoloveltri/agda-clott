@@ -70,12 +70,13 @@ contexts.
 \end{AgdaAlign}
 
 A guarded recursive type in a clock context \Ar{Δ} takes an element of
-\F{Poly Δ} as its input. We call these elements polynomials. Each
+\F{Poly} \Ar{Δ} as its input. We call these elements polynomials. Each
 polynomial \Ar{P} corresponds to a functor, and \IC{μ} \Ar{P} is the
 least fixed point of \Ar{P}. Typically for this fixpoint to exists one
 considers strictly positive functors. Here we consider a restricted
 grammar for functors, consisting of constant functors, the identity
 functor, products, coproducts, the later modality.
+The type family \F{Poly} is defined mutually with \F{Type}.
 
 
 \begin{code}
