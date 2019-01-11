@@ -102,22 +102,7 @@
 \\
 %
 \>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{tag}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
-\AgdaBound{Δ}\<%
-\\
-%
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -157,7 +142,10 @@
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
-\\
+\end{code}
+
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaFunction{eval}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
@@ -215,7 +203,9 @@
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\<%
 \end{code}
+}
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
@@ -316,11 +306,25 @@
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\<%
 \end{code}
+}
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
+\end{code}
+}
+
+We define the object part and the morphism part mutually.
+Usually, the morphism part depends on the object part, but not the other way around.
+Since we have a constructor for later, they depend mutually on each other.
+This is because later is defined as a limit and uses the action on morphisms.
+
+For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
+The constructors for this are in the data type \AD{μObj'}.
+The morphism part \AD{μMor'} is defined by induction.
+
+\begin{code}%
+\>[0][@{}l@{\AgdaIndent{1}}]%
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
@@ -428,8 +432,8 @@
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{►}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{►}%
+\>[305I]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSymbol{\}\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -447,16 +451,18 @@
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaBound{x}\<%
+\\
+\>[.]\<[305I]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{►}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
+\end{code}
+
+\begin{code}%
 %
 \>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -472,8 +478,10 @@
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaOperator{\AgdaPostulate{Size<}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaOperator{\AgdaPostulate{↑}}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSymbol{))}\<%
+\\
+\>[2][@{}l@{\AgdaIndent{0}}]%
+\>[4]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -595,13 +603,13 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{►}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
-\AgdaFunction{p'}\<%
+\AgdaFunction{q}\<%
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
 \>[4]\AgdaKeyword{where}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaFunction{p'}\AgdaSpace{}%
+\>[6]\AgdaFunction{q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{LaterLim}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaDatatype{μObj'}\AgdaSpace{}%
@@ -614,7 +622,7 @@
 \AgdaBound{x}\<%
 \\
 %
-\>[6]\AgdaFunction{p'}\AgdaSpace{}%
+\>[6]\AgdaFunction{q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
@@ -631,6 +639,7 @@
 \AgdaOperator{\AgdaInductiveConstructor{]}}\<%
 \end{code}
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -919,6 +928,9 @@
 \AgdaSymbol{\})}\AgdaSpace{}%
 \AgdaSymbol{\}))}\<%
 \end{code}
+}
+
+In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
 
 \begin{code}%
 \>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
@@ -931,7 +943,10 @@
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
 \AgdaInductiveConstructor{tot}\<%
-\\
+\end{code}
+
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -973,6 +988,11 @@
 %
 \>[2]\AgdaSymbol{\}}\<%
 \end{code}
+}
+
+Finally, we define \AD{μ}.
+We make a case distinction based on the clock context.
+For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
 
 \begin{code}%
 \>[0]\AgdaFunction{mu}\AgdaSpace{}%
@@ -990,14 +1010,6 @@
 \AgdaBound{Δ}\<%
 \\
 \>[0]\AgdaFunction{mu}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaInductiveConstructor{set}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaDatatype{μset}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{P}\<%
-\\
-\>[0]\AgdaFunction{mu}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{tot}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -1005,3 +1017,15 @@
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\<%
 \end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{mu}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaInductiveConstructor{set}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaDatatype{μset}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaBound{P}\<%
+\end{code}
+}

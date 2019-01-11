@@ -95,8 +95,15 @@ weakenP (∁ X) = ∁ (weakenT X)
 weakenP I = I
 weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
+\end{code}
+}
 
+\begin{code}
 evalP : ∀ {Δ} → Poly Δ → Type Δ → Type Δ
+\end{code}
+
+\AgdaHide{
+\begin{code}
 evalP (∁ Y) X = Y
 evalP I X = X
 evalP (P ⊞ Q) X = evalP P X ⊞ evalP Q X

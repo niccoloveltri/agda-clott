@@ -23,13 +23,16 @@ data SemPoly : tag → Set₁ where
     ∁s : Set → SemPoly set
     ∁ps : PSh → SemPoly tot
     I : {Δ : tag} → SemPoly Δ
-    _⊞_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
-    _⊠_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
+    _⊞_ _⊠_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ► : SemPoly tot → SemPoly tot
 \end{code}
 
 \begin{code}
 eval : {Δ : tag} → SemPoly Δ → Ty Δ → Ty Δ
+\end{code}
+
+\AgdaHide{
+\begin{code}
 eval (∁s A) X = A
 eval (∁ps A) X = A
 eval I X = X
@@ -37,7 +40,9 @@ eval (P ⊞ Q) X = eval P X ⊕ eval Q X
 eval (P ⊠ Q) X = eval P X ⊗ eval Q X
 eval (► P) X = ▻(eval P X)
 \end{code}
+}
 
+\AgdaHide{
 \begin{code}
 data μset (P : SemPoly set) : SemPoly set → Set where
   ∁s : {X : Set} → X → μset P (∁s X)
@@ -46,29 +51,49 @@ data μset (P : SemPoly set) : SemPoly set → Set where
   ⊞₁ : {Q R : SemPoly set} → μset P Q → μset P (Q ⊞ R)
   ⊞₂ : {Q R : SemPoly set} → μset P R → μset P (Q ⊞ R)
 \end{code}
+}
 
+\AgdaHide{
 \begin{code}
 mutual
+\end{code}
+}
+
+We define the object part and the morphism part mutually.
+Usually, the morphism part depends on the object part, but not the other way around.
+Since we have a constructor for later, they depend mutually on each other.
+This is because later is defined as a limit and uses the action on morphisms.
+
+For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
+The constructors for this are in the data type \AD{μObj'}.
+The morphism part \AD{μMor'} is defined by induction.
+
+\begin{code}
   data μObj' (P : SemPoly tot) : SemPoly tot → Size → Set where
     ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ps X) i
     I : ∀{i} → μObj' P P i → μObj' P I i
     _⊠_ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
     ⊞₁ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P (Q ⊞ R) i
     ⊞₂ : ∀{Q}{R}{i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ► : ∀{Q}{i} (x : Later (μObj' P Q) i) → LaterLim (μObj' P Q) (μMor' P Q) i x → μObj' P (► Q) i
+    ► : ∀{Q}{i} (x : Later (μObj' P Q) i) → LaterLim (μObj' P Q) (μMor' P Q) i x
+      → μObj' P (► Q) i
+\end{code}
 
-  μMor' : (P Q : SemPoly tot) (i : Size) (j : Size< (↑ i)) → μObj' P Q i → μObj' P Q j
+\begin{code}
+  μMor' : (P Q : SemPoly tot) (i : Size) (j : Size< (↑ i))
+    → μObj' P Q i → μObj' P Q j
   μMor' P (∁ps X) i j (∁ps x) = ∁ps (Mor X i j x)
   μMor' P I i j (I x) = I (μMor' P P i j x)
   μMor' P (Q ⊠ R) i j (x ⊠ y) = μMor' P Q i j x ⊠ μMor' P R i j y
   μMor' P (Q ⊞ R) i j (⊞₁ x) = ⊞₁ (μMor' P Q i j x)
   μMor' P (Q ⊞ R) i j (⊞₂ x) = ⊞₂ (μMor' P R i j x)
-  μMor' P (► Q) i j (► x p) = ► x p'
+  μMor' P (► Q) i j (► x p) = ► x q
     where
-      p' : LaterLim (μObj' P Q) (μMor' P Q) j x
-      p' [ k ] [ l ] = p [ k ] [ l ]
+      q : LaterLim (μObj' P Q) (μMor' P Q) j x
+      q [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 
+\AgdaHide{
 \begin{code}
 μMor'Id : (P Q : SemPoly tot) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
 μMor'Id P (∁ps X) {i} {∁ps x} = cong ∁ps (MorId X)
@@ -89,9 +114,16 @@ mutual
 μMor'Comp P (Q ⊞ R) {x = ⊞₂ x} = cong ⊞₂ (μMor'Comp P R)
 μMor'Comp P (► Q) {x = ► x p} = cong₂-dep ► refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
 \end{code}
+}
+
+In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
 
 \begin{code}
 μpsh : SemPoly tot → SemPoly tot → Ty tot
+\end{code}
+
+\AgdaHide{
+\begin{code}
 μpsh P Q = record
   { Obj = μObj' P Q
   ; Mor = μMor' P Q
@@ -99,9 +131,19 @@ mutual
   ; MorComp = μMor'Comp P Q
   }
 \end{code}
+}
+
+Finally, we define \AD{μ}.
+We make a case distinction based on the clock context.
+For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
 
 \begin{code}
 mu : {Δ : tag} → (P : SemPoly Δ) → Ty Δ
-mu {set} P = μset P P
 mu {tot} P = μpsh P P
 \end{code}
+
+\AgdaHide{
+\begin{code}
+mu {set} P = μset P P
+\end{code}
+}
