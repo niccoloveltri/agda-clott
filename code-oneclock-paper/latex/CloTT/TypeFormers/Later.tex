@@ -80,8 +80,7 @@ Note that this size is only available when we know it is of the shape \IC{[} \AB
 
 The type $\blacktriangleright$ \AB{A} is also defined in several steps.
 In each step, we take more structure of the presheaf \AB{A} into account.
-
-Given a family of types over sizes, we can define later as follows.
+Just using the action on actions, we define a first appoximation of later as follows.
 
 \begin{code}%
 \>[0]\AgdaFunction{Later}\AgdaSpace{}%
@@ -109,18 +108,18 @@ Given a family of types over sizes, we can define later as follows.
 \end{code}
 
 However, this it not yet sufficient.
-Note that types are presheaves and not just families of sizes.
+Note that inhabitants of \AF{Later} \AB{A} are just maps \AB{A} (\AF{size} \AB{j}) to \AB{A}.
+
+We state this as an equality, for which we first define a help function.
 
 \begin{code}%
 \>[0]\AgdaFunction{elimLt}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀\{}\AgdaBound{ℓ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\AgdaSpace{}%
-\AgdaBound{ℓ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaPrimitiveType{Set₁}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -152,6 +151,8 @@ Note that types are presheaves and not just families of sizes.
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \end{code}
+
+The function \F{elimLt} does pattern matching on \F{SizeLt}.
 
 \AgdaHide{
 \begin{code}%
@@ -209,7 +210,7 @@ Note that types are presheaves and not just families of sizes.
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
 \>[4]\AgdaSymbol{→}%
-\>[131I]\AgdaFunction{elimLt}\AgdaSpace{}%
+\>[129I]\AgdaFunction{elimLt}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaSpace{}%
@@ -221,7 +222,7 @@ Note that types are presheaves and not just families of sizes.
 \AgdaSymbol{(}\AgdaOperator{\AgdaPostulate{↑}}\AgdaSpace{}%
 \AgdaBound{j'}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[131I]%
+\>[.]\<[129I]%
 \>[6]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{elimLt}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
@@ -242,6 +243,8 @@ Note that types are presheaves and not just families of sizes.
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\})}\<%
 \end{code}
+
+Note that 
 
 \AgdaHide{
 \begin{code}%
@@ -373,7 +376,7 @@ Note that types are presheaves and not just families of sizes.
 %
 \>[2]\AgdaFunction{▻MorId}\AgdaSpace{}%
 \AgdaSymbol{:}%
-\>[250I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
+\>[248I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
@@ -381,7 +384,7 @@ Note that types are presheaves and not just families of sizes.
 \AgdaFunction{▻Obj}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
-\>[250I][@{}l@{\AgdaIndent{0}}]%
+\>[248I][@{}l@{\AgdaIndent{0}}]%
 \>[13]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{▻Mor}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -418,7 +421,7 @@ Note that types are presheaves and not just families of sizes.
 %
 \>[2]\AgdaFunction{▻MorComp}\AgdaSpace{}%
 \AgdaSymbol{:}%
-\>[284I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
+\>[282I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{j}\AgdaSpace{}%
@@ -436,7 +439,7 @@ Note that types are presheaves and not just families of sizes.
 \AgdaFunction{▻Obj}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
-\>[284I][@{}l@{\AgdaIndent{0}}]%
+\>[282I][@{}l@{\AgdaIndent{0}}]%
 \>[15]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{▻Mor}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -493,10 +496,10 @@ All in all, we get
 \begin{code}%
 \>[0]\AgdaFunction{▻}\AgdaSpace{}%
 \AgdaBound{A}%
-\>[340I]\AgdaSymbol{=}\AgdaSpace{}%
+\>[338I]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaKeyword{record}\<%
 \\
-\>[.]\<[340I]%
+\>[.]\<[338I]%
 \>[4]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%

@@ -41,13 +41,15 @@ Later A i = (j : SizeLt i) → A (size j)
 However, this it not yet sufficient.
 Note that inhabitants of \AF{Later} \AB{A} are just maps \AB{A} (\AF{size} \AB{j}) to \AB{A}.
 
-We state this as an equality.
+We state this as an equality, for which we first define a help function.
 
 \begin{code}
 elimLt : {A : Size → Set₁} {i : Size} (j : SizeLt i)
   → ((j : Size< i) → A j) → A (size j)
 elimLt [ j ] f = f j
 \end{code}
+
+The function \F{elimLt} does pattern matching on \F{SizeLt}.
 
 \AgdaHide{
 \begin{code}
