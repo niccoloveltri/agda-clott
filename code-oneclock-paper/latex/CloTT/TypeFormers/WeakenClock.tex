@@ -28,20 +28,25 @@
 \end{code}
 }
 
+We now show how to model context weakening and clock quantification.
+The weakening of a context, i.e. the process of embedding contexts
+from \IC{set} into contexts from \IC{tot}, is given by the constant
+presheaf construction.
+
 \begin{code}%
 \>[0]\AgdaFunction{WC}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{Ctx}\AgdaSpace{}%
 \AgdaInductiveConstructor{set}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{Ctx}\AgdaSpace{}%
 \AgdaInductiveConstructor{tot}\<%
 \\
 \>[0]\AgdaFunction{WC}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Const}\AgdaSpace{}%
-\AgdaBound{A}\<%
+\AgdaBound{Γ}\<%
 \end{code}
 
 \begin{code}%

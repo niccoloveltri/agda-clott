@@ -12,12 +12,21 @@ open PSh
 \end{code}
 }
 
+Following \cite{Mogelberg14}, clock quantification is modelled by
+taking limits. 
+
 \begin{code}
 □ : Ty tot → Ty set
 □ A = Σ[ f ∈ ((i : Size) → Obj A i) ]
         ((i : Size) (j : Size< (↑ i))
           → Mor A i j (f i) ≡ f j)
 \end{code}
+
+Semantically, clock quantification \F{□} is right adjoint to context
+weakening \F{WC}. In other words, the types \F{Tm} (\F{WC} \Ar{Γ})
+\Ar{A} and \F{Tm} \Ar{Γ} (\F{□} \Ar{A}) are isomorphic. The function
+underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
+
 
 \begin{code}
 box : (Γ : Ctx set) (A : Ty tot) (t : Tm (WC Γ) A) → Tm Γ (□ A)

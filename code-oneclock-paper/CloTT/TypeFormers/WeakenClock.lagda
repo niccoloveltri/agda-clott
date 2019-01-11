@@ -10,9 +10,14 @@ open import CloTT.Structure
 \end{code}
 }
 
+We now show how to model context weakening and clock quantification.
+The weakening of a context, i.e. the process of embedding contexts
+from \IC{set} into contexts from \IC{tot}, is given by the constant
+presheaf construction.
+
 \begin{code}
-WC : Ty set → Ty tot
-WC A = Const A
+WC : Ctx set → Ctx tot
+WC Γ = Const Γ
 \end{code}
 
 \begin{code}
