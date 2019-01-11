@@ -1,0 +1,17 @@
+In dependent type theory, one usually works with terminating computations to ensure consistency.
+Yet many interesting programs are not terminating and use possibly infinite data types.
+To remain consistent, the computations must be productive \cite{Coquand93}.
+This means: every finite part of an infinite object must be compute in a finite number of steps.
+
+To allow convenient programming and reasoning with infinite objects, we need to extend our type theory with productivity checks.
+In the previous years, various approaches were developed for such extensions.
+One is based on sized types \cite{A-sized,AVW-normalization}, where types are assigned a size to indicate the number of unfoldings.
+Another is based on guarded recursion \cite{AtkeyM13,BahrGM17}.
+
+The relation between those approaches...
+
+To compare these two approaches, we develop denotational semantics of guarded recursive type theory in a ttype theory with sized types.
+More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
+The interpretation of simple types are obtained via standard presheaf semantics.
+However, guarded recursion and guarded recursive types are more difficult to obtain.
+Since we use sizes rather than natural numbers, we cannot reuse the topos of trees \cite{BMSS-synthetic}.
