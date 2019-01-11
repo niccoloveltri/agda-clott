@@ -32,6 +32,7 @@ data SemPoly : tag → Set₁ where
 
 Note that we can evaluate polynomials into functors on types.
 This is defined by induction on the polynomial.
+\NW{say that we focus on μ of presheaves}
 
 \begin{code}
 eval : {Δ : tag} → SemPoly Δ → Ty Δ → Ty Δ
@@ -74,12 +75,19 @@ For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{
 The constructors for this are in the data type \AD{μObj'}.
 The morphism part \AD{μMor'} is defined by induction.
 
-The type family \AD{μObj'} depends on two polynomials \AB{P} and
-\AB{Q}: \AB{P} is the 
+The type family \AD{μObj'} does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
+In the end, we take the object part of \AD{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
+This allows to induction on \AB{Q} while remembering \AB{P}.
 
-In the end we will take \AB{P} and \AB{Q} to be the same
-polynomial, but it is important to consider two distinct polynomials
-in the definition. This allows us to remember the 
+Most cases are straightforward.
+For the sum, we can use both inclusions, for the product, we use pairing, and so on.
+For later, we use \F{LaterLim} as defined before.
+The identity case goes differently.
+The input then is something from the presheaf \AD{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
+If we were using induction and we arrived at the identity polynomial, we are unable to get the original polynomial.
+For that reason, we must keep track of the original polynomial, which is added as an extra argument.
+We use the same trick for \AD{μMor'}.
+
 
 \begin{code}
   data μObj' (P : SemPoly tot) : SemPoly tot → Size → Set where
