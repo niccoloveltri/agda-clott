@@ -13,6 +13,8 @@ open PSh
 \end{code}
 }
 
+Finally we give a semantic definition of the force operation. 
+
 \begin{code}
 force-tm : (Γ : Ctx set) (A : Ty tot) (t : Tm Γ (□ (▻ A))) → Tm Γ (□ A)
 proj₁ (force-tm Γ A t x) j = proj₁ (proj₁ (t x) ∞) [ j ]
