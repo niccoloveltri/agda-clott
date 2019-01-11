@@ -56,6 +56,12 @@ This is done in several steps and first we define a type \AD{SizeLt}
 \AgdaBound{i}\<%
 \end{code}
 
+Functions on \AD{Size<} are defined using $\lambda$-abstraction.
+This means that, whenever it has an input, it can apply $\beta$-elimination to unfold.
+However, for \AD{SizeLt}, one can also use pattern matching.
+In this case, the definition can only be unfolded after inspecting the element, and that blocks the computation.
+This is essential for defining guarded recursion.
+
 From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
 Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
 
@@ -76,11 +82,32 @@ Note that this size is only available when we know it is of the shape \IC{[} \AB
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{j}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
+\>[0]\AgdaFunction{size<}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{SizeLt}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaOperator{\AgdaPostulate{Size<}}\AgdaSpace{}%
+\AgdaBound{i}\<%
+\\
+\>[0]\AgdaFunction{size<}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaBound{j}\<%
 \end{code}
 
-The type $\blacktriangleright$ \AB{A} is also defined in several steps.
-In each step, we take more structure of the presheaf \AB{A} into account.
-Just using the action on actions, we define a first appoximation of later as follows.
+The type ▻ \AB{A} is also defined as a limit.
+On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
+Again we use a $\Sigma$-type for the definition.
+The first component is represented by the type \F{Later}.
 
 \begin{code}%
 \>[0]\AgdaFunction{Later}\AgdaSpace{}%
@@ -107,10 +134,9 @@ Just using the action on actions, we define a first appoximation of later as fol
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \end{code}
 
-However, this it not yet sufficient.
-Note that inhabitants of \AF{Later} \AB{A} are just maps \AB{A} (\AF{size} \AB{j}) to \AB{A}.
-
-We state this as an equality, for which we first define a help function.
+The second component is more difficult.
+Usually, one would expect a universally quantified equality.
+To make everything work with \AD{SizeLt}, we need an intermediate definition.
 
 \begin{code}%
 \>[0]\AgdaFunction{elimLt}\AgdaSpace{}%
@@ -123,36 +149,39 @@ We state this as an equality, for which we first define a help function.
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SizeLt}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSymbol{)}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{((}\AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaOperator{\AgdaPostulate{Size<}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSymbol{)}\<%
+\\
+\>[0][@{}l@{\AgdaIndent{0}}]%
+\>[2]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{j}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{SizeLt}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{size}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{elimLt}\AgdaSpace{}%
+\AgdaBound{f}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \end{code}
 
-The function \F{elimLt} does pattern matching on \F{SizeLt}.
+This function does pattern matching on \F{SizeLt} and we use it to build predicate on \AD{SizeLt}.
+Rather than using an element from \AD{SizeLt}, we put an element from \AD{Size<} into this predicate.
+We can thus define the type of the second component as follows.
 
 \AgdaHide{
 \begin{code}%
@@ -210,8 +239,7 @@ The function \F{elimLt} does pattern matching on \F{SizeLt}.
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
 \>[4]\AgdaSymbol{→}%
-\>[129I]\AgdaFunction{elimLt}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
+\>[144I]\AgdaFunction{elimLt}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaBound{j'}\AgdaSpace{}%
@@ -222,10 +250,9 @@ The function \F{elimLt} does pattern matching on \F{SizeLt}.
 \AgdaSymbol{(}\AgdaOperator{\AgdaPostulate{↑}}\AgdaSpace{}%
 \AgdaBound{j'}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[129I]%
+\>[.]\<[144I]%
 \>[6]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{elimLt}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{k'}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -241,10 +268,10 @@ The function \F{elimLt} does pattern matching on \F{SizeLt}.
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k'}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{\})}\<%
+\AgdaBound{k}\AgdaSpace{}%
+\AgdaSymbol{\})}\AgdaSpace{}%
+\AgdaBound{j}\<%
 \end{code}
-
-Note that 
 
 \AgdaHide{
 \begin{code}%
@@ -284,11 +311,18 @@ Note that
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{l}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{l}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
+\AgdaComment{{-}{-} p [ k ]}\<%
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
@@ -301,6 +335,10 @@ Note that
 \AgdaKeyword{where}\<%
 \end{code}
 }
+
+Now we put it all together and we obtain the following definition of the object part.
+In addition, we can define an action on the morphisms and show this preserves identity and composition.
+All in all, we get
 
 \begin{code}%
 \>[0][@{}l@{\AgdaIndent{1}}]%
@@ -376,7 +414,7 @@ Note that
 %
 \>[2]\AgdaFunction{▻MorId}\AgdaSpace{}%
 \AgdaSymbol{:}%
-\>[248I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
+\>[270I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
@@ -384,7 +422,7 @@ Note that
 \AgdaFunction{▻Obj}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
-\>[248I][@{}l@{\AgdaIndent{0}}]%
+\>[270I][@{}l@{\AgdaIndent{0}}]%
 \>[13]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{▻Mor}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -421,7 +459,7 @@ Note that
 %
 \>[2]\AgdaFunction{▻MorComp}\AgdaSpace{}%
 \AgdaSymbol{:}%
-\>[282I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
+\>[304I]\AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{j}\AgdaSpace{}%
@@ -439,7 +477,7 @@ Note that
 \AgdaFunction{▻Obj}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
-\>[282I][@{}l@{\AgdaIndent{0}}]%
+\>[304I][@{}l@{\AgdaIndent{0}}]%
 \>[15]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{▻Mor}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -479,9 +517,6 @@ Note that
 \end{code}
 }
 
-We can also define an action on the morphisms and show this preserves identity and composition.
-All in all, we get
-
 \begin{code}%
 \>[0]\AgdaFunction{▻}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -496,10 +531,10 @@ All in all, we get
 \begin{code}%
 \>[0]\AgdaFunction{▻}\AgdaSpace{}%
 \AgdaBound{A}%
-\>[338I]\AgdaSymbol{=}\AgdaSpace{}%
+\>[360I]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaKeyword{record}\<%
 \\
-\>[.]\<[338I]%
+\>[.]\<[360I]%
 \>[4]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%

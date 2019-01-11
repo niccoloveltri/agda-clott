@@ -21,35 +21,46 @@ data SizeLt (i : Size) : Set where
   [_] : (j : Size< i) → SizeLt i
 \end{code}
 
+Functions on \AD{Size<} are defined using $\lambda$-abstraction.
+This means that, whenever it has an input, it can apply $\beta$-elimination to unfold.
+However, for \AD{SizeLt}, one can also use pattern matching.
+In this case, the definition can only be unfolded after inspecting the element, and that blocks the computation.
+This is essential for defining guarded recursion.
+
 From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
 Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
 
 \begin{code}
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
+
+size< : ∀ {i} → SizeLt i → Size< i
+size< [ j ] = j
 \end{code}
 
-The type $\blacktriangleright$ \AB{A} is also defined in several steps.
-In each step, we take more structure of the presheaf \AB{A} into account.
-Just using the action on actions, we define a first appoximation of later as follows.
+The type ▻ \AB{A} is also defined as a limit.
+On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
+Again we use a $\Sigma$-type for the definition.
+The first component is represented by the type \F{Later}.
 
 \begin{code}
 Later : (Size → Set) → Size → Set
 Later A i = (j : SizeLt i) → A (size j)
 \end{code}
 
-However, this it not yet sufficient.
-Note that inhabitants of \AF{Later} \AB{A} are just maps \AB{A} (\AF{size} \AB{j}) to \AB{A}.
-
-We state this as an equality, for which we first define a help function.
+The second component is more difficult.
+Usually, one would expect a universally quantified equality.
+To make everything work with \AD{SizeLt}, we need an intermediate definition.
 
 \begin{code}
-elimLt : {A : Size → Set₁} {i : Size} (j : SizeLt i)
-  → ((j : Size< i) → A j) → A (size j)
-elimLt [ j ] f = f j
+elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
+  → (j : SizeLt i) → A (size j)
+elimLt f [ j ] = f j
 \end{code}
 
-The function \F{elimLt} does pattern matching on \F{SizeLt}.
+This function does pattern matching on \F{SizeLt} and we use it to build predicate on \AD{SizeLt}.
+Rather than using an element from \AD{SizeLt}, we put an element from \AD{Size<} into this predicate.
+We can thus define the type of the second component as follows.
 
 \AgdaHide{
 \begin{code}
@@ -60,21 +71,23 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
 \begin{code}
   LaterLim : (i : Size) (x : Later A i) → Set
   LaterLim i x = (j : SizeLt i)
-    → elimLt j (λ { j' → (k : SizeLt (↑ j'))
-      → elimLt k (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) })
+    → elimLt (λ { j' → (k : SizeLt (↑ j'))
+      → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
 \end{code}
-
-Note that 
 
 \AgdaHide{
 \begin{code}
   LaterLimMor : (i : Size) (j : Size< (↑ i)) (x : Later A i)
     → LaterLim i x → LaterLim j x
-  LaterLimMor i j x p [ k ] = p [ k ]
+  LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ] -- p [ k ]
 
 module _ (A : Ty tot) where
 \end{code}
 }
+
+Now we put it all together and we obtain the following definition of the object part.
+In addition, we can define an action on the morphisms and show this preserves identity and composition.
+All in all, we get
 
 \begin{code}
   ▻Obj : (i : Size) → Set
@@ -96,9 +109,6 @@ module _ (A : Ty tot) where
   ▻MorComp = Σ≡-uip (funext (λ { [ j ] → funext (λ { [ k ] → uip }) })) refl
 \end{code}
 }
-
-We can also define an action on the morphisms and show this preserves identity and composition.
-All in all, we get
 
 \begin{code}
 ▻ : Ty tot → Ty tot
