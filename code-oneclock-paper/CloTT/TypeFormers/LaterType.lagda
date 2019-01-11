@@ -15,7 +15,7 @@ open PSh
 
 \begin{code}
 pure : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ A) → Tm Γ (▻ A)
-proj₁ (proj₁ (pure Γ A (t , _)) i x) [ j ] = t j (Mor Γ i j x)
+proj₁ (proj₁ (pure Γ A (t , p)) i x) [ j ] = t j (Mor Γ i j x)
 \end{code}
 
 \AgdaHide{
@@ -35,15 +35,12 @@ proj₂ (pure Γ A (t , p)) i j x =
 \end{code}
 }
 
+\AgdaHide{
 \begin{code}
 fmap : (Γ : Ctx tot) (A B : Ty tot) 
           → (f : Tm Γ (▻ (A ⇒ B))) (t : Tm Γ (▻ A))
           → Tm Γ (▻ B)
 proj₁ (proj₁ (fmap Γ A B (f , _) (t , _)) i x) [ j ] = proj₁ (proj₁ (f i x) [ j ]) j (proj₁ (t i x) [ j ])
-\end{code}
-
-\AgdaHide{
-\begin{code}
 proj₂ (proj₁ (fmap Γ A B (f , p) (t , q)) i x) [ j ] [ k ] =
   begin
     Mor B j k (proj₁ (proj₁ (f i x) [ j ]) j (proj₁ (t i x) [ j ]))

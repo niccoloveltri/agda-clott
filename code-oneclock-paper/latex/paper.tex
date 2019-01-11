@@ -119,6 +119,7 @@
 \newunicodechar{⟦}{$\llbracket$}
 \newunicodechar{⟧}{$\rrbracket$}
 \newunicodechar{⊥}{$\bot$}
+\newunicodechar{∞}{$\infty$}
 % Add more as you need them (shouldn't happen often).
 
 \newcommand{\AD}[1]{\AgdaDatatype{#1}}
@@ -236,14 +237,18 @@ For sets, we use products, sums, and function types in Agda.
 Products, sums, and exponentials of presheaves are interpreted with the operations in \Cref{sec:presheaves}.
 
 \section{Modelling Guarded Recursion}
+We model something like guarrded ercursion.
+Oh, and guarded recursive types
+
 \subsection{Later}
 \input{CloTT/TypeFormers/Later}
 \input{CloTT/TypeFormers/LaterType}
 \input{CloTT/TypeFormers/Fix}
 
 \subsection{Clock Quantification}
+\input{CloTT/TypeFormers/WeakenClock}
 \input{CloTT/TypeFormers/ClockQuantification}
-\input{CloTT/TypeFormers/ClockQuantificationType}
+\input{CloTT/TypeFormers/Force}
 
 \subsection{Inductive Types}
 \input{CloTT/TypeFormers/Mu}
