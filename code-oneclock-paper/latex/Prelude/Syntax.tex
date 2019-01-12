@@ -52,7 +52,9 @@ a single clock \IC{κ}.
 \end{code}
 }
 
-Types depend on a clock context. 
+Types depend on a clock context. We have the unit type which exists
+only in the empty clock context. We have products, coproducts and
+function spaces which exist in all clock contexts.
 
 \begin{AgdaAlign}
 \begin{code}%
@@ -64,51 +66,17 @@ Types depend on a clock context.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
-\end{code}
-
-We have the unit type which exists only in the empty clock context. We
-have products, coproducts and function spaces which exist in all clock
-contexts.
-
-\begin{code}%
-\>[2][@{}l@{\AgdaIndent{1}}]%
+\\
+\>[2][@{}l@{\AgdaIndent{0}}]%
 \>[4]\AgdaInductiveConstructor{𝟙}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\<%
 \\
 %
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\<%
-\\
-%
 \>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\<%
-\\
-%
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⟶\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⟶\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -122,7 +90,6 @@ contexts.
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \end{code}
-
 In addition to the usual simple type formers, there are types that
 allow us to specify guarded recursive and coinductive types. We have
 the later modality, which takes a type in the \IC{κ} clock context and
@@ -131,10 +98,9 @@ We have clock quantification, which takes a type in the \IC{κ} clock
 context and returns a type in the \IC{∅} clock context. We also have a
 weakening type former, which embeds any type in the \IC{∅} clock context
 into types in the \IC{κ} clock context.
-
 \begin{code}%
 %
-\>[4]\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
@@ -143,7 +109,7 @@ into types in the \IC{κ} clock context.
 \AgdaInductiveConstructor{κ}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
@@ -160,10 +126,8 @@ into types in the \IC{κ} clock context.
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
-
 Finally we have guarded recursive types which exist in all clock
 contexts. 
-
 \begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{μ}\AgdaSpace{}%
@@ -178,10 +142,8 @@ contexts.
 \AgdaBound{Δ}\<%
 \end{code}
 \end{AgdaAlign}
-
 A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
-
 \begin{code}%
 %
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
@@ -214,22 +176,8 @@ A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \AgdaBound{Δ}\<%
 \\
 %
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
-\AgdaBound{Δ}\<%
-\\
-%
 \>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -244,7 +192,7 @@ A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \AgdaBound{Δ}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{►}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Poly}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
@@ -252,7 +200,6 @@ A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \AgdaDatatype{Poly}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
-
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{weakenP}\AgdaSpace{}%
@@ -299,20 +246,8 @@ A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \AgdaBound{Q}\<%
 \end{code}
 }
-
 We can associate to each polynomial \Ar{P} an endofunctor \F{evalP}
-\Ar{P} on \F{Type} \Ar{Δ}. Then \IC{μ} \Ar{P} is the least fixed point
-of \F{evalP} \Ar{P}. For this fixpoint to exist, one typically
-restricts the constructors of the type family \F{Poly} so that the
-functor \F{evalP} \Ar{P} is strictly positive, for all \Ar{P}.  Here
-we consider a grammar for polynomials consisting of constant functors,
-the identity functor, products, coproducts and the later
-modality. Exponentials with constant domain and clock quantification
-could also be added to the grammar, but we did not consider them in
-our formalization.  Because of the presence of constant functors in
-the grammar, the type family \F{Poly} has to be defined simultaneously
-with \F{Type}.
-
+\Ar{P} on \F{Type} \Ar{Δ}.
 \begin{code}%
 \>[0]\AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -328,6 +263,16 @@ with \F{Type}.
 \AgdaDatatype{Type}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \end{code}
+Then \IC{μ} \Ar{P} is the least fixed point of \F{evalP} \Ar{P}. For
+this fixpoint to exist, one typically restricts the constructors of
+the type family \F{Poly} so that the functor \F{evalP} \Ar{P} is
+strictly positive, for all \Ar{P}.  Here we consider a grammar for
+polynomials consisting of constant functors, the identity functor,
+products, coproducts and the later modality. Exponentials with
+constant domain and clock quantification could also be added to the
+grammar, but we did not consider them in our formalization.  Because
+of the presence of constant functors in the grammar, the type family
+\F{Poly} has to be defined simultaneously with \F{Type}.
 
 \AgdaHide{
 \begin{code}%
@@ -373,17 +318,20 @@ with \F{Type}.
 \AgdaBound{X}\<%
 \\
 \>[0]\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{►}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\<%
 \end{code}
 }
 
+Contexts also depend on a clock context. We have the empty context and
+context extension which exist in all clock contexts.
+\begin{AgdaAlign}
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
@@ -416,7 +364,12 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
-\\
+\end{code}
+In addition to the usual context formers, we have context
+weakening. This operation takes a context in the \IC{∅} clock context
+and returns a context in the \IC{κ} clock context. It is the context
+analogue of the type former \IC{weakenT}.
+\begin{code}%
 %
 \>[2]\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -426,12 +379,18 @@ with \F{Type}.
 \AgdaDatatype{Context}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
+\end{AgdaAlign}
 
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
 \end{code}
 }
+
+Terms and substitutions are introduced simultaneously. Terms are
+indexed by contexts and types. They include constructors for variables
+and substitutions.
+\begin{AgdaAlign}
 \begin{code}%
 \>[0][@{}l@{\AgdaIndent{1}}]%
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
@@ -450,6 +409,26 @@ with \F{Type}.
 \AgdaKeyword{where}\<%
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
+\>[4]\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{A}\<%
+\\
+%
 \>[4]\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -477,27 +456,168 @@ with \F{Type}.
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
 \AgdaBound{A}\<%
-\\
+\end{code}
+We have lambda abstraction and application and the usual terms
+describing the introduction and elimination rules for simple
+types. Here we include only the terms associated to product types, for
+theunit and coproducts we refer to our Agda formalization.
+\begin{code}%
 %
-\>[4]\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\\
+\>[4][@{}l@{\AgdaIndent{0}}]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+%
+\>[4]\AgdaInductiveConstructor{appTm}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\\
+\>[4][@{}l@{\AgdaIndent{0}}]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{B}\<%
+\\
+%
+\>[4]\AgdaOperator{\AgdaInductiveConstructor{[\AgdaUnderscore{}\&\AgdaUnderscore{}]}}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\<%
+\\
+\>[4][@{}l@{\AgdaIndent{0}}]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+%
+\>[4]\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\<%
 \\
+%
+\>[4]\AgdaInductiveConstructor{π₂}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaBound{B}\<%
+\end{code}
+\AgdaHide{
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{tt}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -628,161 +748,167 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{C}\<%
-\\
+\end{code}
+}
+We include terms stating that the later modality is an applicative
+functor. We also have a guarded fixed point combinator.
+\begin{code}%
 %
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{[\AgdaUnderscore{}\&\AgdaUnderscore{}]}}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{next}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\<%
-\\
-\>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\<%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
+\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊛\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\<%
+\\
+\>[4][@{}l@{\AgdaIndent{0}}]%
+\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaBound{B}\AgdaSymbol{)}\<%
+\\
+%
+\>[4]\AgdaInductiveConstructor{fix{-}tm}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\<%
-\\
+\end{code}
+We have introduction and elimination
+rules for clock quantification. The rule \IC{box-q} corresponds to
+Atkey and McBride's rule for clock abstraction
+\cite{atkey2013productive}. Notice that \IC{box-q} can only be applied
+to terms of type \Ar{A} over a weakened context \IC{weakenC}
+\Ar{Γ}. This is in analogy with Atkey and McBride's side condition
+requiring the universally quantified clock variable to not appear free
+in the context \Ar{Γ}. Similarly, the rule \IC{unbox-q} corresponds to
+clock application. We also have a force operation for removing \IC{▻}
+when it is protected by \IC{□}.
+\begin{code}%
 %
-\>[4]\AgdaInductiveConstructor{π₂}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{B}\<%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\<%
-\\
-\>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\<%
+\AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{A}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{appTm}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{force}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\<%
-\\
-\>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{B}\<%
-\\
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Term}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\<%
+\end{code}
+We have introduction and elimination rules for type weakening.
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -826,149 +952,9 @@ with \F{Type}.
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{next}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\<%
-\\
-%
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊛\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\<%
-\\
-\>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaBound{B}\AgdaSymbol{)}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{fix{-}tm}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{force}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\<%
-\\
+\end{code}
+We have introduction and elimination rules for guarded recursive types.
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{cons}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1034,7 +1020,19 @@ with \F{Type}.
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
-\\
+\end{code}
+Atkey and McBride assume the existence of certain type equalities
+\cite{atkey2013productive}. M\"ogelberg assumes the existence of
+similar type isomorphisms \cite{Mogelberg14}. In our formalization we
+follow the second approach. In other words, we do not introduce an
+equivalence relation on types specifying what types should be
+considered equal, as in Chapman's type theory
+\cite{Chapman09}. Instead, we include additional term constructors
+corresponding to functions underlying the required type
+isomorphisms. For example, every type \Ar{A} in \F{Type} \IC{∅} should
+be isomorphic to the type \IC{□} (\IC{weakenT} \Ar{A}). Therefore we
+add the following constructor:
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{□const}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1049,12 +1047,19 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
-\\
+\end{code}
+It is possible to define an element \F{const□} in \F{Term} \Ar{Γ}
+(\Ar{A} \IC{⟶} \IC{□} (\IC{weakenT} \Ar{A})). When we
+introduce definitional equality on terms, we will
+ask for \F{□const} and \F{const□} to be each other inverses.
+We proceed similarly with the other type isomoprhisms.
+\AgdaHide{
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{□sum}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1072,15 +1077,15 @@ with \F{Type}.
 \>[6]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
 %
@@ -1142,7 +1147,12 @@ with \F{Type}.
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{))}\<%
 \end{code}
+}
 
+Next we describe the constructors of explicit substitutions.  We have
+the empty substitution, the identity substitution, the extension of a
+substitution with an additional term, composition of substututions and
+projection.
 \begin{code}%
 %
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
@@ -1267,7 +1277,12 @@ with \F{Type}.
 \AgdaDatatype{Subst}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
 \AgdaBound{Γ₂}\<%
-\\
+\end{code}
+On top of the usual constructors, we add a rule embedding
+substitutions between contexts existing in the \IC{∅} clock context
+into substitutions between contexts existing in the \IC{κ} clock
+context.
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{weakenS}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1286,7 +1301,13 @@ with \F{Type}.
 \AgdaBound{Γ₁}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
 \AgdaBound{Γ₂}\AgdaSymbol{)}\<%
-\\
+\end{code}
+We require contexts to satisfy two isomorphisms: \IC{weakenC •} needs
+to be isomorphic to \IC{•} and \IC{weakenC} (\Ar{Γ} \IC{,} \Ar{A})
+needs to be isomorphic to \IC{weakenC} \Ar{Γ} \IC{,} \IC{weakenT}
+\Ar{A}. We add two constructors corresponding to functions underlying
+the context isomorphisms:
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{•{-}to{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1320,8 +1341,12 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \end{code}
-
-
+\end{AgdaAlign}
+It is possible to define an element \F{weaken-to-•} in \F{Subst}
+(\IC{weakenC •}) \IC{•}. When we introduce the definitional
+equality on substitutions, we will ask for \IC{•-to-weaken} and
+\F{weaken-to-•} to be each other inverses. We proceed similarly with
+\IC{,-weaken}.
 
 \AgdaHide{
 \begin{code}%
@@ -1639,11 +1664,11 @@ with \F{Type}.
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1246I]\AgdaSymbol{(}\AgdaBound{A₂}\AgdaSpace{}%
+\>[1214I]\AgdaSymbol{(}\AgdaBound{A₂}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B₂}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1246I]%
+\>[.]\<[1214I]%
 \>[17]\AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaBound{B₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
@@ -1728,7 +1753,7 @@ with \F{Type}.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}%
-\>[1317I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\>[1285I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -1746,7 +1771,7 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{B₁}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[1317I]%
+\>[.]\<[1285I]%
 \>[11]\AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
 \AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
@@ -1768,7 +1793,7 @@ with \F{Type}.
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{►map}\AgdaSpace{}%
+\>[0]\AgdaFunction{▻Pmap}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1790,13 +1815,13 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{►map}\AgdaSpace{}%
+\>[0]\AgdaFunction{▻Pmap}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{B}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -1807,9 +1832,9 @@ with \F{Type}.
 \>[2]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
@@ -1818,7 +1843,7 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⊛}}\AgdaSpace{}%
 \AgdaInductiveConstructor{varTm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \\
 %
@@ -1902,11 +1927,11 @@ with \F{Type}.
 \AgdaBound{f}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{Pmap}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{►}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{►map}\AgdaSpace{}%
+\AgdaFunction{▻Pmap}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{Pmap}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\<%
@@ -2015,12 +2040,12 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{□functor}\AgdaSpace{}%
@@ -2050,7 +2075,7 @@ with \F{Type}.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \\
@@ -2086,13 +2111,13 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{((}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{((}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
@@ -2101,16 +2126,16 @@ with \F{Type}.
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}%
-\>[1610I]\AgdaInductiveConstructor{lambdaTm}\<%
+\>[1578I]\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[1610I][@{}l@{\AgdaIndent{0}}]%
+\>[1578I][@{}l@{\AgdaIndent{0}}]%
 \>[13]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1611I]\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\>[1579I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1611I]%
+\>[.]\<[1579I]%
 \>[19]\AgdaSymbol{(}\AgdaFunction{□functor}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
@@ -2149,12 +2174,12 @@ with \F{Type}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \\
 \>[0]\AgdaFunction{□next}\AgdaSpace{}%
@@ -2191,16 +2216,16 @@ with \F{Type}.
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}%
-\>[1679I]\AgdaInductiveConstructor{lambdaTm}\<%
+\>[1647I]\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[1679I][@{}l@{\AgdaIndent{0}}]%
+\>[1647I][@{}l@{\AgdaIndent{0}}]%
 \>[16]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1680I]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
+\>[1648I]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1680I]%
+\>[.]\<[1648I]%
 \>[22]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
@@ -2250,7 +2275,7 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
@@ -2261,26 +2286,26 @@ with \F{Type}.
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[1734I]\AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
+\>[1702I]\AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{sum□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[1734I][@{}l@{\AgdaIndent{0}}]%
+\>[1702I][@{}l@{\AgdaIndent{0}}]%
 \>[29]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1740I]\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\>[1708I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1740I]%
+\>[.]\<[1708I]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
@@ -2295,7 +2320,7 @@ with \F{Type}.
 \\
 %
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
@@ -2310,7 +2335,7 @@ with \F{Type}.
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{clock{-}q{-}adj₁}\AgdaSpace{}%
+\>[0]\AgdaFunction{□{-}adj₁}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2332,23 +2357,23 @@ with \F{Type}.
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{clock{-}q{-}adj₁}\AgdaSpace{}%
+\>[0]\AgdaFunction{□{-}adj₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[1799I]\AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\<%
+\>[1767I]\AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\<%
 \\
-\>[.]\<[1799I]%
+\>[1767I][@{}l@{\AgdaIndent{0}}]%
 \>[30]\AgdaSymbol{(}\AgdaFunction{app{-}map}\<%
 \\
 \>[30][@{}l@{\AgdaIndent{0}}]%
 \>[32]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1800I]\AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
+\>[1768I]\AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
@@ -2363,7 +2388,7 @@ with \F{Type}.
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSymbol{))))}\<%
 \\
-\>[.]\<[1800I]%
+\>[.]\<[1768I]%
 \>[37]\AgdaSymbol{(}\AgdaFunction{weaken{-},}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
@@ -2376,7 +2401,7 @@ with \F{Type}.
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{clock{-}q{-}adj₂}\AgdaSpace{}%
+\>[0]\AgdaFunction{□{-}adj₂}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2391,7 +2416,7 @@ with \F{Type}.
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
@@ -2401,28 +2426,28 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{clock{-}q{-}adj₂}\AgdaSpace{}%
+\>[0]\AgdaFunction{□{-}adj₂}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1848I]\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
+\>[1816I]\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})))}\<%
 \\
-\>[.]\<[1848I]%
+\>[1816I][@{}l@{\AgdaIndent{0}}]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -2458,7 +2483,7 @@ with \F{Type}.
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{clock{-}q{-}adj₂}\AgdaSpace{}%
+\AgdaFunction{□{-}adj₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\AgdaSpace{}%
@@ -2561,7 +2586,7 @@ with \F{Type}.
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{split{-}prod}%
-\>[1977I]\AgdaInductiveConstructor{•}\AgdaSpace{}%
+\>[1945I]\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
@@ -2570,9 +2595,9 @@ with \F{Type}.
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1977I]%
+\>[.]\<[1945I]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1985I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\>[1953I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
@@ -2587,7 +2612,7 @@ with \F{Type}.
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1985I]%
+\>[.]\<[1953I]%
 \>[40]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
@@ -2633,7 +2658,7 @@ with \F{Type}.
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[2037I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\>[2005I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
@@ -2655,7 +2680,7 @@ with \F{Type}.
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaInductiveConstructor{•{-}to{-}weaken}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[2037I]%
+\>[.]\<[2005I]%
 \>[23]\AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
 \AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
@@ -2708,11 +2733,11 @@ with \F{Type}.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}%
-\>[2100I]\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\<%
+\>[2068I]\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[.]\<[2100I]%
+\>[.]\<[2068I]%
 \>[11]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[2101I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\>[2069I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
@@ -2737,7 +2762,7 @@ with \F{Type}.
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[2101I]%
+\>[.]\<[2069I]%
 \>[16]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
@@ -3398,7 +3423,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{t₁}\AgdaSpace{}%
@@ -3456,7 +3481,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))\}}\AgdaSpace{}%
@@ -3465,7 +3490,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{t₁}\AgdaSpace{}%
@@ -3500,7 +3525,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)\}}\AgdaSpace{}%
@@ -3531,7 +3556,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{t₁}\AgdaSpace{}%
@@ -3977,7 +4002,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
@@ -4049,7 +4074,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaInductiveConstructor{next}\AgdaSpace{}%
@@ -4077,7 +4102,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{B}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)))}\AgdaSpace{}%
@@ -4085,7 +4110,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\AgdaSpace{}%
@@ -4093,7 +4118,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -4165,7 +4190,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\AgdaSpace{}%
@@ -4211,7 +4236,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
@@ -4240,7 +4265,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
@@ -4779,7 +4804,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\AgdaSpace{}%
@@ -4787,7 +4812,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -4827,7 +4852,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
@@ -4865,7 +4890,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5053,7 +5078,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)))}\<%
 \\
@@ -5116,10 +5141,10 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
-\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -5152,7 +5177,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
@@ -5186,7 +5211,7 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -5211,8 +5236,8 @@ weakenμ P =
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{clock{-}q}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)))}\<%
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
@@ -5954,21 +5979,21 @@ weakenμ P =
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4931I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4899I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4931I]%
+\>[.]\<[4899I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{sub}%
-\>[4935I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[4936I]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
+\>[4903I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
+\>[4904I]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4936I]%
+\>[.]\<[4904I]%
 \>[18]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
@@ -5984,7 +6009,7 @@ weakenμ P =
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4935I]%
+\>[.]\<[4903I]%
 \>[12]\AgdaSymbol{((}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenC}\AgdaSpace{}%
@@ -6059,20 +6084,20 @@ weakenμ P =
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[5015I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4983I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[5015I]%
+\>[.]\<[4983I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[5022I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4990I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenT}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
@@ -6086,7 +6111,7 @@ weakenμ P =
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[5022I]%
+\>[.]\<[4990I]%
 \>[15]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenS}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%

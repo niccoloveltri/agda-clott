@@ -28,24 +28,16 @@ mutual
 \end{code}
 }
 
-Types depend on a clock context. 
+Types depend on a clock context. We have the unit type which exists
+only in the empty clock context. We have products, coproducts and
+function spaces which exist in all clock contexts.
 
 \begin{AgdaAlign}
 \begin{code}
   data Type : ClockContext → Set where
-\end{code}
-
-We have the unit type which exists only in the empty clock context. We
-have products, coproducts and function spaces which exist in all clock
-contexts.
-
-\begin{code}
     𝟙 : Type ∅
-    _⊞_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
-    _⊠_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
-    _⟶_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
+    _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
 \end{code}
-
 In addition to the usual simple type formers, there are types that
 allow us to specify guarded recursive and coinductive types. We have
 the later modality, which takes a type in the \IC{κ} clock context and
@@ -54,33 +46,26 @@ We have clock quantification, which takes a type in the \IC{κ} clock
 context and returns a type in the \IC{∅} clock context. We also have a
 weakening type former, which embeds any type in the \IC{∅} clock context
 into types in the \IC{κ} clock context.
-
 \begin{code}
     ▻ : Type κ → Type κ
     □ : Type κ → Type ∅
     weakenT : Type ∅ → Type κ
 \end{code}
-
 Finally we have guarded recursive types which exist in all clock
 contexts. 
-
 \begin{code}
     μ : ∀ {Δ} → Poly Δ → Type Δ
 \end{code}
 \end{AgdaAlign}
-
 A guarded recursive type in a clock context \Ar{Δ} takes an element of
 \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
-
 \begin{code}
   data Poly : ClockContext → Set where
     ∁ : ∀ {Δ} → Type Δ → Poly Δ
     I : ∀ {Δ} → Poly Δ
-    _⊞_ : ∀ {Δ} → Poly Δ → Poly Δ → Poly Δ
-    _⊠_ : ∀ {Δ} → Poly Δ → Poly Δ → Poly Δ
+    _⊠_ _⊞_ : ∀ {Δ} → Poly Δ → Poly Δ → Poly Δ
     ▻P : Poly κ → Poly κ
 \end{code}
-
 \AgdaHide{
 \begin{code}
 weakenP : Poly ∅ → Poly κ
@@ -90,23 +75,21 @@ weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 \end{code}
 }
-
 We can associate to each polynomial \Ar{P} an endofunctor \F{evalP}
-\Ar{P} on \F{Type} \Ar{Δ}. Then \IC{μ} \Ar{P} is the least fixed point
-of \F{evalP} \Ar{P}. For this fixpoint to exist, one typically
-restricts the constructors of the type family \F{Poly} so that the
-functor \F{evalP} \Ar{P} is strictly positive, for all \Ar{P}.  Here
-we consider a grammar for polynomials consisting of constant functors,
-the identity functor, products, coproducts and the later
-modality. Exponentials with constant domain and clock quantification
-could also be added to the grammar, but we did not consider them in
-our formalization.  Because of the presence of constant functors in
-the grammar, the type family \F{Poly} has to be defined simultaneously
-with \F{Type}.
-
+\Ar{P} on \F{Type} \Ar{Δ}.
 \begin{code}
 evalP : ∀ {Δ} → Poly Δ → Type Δ → Type Δ
 \end{code}
+Then \IC{μ} \Ar{P} is the least fixed point of \F{evalP} \Ar{P}. For
+this fixpoint to exist, one typically restricts the constructors of
+the type family \F{Poly} so that the functor \F{evalP} \Ar{P} is
+strictly positive, for all \Ar{P}.  Here we consider a grammar for
+polynomials consisting of constant functors, the identity functor,
+products, coproducts and the later modality. Exponentials with
+constant domain and clock quantification could also be added to the
+grammar, but we did not consider them in our formalization.  Because
+of the presence of constant functors in the grammar, the type family
+\F{Poly} has to be defined simultaneously with \F{Type}.
 
 \AgdaHide{
 \begin{code}
@@ -118,50 +101,118 @@ evalP (▻P P) X = ▻ (evalP P X)
 \end{code}
 }
 
+Contexts also depend on a clock context. We have the empty context and
+context extension which exist in all clock contexts.
+\begin{AgdaAlign}
 \begin{code}
 data Context : ClockContext → Set where
   • : ∀ {Δ} → Context Δ
   _,_ : ∀ {Δ} → Context Δ → Type Δ → Context Δ
+\end{code}
+In addition to the usual context formers, we have context
+weakening. This operation takes a context in the \IC{∅} clock context
+and returns a context in the \IC{κ} clock context. It is the context
+analogue of the type former \IC{weakenT}.
+\begin{code}
   weakenC : Context ∅ → Context κ
 \end{code}
+\end{AgdaAlign}
 
 \AgdaHide{
 \begin{code}
 mutual
 \end{code}
 }
+
+Terms and substitutions are introduced simultaneously. Terms are
+indexed by contexts and types. They include constructors for variables
+and substitutions.
+\begin{AgdaAlign}
 \begin{code}
   data Term : ∀ {Δ} → Context Δ → Type Δ → Set where
+    varTm : ∀ {Δ} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
     sub : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
       → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
-    varTm : ∀ {Δ} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
+\end{code}
+We have lambda abstraction and application and the usual terms
+describing the introduction and elimination rules for simple
+types. Here we include only the terms associated to product types, for
+theunit and coproducts we refer to our Agda formalization.
+\begin{code}
+    lambdaTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
+      → Term (Γ , A) B → Term Γ (A ⟶ B)
+    appTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
+      → Term Γ (A ⟶ B) → Term (Γ , A) B
+    [_&_] : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
+      → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
+    π₁ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
+    π₂ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
+\end{code}
+\AgdaHide{
+\begin{code}
     tt : {Γ : Context ∅} → Term Γ 𝟙
     unit-rec : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (Γ , 𝟙) A
     in₁ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} (B : Type Δ) → Term Γ A → Term Γ (A ⊞ B)
     in₂ : ∀ {Δ} {Γ : Context Δ} (A : Type Δ) {B : Type Δ} → Term Γ B → Term Γ (A ⊞ B)
     ⊞rec : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} (C : Type Δ)
       → Term (Γ , A) C → Term (Γ , B) C → Term (Γ , (A ⊞ B)) C
-    [_&_] : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
-      → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
-    π₁ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
-    π₂ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
-    lambdaTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
-      → Term (Γ , A) B → Term Γ (A ⟶ B)
-    appTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
-      → Term Γ (A ⟶ B) → Term (Γ , A) B
-    ⇡ : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (weakenC Γ) (weakenT A)
-    ↓ : {Γ : Context ∅} {A : Type ∅} → Term (weakenC Γ) (weakenT A) → Term Γ A
-    box-q : {Γ : Context ∅} {A : Type κ} → Term (weakenC Γ) A → Term Γ (□ A)
-    unbox-q : {Γ : Context ∅} {A : Type κ} → Term Γ (□ A) → Term (weakenC Γ) A
+\end{code}
+}
+We include terms stating that the later modality is an applicative
+functor. We also have a guarded fixed point combinator.
+\begin{code}
     next : {Γ : Context κ} {A : Type κ} → Term Γ A → Term Γ (▻ A)
     _⊛_ : {Γ : Context κ} {A B : Type κ}
       → Term Γ (▻ (A ⟶ B)) → Term Γ (▻ A) → Term Γ (▻ B)
     fix-tm : {Γ : Context κ} {A : Type κ} → Term Γ (▻ A ⟶ A) → Term Γ A
-    force : {Γ : Context ∅} {A : Type κ} → Term Γ (□(▻ A)) → Term Γ (□ A)
+\end{code}
+We have introduction and elimination
+rules for clock quantification. The rule \IC{box-q} corresponds to
+Atkey and McBride's rule for clock abstraction
+\cite{atkey2013productive}. Notice that \IC{box-q} can only be applied
+to terms of type \Ar{A} over a weakened context \IC{weakenC}
+\Ar{Γ}. This is in analogy with Atkey and McBride's side condition
+requiring the universally quantified clock variable to not appear free
+in the context \Ar{Γ}. Similarly, the rule \IC{unbox-q} corresponds to
+clock application. We also have a force operation for removing \IC{▻}
+when it is protected by \IC{□}.
+\begin{code}
+    box-q : {Γ : Context ∅} {A : Type κ} → Term (weakenC Γ) A → Term Γ (□ A)
+    unbox-q : {Γ : Context ∅} {A : Type κ} → Term Γ (□ A) → Term (weakenC Γ) A
+    force : {Γ : Context ∅} {A : Type κ} → Term Γ (□ (▻ A)) → Term Γ (□ A)
+\end{code}
+We have introduction and elimination rules for type weakening.
+\begin{code}
+    ⇡ : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (weakenC Γ) (weakenT A)
+    ↓ : {Γ : Context ∅} {A : Type ∅} → Term (weakenC Γ) (weakenT A) → Term Γ A
+\end{code}
+We have introduction and elimination rules for guarded recursive types.
+\begin{code}
     cons : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
     primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
       → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
+\end{code}
+Atkey and McBride assume the existence of certain type equalities
+\cite{atkey2013productive}. M\"ogelberg assumes the existence of
+similar type isomorphisms \cite{Mogelberg14}. In our formalization we
+follow the second approach. In other words, we do not introduce an
+equivalence relation on types specifying what types should be
+considered equal, as in Chapman's type theory
+\cite{Chapman09}. Instead, we include additional term constructors
+corresponding to functions underlying the required type
+isomorphisms. For example, every type \Ar{A} in \F{Type} \IC{∅} should
+be isomorphic to the type \IC{□} (\IC{weakenT} \Ar{A}). Therefore we
+add the following constructor:
+\begin{code}
     □const : {Γ : Context ∅} (A : Type ∅) → Term Γ (□ (weakenT A) ⟶ A)
+\end{code}
+It is possible to define an element \F{const□} in \F{Term} \Ar{Γ}
+(\Ar{A} \IC{⟶} \IC{□} (\IC{weakenT} \Ar{A})). When we
+introduce definitional equality on terms, we will
+ask for \F{□const} and \F{const□} to be each other inverses.
+We proceed similarly with the other type isomoprhisms.
+\AgdaHide{
+\begin{code}
     □sum : {Γ : Context ∅} (A B : Type κ)
       → Term Γ (□ (A ⊞ B) ⟶ (□ A ⊞ □ B))
     ⟶weaken : (A B : Type ∅)
@@ -169,7 +220,12 @@ mutual
     μweaken : (P : Poly ∅) → Term • (weakenT (μ P) ⟶ μ (weakenP P))
     weakenμ : (P : Poly ∅) → Term • (μ (weakenP P) ⟶ weakenT (μ P))
 \end{code}
+}
 
+Next we describe the constructors of explicit substitutions.  We have
+the empty substitution, the identity substitution, the extension of a
+substitution with an additional term, composition of substututions and
+projection.
 \begin{code}
   data Subst : ∀ {Δ} → Context Δ → Context Δ → Set where
     ε : ∀ {Δ} (Γ : Context Δ) → Subst Γ •
@@ -178,13 +234,30 @@ mutual
       → Subst Γ₁ Γ₂ → Term Γ₁ A → Subst Γ₁ (Γ₂ , A)
     _o_ : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} → Subst Γ₂ Γ₃ → Subst Γ₁ Γ₂ → Subst Γ₁ Γ₃
     pr : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} → Subst Γ₁ (Γ₂ , A) → Subst Γ₁ Γ₂
+\end{code}
+On top of the usual constructors, we add a rule embedding
+substitutions between contexts existing in the \IC{∅} clock context
+into substitutions between contexts existing in the \IC{κ} clock
+context.
+\begin{code}
     weakenS : {Γ₁ Γ₂ : Context ∅} → Subst Γ₁ Γ₂ → Subst (weakenC Γ₁) (weakenC Γ₂)
+\end{code}
+We require contexts to satisfy two isomorphisms: \IC{weakenC •} needs
+to be isomorphic to \IC{•} and \IC{weakenC} (\Ar{Γ} \IC{,} \Ar{A})
+needs to be isomorphic to \IC{weakenC} \Ar{Γ} \IC{,} \IC{weakenT}
+\Ar{A}. We add two constructors corresponding to functions underlying
+the context isomorphisms:
+\begin{code}
     •-to-weaken : Subst • (weakenC •)
     ,-weaken : (Γ : Context ∅) (A : Type ∅)
       → Subst (weakenC Γ , weakenT A) (weakenC (Γ , A))
 \end{code}
-
-
+\end{AgdaAlign}
+It is possible to define an element \F{weaken-to-•} in \F{Subst}
+(\IC{weakenC •}) \IC{•}. When we introduce the definitional
+equality on substitutions, we will ask for \IC{•-to-weaken} and
+\F{weaken-to-•} to be each other inverses. We proceed similarly with
+\IC{,-weaken}.
 
 \AgdaHide{
 \begin{code}
