@@ -88,11 +88,12 @@ record ►Obj (A : Ty κ) (i : Size) : Set where
     field
       ►cone : Later (Obj A) i
       ►com : LaterLim (Obj A) (Mor A) i ►cone
-open ►Obj
 \end{code}
 
 \AgdaHide{
 \begin{code}
+open ►Obj
+
 ►eq' : {A : Ty κ} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
 ►eq' {_} {s} {t} refl = cong (λ z → record { ►cone = ►cone t ; ►com = z})
                              (funext (λ {[ j ] → funext (λ {[ k ] → uip})}))

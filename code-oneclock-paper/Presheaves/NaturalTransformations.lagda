@@ -14,8 +14,13 @@ record NatTrans (P Q : PSh) : Set where
     nat-map : (i : Size) → Obj P i → Obj Q i
     nat-com : (i : Size) (j : Size< (↑ i)) (x : Obj P i)
       → Mor Q i j (nat-map i x) ≡ nat-map j (Mor P i j x)
+\end{code}
+
+\AgdaHide{
+\begin{code}
 open NatTrans
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}

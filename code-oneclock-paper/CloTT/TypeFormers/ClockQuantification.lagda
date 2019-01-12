@@ -28,11 +28,12 @@ record ■ (A : Ty κ) : Ty ∅ where
   field
     ■cone : (i : Size) → Obj A i
     ■com : (i : Size) (j : Size< (↑ i)) → Mor A i j (■cone i) ≡ ■cone j
-open ■
 \end{code}
 
 \AgdaHide{
 \begin{code}
+open ■
+
 ■eq' : {A : Ty κ} {s t : ■ A} → ■cone s ≡ ■cone t → s ≡ t
 ■eq' {_} {s} {t} refl = cong (λ z → record { ■cone = ■cone s ; ■com = z })
                              (funext (λ _ → funext λ _ → uip))

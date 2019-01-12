@@ -40,23 +40,9 @@ uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
 uip {A} {x} {y} {refl} {refl} = refl
 \end{code}
 
+\NW{Part on sized types}
+
 \AgdaHide{
-\begin{code}
-Σ≡ : {A : Set}{P : A → Set}
-  → {a a' : A} {p : P a} {p' : P a'}
-  → (e : a ≡ a') → subst P e p ≡ p' → (a , p) ≡ (a' , p')
-Σ≡ refl refl = refl
-
-isProp : Set → Set
-isProp P = {x y : P} → x ≡ y
-
-Σ≡-uip : {A : Set}{P : A → Set}
-  → ({a : A} → isProp (P a))
-  → {a a' : A} {p : P a} {p' : P a'}
-  → (e : a ≡ a') → (a , p) ≡ (a' , p')
-Σ≡-uip q refl = cong (_,_ _) q
-\end{code}
-
 Dependent functions preserve equality
 \begin{code}
 cong-dep : {A : Set}{P : A → Set}
