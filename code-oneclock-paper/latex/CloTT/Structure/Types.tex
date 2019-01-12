@@ -12,33 +12,29 @@
 \\
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaKeyword{import}\AgdaSpace{}%
-\AgdaModule{CloTT.Structure.ClockContexts}\<%
-\\
-\>[0]\AgdaKeyword{open}\AgdaSpace{}%
-\AgdaKeyword{import}\AgdaSpace{}%
 \AgdaModule{Presheaves}\AgdaSpace{}%
 \AgdaKeyword{public}\<%
 \end{code}
 }
 
 Types are defined in a similar way.
-Note that we are modelling a simply typed theory and thus types do not depend on contexts.
+Note that we are modelling a simple type theory and thus types do not depend on contexts.
 For this reason, we can interpet types the same way as contexts.
 
 \begin{code}%
 \>[0]\AgdaFunction{Ty}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{tag}\AgdaSpace{}%
+\AgdaDatatype{ClockContext}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set₁}\<%
 \\
 \>[0]\AgdaFunction{Ty}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\<%
 \\
 \>[0]\AgdaFunction{Ty}\AgdaSpace{}%
-\AgdaInductiveConstructor{tot}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%
 \end{code}

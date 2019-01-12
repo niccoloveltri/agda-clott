@@ -17,7 +17,7 @@ open NatTrans
 }
 
 \begin{code}
-sem-next : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ A) → Tm Γ (► A)
+sem-next : (Γ : Ctx κ) (A : Ty κ) (t : Tm Γ A) → Tm Γ (► A)
 ►cone (nat-map (sem-next Γ A t) i x) [ j ] = nat-map t j (Mor Γ i j x)
 \end{code}
 
@@ -37,7 +37,7 @@ nat-com (sem-next Γ A t) i j x = ►eq (λ { j → cong (nat-map t j) (MorComp 
 
 \AgdaHide{
 \begin{code}
-fmap : (Γ : Ctx tot) (A B : Ty tot) 
+fmap : (Γ : Ctx κ) (A B : Ty κ) 
           → (f : Tm Γ (► (A ⇒ B))) (t : Tm Γ (► A))
           → Tm Γ (► B)
 ►cone (nat-map (fmap Γ A B f t) i x) [ j ] = fun (►cone (nat-map f i x) [ j ]) j (►cone (nat-map t i x) [ j ])

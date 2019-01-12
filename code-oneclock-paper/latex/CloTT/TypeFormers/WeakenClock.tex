@@ -25,22 +25,27 @@
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaKeyword{import}\AgdaSpace{}%
 \AgdaModule{CloTT.Structure}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
+\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaModule{NatTrans}\<%
 \end{code}
 }
 
 We now show how to model context weakening and clock quantification.
 The weakening of a context, i.e. the process of embedding contexts
-from \IC{set} into contexts from \IC{tot}, is given by the constant
+from \IC{∅} into contexts from \IC{κ}, is given by the constant
 presheaf construction.
 
 \begin{code}%
 \>[0]\AgdaFunction{WC}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
-\AgdaInductiveConstructor{tot}\<%
+\AgdaInductiveConstructor{κ}\<%
 \\
 \>[0]\AgdaFunction{WC}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -56,11 +61,11 @@ presheaf construction.
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Tm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -72,7 +77,7 @@ presheaf construction.
 \AgdaSymbol{(}\AgdaFunction{WC}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaField{proj₁}\AgdaSpace{}%
+\>[0]\AgdaField{nat{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{WC{-}fun}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -81,7 +86,7 @@ presheaf construction.
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{t}\<%
 \\
-\>[0]\AgdaField{proj₂}\AgdaSpace{}%
+\>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{WC{-}fun}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -99,11 +104,11 @@ presheaf construction.
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ctx}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
-\AgdaInductiveConstructor{set}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Tm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{WC}\AgdaSpace{}%
@@ -118,10 +123,9 @@ presheaf construction.
 \>[0]\AgdaFunction{WC{-}unfun}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaBound{p}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
+\AgdaField{nat{-}map}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaPostulate{∞}\<%
 \end{code}

@@ -19,12 +19,8 @@ open NatTrans
 }
 
 \begin{code}
-⟦_⟧Δ : ClockContext → tag
-⟦ ∅ ⟧Δ = set
-⟦ κ ⟧Δ = tot
-
 mutual
-  ⟦_⟧poly : {Δ : ClockContext} → Poly Δ → SemPoly ⟦ Δ ⟧Δ
+  ⟦_⟧poly : {Δ : ClockContext} → Poly Δ → SemPoly Δ
   ⟦_⟧poly {∅} (∁ A) = ∁s ⟦ A ⟧A
   ⟦_⟧poly {κ} (∁ A) = ∁ps ⟦ A ⟧A
   ⟦ I ⟧poly = I
@@ -32,7 +28,7 @@ mutual
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
   ⟦ ▻P P ⟧poly = ►P ⟦ P ⟧poly
 
-  ⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty ⟦ Δ ⟧Δ
+  ⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty Δ
   ⟦ 𝟙 ⟧A = Unit
   ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
   ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
@@ -42,7 +38,7 @@ mutual
   ⟦ □ A ⟧A = ■(⟦ A ⟧A)
   ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
   
-⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx ⟦ Δ ⟧Δ
+⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx Δ
 ⟦ • ⟧Γ = ∙ _
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ weakenC Γ ⟧Γ = WC ⟦ Γ ⟧Γ
@@ -145,7 +141,7 @@ primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
                (cong (λ z → proj₂ z) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)))
 primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = cong₂ (_,_) (►eq (λ {_ → refl})) (►eq (λ {_ → refl}))
 
-primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
+primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
   → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
     ≡

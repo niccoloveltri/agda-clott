@@ -89,11 +89,11 @@ sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t
   → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧tm
 sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
-dfix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
-  → def-eq {tot} Γ (► A) (dfix Γ A f) (sem-next Γ A (sem-fix Γ A f))
+dfix-eq : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A))
+  → def-eq {κ} Γ (► A) (dfix Γ A f) (sem-next Γ A (sem-fix Γ A f))
 dfix-eq Γ A f i γ = ►eq (λ {j → cong (λ a → fun a j (dfix₁ A j a)) (nat-com f i j γ)})
 
-fix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
+fix-eq : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A))
   → def-eq Γ A
            (sem-fix Γ A f)
            (sem-app-map Γ (► A) A f (sem-next Γ A (sem-fix Γ A f)))
@@ -105,7 +105,7 @@ sem-fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A))
            ⟦ app-map f (next (fix-tm f)) ⟧tm
 sem-fix-f f = fix-eq _ _ ⟦ f ⟧tm
 
-dfix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A) (i : Size) (x : Obj Γ i)
+dfix-un : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A) (i : Size) (x : Obj Γ i)
   → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
   → dfix₁ A i (nat-map f i x) ≡ nat-map (sem-next Γ A u) i x
 dfix-un Γ A z₁ z₂ i x r =
@@ -126,7 +126,7 @@ dfix-un Γ A z₁ z₂ i x r =
     ∎
     }))
 
-fix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A)
+fix-un : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A)
   → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
   → def-eq Γ A (sem-fix Γ A f) u
 fix-un Γ A f u p i x =

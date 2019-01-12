@@ -14,20 +14,20 @@ open PSh
 }
 
 \begin{code}
-Unit : {b : tag} → Ty b
-Unit {set} = ⊤
-Unit {tot} = Terminal
+Unit : {b : ClockContext} → Ty b
+Unit {∅} = ⊤
+Unit {κ} = Terminal
 
-⋆ : {b : tag} (Γ : Ctx b) → Tm Γ Unit
-⋆ {set} Γ x = tt
-nat-map (⋆ {tot} Γ) i x = tt
-nat-com (⋆ {tot} Γ) i j x = refl
+⋆ : {b : ClockContext} (Γ : Ctx b) → Tm Γ Unit
+⋆ {∅} Γ x = tt
+nat-map (⋆ {κ} Γ) i x = tt
+nat-com (⋆ {κ} Γ) i j x = refl
 
-Unit-rec : {b : tag} (Γ : Ctx b) (A : Ty b)
+Unit-rec : {b : ClockContext} (Γ : Ctx b) (A : Ty b)
   → Tm Γ A → Tm (Γ ,, Unit) A
-Unit-rec {set} Γ A t x = t (proj₁ x)
-nat-map (Unit-rec {tot} Γ A t) i x = nat-map t i (proj₁ x)
-nat-com (Unit-rec {tot} Γ A t) i j x =
+Unit-rec {∅} Γ A t x = t (proj₁ x)
+nat-map (Unit-rec {κ} Γ A t) i x = nat-map t i (proj₁ x)
+nat-com (Unit-rec {κ} Γ A t) i j x =
   begin
     Mor A i j (nat-map t i (proj₁ x))
   ≡⟨ nat-com t i j (proj₁ x) ⟩

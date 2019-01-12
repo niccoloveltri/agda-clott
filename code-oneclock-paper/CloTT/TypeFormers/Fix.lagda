@@ -18,7 +18,7 @@ open NatTrans
 }
 
 \begin{code}
-dfix₁ : (A : Ty tot) (i : Size) → ExpObj (► A) A i → ►Obj A i
+dfix₁ : (A : Ty κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
 ►cone (dfix₁ A i f) [ j ] = fun f j (dfix₁ A j f)
 \end{code}
 
@@ -36,7 +36,7 @@ dfix₁ : (A : Ty tot) (i : Size) → ExpObj (► A) A i → ►Obj A i
 }
 
 \begin{code}
-dfix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) → Tm Γ (► A)
+dfix : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) → Tm Γ (► A)
 nat-map (dfix Γ A f) i γ = dfix₁ A i (nat-map f i γ)
 \end{code}
 
@@ -49,7 +49,7 @@ nat-com (dfix Γ A f) i j γ = ►eq (λ {k → cong (λ a → fun a k (dfix₁ 
 By applying \AB{f} to \F{dfix}, we can obtain the required fixpoint operations \F{fix}.
 
 \begin{code}
-sem-fix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) → Tm Γ A
+sem-fix : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) → Tm Γ A
 \end{code}
 
 \AgdaHide{
