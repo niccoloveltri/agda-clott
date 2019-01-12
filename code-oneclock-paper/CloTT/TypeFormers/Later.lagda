@@ -75,12 +75,35 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
       → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
 \end{code}
 
-\AgdaHide{
+\AgdaHide
 \begin{code}
   LaterLimMor : (i : Size) (j : Size< (↑ i)) (x : Later A i)
     → LaterLim i x → LaterLim j x
   LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ] -- p [ k ]
+\end{code}
+}
 
+\begin{code}
+record ►Obj (A : Ty tot) (i : Size) : Set where
+    field
+      ►cone : Later (Obj A) i
+      ►com : LaterLim (Obj A) (Mor A) i ►cone
+open ►Obj
+\end{code}
+
+\AgdaHide{
+\begin{code}
+►eq' : {A : Ty tot} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
+►eq' {_} {s} {t} refl = cong (λ z → record { ►cone = ►cone t ; ►com = z})
+                             (funext (λ {[ j ] → funext (λ {[ k ] → uip})}))
+
+►eq : {A : Ty tot} {i : Size} {s t : ►Obj A i} → ((j : Size< i) → ►cone s [ j ] ≡ ►cone t [ j ]) → s ≡ t
+►eq p = ►eq' (funext (λ {[ j ] → p j}))
+\end{code}
+}
+
+\AgdaHide{
+\begin{code}
 module _ (A : Ty tot) where
 \end{code}
 }
@@ -89,38 +112,34 @@ Now we put it all together and we obtain the following definition of the object 
 In addition, we can define an action on the morphisms and show this preserves identity and composition.
 All in all, we get
 
-\begin{code}
-  ▻Obj : (i : Size) → Set
-  ▻Obj i = Σ (Later (Obj A) i) (LaterLim (Obj A) (Mor A) i)
-\end{code}
-
 \AgdaHide{
 \begin{code}
-  ▻Mor : (i : Size) (j : Size< (↑ i))
-    → ▻Obj i → ▻Obj j
-  ▻Mor i j (x , p) = x , LaterLimMor (Obj A) (Mor A) i j x p
-
-  ▻MorId : {i : Size} {x : ▻Obj i}
-             → ▻Mor i i x ≡ x
-  ▻MorId = Σ≡-uip (funext (λ { [ j ] → funext (λ { [ k ] → uip }) })) refl
-
-  ▻MorComp : {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : ▻Obj i}
-               → ▻Mor i k x ≡ ▻Mor j k (▻Mor i j x)
-  ▻MorComp = Σ≡-uip (funext (λ { [ j ] → funext (λ { [ k ] → uip }) })) refl
+  ►Mor : (i : Size) (j : Size< (↑ i))
+    → ►Obj A i → ►Obj A j
+  ►cone (►Mor i j t) = ►cone t
+  ►com (►Mor i j t) = LaterLimMor (Obj A) (Mor A) i j (►cone t) (►com t)
+  
+  ►MorId : {i : Size} {x : ►Obj A i}
+    → ►Mor i i x ≡ x
+  ►MorId = ►eq (λ {j → refl})
+  
+  ►MorComp : {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : ►Obj A i}
+               → ►Mor i k x ≡ ►Mor j k (►Mor i j x)
+  ►MorComp = ►eq (λ {j → refl})
 \end{code}
 }
 
 \begin{code}
-▻ : Ty tot → Ty tot
+► : Ty tot → Ty tot
 \end{code}
 
 \AgdaHide{
 \begin{code}
-▻ A = record
-    { Obj = ▻Obj A
-    ; Mor = ▻Mor A
-    ; MorId = ▻MorId A
-    ; MorComp = ▻MorComp A
+► A = record
+    { Obj = ►Obj A
+    ; Mor = ►Mor A
+    ; MorId = ►MorId A
+    ; MorComp = ►MorComp A
     }
 \end{code}
 }

@@ -13,6 +13,7 @@ open import CloTT.TypeFormers
 open import CloTT.InterpretSyntax
 
 open PSh
+open ■
 \end{code}
 }
 
@@ -286,8 +287,8 @@ mutual
   ⟦_⟧tm-eq {κ} (cong-appTm p) i (x , a) = cong (λ z → proj₁ z i a) (⟦ p ⟧tm-eq i x)
   ⟦ cong-⇡ p ⟧tm-eq i x = ⟦ p ⟧tm-eq x
   ⟦ cong-↓ p ⟧tm-eq x = ⟦ p ⟧tm-eq ∞ x
-  ⟦ cong-box-q p ⟧tm-eq x = Σ≡-uip (funext (λ _ → funext (λ _ → uip))) (funext (λ i → ⟦ p ⟧tm-eq i x))
-  ⟦ cong-unbox-q p ⟧tm-eq i x = cong (λ z → proj₁ z i) (⟦ p ⟧tm-eq x)
+  ⟦ cong-box-q p ⟧tm-eq x = ■eq (λ i → ⟦ p ⟧tm-eq i x)
+  ⟦ cong-unbox-q p ⟧tm-eq i x = cong (λ z → ■cone z i) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq (cong-next {Γ = Γ} p) i x =
     Σ≡-uip
       (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
@@ -297,10 +298,7 @@ mutual
       (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
       (funext (λ{ [ j ] → cong₂ (λ a b → proj₁ (proj₁ a [ j ]) j (proj₁ b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x) }))
   ⟦_⟧tm-eq (cong-fix-tm {A = A} p) i x = cong (λ z → proj₁ z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
-  ⟦ cong-force {Γ} {A} {t₁} {t₂} p ⟧tm-eq x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → uip)))
-      (funext (λ j → cong (λ z → proj₁ (proj₁ z ∞) [ j ]) (⟦ p ⟧tm-eq x)))
+  ⟦ cong-force {Γ} {A} {t₁} {t₂} p ⟧tm-eq x = ■eq (λ i → cong (λ z → proj₁ (■cone z ∞) [ i ]) (⟦ p ⟧tm-eq x))
   ⟦_⟧tm-eq {∅} (cong-cons p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-cons p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
   ⟦_⟧tm-eq {∅} (cong-primrec P {Γ} {A} p) x = funext (λ a → cong (λ z → z (primrec-set' P P A z a)) (⟦ p ⟧tm-eq x))
@@ -348,10 +346,7 @@ mutual
       (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
       (funext (λ j → funext (λ z → cong (λ y → proj₁ ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))))
   ⟦_⟧tm-eq {.κ} (sub-⇡ t s) i x = refl
-  ⟦_⟧tm-eq {.∅} (sub-box-q t s) x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → uip)))
-      refl
+  ⟦_⟧tm-eq {.∅} (sub-box-q t s) x = ■eq (λ _ → refl)
   ⟦_⟧tm-eq {.κ} (sub-next t s) i x =
     Σ≡-uip
       (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
@@ -368,36 +363,16 @@ mutual
   ⟦_⟧tm-eq {κ} (sub-cons t s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-primrec P t s) x = refl
   ⟦_⟧tm-eq {κ} (sub-primrec P t s) i x = refl
-  ⟦ const□const t ⟧tm-eq x =
-    Σ≡-uip
-      (funext (λ { _ → funext (λ _ → uip) }))
-      (funext (proj₂ (⟦ t ⟧tm x) ∞))
+  ⟦ const□const t ⟧tm-eq x = ■eq (λ i → ■com (⟦ t ⟧tm x) ∞ i)
   ⟦ □const□ t ⟧tm-eq x = refl
   ⟦ □sum□ A B t ⟧tm-eq γ with ⟦ t ⟧tm γ
-  ⟦ □sum□ A B t ⟧tm-eq γ | inj₁ (x , p) =
-    cong inj₁ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
-                      (funext (p ∞)))
-  ⟦ □sum□ A B t ⟧tm-eq γ | inj₂ (y , p) =
-    cong inj₂ (Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
-                      (funext (p ∞)))
-  ⟦ sum□sum A B t ⟧tm-eq γ with proj₁ (⟦ t ⟧tm γ) ∞ | inspect (proj₁ (⟦ t ⟧tm γ)) ∞
-  ⟦ sum□sum {Γ} A B t ⟧tm-eq γ | inj₁ x | [ eq ] =
-    Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
-           (funext (λ i → sym (proj₂ (sum-lem₁ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) x eq) i)))
-  ⟦ sum□sum {Γ} A B t ⟧tm-eq γ | inj₂ y | [ eq ] =
-    Σ≡-uip (funext (λ { _ → funext (λ _ → uip) }))
-           (funext (λ i → sym (proj₂ (sum-lem₂ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) y eq) i)))
-  ⟦ force-□next t ⟧tm-eq x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → uip)))
-      refl
-  ⟦ □next-force t ⟧tm-eq x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ {_ → uip})))
-      (funext (λ i →
-        Σ≡-uip
-          (funext (λ {[ j ] → funext (λ {[ _ ] → uip})}))
-          (funext (λ {[ j ] → cong (λ z → proj₁ z [ j ]) (proj₂ (⟦ t ⟧tm x) ∞ i)}))))
+  ... | inj₁ x = cong inj₁ (■eq (■com x ∞))
+  ... | inj₂ y = cong inj₂ (■eq (■com y ∞))
+  ⟦ sum□sum {Γ} A B t ⟧tm-eq γ with ■cone (⟦ t ⟧tm γ) ∞ | inspect (■cone (⟦ t ⟧tm γ)) ∞
+  ... | inj₁ x | [ eq ] = ■eq (λ i → sym (proj₂ (sum-lem₁ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) x eq) i))
+  ... | inj₂ y | [ eq ] = ■eq (λ i → sym (proj₂ (sum-lem₂ ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A (⟦ t ⟧tm γ) y eq) i))
+  ⟦ force-□next t ⟧tm-eq x = ■eq (λ _ → refl)
+  ⟦ □next-force t ⟧tm-eq x = ■eq (λ i → Σ≡-uip (funext (λ {[ j ] → funext (λ {[ _ ] → uip})})) ((funext (λ {[ j ] → cong (λ z → proj₁ z [ j ]) (■com (⟦ t ⟧tm x) ∞ i)}))))
   ⟦ ⟶weaken⟶ A B t ⟧tm-eq i x = funext (λ y → refl)
   ⟦ weaken⟶weaken A B t ⟧tm-eq i x =
     Σ≡-uip

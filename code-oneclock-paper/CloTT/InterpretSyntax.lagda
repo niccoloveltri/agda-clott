@@ -36,7 +36,7 @@ mutual
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
   ⟦ weakenT A ⟧A = WC ⟦ A ⟧A
   ⟦ later A ⟧A = ▻(⟦ A ⟧A)
-  ⟦ clock-q A ⟧A = □(⟦ A ⟧A)
+  ⟦ clock-q A ⟧A = ■(⟦ A ⟧A)
   ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
   
 ⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx ⟦ Δ ⟧Δ
@@ -268,13 +268,13 @@ mutual
   ⟦ next {Γ} {A} t ⟧tm = pure ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
   ⟦ fix-tm {Γ} {A} f ⟧tm = fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
-  ⟦ force {Γ} {A} t ⟧tm = force-tm ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
+  ⟦ force {Γ} {A} t ⟧tm = sem-force ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦_⟧tm {∅} (primrec P {Γ} {A} t) = primrec-set P Γ A ⟦ t ⟧tm
   ⟦_⟧tm {κ} (primrec P {Γ} {A} t) = primrec-psh P Γ A ⟦ t ⟧tm
-  ⟦ □const A ⟧tm = □const-tm _ ⟦ A ⟧A
-  ⟦ □sum A B ⟧tm = □sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
+  ⟦ □const A ⟧tm = ■const-tm _ ⟦ A ⟧A
+  ⟦ □sum A B ⟧tm = ■sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
   proj₁ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j (y , p) = y j
   proj₂ (proj₁ ⟦ ⟶weaken A B ⟧tm i x) j k (y , p) = funext (p j k) 
   proj₂ ⟦ ⟶weaken A B ⟧tm i j x =

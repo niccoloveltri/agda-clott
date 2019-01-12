@@ -5,7 +5,6 @@ module CloTT.TypeFormers.Mu where
 open import Data.Sum renaming (map to map⊎)
 open import Data.Product renaming (map to map×)
 open import Prelude
-open import Prelude.Syntax
 open import Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.Later
@@ -27,7 +26,7 @@ data SemPoly : tag → Set₁ where
     ∁ps : PSh → SemPoly tot
     I : {Δ : tag} → SemPoly Δ
     _⊞_ _⊠_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
-    ► : SemPoly tot → SemPoly tot
+    ►P : SemPoly tot → SemPoly tot
 \end{code}
 
 Note that we can evaluate polynomials into functors on types.
@@ -45,7 +44,7 @@ eval (∁ps A) X = A
 eval I X = X
 eval (P ⊞ Q) X = eval P X ⊕ eval Q X
 eval (P ⊠ Q) X = eval P X ⊗ eval Q X
-eval (► P) X = ▻(eval P X)
+eval (►P P) X = ►(eval P X)
 \end{code}
 }
 
@@ -96,8 +95,8 @@ We use the same trick for \AD{μMor'}.
     _⊠_ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
     ⊞₁ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P (Q ⊞ R) i
     ⊞₂ : ∀{Q}{R}{i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ► : ∀{Q}{i} (x : Later (μObj' P Q) i) → LaterLim (μObj' P Q) (μMor' P Q) i x
-      → μObj' P (► Q) i
+    ►P : ∀{Q}{i} (x : Later (μObj' P Q) i) → LaterLim (μObj' P Q) (μMor' P Q) i x
+      → μObj' P (►P Q) i
 \end{code}
 
 \begin{code}
@@ -108,7 +107,7 @@ We use the same trick for \AD{μMor'}.
   μMor' P (Q ⊠ R) i j (x ⊠ y) = μMor' P Q i j x ⊠ μMor' P R i j y
   μMor' P (Q ⊞ R) i j (⊞₁ x) = ⊞₁ (μMor' P Q i j x)
   μMor' P (Q ⊞ R) i j (⊞₂ x) = ⊞₂ (μMor' P R i j x)
-  μMor' P (► Q) i j (► x p) = ► x q
+  μMor' P (►P Q) i j (►P x p) = ►P x q
     where
       q : LaterLim (μObj' P Q) (μMor' P Q) j x
       q [ k ] [ l ] = p [ k ] [ l ]
@@ -122,7 +121,7 @@ We use the same trick for \AD{μMor'}.
 μMor'Id P (Q ⊠ R) {i}{x ⊠ y} = cong₂ _⊠_ (μMor'Id P Q) (μMor'Id P R)
 μMor'Id P (Q ⊞ R) {i}{⊞₁ x} = cong ⊞₁ (μMor'Id P Q)
 μMor'Id P (Q ⊞ R) {i}{⊞₂ x} = cong ⊞₂ (μMor'Id P R)
-μMor'Id P (► Q) {i}{► x p} = cong₂-dep ► refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
+μMor'Id P (►P Q) {i}{►P x p} = cong₂-dep ►P refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
 \end{code}
 
 \begin{code}
@@ -133,7 +132,7 @@ We use the same trick for \AD{μMor'}.
 μMor'Comp P (Q ⊠ R) {x = x ⊠ y} = cong₂ _⊠_ (μMor'Comp P Q) (μMor'Comp P R)
 μMor'Comp P (Q ⊞ R) {x = ⊞₁ x} = cong ⊞₁ (μMor'Comp P Q)
 μMor'Comp P (Q ⊞ R) {x = ⊞₂ x} = cong ⊞₂ (μMor'Comp P R)
-μMor'Comp P (► Q) {x = ► x p} = cong₂-dep ► refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
+μMor'Comp P (►P Q) {x = ►P x p} = cong₂-dep ►P refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
 \end{code}
 }
 
