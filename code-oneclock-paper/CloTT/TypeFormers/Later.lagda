@@ -75,11 +75,11 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
       → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
 \end{code}
 
-\AgdaHide
+\AgdaHide{
 \begin{code}
   LaterLimMor : (i : Size) (j : Size< (↑ i)) (x : Later A i)
     → LaterLim i x → LaterLim j x
-  LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ] -- p [ k ]
+  LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 }
 
