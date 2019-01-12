@@ -82,7 +82,7 @@ sub-unbox-q t s =
   trans∼ (sym∼ (□-β (sub (unbox-q t) (weakenS s))))
          (cong-unbox-q (trans∼ (sym∼ (sub-box-q (unbox-q t) s)) (cong-sub (□-η t) refl≈)))
 
-sub-↓ : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ₁) (weakenT A)) (s : Subst Γ₂ Γ₁)
+sub-↓ : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ₁) (⇑ A)) (s : Subst Γ₂ Γ₁)
   → sub (↓ t) s ∼ ↓(sub t (weakenS s))
 sub-↓ t s =
   trans∼ (sym∼ (⇡-β (sub (↓ t) s)))
