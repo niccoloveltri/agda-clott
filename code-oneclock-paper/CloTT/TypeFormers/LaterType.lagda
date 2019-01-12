@@ -11,6 +11,7 @@ open import CloTT.TypeFormers.FunctionType
 
 open PSh
 open ►Obj
+open ExpObj
 \end{code}
 }
 
@@ -38,21 +39,21 @@ proj₂ (pure Γ A t) i j x = ►eq (λ { j → cong (proj₁ t j) (MorComp Γ) 
 fmap : (Γ : Ctx tot) (A B : Ty tot) 
           → (f : Tm Γ (► (A ⇒ B))) (t : Tm Γ (► A))
           → Tm Γ (► B)
-►cone (proj₁ (fmap Γ A B (f , _) (t , _)) i x) [ j ] = proj₁ (►cone (f i x) [ j ]) j (►cone (t i x) [ j ])
+►cone (proj₁ (fmap Γ A B (f , p) (t , _)) i x) [ j ] = fun (►cone (f i x) [ j ]) j (►cone (t i x) [ j ])
 ►com (proj₁ (fmap Γ A B (f , p) (t , q)) i x) [ j ] [ k ] =
   begin
-    Mor B j k (proj₁ (►cone (f i x) [ j ]) j (►cone (t i x) [ j ]))
-  ≡⟨ proj₂ (►cone (f i x) [ j ]) j k (►cone (t i x) [ j ]) ⟩ 
-    proj₁ (►cone (f i x) [ j ]) k (Mor A j k (►cone (t i x) [ j ]))
-  ≡⟨ cong (proj₁ (►cone (f i x) [ j ]) k) (►com (t i x) [ j ] [ k ]) ⟩
-    proj₁ (►cone (f i x) [ j ]) k (►cone (t i x) [ k ]) 
-  ≡⟨ cong (λ z → proj₁ z k (►cone (t i x) [ k ])) (sym (►com (f i x) [ j ] [ j ])) ⟩ 
-    proj₁ (Mor (A ⇒ B) j j (►cone (f i x) [ j ])) k (►cone (t i x) [ k ])
-  ≡⟨ cong (λ z → proj₁ z k (►cone (t i x) [ k ])) (►com (f i x) [ j ] [ k ]) ⟩
-    proj₁ (►cone (f i x) [ k ]) k (►cone (t i x) [ k ])
-  ∎ 
+    Mor B j k (fun (►cone (f i x) [ j ]) j (►cone (t i x) [ j ]))
+  ≡⟨ funcom (►cone (f i x) [ j ]) j k (►cone (t i x) [ j ]) ⟩ 
+    fun (►cone (f i x) [ j ]) k (Mor A j k (►cone (t i x) [ j ]))
+  ≡⟨ cong (fun (►cone (f i x) [ j ]) k) (►com (t i x) [ j ] [ k ]) ⟩
+    fun (►cone (f i x) [ j ]) k (►cone (t i x) [ k ]) 
+  ≡⟨ cong (λ z → fun z k (►cone (t i x) [ k ])) (sym (►com (f i x) [ j ] [ j ])) ⟩ 
+    fun (Mor (A ⇒ B) j j (►cone (f i x) [ j ])) k (►cone (t i x) [ k ])
+  ≡⟨ cong (λ z → fun z k (►cone (t i x) [ k ])) (►com (f i x) [ j ] [ k ]) ⟩
+    fun (►cone (f i x) [ k ]) k (►cone (t i x) [ k ])
+  ∎
 proj₂ (fmap Γ A B f t) i j x =
-  ►eq (λ {k → cong₂ (λ a b → proj₁ (►cone a [ k ]) k (►cone b [ k ]))
+  ►eq (λ {k → cong₂ (λ a b → fun (►cone a [ k ]) k (►cone b [ k ]))
                     (proj₂ f i j x)
                     (proj₂ t i j x)})
 \end{code}

@@ -15,6 +15,7 @@ open import CloTT.InterpretSyntax
 open PSh
 open ■
 open ►Obj
+open ExpObj
 \end{code}
 }
 
@@ -31,10 +32,7 @@ sem-λ-β {κ} {Γ} {A} {B} t i x =
 
 sem-λ-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → def-eq _ _ ⟦ lambdaTm (appTm t) ⟧tm ⟦ t ⟧tm
 sem-λ-η {∅} {Γ} {A} {B} f x = refl
-sem-λ-η {κ} {Γ} {A} {B} f i x =
-  Σ≡-uip
-    (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-    (funext (λ j → cong (λ z → proj₁ z j) (sym (proj₂ ⟦ f ⟧tm i j x))))
+sem-λ-η {κ} {Γ} {A} {B} f i x = funeq (λ j y → cong (λ z → fun z j y) (sym (proj₂ ⟦ f ⟧tm i j x)))
 
 sem-⊠-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → def-eq _ _ ⟦ π₁ [ t₁ & t₂ ] ⟧tm ⟦ t₁ ⟧tm
 sem-⊠-β₁ {∅} {Γ} {A} {B} t₁ t₂ x = refl
@@ -88,17 +86,17 @@ sem-next-comp g f t i x = ►eq (λ {_ → refl})
 
 sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
   → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧tm
-sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → proj₁ (►cone (proj₁ ⟦ f ⟧tm i x) [ j ]) j (proj₁ ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
+sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (proj₁ ⟦ f ⟧tm i x) [ j ]) j (proj₁ ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
 dfix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
   → def-eq {tot} Γ (► A) (dfix Γ A f) (pure Γ A (fix Γ A f))
-dfix-eq Γ A (f , p) i γ = ►eq (λ { j → cong (λ a → proj₁ a j (dfix₁ A j (proj₁ a , proj₂ a))) (p i j γ)})
+dfix-eq Γ A (f , p) i γ = ►eq (λ {j → cong (λ a → fun a j (dfix₁ A j a)) (p i j γ)})
 
 fix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
   → def-eq Γ A
            (fix Γ A f)
            (sem-app-map Γ (► A) A f (pure Γ A (fix Γ A f)))
-fix-eq Γ A f i x = cong (proj₁ (proj₁ f i x) i) (dfix-eq Γ A f i x)
+fix-eq Γ A f i x = cong (fun (proj₁ f i x) i) (dfix-eq Γ A f i x)
 
 sem-fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A))
   → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
@@ -113,11 +111,11 @@ dfix-un Γ A (f , p) (u , q) i x r =
   ►eq'
   (funext (λ {[ j ] →
     begin
-      proj₁ (f i x) j (dfix₁ A j (proj₁ (f i x) , proj₂ (f i x)))
-    ≡⟨ cong (λ z → proj₁ z j (dfix₁ A j z)) (p i j x) ⟩
-      proj₁ (f j (Mor Γ i j x)) j (dfix₁ A j (f j (Mor Γ i j x)))
-    ≡⟨ cong (proj₁ (f j (Mor Γ i j x)) j) (dfix-un Γ A (f , p) (u , q) j (Mor Γ i j x) r) ⟩
-      proj₁ (f j (Mor Γ i j x)) j (proj₁ (pure Γ A (u , q)) j (Mor Γ i j x))
+      fun (f i x) j (dfix₁ A j (f i x))
+    ≡⟨ cong (λ z → fun z j (dfix₁ A j z)) (p i j x) ⟩
+      fun (f j (Mor Γ i j x)) j (dfix₁ A j (f j (Mor Γ i j x)))
+    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (dfix-un Γ A (f , p) (u , q) j (Mor Γ i j x) r) ⟩
+      fun (f j (Mor Γ i j x)) j (proj₁ (pure Γ A (u , q)) j (Mor Γ i j x))
     ≡⟨ r j (Mor Γ i j x) ⟩
       u j (Mor Γ i j x)
     ∎
@@ -129,7 +127,7 @@ fix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A)
 fix-un Γ A f u p i x =
   begin
     proj₁ (fix Γ A f) i x
-  ≡⟨ cong (λ z → proj₁ (proj₁ f i x) i z) (dfix-un Γ A f u i x p) ⟩
+  ≡⟨ cong (λ z → fun (proj₁ f i x) i z) (dfix-un Γ A f u i x p) ⟩
     proj₁ (sem-app-map Γ (► A) A f (pure Γ A u)) i x
   ≡⟨ p i x ⟩
     proj₁ u i x
@@ -197,29 +195,29 @@ sem-primrec-set P (Q ⊠ R) Γ A t x (a₁ , a₂) =
 sem-primrec-psh : (P Q : Poly κ) (Γ : Context κ) (A : Type κ)
   → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
   → (i : Size) (x : Obj ⟦ Γ ⟧Γ i) (j : Size< (↑ i)) (a : Obj ⟦ evalP Q (μ P) ⟧A j)
-  → primrec-psh'₁₁ P Q A i (proj₁ ⟦ t ⟧tm i x) j (cons₁' P Q j a) ≡ (a , proj₁(proj₁ ⟦ Pmap Q (primrec P t) ⟧tm i x) j a)
+  → primrec-psh'₁₁ P Q A i (proj₁ ⟦ t ⟧tm i x) j (cons₁' P Q j a) ≡ (a , fun(proj₁ ⟦ Pmap Q (primrec P t) ⟧tm i x) j a)
 sem-primrec-psh P (∁ X) Γ A t i x j a = refl
 sem-primrec-psh P I Γ A t i x j a = refl
 sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₁ a) =
   cong₂ _,_ (cong (inj₁ ∘ proj₁) (sem-primrec-psh P Q Γ A t i x j a))
             (trans (cong (inj₁ ∘ proj₂) (sem-primrec-psh P Q Γ A t i x j a))
-                   (cong (λ z → inj₁ (proj₁ z j a)) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+                   (cong (λ z → inj₁ (fun z j a)) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
 sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₂ a) =
   cong₂ _,_ (cong (inj₂ ∘ proj₁) (sem-primrec-psh P R Γ A t i x j a))
             (trans (cong (inj₂ ∘ proj₂) (sem-primrec-psh P R Γ A t i x j a))
-                   (cong (λ z → inj₂ (proj₁ z j a)) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x)))
+                   (cong (λ z → inj₂ (fun z j a)) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x)))
 sem-primrec-psh P (Q ⊠ R) Γ A t i x j (a₁ , a₂) =
   cong₂ _,_ (cong₂ _,_ (cong proj₁ (sem-primrec-psh P Q Γ A t i x j a₁))
                        (cong proj₁ (sem-primrec-psh P R Γ A t i x j a₂)))
             (cong₂ _,_ (trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x j a₁))
-                              (cong (λ z → proj₁ z j a₁) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+                              (cong (λ z → fun z j a₁) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
                        (trans (cong proj₂ (sem-primrec-psh P R Γ A t i x j a₂))
-                              (cong (λ z → proj₁ z j a₂) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x))))
+                              (cong (λ z → fun z j a₂) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x))))
 sem-primrec-psh P (▻P Q) Γ A t i x j z =
   cong₂ _,_
         (►eq (λ {k → cong proj₁ (sem-primrec-psh P Q Γ A t i x k (►cone z [ k ]))}))
         (►eq (λ {k → trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x k (►cone z [ k ])))
-                           (cong (λ y → proj₁ y k (►cone z [ k ]))
+                           (cong (λ y → fun y k (►cone z [ k ]))
                                  (trans (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i k x)
                                         (cong (proj₁ ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))}))
 
@@ -265,27 +263,21 @@ mutual
   ⟦_⟧tm-eq {∅} (cong-π₂ p) x = cong proj₂ (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-π₂ p)  i x = cong proj₂ (⟦ p ⟧tm-eq i x)
   ⟦_⟧tm-eq {∅} (cong-lambdaTm p) x = funext (λ a → ⟦ p ⟧tm-eq (x , a))
-  ⟦_⟧tm-eq {κ} (cong-lambdaTm {Γ = Γ} p) i x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-      (funext (λ j → funext (λ a → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x , a))))
+  ⟦_⟧tm-eq {κ} (cong-lambdaTm {Γ = Γ} p) i x = funeq (λ j a → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x , a))
   ⟦_⟧tm-eq {∅} (cong-appTm p) (x , a) = cong (λ z → z a) (⟦ p ⟧tm-eq x)
-  ⟦_⟧tm-eq {κ} (cong-appTm p) i (x , a) = cong (λ z → proj₁ z i a) (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq {κ} (cong-appTm p) i (x , a) = cong (λ z → fun z i a) (⟦ p ⟧tm-eq i x)
   ⟦ cong-⇡ p ⟧tm-eq i x = ⟦ p ⟧tm-eq x
   ⟦ cong-↓ p ⟧tm-eq x = ⟦ p ⟧tm-eq ∞ x
   ⟦ cong-box-q p ⟧tm-eq x = ■eq (λ i → ⟦ p ⟧tm-eq i x)
   ⟦ cong-unbox-q p ⟧tm-eq i x = cong (λ z → ■cone z i) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq (cong-next {Γ = Γ} p) i x = ►eq (λ{ j → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x) })
-  ⟦_⟧tm-eq (cong- p ⊛ q) i x = ►eq (λ{ j → cong₂ (λ a b → proj₁ (►cone a [ j ]) j (►cone b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x)})
-  ⟦_⟧tm-eq (cong-fix-tm {A = A} p) i x = cong (λ z → proj₁ z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq (cong- p ⊛ q) i x = ►eq (λ{ j → cong₂ (λ a b → fun (►cone a [ j ]) j (►cone b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x)})
+  ⟦_⟧tm-eq (cong-fix-tm {A = A} p) i x = cong (λ z → fun z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
   ⟦ cong-force {Γ} {A} {t₁} {t₂} p ⟧tm-eq x = ■eq (λ i → cong (λ z → ►cone (■cone z ∞) [ i ]) (⟦ p ⟧tm-eq x))
   ⟦_⟧tm-eq {∅} (cong-cons p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-cons p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
   ⟦_⟧tm-eq {∅} (cong-primrec P {Γ} {A} p) x = funext (λ a → cong (λ z → z (primrec-set' P P A z a)) (⟦ p ⟧tm-eq x))
-  ⟦_⟧tm-eq {κ} (cong-primrec P {Γ} {A} p) i x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-      (funext (λ j → funext (λ y → cong (λ z → proj₁ z j (primrec-psh'₁₁ P P A i z j y)) (⟦ p ⟧tm-eq i x))))
+  ⟦_⟧tm-eq {κ} (cong-primrec P {Γ} {A} p) i x = funeq (λ j y → cong (λ z → fun z j (primrec-psh'₁₁ P P A i z j y)) (⟦ p ⟧tm-eq i x))
   ⟦ λ-β t ⟧tm-eq = sem-λ-β t
   ⟦ λ-η t ⟧tm-eq = sem-λ-η t
   ⟦ ⊠-β₁ t₁ t₂ ⟧tm-eq = sem-⊠-β₁ t₁ t₂
@@ -306,7 +298,7 @@ mutual
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
   ⟦_⟧tm-eq {∅} (primrec-cons P t a) x = cong (⟦ t ⟧tm x) (sem-primrec-set P P _ _ t x (⟦ a ⟧tm x))
-  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (proj₁ (proj₁ ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (proj₁ ⟦ a ⟧tm i x))
+  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (fun (proj₁ ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (proj₁ ⟦ a ⟧tm i x))
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
   ⟦_⟧tm-eq {κ} (sub-id t) i x = refl
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl
@@ -321,10 +313,7 @@ mutual
   ⟦_⟧tm-eq {∅} (sub-[ t₁ & t₂ ] s) x = refl
   ⟦_⟧tm-eq {κ} (sub-[ t₁ & t₂ ] s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-lambdaTm t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-      (funext (λ j → funext (λ z → cong (λ y → proj₁ ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))))
+  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x = funeq (λ j z → cong (λ y → proj₁ ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))
   ⟦_⟧tm-eq {.κ} (sub-⇡ t s) i x = refl
   ⟦_⟧tm-eq {.∅} (sub-box-q t s) x = ■eq (λ _ → refl)
   ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → sym (cong (proj₁ ⟦ t ⟧tm j) (proj₂ ⟦ s ⟧sub i j x))})
@@ -348,10 +337,7 @@ mutual
   ⟦ force-□next t ⟧tm-eq x = ■eq (λ _ → refl)
   ⟦ □next-force t ⟧tm-eq x = ■eq (λ i → ►eq (λ {j → cong (λ z → ►cone z [ j ]) (■com (⟦ t ⟧tm x) ∞ i)}))
   ⟦ ⟶weaken⟶ A B t ⟧tm-eq i x = funext (λ y → refl)
-  ⟦ weaken⟶weaken A B t ⟧tm-eq i x =
-    Σ≡-uip
-      (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
-      (funext (λ j → funext (λ z → proj₂ (proj₁ ⟦ t ⟧tm i x) i j z)))
+  ⟦ weaken⟶weaken A B t ⟧tm-eq i x = funeq (λ j z → funcom (proj₁ ⟦ t ⟧tm i x) i j z)
   ⟦ μweakenμ P t ⟧tm-eq i x = μweakenμ-help P P i (proj₁ ⟦ t ⟧tm i x)
   ⟦ weakenμweaken P t ⟧tm-eq i x = weakenμweaken-help P P i (proj₁ ⟦ t ⟧tm i x)
   ⟦ ⇡↓ t ⟧tm-eq i x = proj₂ ⟦ t ⟧tm ∞ i x
