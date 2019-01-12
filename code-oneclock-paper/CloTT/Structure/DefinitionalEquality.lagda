@@ -12,13 +12,14 @@ open import CloTT.Structure.Terms
 open import CloTT.Structure.Subst
 
 open PSh
+open NatTrans
 \end{code}
 }
 
 \begin{code}
 def-eq : {b : tag} (Γ : Ctx b) (A : Ty b) (s t : Tm Γ A) → Set
 def-eq {set} Γ A s t = (x : Γ) → s x ≡ t x
-def-eq {tot} Γ A (s , p) (t , q) = (i : Size) (x : Obj Γ i) → s i x ≡ t i x
+def-eq {tot} Γ A s t = (i : Size) (x : Obj Γ i) → nat-map s i x ≡ nat-map t i x
 \end{code}
 
 \AgdaHide{
@@ -45,10 +46,7 @@ eq-to-def-eq refl = refl-def-eq
 def-eq-to-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {s t : Tm Γ A}
   → def-eq Γ A s t → s ≡ t
 def-eq-to-eq {set} p = funext p
-def-eq-to-eq {tot} p =
-  Σ≡-uip
-    (funext (λ x → funext (λ y → funext (λ z → uip))))
-    (funext (λ i → funext (λ x → p i x)))
+def-eq-to-eq {tot} p = NatTrans-eq p
 
 eq-to-def-eq-to-eq : {b : tag} {Γ : Ctx b} {A : Ty b} {s t : Tm Γ A}
   → (p : def-eq Γ A s t) → eq-to-def-eq(def-eq-to-eq p) ≡ p

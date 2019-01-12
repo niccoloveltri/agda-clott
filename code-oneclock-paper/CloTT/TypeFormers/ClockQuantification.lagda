@@ -8,7 +8,9 @@ open import Presheaves.Presheaves
 open import CloTT.Structure
 open import CloTT.TypeFormers.WeakenClock
 open import CloTT.TypeFormers.FunctionType
+
 open PSh
+open NatTrans
 \end{code}
 }
 
@@ -27,7 +29,10 @@ record ■ (A : Ty tot) : Ty set where
     ■cone : (i : Size) → Obj A i
     ■com : (i : Size) (j : Size< (↑ i)) → Mor A i j (■cone i) ≡ ■cone j
 open ■
+\end{code}
 
+\AgdaHide{
+\begin{code}
 ■eq' : {A : Ty tot} {s t : ■ A} → ■cone s ≡ ■cone t → s ≡ t
 ■eq' {_} {s} {t} refl = cong (λ z → record { ■cone = ■cone s ; ■com = z })
                              (funext (λ _ → funext λ _ → uip))
@@ -35,6 +40,7 @@ open ■
 ■eq : {A : Ty tot} {s t : ■ A} → ((i : Size) → ■cone s i ≡ ■cone t i) → s ≡ t
 ■eq p = ■eq' (funext p)
 \end{code}
+}
 
 Semantically, clock quantification \F{■} is right adjoint to context
 weakening \F{WC}. In other words, the types \F{Tm} (\F{WC} \Ar{Γ})
@@ -44,22 +50,12 @@ underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 
 \begin{code}
 box : (Γ : Ctx set) (A : Ty tot) (t : Tm (WC Γ) A) → Tm Γ (■ A)
-■cone (box Γ A t x) i = proj₁ t i x
-■com (box Γ A t x) i j = proj₂ t i j x
-{-
-box : (Γ : Ctx set) (A : Ty tot) (t : Tm (WC Γ) A) → Tm Γ (■ A)
-proj₁ (box Γ A (t , p) x) = {!!} -- t i x
-proj₂ (box Γ A (t , p) x) i j = p i j x
--}
+■cone (box Γ A t x) i = nat-map t i x
+■com (box Γ A t x) i j = nat-com t i j x
 \end{code}
 
 \begin{code}
 unbox : (Γ : Ctx set) (A : Ty tot) (t : Tm Γ (■ A)) → Tm (WC Γ) A
-proj₁ (unbox Γ A t) i x = ■cone (t x) i
-proj₂ (unbox Γ A t) i j x = ■com (t x) i j
-{-
-unbox : (Γ : Ctx set) (A : Ty tot) (t : Tm Γ (■ A)) → Tm (WC Γ) A
-proj₁ (unbox Γ A t) i x = proj₁ (t x) i
-proj₂ (unbox Γ A t) i j x = proj₂ (t x) i j
--}
+nat-map (unbox Γ A t) i x = ■cone (t x) i
+nat-com (unbox Γ A t) i j x = ■com (t x) i j
 \end{code}

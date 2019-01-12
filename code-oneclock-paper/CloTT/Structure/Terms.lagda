@@ -20,10 +20,7 @@ For presheaves, we use natural transformations instead.
 \begin{code}
 Tm : {b : tag} (Γ : Ctx b) (A : Ty b) → Set
 Tm {set} Γ A = Γ → A
-Tm {tot} Γ A = 
-  Σ[ θ ∈ ((i : Size) → Obj Γ i → Obj A i) ]
-    ((i : Size) (j : Size< (↑ i)) (x : Obj Γ i)
-      → Mor A i j (θ i x) ≡ θ j (Mor Γ i j x))
+Tm {tot} Γ A = NatTrans Γ A
 \end{code}
 
 We define natural transformations as a sigma type.

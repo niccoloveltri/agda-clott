@@ -12,25 +12,26 @@ open import CloTT.TypeFormers.FunctionType
 open PSh
 open ►Obj
 open ExpObj
+open NatTrans
 \end{code}
 }
 
 \begin{code}
-pure : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ A) → Tm Γ (► A)
-►cone (proj₁ (pure Γ A t) i x) [ j ] = proj₁ t j (Mor Γ i j x)
+sem-next : (Γ : Ctx tot) (A : Ty tot) (t : Tm Γ A) → Tm Γ (► A)
+►cone (nat-map (sem-next Γ A t) i x) [ j ] = nat-map t j (Mor Γ i j x)
 \end{code}
 
 \AgdaHide{
 \begin{code}
-►com (proj₁ (pure Γ A t) i x) [ j ] [ k ] = 
+►com (nat-map (sem-next Γ A t) i x) [ j ] [ k ] =
   begin
-    Mor A j k (proj₁ t j (Mor Γ i j x))
-  ≡⟨ proj₂ t j k (Mor Γ i j x)  ⟩
-    proj₁ t k (Mor Γ j k (Mor Γ i j x))
-  ≡⟨ cong (proj₁ t k) (sym (MorComp Γ)) ⟩
-    proj₁ t k (Mor Γ i k x)
+    Mor A j k (nat-map t j (Mor Γ i j x))
+  ≡⟨ nat-com t j k (Mor Γ i j x)  ⟩
+    nat-map t k (Mor Γ j k (Mor Γ i j x))
+  ≡⟨ cong (nat-map t k) (sym (MorComp Γ)) ⟩
+    nat-map t k (Mor Γ i k x)
   ∎
-proj₂ (pure Γ A t) i j x = ►eq (λ { j → cong (proj₁ t j) (MorComp Γ) })
+nat-com (sem-next Γ A t) i j x = ►eq (λ { j → cong (nat-map t j) (MorComp Γ) })
 \end{code}
 }
 
@@ -39,8 +40,10 @@ proj₂ (pure Γ A t) i j x = ►eq (λ { j → cong (proj₁ t j) (MorComp Γ) 
 fmap : (Γ : Ctx tot) (A B : Ty tot) 
           → (f : Tm Γ (► (A ⇒ B))) (t : Tm Γ (► A))
           → Tm Γ (► B)
-►cone (proj₁ (fmap Γ A B (f , p) (t , _)) i x) [ j ] = fun (►cone (f i x) [ j ]) j (►cone (t i x) [ j ])
-►com (proj₁ (fmap Γ A B (f , p) (t , q)) i x) [ j ] [ k ] =
+►cone (nat-map (fmap Γ A B f t) i x) [ j ] = fun (►cone (nat-map f i x) [ j ]) j (►cone (nat-map t i x) [ j ])
+►com (nat-map (fmap Γ A B f' t') i x) [ j ] [ k ] =
+  let f = nat-map f' in
+  let t = nat-map t' in
   begin
     Mor B j k (fun (►cone (f i x) [ j ]) j (►cone (t i x) [ j ]))
   ≡⟨ funcom (►cone (f i x) [ j ]) j k (►cone (t i x) [ j ]) ⟩ 
@@ -52,9 +55,9 @@ fmap : (Γ : Ctx tot) (A B : Ty tot)
   ≡⟨ cong (λ z → fun z k (►cone (t i x) [ k ])) (►com (f i x) [ j ] [ k ]) ⟩
     fun (►cone (f i x) [ k ]) k (►cone (t i x) [ k ])
   ∎
-proj₂ (fmap Γ A B f t) i j x =
+nat-com (fmap Γ A B f t) i j x =
   ►eq (λ {k → cong₂ (λ a b → fun (►cone a [ k ]) k (►cone b [ k ]))
-                    (proj₂ f i j x)
-                    (proj₂ t i j x)})
+                    (nat-com f i j x)
+                    (nat-com t i j x)})
 \end{code}
 }

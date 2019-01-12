@@ -16,6 +16,7 @@ open PSh
 open ■
 open ►Obj
 open ExpObj
+open NatTrans
 \end{code}
 }
 
@@ -25,14 +26,14 @@ sem-λ-β : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term (Γ 
 sem-λ-β {∅} {Γ} {A} {B} t x = refl
 sem-λ-β {κ} {Γ} {A} {B} t i x =
   begin
-    proj₁ ⟦ t ⟧tm i (Mor ⟦ Γ ⟧Γ i i (proj₁ x) , proj₂ x)
-  ≡⟨ cong (λ z → proj₁ ⟦ t ⟧tm i (z , _)) (MorId ⟦ Γ ⟧Γ) ⟩
-    proj₁ ⟦ t ⟧tm i x
+    nat-map ⟦ t ⟧tm i (Mor ⟦ Γ ⟧Γ i i (proj₁ x) , proj₂ x)
+  ≡⟨ cong (λ z → nat-map ⟦ t ⟧tm i (z , _)) (MorId ⟦ Γ ⟧Γ) ⟩
+    nat-map ⟦ t ⟧tm i x
   ∎
 
 sem-λ-η : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → def-eq _ _ ⟦ lambdaTm (appTm t) ⟧tm ⟦ t ⟧tm
 sem-λ-η {∅} {Γ} {A} {B} f x = refl
-sem-λ-η {κ} {Γ} {A} {B} f i x = funeq (λ j y → cong (λ z → fun z j y) (sym (proj₂ ⟦ f ⟧tm i j x)))
+sem-λ-η {κ} {Γ} {A} {B} f i x = funeq (λ j y → cong (λ z → fun z j y) (sym (nat-com ⟦ f ⟧tm i j x)))
 
 sem-⊠-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → def-eq _ _ ⟦ π₁ [ t₁ & t₂ ] ⟧tm ⟦ t₁ ⟧tm
 sem-⊠-β₁ {∅} {Γ} {A} {B} t₁ t₂ x = refl
@@ -72,7 +73,7 @@ sem-⇡-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → def-eq ⟦ Γ
 sem-⇡-β t x = refl
 
 sem-⇡-η : {Γ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ) (weakenT A)) → def-eq ⟦ weakenC Γ ⟧Γ ⟦ weakenT A ⟧A ⟦ ⇡ (↓ t) ⟧tm ⟦ t ⟧tm
-sem-⇡-η t = proj₂ ⟦ t ⟧tm ∞
+sem-⇡-η t = nat-com ⟦ t ⟧tm ∞
 
 sem-next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (▻ A)) → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A ⟦ next (idmap A) ⊛ t ⟧tm ⟦ t ⟧tm
 sem-next-id t i x = ►eq (λ {_ → refl})
@@ -86,17 +87,17 @@ sem-next-comp g f t i x = ►eq (λ {_ → refl})
 
 sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
   → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧tm
-sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (proj₁ ⟦ f ⟧tm i x) [ j ]) j (proj₁ ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
+sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
 dfix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
-  → def-eq {tot} Γ (► A) (dfix Γ A f) (pure Γ A (fix Γ A f))
-dfix-eq Γ A (f , p) i γ = ►eq (λ {j → cong (λ a → fun a j (dfix₁ A j a)) (p i j γ)})
+  → def-eq {tot} Γ (► A) (dfix Γ A f) (sem-next Γ A (sem-fix Γ A f))
+dfix-eq Γ A f i γ = ►eq (λ {j → cong (λ a → fun a j (dfix₁ A j a)) (nat-com f i j γ)})
 
 fix-eq : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A))
   → def-eq Γ A
-           (fix Γ A f)
-           (sem-app-map Γ (► A) A f (pure Γ A (fix Γ A f)))
-fix-eq Γ A f i x = cong (fun (proj₁ f i x) i) (dfix-eq Γ A f i x)
+           (sem-fix Γ A f)
+           (sem-app-map Γ (► A) A f (sem-next Γ A (sem-fix Γ A f)))
+fix-eq Γ A f i x = cong (fun (nat-map f i x) i) (dfix-eq Γ A f i x)
 
 sem-fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A))
   → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
@@ -105,32 +106,36 @@ sem-fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A))
 sem-fix-f f = fix-eq _ _ ⟦ f ⟧tm
 
 dfix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A) (i : Size) (x : Obj Γ i)
-  → def-eq Γ A (sem-app-map Γ (► A) A f (pure Γ A u)) u
-  → dfix₁ A i (proj₁ f i x) ≡ proj₁ (pure Γ A u) i x
-dfix-un Γ A (f , p) (u , q) i x r =
+  → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
+  → dfix₁ A i (nat-map f i x) ≡ nat-map (sem-next Γ A u) i x
+dfix-un Γ A z₁ z₂ i x r =
+  let f = nat-map z₁ in
+  let p = nat-com z₁ in
+  let u = nat-map z₂ in
+  let q = nat-com z₂ in
   ►eq'
   (funext (λ {[ j ] →
     begin
       fun (f i x) j (dfix₁ A j (f i x))
     ≡⟨ cong (λ z → fun z j (dfix₁ A j z)) (p i j x) ⟩
       fun (f j (Mor Γ i j x)) j (dfix₁ A j (f j (Mor Γ i j x)))
-    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (dfix-un Γ A (f , p) (u , q) j (Mor Γ i j x) r) ⟩
-      fun (f j (Mor Γ i j x)) j (proj₁ (pure Γ A (u , q)) j (Mor Γ i j x))
+    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (dfix-un Γ A z₁ z₂ j (Mor Γ i j x) r) ⟩
+      fun (f j (Mor Γ i j x)) j (nat-map (sem-next Γ A z₂) j (Mor Γ i j x))
     ≡⟨ r j (Mor Γ i j x) ⟩
       u j (Mor Γ i j x)
     ∎
     }))
 
 fix-un : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A)
-  → def-eq Γ A (sem-app-map Γ (► A) A f (pure Γ A u)) u
-  → def-eq Γ A (fix Γ A f) u
+  → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
+  → def-eq Γ A (sem-fix Γ A f) u
 fix-un Γ A f u p i x =
   begin
-    proj₁ (fix Γ A f) i x
-  ≡⟨ cong (λ z → fun (proj₁ f i x) i z) (dfix-un Γ A f u i x p) ⟩
-    proj₁ (sem-app-map Γ (► A) A f (pure Γ A u)) i x
+    nat-map (sem-fix Γ A f) i x
+  ≡⟨ cong (λ z → fun (nat-map f i x) i z) (dfix-un Γ A f u i x p) ⟩
+    nat-map (sem-app-map Γ (► A) A f (sem-next Γ A u)) i x
   ≡⟨ p i x ⟩
-    proj₁ u i x
+    nat-map u i x
   ∎
 
 sem-fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A)
@@ -195,31 +200,31 @@ sem-primrec-set P (Q ⊠ R) Γ A t x (a₁ , a₂) =
 sem-primrec-psh : (P Q : Poly κ) (Γ : Context κ) (A : Type κ)
   → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
   → (i : Size) (x : Obj ⟦ Γ ⟧Γ i) (j : Size< (↑ i)) (a : Obj ⟦ evalP Q (μ P) ⟧A j)
-  → primrec-psh'₁₁ P Q A i (proj₁ ⟦ t ⟧tm i x) j (cons₁' P Q j a) ≡ (a , fun(proj₁ ⟦ Pmap Q (primrec P t) ⟧tm i x) j a)
+  → primrec-psh'₁₁ P Q A i (nat-map ⟦ t ⟧tm i x) j (cons₁' P Q j a) ≡ (a , fun(nat-map ⟦ Pmap Q (primrec P t) ⟧tm i x) j a)
 sem-primrec-psh P (∁ X) Γ A t i x j a = refl
 sem-primrec-psh P I Γ A t i x j a = refl
 sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₁ a) =
   cong₂ _,_ (cong (inj₁ ∘ proj₁) (sem-primrec-psh P Q Γ A t i x j a))
             (trans (cong (inj₁ ∘ proj₂) (sem-primrec-psh P Q Γ A t i x j a))
-                   (cong (λ z → inj₁ (fun z j a)) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+                   (cong (λ z → inj₁ (fun z j a)) (nat-com ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
 sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₂ a) =
   cong₂ _,_ (cong (inj₂ ∘ proj₁) (sem-primrec-psh P R Γ A t i x j a))
             (trans (cong (inj₂ ∘ proj₂) (sem-primrec-psh P R Γ A t i x j a))
-                   (cong (λ z → inj₂ (fun z j a)) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x)))
+                   (cong (λ z → inj₂ (fun z j a)) (nat-com ⟦ Pmap R (primrec P t) ⟧tm i j x)))
 sem-primrec-psh P (Q ⊠ R) Γ A t i x j (a₁ , a₂) =
   cong₂ _,_ (cong₂ _,_ (cong proj₁ (sem-primrec-psh P Q Γ A t i x j a₁))
                        (cong proj₁ (sem-primrec-psh P R Γ A t i x j a₂)))
             (cong₂ _,_ (trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x j a₁))
-                              (cong (λ z → fun z j a₁) (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
+                              (cong (λ z → fun z j a₁) (nat-com ⟦ Pmap Q (primrec P t) ⟧tm i j x)))
                        (trans (cong proj₂ (sem-primrec-psh P R Γ A t i x j a₂))
-                              (cong (λ z → fun z j a₂) (proj₂ ⟦ Pmap R (primrec P t) ⟧tm i j x))))
+                              (cong (λ z → fun z j a₂) (nat-com ⟦ Pmap R (primrec P t) ⟧tm i j x))))
 sem-primrec-psh P (▻P Q) Γ A t i x j z =
   cong₂ _,_
         (►eq (λ {k → cong proj₁ (sem-primrec-psh P Q Γ A t i x k (►cone z [ k ]))}))
         (►eq (λ {k → trans (cong proj₂ (sem-primrec-psh P Q Γ A t i x k (►cone z [ k ])))
                            (cong (λ y → fun y k (►cone z [ k ]))
-                                 (trans (proj₂ ⟦ Pmap Q (primrec P t) ⟧tm i k x)
-                                        (cong (proj₁ ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))}))
+                                 (trans (nat-com ⟦ Pmap Q (primrec P t) ⟧tm i k x)
+                                        (cong (nat-map ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))}))
 
 μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i)
   → μweaken-help P Q (weakenμ-help P Q i x) i ≡ x
@@ -246,7 +251,7 @@ mutual
   ⟦_⟧tm-eq {∅} (trans∼ p q) x = trans (⟦_⟧tm-eq p x) (⟦_⟧tm-eq q x)
   ⟦_⟧tm-eq {κ} (trans∼ p q) i x = trans (⟦_⟧tm-eq p i x) (⟦_⟧tm-eq q i x)
   ⟦_⟧tm-eq {∅} (cong-sub {t₂ = t₂} {s₁} p q) x = trans (⟦_⟧tm-eq p (⟦ s₁ ⟧sub x)) (cong ⟦ t₂ ⟧tm (⟦ q ⟧sub-eq x))
-  ⟦_⟧tm-eq {κ} (cong-sub {t₂ = t₂} {s₁} p q) i x = trans (⟦_⟧tm-eq p i (proj₁ ⟦ s₁ ⟧sub i x)) (cong (proj₁ ⟦ t₂ ⟧tm i) (⟦ q ⟧sub-eq i x))
+  ⟦_⟧tm-eq {κ} (cong-sub {t₂ = t₂} {s₁} p q) i x = trans (⟦_⟧tm-eq p i (proj₁ ⟦ s₁ ⟧sub i x)) (cong (nat-map ⟦ t₂ ⟧tm i) (⟦ q ⟧sub-eq i x))
   ⟦ cong-unit-rec p ⟧tm-eq (x , tt) = ⟦ p ⟧tm-eq x
   ⟦_⟧tm-eq {∅} (cong-in₁ B p) x = cong inj₁ (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-in₁ B p) i x = cong inj₁ (⟦ p ⟧tm-eq i x)
@@ -298,7 +303,7 @@ mutual
   ⟦ fix-f f ⟧tm-eq = sem-fix-f f
   ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
   ⟦_⟧tm-eq {∅} (primrec-cons P t a) x = cong (⟦ t ⟧tm x) (sem-primrec-set P P _ _ t x (⟦ a ⟧tm x))
-  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (fun (proj₁ ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (proj₁ ⟦ a ⟧tm i x))
+  ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (fun (nat-map ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (nat-map ⟦ a ⟧tm i x))
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
   ⟦_⟧tm-eq {κ} (sub-id t) i x = refl
   ⟦_⟧tm-eq {∅} (sub-sub t s s') x = refl
@@ -313,10 +318,10 @@ mutual
   ⟦_⟧tm-eq {∅} (sub-[ t₁ & t₂ ] s) x = refl
   ⟦_⟧tm-eq {κ} (sub-[ t₁ & t₂ ] s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-lambdaTm t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x = funeq (λ j z → cong (λ y → proj₁ ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))
+  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x = funeq (λ j z → cong (λ y → nat-map ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))
   ⟦_⟧tm-eq {.κ} (sub-⇡ t s) i x = refl
   ⟦_⟧tm-eq {.∅} (sub-box-q t s) x = ■eq (λ _ → refl)
-  ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → sym (cong (proj₁ ⟦ t ⟧tm j) (proj₂ ⟦ s ⟧sub i j x))})
+  ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → sym (cong (nat-map ⟦ t ⟧tm j) (proj₂ ⟦ s ⟧sub i j x))})
   ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x = ►eq (λ {_ → refl})
   ⟦_⟧tm-eq {.κ} (sub-fix-tm f s) i x = refl
   ⟦ sub-force t s ⟧tm-eq x = refl
@@ -337,10 +342,10 @@ mutual
   ⟦ force-□next t ⟧tm-eq x = ■eq (λ _ → refl)
   ⟦ □next-force t ⟧tm-eq x = ■eq (λ i → ►eq (λ {j → cong (λ z → ►cone z [ j ]) (■com (⟦ t ⟧tm x) ∞ i)}))
   ⟦ ⟶weaken⟶ A B t ⟧tm-eq i x = funext (λ y → refl)
-  ⟦ weaken⟶weaken A B t ⟧tm-eq i x = funeq (λ j z → funcom (proj₁ ⟦ t ⟧tm i x) i j z)
-  ⟦ μweakenμ P t ⟧tm-eq i x = μweakenμ-help P P i (proj₁ ⟦ t ⟧tm i x)
-  ⟦ weakenμweaken P t ⟧tm-eq i x = weakenμweaken-help P P i (proj₁ ⟦ t ⟧tm i x)
-  ⟦ ⇡↓ t ⟧tm-eq i x = proj₂ ⟦ t ⟧tm ∞ i x
+  ⟦ weaken⟶weaken A B t ⟧tm-eq i x = funeq (λ j z → funcom (nat-map ⟦ t ⟧tm i x) i j z)
+  ⟦ μweakenμ P t ⟧tm-eq i x = μweakenμ-help P P i (nat-map ⟦ t ⟧tm i x)
+  ⟦ weakenμweaken P t ⟧tm-eq i x = weakenμweaken-help P P i (nat-map ⟦ t ⟧tm i x)
+  ⟦ ⇡↓ t ⟧tm-eq i x = nat-com ⟦ t ⟧tm ∞ i x
   ⟦ ↓⇡ t ⟧tm-eq x = refl
   ⟦ ⇡varTm Γ A ⟧tm-eq i x = refl
   ⟦ ↓varTm Γ A ⟧tm-eq x = refl

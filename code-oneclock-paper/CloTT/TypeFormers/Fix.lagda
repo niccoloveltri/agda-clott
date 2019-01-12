@@ -13,6 +13,7 @@ open import CloTT.TypeFormers.FunctionType
 open PSh
 open ►Obj
 open ExpObj
+open NatTrans
 \end{code}
 }
 
@@ -36,23 +37,23 @@ dfix₁ : (A : Ty tot) (i : Size) → ExpObj (► A) A i → ►Obj A i
 
 \begin{code}
 dfix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) → Tm Γ (► A)
-proj₁ (dfix Γ A (f , p)) i γ = dfix₁ A i (f i γ)
+nat-map (dfix Γ A f) i γ = dfix₁ A i (nat-map f i γ)
 \end{code}
 
 \AgdaHide{
 \begin{code}
-proj₂ (dfix Γ A (f , p)) i j γ = ►eq (λ {k → cong (λ a → fun a k (dfix₁ A k a)) (p i j γ)})
+nat-com (dfix Γ A f) i j γ = ►eq (λ {k → cong (λ a → fun a k (dfix₁ A k a)) (nat-com f i j γ)})
 \end{code}
 }
 
 By applying \AB{f} to \F{dfix}, we can obtain the required fixpoint operations \F{fix}.
 
 \begin{code}
-fix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) → Tm Γ A
+sem-fix : (Γ : Ctx tot) (A : Ty tot) (f : Tm Γ (► A ⇒ A)) → Tm Γ A
 \end{code}
 
 \AgdaHide{
 \begin{code}
-fix Γ A f = sem-app-map Γ (► A) A f (dfix Γ A f)
+sem-fix Γ A f = sem-app-map Γ (► A) A f (dfix Γ A f)
 \end{code}
 }

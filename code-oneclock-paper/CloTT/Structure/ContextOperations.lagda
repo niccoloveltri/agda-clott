@@ -10,6 +10,8 @@ open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.Types
 open import CloTT.Structure.Terms
+
+open NatTrans
 \end{code}
 }
 
@@ -35,14 +37,14 @@ _,,_ {tot} Γ A = Prod Γ A
 \begin{code}
 var : {b : tag} (Γ : Ctx b) (A : Ty b) → Tm (Γ ,, A) A
 var {set} Γ A = proj₂
-proj₁ (var {tot} Γ A) i (γ , x) = x
-proj₂ (var {tot} Γ A) i j (γ , x) = refl
+nat-map (var {tot} Γ A) i (γ , x) = x
+nat-com (var {tot} Γ A) i j (γ , x) = refl
 \end{code}
 
 \begin{code}
 weaken : {b : tag} (Γ : Ctx b) (A B : Ty b) → Tm Γ B → Tm (Γ ,, A) B
 weaken {set} Γ A B t (x , _) = t x
-proj₁ (weaken {tot} Γ A B (t , p)) i (x₁ , x₂) = t i x₁
-proj₂ (weaken {tot} Γ A B (t , p)) i j (x₁ , x₂) = p i j x₁
+nat-map (weaken {tot} Γ A B t) i (x₁ , x₂) = nat-map t i x₁
+nat-com (weaken {tot} Γ A B t) i j (x₁ , x₂) = nat-com t i j x₁
 \end{code}
 }
