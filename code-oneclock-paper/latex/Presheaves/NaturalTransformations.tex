@@ -19,6 +19,10 @@
 \end{code}
 }
 
+Beside presheaves, we also consider natural transformations between them.
+A natural transformation consists of a map \Fi{nat-map} which satisfies a commutativity requirement.
+More precisely, we use the following record
+
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{NatTrans}\AgdaSpace{}%
@@ -82,13 +86,15 @@
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}\<%
-\\
-\>[0]\AgdaKeyword{open}\AgdaSpace{}%
-\AgdaModule{NatTrans}\<%
 \end{code}
 
 \AgdaHide{
 \begin{code}%
+\>[0]\AgdaKeyword{open}\AgdaSpace{}%
+\AgdaModule{NatTrans}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{NatTrans{-}eq'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{P}\AgdaSpace{}%

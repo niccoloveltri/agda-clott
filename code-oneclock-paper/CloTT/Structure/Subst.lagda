@@ -16,9 +16,10 @@ open NatTrans
 }
 
 The type theory we study, has explicit substitutions and we must also provide an interpretation for these.
-Substitutions are maps from a context to a context.
-Since contexts are presheaves, we interpret substitutions as natural transformations.
-This leads to the following definition.
+Substitutions are maps between contexts.
+Again there are two cases.
+If the clock context is empty, then we just use functions.
+If we have one clock variable, then we use  natural transformations.
 
 \begin{code}
 sem-subst : {b : ClockContext} → Ctx b → Ctx b → Set
@@ -33,7 +34,8 @@ As an example, we show how an explicit substitution gives rise to an actual one.
 We only give the component map and not the proof of naturality.
 
 \begin{code}
-sem-sub : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → Tm Γ₂ A → sem-subst Γ₁ Γ₂ → Tm Γ₁ A
+sem-sub : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b)
+  → Tm Γ₂ A → sem-subst Γ₁ Γ₂ → Tm Γ₁ A
 sem-sub {∅} Γ₁ Γ₂ A t α x = t(α x)
 nat-map (sem-sub {κ} Γ₁ Γ₂ A t α) i x = nat-map t i (nat-map α i x)
 \end{code}

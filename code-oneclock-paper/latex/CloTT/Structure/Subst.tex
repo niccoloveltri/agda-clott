@@ -45,9 +45,10 @@
 }
 
 The type theory we study, has explicit substitutions and we must also provide an interpretation for these.
-Substitutions are maps from a context to a context.
-Since contexts are presheaves, we interpret substitutions as natural transformations.
-This leads to the following definition.
+Substitutions are maps between contexts.
+Again there are two cases.
+If the clock context is empty, then we just use functions.
+If we have one clock variable, then we use  natural transformations.
 
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}subst}\AgdaSpace{}%
@@ -103,8 +104,10 @@ We only give the component map and not the proof of naturality.
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Ty}\AgdaSpace{}%
-\AgdaBound{b}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaBound{b}\AgdaSymbol{)}\<%
+\\
+\>[0][@{}l@{\AgdaIndent{0}}]%
+\>[2]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{Tm}\AgdaSpace{}%
 \AgdaBound{Γ₂}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%

@@ -8,6 +8,10 @@ open PSh
 \end{code}
 }
 
+Beside presheaves, we also consider natural transformations between them.
+A natural transformation consists of a map \Fi{nat-map} which satisfies a commutativity requirement.
+More precisely, we use the following record
+
 \begin{code}
 record NatTrans (P Q : PSh) : Set where
   field
@@ -19,11 +23,7 @@ record NatTrans (P Q : PSh) : Set where
 \AgdaHide{
 \begin{code}
 open NatTrans
-\end{code}
-}
 
-\AgdaHide{
-\begin{code}
 NatTrans-eq' : {P Q : PSh} {s t : NatTrans P Q} → nat-map s ≡ nat-map t → s ≡ t
 NatTrans-eq' {_} {_} {s} {t} refl =
   cong (λ z → record {nat-map = nat-map t ; nat-com = z})

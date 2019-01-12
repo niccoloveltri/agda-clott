@@ -15,10 +15,16 @@ open NatTrans
 
 \begin{code}
 _⇒_ : {b : ClockContext} (A B : Ty b) → Ty b
+\end{code}
+
+\AgdaHide{
+\begin{code}
 _⇒_ {∅} A B = A → B
 _⇒_ {κ} A B = Exp A B
 \end{code}
+}
 
+\AgdaHide{
 \begin{code}
 lambda : {b : ClockContext} (Γ : Ctx b) (A B : Ty b) (t : Tm (Γ ,, A) B)
   → Tm Γ (A ⇒ B)
@@ -51,7 +57,6 @@ nat-com (app {κ} Γ A B f) i j (x , y) =
   ∎
 \end{code}
 
-\AgdaHide{
 \begin{code}
 sem-app-map : {b : ClockContext} (Γ : Ctx b) (A B : Ty b) → Tm Γ (A ⇒ B) → Tm Γ A → Tm Γ B
 sem-app-map {b} Γ A B f t = sem-sub Γ (Γ ,, A) B (app Γ A B f) (sem-subst-tm Γ Γ A (sem-idsub Γ) t)

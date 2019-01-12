@@ -31,7 +31,7 @@ data SemPoly : ClockContext → Set₁ where
 
 Note that we can evaluate polynomials into functors on types.
 This is defined by induction on the polynomial.
-\NW{say that we focus on μ of presheaves}
+In each case, we use the corresponding opertion on types.
 
 \begin{code}
 eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
@@ -65,6 +65,7 @@ mutual
 \end{code}
 }
 
+In the remainder of this section, we focus on μ-types in the clock context with a single clock variable.
 We define the object part and the morphism part mutually.
 Usually, the morphism part depends on the object part, but not the other way around.
 Since we have a constructor for later, they depend mutually on each other.

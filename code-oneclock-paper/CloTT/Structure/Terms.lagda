@@ -21,6 +21,3 @@ Tm : {b : ClockContext} (Γ : Ctx b) (A : Ty b) → Set
 Tm {∅} Γ A = Γ → A
 Tm {κ} Γ A = NatTrans Γ A
 \end{code}
-
-We define natural transformations as a sigma type.
-The first component is the map and the second is the commutativity requirement.
