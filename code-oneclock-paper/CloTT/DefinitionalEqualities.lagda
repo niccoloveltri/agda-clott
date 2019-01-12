@@ -63,7 +63,7 @@ sem-𝟙-β {Γ} {A} t x = refl
 sem-𝟙-η : {Γ : Context ∅} (t : Term Γ 𝟙) → def-eq ⟦ Γ ⟧Γ ⟦ 𝟙 ⟧A ⟦ t ⟧tm ⟦ tt {Γ} ⟧tm
 sem-𝟙-η t x = refl
 
-sem-□-β : {Γ : Context ∅} {A : Type κ} (t : Term (weakenC Γ) A) → def-eq ⟦ weakenC Γ ⟧Γ ⟦ A ⟧A ⟦ unbox-q (box-q t) ⟧tm ⟦ t ⟧tm
+sem-□-β : {Γ : Context ∅} {A : Type κ} (t : Term (⇑ Γ) A) → def-eq ⟦ ⇑ Γ ⟧Γ ⟦ A ⟧A ⟦ unbox-q (box-q t) ⟧tm ⟦ t ⟧tm
 sem-□-β {Γ} {A} t i x = refl
 
 sem-□-η : {Γ : Context ∅} {A : Type κ} (t : Term Γ (□ A)) → def-eq ⟦ Γ ⟧Γ ⟦ □ A ⟧A ⟦ box-q (unbox-q t) ⟧tm ⟦ t ⟧tm
@@ -72,7 +72,7 @@ sem-□-η t x = refl
 sem-⇡-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ ↓ (⇡ t) ⟧tm ⟦ t ⟧tm
 sem-⇡-β t x = refl
 
-sem-⇡-η : {Γ : Context ∅} {A : Type ∅} (t : Term (weakenC Γ) (weakenT A)) → def-eq ⟦ weakenC Γ ⟧Γ ⟦ weakenT A ⟧A ⟦ ⇡ (↓ t) ⟧tm ⟦ t ⟧tm
+sem-⇡-η : {Γ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ) (⇑ A)) → def-eq ⟦ ⇑ Γ ⟧Γ ⟦ ⇑ A ⟧A ⟦ ⇡ (↓ t) ⟧tm ⟦ t ⟧tm
 sem-⇡-η t = nat-com ⟦ t ⟧tm ∞
 
 sem-next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (▻ A)) → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A ⟦ next (idmap A) ⊛ t ⟧tm ⟦ t ⟧tm
@@ -86,7 +86,7 @@ sem-next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (▻ (B ⟶ C))
 sem-next-comp g f t i x = ►eq (λ {_ → refl})
 
 sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
-  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (weakenTm _ _ _ t))) ⊛ f ⟧tm
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (⇑m _ _ _ t))) ⊛ f ⟧tm
 sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
 dfix-eq : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A))

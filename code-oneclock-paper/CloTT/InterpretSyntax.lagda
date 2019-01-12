@@ -33,7 +33,7 @@ mutual
   ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
   ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-  ⟦ weakenT A ⟧A = WC ⟦ A ⟧A
+  ⟦ ⇑ A ⟧A = WC ⟦ A ⟧A
   ⟦ ▻ A ⟧A = ►(⟦ A ⟧A)
   ⟦ □ A ⟧A = ■(⟦ A ⟧A)
   ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
@@ -41,7 +41,7 @@ mutual
 ⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx Δ
 ⟦ • ⟧Γ = ∙ _
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
-⟦ weakenC Γ ⟧Γ = WC ⟦ Γ ⟧Γ
+⟦ ⇑ Γ ⟧Γ = WC ⟦ Γ ⟧Γ
 
 consset' : (P Q : Poly ∅) → ⟦ evalP Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
 consset' P (∁ x) t = ∁s t -- ∁s t
