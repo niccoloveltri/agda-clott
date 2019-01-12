@@ -7,6 +7,8 @@ open import Prelude
 open import Presheaves.Presheaves
 open import Presheaves.Const
 open import CloTT.Structure
+
+open NatTrans
 \end{code}
 }
 
@@ -23,12 +25,12 @@ WC Γ = Const Γ
 \AgdaHide{
 \begin{code}
 WC-fun : (Γ : Ctx set) (A : Ty set) → Tm Γ A → Tm (WC Γ) (WC A)
-proj₁ (WC-fun Γ A t) _ = t
-proj₂ (WC-fun Γ A t) _ _ _ = refl
+nat-map (WC-fun Γ A t) _ = t
+nat-com (WC-fun Γ A t) _ _ _ = refl
 \end{code}
 
 \begin{code}
 WC-unfun : (Γ : Ctx set) (A : Ty set) → Tm (WC Γ) (WC A) → Tm Γ A 
-WC-unfun Γ A (t , p) = t ∞
+WC-unfun Γ A t = nat-map t ∞
 \end{code}
 }

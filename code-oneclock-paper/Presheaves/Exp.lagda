@@ -6,35 +6,41 @@ open import Data.Product
 open import Prelude
 open import Presheaves.Presheaves
 open PSh
-
-module _ (P Q : PSh) where
 \end{code}
 
-  \begin{code}
-  ExpObj : Size → Set
-  ExpObj i =
-    Σ[ f ∈ ((j : Size< (↑ i)) → Obj P j → Obj Q j) ]
-      ((j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj P j)
-        → Mor Q j k (f j x)
-          ≡
-          f k (Mor P j k x))
-  \end{code}
+\begin{code}
+record ExpObj (P Q : PSh) (i : Size) : Set where
+  field
+    fun : (j : Size< (↑ i)) → Obj P j → Obj Q j
+    funcom : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj P j)
+      → Mor Q j k (fun j x) ≡ fun k (Mor P j k x)
+open ExpObj
 
+funeq' : {P Q : PSh} {i : Size} {s t : ExpObj P Q i} → fun s ≡ fun t → s ≡ t
+funeq' {P} {Q} {_} {s} {t} refl = cong (λ z → record { fun = fun t ; funcom = z }) (funext (λ _ → funext (λ _ → funext (λ _ → uip))))
+
+funeq : {P Q : PSh} {i : Size} {s t : ExpObj P Q i} → ((j : Size< (↑ i)) (x : Obj P j) → fun s j x ≡ fun t j x) → s ≡ t
+funeq p = funeq' (funext (λ j → funext (λ x → p j x)))
+\end{code}
+
+\begin{code}
+module _ (P Q : PSh) where
+\end{code}
   \begin{code}
   ExpMor : (i : Size) (j : Size< (↑ i))
-    → ExpObj i → ExpObj j
-  ExpMor i j (f , p) = f , p
+    → ExpObj P Q i → ExpObj P Q j
+  ExpMor i j f = f
   \end{code}
 
   \begin{code}
-  ExpMorId : {i : Size} {x : ExpObj i}
+  ExpMorId : {i : Size} {x : ExpObj P Q i}
     → ExpMor i i x ≡ x
   ExpMorId = refl
   \end{code}
   
   \begin{code}
   ExpMorComp : {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)}
-    → {x : ExpObj i}
+    → {x : ExpObj P Q i}
     → ExpMor i k x ≡ ExpMor j k (ExpMor i j x)
   ExpMorComp = refl
   \end{code}

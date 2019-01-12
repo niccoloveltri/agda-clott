@@ -12,6 +12,7 @@ open import CloTT.Structure.Types
 open import CloTT.Structure.Terms
 
 open PSh
+open NatTrans
 \end{code}
 }
 
@@ -38,17 +39,17 @@ We only give the component map and not the proof of naturality.
 \begin{code}
 sem-sub : {b : tag} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → Tm Γ₂ A → sem-subst Γ₁ Γ₂ → Tm Γ₁ A
 sem-sub {set} Γ₁ Γ₂ A t α x = t(α x)
-proj₁ (sem-sub {tot} Γ₁ Γ₂ A (t , p) (α , q)) i x = t i (α i x)
+nat-map (sem-sub {tot} Γ₁ Γ₂ A t α) i x = nat-map t i (proj₁ α i x)
 \end{code}
 \AgdaHide{
 \begin{code}
-proj₂ (sem-sub {tot} Γ₁ Γ₂ A (t , p) (α , q)) i j x =
+nat-com (sem-sub {tot} Γ₁ Γ₂ A t α) i j x =
   begin
-    Mor A i j (t i (α i x))
-  ≡⟨ p i j (α i x) ⟩
-    t j (Mor Γ₂ i j (α i x))
-  ≡⟨ cong (t j) (sym (q i j x)) ⟩
-    t j (α j (Mor Γ₁ i j x))
+    Mor A i j (nat-map t i (proj₁ α i x))
+  ≡⟨ nat-com t i j (proj₁ α i x) ⟩
+    nat-map t j (Mor Γ₂ i j (proj₁ α i x))
+  ≡⟨ cong (nat-map t j) (sym (proj₂ α i j x)) ⟩
+    nat-map t j (proj₁ α j (Mor Γ₁ i j x))
   ∎
 \end{code}
 }
@@ -85,14 +86,14 @@ proj₂ (sem-subcomp {tot} Γ₁ Γ₂ Γ₃ α β) i j x =
 \begin{code}
 sem-subst-tm : {b : tag} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → sem-subst Γ₁ Γ₂ → Tm Γ₁ A → sem-subst Γ₁ (Γ₂ ,, A)
 sem-subst-tm {set} Γ₁ Γ₂ A α t x = α x , t x
-proj₁ (sem-subst-tm {tot} Γ₁ Γ₂ A (α , p) (t , q)) i x = (α i x) , t i x
-proj₂ (sem-subst-tm {tot} Γ₁ Γ₂ A (α , p) (t , q)) i j x =
+proj₁ (sem-subst-tm {tot} Γ₁ Γ₂ A α t) i x = proj₁ α i x , nat-map t i x
+proj₂ (sem-subst-tm {tot} Γ₁ Γ₂ A α t) i j x =
   begin
-    (α j (Mor Γ₁ i j x) , t j (Mor Γ₁ i j x))
-  ≡⟨ cong (λ z → (z , _)) (p i j x) ⟩
-    (Mor Γ₂ i j (α i x) , t j (Mor Γ₁ i j x))
-  ≡⟨ cong (λ z → (_ , z)) (sym (q i j x)) ⟩
-    (Mor Γ₂ i j (α i x) , Mor A i j (t i x))
+    (proj₁ α j (Mor Γ₁ i j x) , nat-map t j (Mor Γ₁ i j x))
+  ≡⟨ cong (λ z → (z , _)) (proj₂ α i j x) ⟩
+    (Mor Γ₂ i j (proj₁ α i x) , nat-map t j (Mor Γ₁ i j x))
+  ≡⟨ cong (λ z → (_ , z)) (sym (nat-com t i j x)) ⟩
+    (Mor Γ₂ i j (proj₁ α i x) , Mor A i j (nat-map t i x))
   ∎
 \end{code}
 
