@@ -21,10 +21,10 @@ open ■
 }
 
 \begin{code}
-■const-tm : (Γ : Ctx set) (A : Ty set) → Tm Γ (■ (WC A) ⇒ A)
+■const-tm : (Γ : Ctx ∅) (A : Ty ∅) → Tm Γ (■ (WC A) ⇒ A)
 ■const-tm Γ A γ x = ■cone x ∞
 
-module _ (Γ : Ctx set) (A : Ty tot) (B : Ty tot) where
+module _ (Γ : Ctx ∅) (A : Ty κ) (B : Ty κ) where
   sum-lem₁ : (t : ■ (A ⊕ B)) (x : Obj A ∞)
     → ■cone t ∞ ≡ inj₁ x
     → Σ (■ A) (λ s → (i : Size) → ■cone t i ≡ inj₁ (■cone s i))

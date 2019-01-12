@@ -84,7 +84,7 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
 }
 
 \begin{code}
-record ►Obj (A : Ty tot) (i : Size) : Set where
+record ►Obj (A : Ty κ) (i : Size) : Set where
     field
       ►cone : Later (Obj A) i
       ►com : LaterLim (Obj A) (Mor A) i ►cone
@@ -93,18 +93,18 @@ open ►Obj
 
 \AgdaHide{
 \begin{code}
-►eq' : {A : Ty tot} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
+►eq' : {A : Ty κ} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
 ►eq' {_} {s} {t} refl = cong (λ z → record { ►cone = ►cone t ; ►com = z})
                              (funext (λ {[ j ] → funext (λ {[ k ] → uip})}))
 
-►eq : {A : Ty tot} {i : Size} {s t : ►Obj A i} → ((j : Size< i) → ►cone s [ j ] ≡ ►cone t [ j ]) → s ≡ t
+►eq : {A : Ty κ} {i : Size} {s t : ►Obj A i} → ((j : Size< i) → ►cone s [ j ] ≡ ►cone t [ j ]) → s ≡ t
 ►eq p = ►eq' (funext (λ {[ j ] → p j}))
 \end{code}
 }
 
 \AgdaHide{
 \begin{code}
-module _ (A : Ty tot) where
+module _ (A : Ty κ) where
 \end{code}
 }
 
@@ -130,7 +130,7 @@ All in all, we get
 }
 
 \begin{code}
-► : Ty tot → Ty tot
+► : Ty κ → Ty κ
 \end{code}
 
 \AgdaHide{

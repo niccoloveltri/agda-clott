@@ -21,12 +21,12 @@ The reason why we cannot use the syntactic ones, is because we need to use inhab
 This leads to the following definition.
 
 \begin{code}
-data SemPoly : tag → Set₁ where
-    ∁s : Set → SemPoly set
-    ∁ps : PSh → SemPoly tot
-    I : {Δ : tag} → SemPoly Δ
-    _⊞_ _⊠_ : {Δ : tag} → SemPoly Δ → SemPoly Δ → SemPoly Δ
-    ►P : SemPoly tot → SemPoly tot
+data SemPoly : ClockContext → Set₁ where
+    ∁s : Set → SemPoly ∅
+    ∁ps : PSh → SemPoly κ
+    I : {Δ : ClockContext} → SemPoly Δ
+    _⊞_ _⊠_ : {Δ : ClockContext} → SemPoly Δ → SemPoly Δ → SemPoly Δ
+    ►P : SemPoly κ → SemPoly κ
 \end{code}
 
 Note that we can evaluate polynomials into functors on types.
@@ -34,7 +34,7 @@ This is defined by induction on the polynomial.
 \NW{say that we focus on μ of presheaves}
 
 \begin{code}
-eval : {Δ : tag} → SemPoly Δ → Ty Δ → Ty Δ
+eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
 \end{code}
 
 \AgdaHide{
@@ -50,12 +50,12 @@ eval (►P P) X = ►(eval P X)
 
 \AgdaHide{
 \begin{code}
-data μset (P : SemPoly set) : SemPoly set → Set where
+data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
   ∁s : {X : Set} → X → μset P (∁s X)
   I : μset P P → μset P I
-  _⊠_ : {Q R : SemPoly set} → μset P Q → μset P R → μset P (Q ⊠ R)
-  ⊞₁ : {Q R : SemPoly set} → μset P Q → μset P (Q ⊞ R)
-  ⊞₂ : {Q R : SemPoly set} → μset P R → μset P (Q ⊞ R)
+  _⊠_ : {Q R : SemPoly ∅} → μset P Q → μset P R → μset P (Q ⊠ R)
+  ⊞₁ : {Q R : SemPoly ∅} → μset P Q → μset P (Q ⊞ R)
+  ⊞₂ : {Q R : SemPoly ∅} → μset P R → μset P (Q ⊞ R)
 \end{code}
 }
 
@@ -89,7 +89,7 @@ We use the same trick for \AD{μMor'}.
 
 
 \begin{code}
-  data μObj' (P : SemPoly tot) : SemPoly tot → Size → Set where
+  data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
     ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ps X) i
     I : ∀{i} → μObj' P P i → μObj' P I i
     _⊠_ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
@@ -100,7 +100,7 @@ We use the same trick for \AD{μMor'}.
 \end{code}
 
 \begin{code}
-  μMor' : (P Q : SemPoly tot) (i : Size) (j : Size< (↑ i))
+  μMor' : (P Q : SemPoly κ) (i : Size) (j : Size< (↑ i))
     → μObj' P Q i → μObj' P Q j
   μMor' P (∁ps X) i j (∁ps x) = ∁ps (Mor X i j x)
   μMor' P I i j (I x) = I (μMor' P P i j x)
@@ -115,7 +115,7 @@ We use the same trick for \AD{μMor'}.
 
 \AgdaHide{
 \begin{code}
-μMor'Id : (P Q : SemPoly tot) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
+μMor'Id : (P Q : SemPoly κ) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
 μMor'Id P (∁ps X) {i} {∁ps x} = cong ∁ps (MorId X)
 μMor'Id P I {i}{I x} = cong I (μMor'Id P P)
 μMor'Id P (Q ⊠ R) {i}{x ⊠ y} = cong₂ _⊠_ (μMor'Id P Q) (μMor'Id P R)
@@ -125,7 +125,7 @@ We use the same trick for \AD{μMor'}.
 \end{code}
 
 \begin{code}
-μMor'Comp : (P Q : SemPoly tot) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : μObj' P Q i}
+μMor'Comp : (P Q : SemPoly κ) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : μObj' P Q i}
   → μMor' P Q i k x ≡ μMor' P Q j k (μMor' P Q i j x)
 μMor'Comp P (∁ps X) {x = ∁ps x} = cong ∁ps (MorComp X)
 μMor'Comp P I {x = I x} = cong I (μMor'Comp P P)
@@ -139,7 +139,7 @@ We use the same trick for \AD{μMor'}.
 In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
 
 \begin{code}
-μpsh : SemPoly tot → SemPoly tot → Ty tot
+μpsh : SemPoly κ → SemPoly κ → Ty κ
 \end{code}
 
 \AgdaHide{
@@ -158,12 +158,12 @@ We make a case distinction based on the clock context.
 For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
 
 \begin{code}
-mu : {Δ : tag} → (P : SemPoly Δ) → Ty Δ
-mu {tot} P = μpsh P P
+mu : {Δ : ClockContext} → (P : SemPoly Δ) → Ty Δ
+mu {κ} P = μpsh P P
 \end{code}
 
 \AgdaHide{
 \begin{code}
-mu {set} P = μset P P
+mu {∅} P = μset P P
 \end{code}
 }

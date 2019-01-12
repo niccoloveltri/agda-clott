@@ -15,18 +15,16 @@ open import CloTT
 }
 
 \begin{code}
-record interpret-syntax {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ∼}{ℓ≈} : Set (lsuc (ℓCC l⊔ ℓTy l⊔ ℓCtx l⊔ ℓSub l⊔ ℓTm l⊔ ℓ∼ l⊔ ℓ≈)) where
+record interpret-syntax {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ∼}{ℓ≈} : Set (lsuc (ℓTy l⊔ ℓCtx l⊔ ℓSub l⊔ ℓTm l⊔ ℓ∼ l⊔ ℓ≈)) where
   field
-    semClockContext : Set ℓCC
-    semType : semClockContext → Set ℓTy
-    semContext : semClockContext → Set ℓCtx
-    semSubst : {Δ : semClockContext} → semContext Δ → semContext Δ → Set ℓSub
-    semTerm : {Δ : semClockContext} → semContext Δ → semType Δ → Set ℓTm
-    _sem∼_ : {Δ : semClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ∼ -- \sim
-    _sem≈_ : {Δ : semClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set ℓ≈ -- ≈
-    ⟦_⟧CCtx : ClockContext → semClockContext
-    ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType ⟦ Δ ⟧CCtx
-    ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext ⟦ Δ ⟧CCtx
+    semType : ClockContext → Set ℓTy
+    semContext : ClockContext → Set ℓCtx
+    semSubst : {Δ : ClockContext} → semContext Δ → semContext Δ → Set ℓSub
+    semTerm : {Δ : ClockContext} → semContext Δ → semType Δ → Set ℓTm
+    _sem∼_ : {Δ : ClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ∼ -- \sim
+    _sem≈_ : {Δ : ClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set ℓ≈ -- ≈
+    ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType Δ
+    ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext Δ
     ⟦_⟧Subst : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → semSubst ⟦ Γ ⟧Ctx ⟦ Γ' ⟧Ctx
     ⟦_⟧Tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm ⟦ Γ ⟧Ctx ⟦ A ⟧Type
     ⟦_⟧∼ : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A} → t ∼ t' → ⟦ t ⟧Tm sem∼ ⟦ t' ⟧Tm
@@ -38,14 +36,12 @@ open interpret-syntax
 \begin{code}
 initial-interpretation : interpret-syntax
 initial-interpretation = record
-  { semClockContext = ClockContext
-  ; semType = Type
+  { semType = Type
   ; semContext = Context
   ; semSubst = Subst
   ; semTerm = Term
   ; _sem∼_ = _∼_
   ; _sem≈_ = _≈_
-  ; ⟦_⟧CCtx = id
   ; ⟦_⟧Type = id
   ; ⟦_⟧Ctx = id
   ; ⟦_⟧Subst = id
@@ -54,7 +50,7 @@ initial-interpretation = record
   ; ⟦_⟧≈ = id
   }
 
-consistent : ∀ {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ≈} → interpret-syntax {ℓCC}{ℓTy}{ℓCtx}{ℓSub}{ℓTm}{_}{ℓ≈} → Set
+consistent : ∀ {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ≈} → interpret-syntax {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{_}{ℓ≈} → Set
 consistent sem = (_sem∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE)) → ⊥
 \end{code}
 }
@@ -99,14 +95,12 @@ sub-tt s = 𝟙-η (sub tt s)
 
 \begin{code}
 sem : interpret-syntax
-semClockContext sem = tag
 semType sem = Ty
 semContext sem = Ctx
 semSubst sem = sem-subst
 semTerm sem = Tm
 _sem∼_ sem = def-eq _ _
 _sem≈_ sem = subst-eq _ _
-⟦ sem ⟧CCtx = ⟦_⟧Δ
 ⟦ sem ⟧Type = ⟦_⟧A
 ⟦ sem ⟧Ctx = ⟦_⟧Γ
 ⟦ sem ⟧Subst = ⟦_⟧sub

@@ -18,7 +18,7 @@ open ►Obj
 Finally we give a semantic definition of the force operation. 
 
 \begin{code}
-sem-force : (Γ : Ctx set) (A : Ty tot) (t : Tm Γ (■ (► A))) → Tm Γ (■ A)
+sem-force : (Γ : Ctx ∅) (A : Ty κ) (t : Tm Γ (■ (► A))) → Tm Γ (■ A)
 ■cone (sem-force Γ A t x) j = ►cone (■cone (t x) ∞) [ j ]
 ■com (sem-force Γ A t x) i j = ►com (■cone (t x) ∞) [ i ] [ j ]
 \end{code}
