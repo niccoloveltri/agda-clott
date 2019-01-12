@@ -12,6 +12,7 @@ open import CloTT.Structure
 open import CloTT.TypeFormers
 
 open PSh
+open ►Obj
 \end{code}
 }
 
@@ -59,19 +60,19 @@ cons₁' P I i t = I t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
 cons₁' P (Q ⊞ R) i (inj₁ t) = ⊞₁ (cons₁' P Q i t)
 cons₁' P (Q ⊞ R) i (inj₂ t) = ⊞₂ (cons₁' P R i t)
-cons₁' P (▻P Q) i t = ? {- ► c₁ c₂
+cons₁' P (▻P Q) i t = ►P c₁ c₂
   where
     c₁ : Later (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) i
-    c₁ [ j ] = cons₁' P Q j (t [ j ])
+    c₁ [ j ] = cons₁' P Q j (►cone t [ j ])
     c₂ : LaterLim (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly) i c₁
-    c₂ [ j ] [ k ] = trans (cons₂' P Q j k (t [ j ])) (cong (cons₁' P Q k) (p [ j ] [ k ])) -}
+    c₂ [ j ] [ k ] = trans (cons₂' P Q j k (►cone t [ j ])) (cong (cons₁' P Q k) (►com t [ j ] [ k ]))
 cons₂' P (∁ X) i j t = refl
 cons₂' P I i j t = refl
 cons₂' P (Q ⊠ R) i j (t , u) = cong₂ _⊠_ (cons₂' P Q i j t) (cons₂' P R i j u)
 cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (▻P Q) i j t =
-  ? -- cong₂-dep ► (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+  cong₂-dep ►P (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
 
 conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
 proj₁ (conspsh P Q Γ (t , p)) i γ  = cons₁' P Q i (t i γ)
@@ -112,17 +113,14 @@ primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) = (inj₂ (proj₁ (prim
 primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) =
   ((proj₁ (primrec-psh'₁₁ P Q₁ A i t j z₁) , proj₁ (primrec-psh'₁₁ P Q₂ A i t j z₂)),
    (proj₂ (primrec-psh'₁₁ P Q₁ A i t j z₁) , proj₂ (primrec-psh'₁₁ P Q₂ A i t j z₂)))
-primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂) = ?
-{-
-proj₁ (proj₁ (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] = proj₁ (primrec-psh'₁₁ P Q A i t k (z₁ [ k ]))
-proj₂ (proj₁ (primrec-psh'₁₁ P (►P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
+►cone (proj₁ (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] = proj₁ (primrec-psh'₁₁ P Q A i t k (z₁ [ k ]))
+►com (proj₁ (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
   trans (cong proj₁ (primrec-psh'₁₂ P Q A i t k (z₁ [ k ]) l))
         ((cong (λ q → proj₁ (primrec-psh'₁₁ P Q A i t l q)) (z₂ [ k ] [ l ])))
-proj₁ (proj₂ (primrec-psh'₁₁ P (►P Q) A i t j (►P z₁ z₂))) [ k ] = proj₂ (primrec-psh'₁₁ P Q A i t k (z₁ [ k ]))
-proj₂ (proj₂ (primrec-psh'₁₁ P (►P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
+►cone (proj₂ (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] = proj₂ (primrec-psh'₁₁ P Q A i t k (z₁ [ k ]))
+►com (proj₂ (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
   trans (cong proj₂ (primrec-psh'₁₂ P Q A i t k (z₁ [ k ]) l))
         ((cong (λ q → proj₂ (primrec-psh'₁₁ P Q A i t l q)) (z₂ [ k ] [ l ])))
--}
 primrec-psh'₁₂ P (∁ X) A i t j (∁ps z) k = refl
 primrec-psh'₁₂ P I A i (t , p) j (I z) k =
   cong (λ z → (_ , z))
@@ -144,14 +142,7 @@ primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
         (cong₂ (_,_)
                (cong (λ z → proj₂ z) (primrec-psh'₁₂ P Q₁ A i t j z₁ k))
                (cong (λ z → proj₂ z) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)))
-primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = ?
-  {-cong₂ (_,_)
-        (Σ≡-uip
-          (funext (λ { [ _ ] → funext (λ { [ _ ] → uip}) }))
-          (funext (λ {[ l ] → refl})))
-        (Σ≡-uip
-          (funext (λ { [ _ ] → funext (λ { [ _ ] → uip}) }))
-          (funext (λ {[ l ] → refl})))-}
+primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = cong₂ (_,_) (►eq (λ {_ → refl})) (►eq (λ {_ → refl}))
 
 primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx tot) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
@@ -179,14 +170,10 @@ primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
         (cong₂ (_,_)
                (cong proj₂ (primrec-psh'₂ P Q₁ Γ A t i j x k z₁))
                (cong proj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)))
-primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) = ?
-  {-cong₂ (_,_)
-        (Σ≡-uip
-          (funext (λ {[ _ ] → funext (λ {[ _ ] → uip})}))
-          (funext (λ {[ l ] → cong proj₁ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))})))
-        (Σ≡-uip
-          (funext (λ {[ _ ] → funext (λ {[ _ ] → uip})}))
-          (funext (λ {[ l ] → cong proj₂ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))})))-}
+primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
+  cong₂ (_,_)
+        (►eq (λ {l → cong proj₁ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))}))
+        (►eq (λ {l → cong proj₂ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))}))
 
 primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
   → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
