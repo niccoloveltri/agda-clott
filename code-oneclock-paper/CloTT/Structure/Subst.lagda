@@ -5,7 +5,6 @@ module CloTT.Structure.Subst where
 open import Data.Unit
 open import Data.Product
 open import Prelude
-open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.ContextOperations
 open import CloTT.Structure.Types
@@ -22,12 +21,9 @@ Since contexts are presheaves, we interpret substitutions as natural transformat
 This leads to the following definition.
 
 \begin{code}
-sem-subst : {b : tag} → Ctx b → Ctx b → Set
-sem-subst {set} Γ₁ Γ₂ = Γ₁ → Γ₂
-sem-subst {tot} Γ₁ Γ₂ =
-  Σ[ f ∈ ((i : Size) → Obj Γ₁ i → Obj Γ₂ i) ]
-    ((i : Size) (j : Size< (↑ i)) (x : Obj Γ₁ i)
-      → f j (Mor Γ₁ i j x) ≡ Mor Γ₂ i j (f i x))
+sem-subst : {b : ClockContext} → Ctx b → Ctx b → Set
+sem-subst {∅} Γ₁ Γ₂ = Γ₁ → Γ₂
+sem-subst {κ} Γ₁ Γ₂ = NatTrans Γ₁ Γ₂
 \end{code}
 
 Next we define the interpretation of operations on substitutions.
@@ -37,75 +33,70 @@ As an example, we show how an explicit substitution gives rise to an actual one.
 We only give the component map and not the proof of naturality.
 
 \begin{code}
-sem-sub : {b : tag} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → Tm Γ₂ A → sem-subst Γ₁ Γ₂ → Tm Γ₁ A
-sem-sub {set} Γ₁ Γ₂ A t α x = t(α x)
-nat-map (sem-sub {tot} Γ₁ Γ₂ A t α) i x = nat-map t i (proj₁ α i x)
+sem-sub : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → Tm Γ₂ A → sem-subst Γ₁ Γ₂ → Tm Γ₁ A
+sem-sub {∅} Γ₁ Γ₂ A t α x = t(α x)
+nat-map (sem-sub {κ} Γ₁ Γ₂ A t α) i x = nat-map t i (nat-map α i x)
 \end{code}
 \AgdaHide{
 \begin{code}
-nat-com (sem-sub {tot} Γ₁ Γ₂ A t α) i j x =
+nat-com (sem-sub {κ} Γ₁ Γ₂ A t α) i j x =
   begin
-    Mor A i j (nat-map t i (proj₁ α i x))
-  ≡⟨ nat-com t i j (proj₁ α i x) ⟩
-    nat-map t j (Mor Γ₂ i j (proj₁ α i x))
-  ≡⟨ cong (nat-map t j) (sym (proj₂ α i j x)) ⟩
-    nat-map t j (proj₁ α j (Mor Γ₁ i j x))
+    Mor A i j (nat-map t i (nat-map α i x))
+  ≡⟨ nat-com t i j (nat-map α i x) ⟩
+    nat-map t j (Mor Γ₂ i j (nat-map α i x))
+  ≡⟨ cong (nat-map t j) (nat-com α i j x) ⟩
+    nat-map t j (nat-map α j (Mor Γ₁ i j x))
   ∎
 \end{code}
 }
 
 \AgdaHide{
 \begin{code}
-sem-idsub : {b : tag} (Γ : Ctx b) → sem-subst Γ Γ
-sem-idsub {set} Γ x = x
-proj₁ (sem-idsub {tot} Γ) i x = x
-proj₂ (sem-idsub {tot} Γ) i j x = refl
+sem-idsub : {b : ClockContext} (Γ : Ctx b) → sem-subst Γ Γ
+sem-idsub {∅} Γ x = x
+nat-map (sem-idsub {κ} Γ) i x = x
+nat-com (sem-idsub {κ} Γ) i j x = refl
 \end{code}
 
 \begin{code}
-sem-ε : {b : tag} (Γ : Ctx b) → sem-subst Γ (∙ b)
-sem-ε {set} Γ x = tt
-proj₁ (sem-ε {tot} Γ) i x = tt
-proj₂ (sem-ε {tot} Γ) i j x = refl
+sem-ε : {b : ClockContext} (Γ : Ctx b) → sem-subst Γ (∙ b)
+sem-ε {∅} Γ x = tt
+nat-map (sem-ε {κ} Γ) i x = tt
+nat-com (sem-ε {κ} Γ) i j x = refl
 \end{code}
 
 \begin{code}
-sem-subcomp : {b : tag} (Γ₁ Γ₂ Γ₃ : Ctx b) → sem-subst Γ₂ Γ₃ → sem-subst Γ₁ Γ₂ → sem-subst Γ₁ Γ₃
-sem-subcomp {set} Γ₁ Γ₂ Γ₃ α β x = α(β x)
-proj₁ (sem-subcomp {tot} Γ₁ Γ₂ Γ₃ α β) i x = proj₁ α i (proj₁ β i x) 
-proj₂ (sem-subcomp {tot} Γ₁ Γ₂ Γ₃ α β) i j x =
+sem-subcomp : {b : ClockContext} (Γ₁ Γ₂ Γ₃ : Ctx b) → sem-subst Γ₂ Γ₃ → sem-subst Γ₁ Γ₂ → sem-subst Γ₁ Γ₃
+sem-subcomp {∅} Γ₁ Γ₂ Γ₃ α β x = α(β x)
+nat-map (sem-subcomp {κ} Γ₁ Γ₂ Γ₃ α β) i x = nat-map α i (nat-map β i x) 
+nat-com (sem-subcomp {κ} Γ₁ Γ₂ Γ₃ α β) i j x =
   begin
-    proj₁ α j (proj₁ β j (Mor Γ₁ i j x))
-  ≡⟨ cong (proj₁ α j) (proj₂ β i j x) ⟩
-    proj₁ α j (Mor Γ₂ i j (proj₁ β i x))
-  ≡⟨ proj₂ α i j (proj₁ β i x) ⟩
-    Mor Γ₃ i j (proj₁ α i (proj₁ β i x))
+    Mor Γ₃ i j (nat-map α i (nat-map β i x))
+  ≡⟨ nat-com α i j (nat-map β i x) ⟩
+    nat-map α j (Mor Γ₂ i j (nat-map β i x))
+  ≡⟨ cong (nat-map α j) (nat-com β i j x) ⟩
+    nat-map α j (nat-map β j (Mor Γ₁ i j x))
   ∎
 \end{code}
 
 \begin{code}
-sem-subst-tm : {b : tag} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → sem-subst Γ₁ Γ₂ → Tm Γ₁ A → sem-subst Γ₁ (Γ₂ ,, A)
-sem-subst-tm {set} Γ₁ Γ₂ A α t x = α x , t x
-proj₁ (sem-subst-tm {tot} Γ₁ Γ₂ A α t) i x = proj₁ α i x , nat-map t i x
-proj₂ (sem-subst-tm {tot} Γ₁ Γ₂ A α t) i j x =
+sem-subst-tm : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → sem-subst Γ₁ Γ₂ → Tm Γ₁ A → sem-subst Γ₁ (Γ₂ ,, A)
+sem-subst-tm {∅} Γ₁ Γ₂ A α t x = α x , t x
+nat-map (sem-subst-tm {κ} Γ₁ Γ₂ A α t) i x = nat-map α i x , nat-map t i x
+nat-com (sem-subst-tm {κ} Γ₁ Γ₂ A α t) i j x =
   begin
-    (proj₁ α j (Mor Γ₁ i j x) , nat-map t j (Mor Γ₁ i j x))
-  ≡⟨ cong (λ z → (z , _)) (proj₂ α i j x) ⟩
-    (Mor Γ₂ i j (proj₁ α i x) , nat-map t j (Mor Γ₁ i j x))
-  ≡⟨ cong (λ z → (_ , z)) (sym (nat-com t i j x)) ⟩
-    (Mor Γ₂ i j (proj₁ α i x) , Mor A i j (nat-map t i x))
+    (Mor Γ₂ i j (nat-map α i x) , Mor A i j (nat-map t i x))
+  ≡⟨ cong (λ z → (_ , z)) (nat-com t i j x) ⟩
+    (Mor Γ₂ i j (nat-map α i x) , nat-map t j (Mor Γ₁ i j x))
+  ≡⟨ cong (λ z → (z , _)) (nat-com α i j x) ⟩
+    (nat-map α j (Mor Γ₁ i j x) , nat-map t j (Mor Γ₁ i j x))
   ∎
 \end{code}
 
 \begin{code}
-sem-subpr : {b : tag} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → sem-subst Γ₁ (Γ₂ ,, A) → sem-subst Γ₁ Γ₂
-sem-subpr {set} Γ₁ Γ₂ A α z = proj₁ (α z)
-proj₁ (sem-subpr {tot} Γ₁ Γ₂ A (α , p)) i x = proj₁ (α i x)
-proj₂ (sem-subpr {tot} Γ₁ Γ₂ A (α , p)) i j x =
-  begin
-    proj₁ (α j (Mor Γ₁ i j x))
-  ≡⟨ cong proj₁ (p i j x) ⟩
-    Mor Γ₂ i j (proj₁ (α i x))
-  ∎
+sem-subpr : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b) → sem-subst Γ₁ (Γ₂ ,, A) → sem-subst Γ₁ Γ₂
+sem-subpr {∅} Γ₁ Γ₂ A α z = proj₁ (α z)
+nat-map (sem-subpr {κ} Γ₁ Γ₂ A α) i x = proj₁ (nat-map α i x)
+nat-com (sem-subpr {κ} Γ₁ Γ₂ A α) i j x = cong proj₁ (nat-com α i j x)
 \end{code}
 }

@@ -251,7 +251,7 @@ mutual
   ⟦_⟧tm-eq {∅} (trans∼ p q) x = trans (⟦_⟧tm-eq p x) (⟦_⟧tm-eq q x)
   ⟦_⟧tm-eq {κ} (trans∼ p q) i x = trans (⟦_⟧tm-eq p i x) (⟦_⟧tm-eq q i x)
   ⟦_⟧tm-eq {∅} (cong-sub {t₂ = t₂} {s₁} p q) x = trans (⟦_⟧tm-eq p (⟦ s₁ ⟧sub x)) (cong ⟦ t₂ ⟧tm (⟦ q ⟧sub-eq x))
-  ⟦_⟧tm-eq {κ} (cong-sub {t₂ = t₂} {s₁} p q) i x = trans (⟦_⟧tm-eq p i (proj₁ ⟦ s₁ ⟧sub i x)) (cong (nat-map ⟦ t₂ ⟧tm i) (⟦ q ⟧sub-eq i x))
+  ⟦_⟧tm-eq {κ} (cong-sub {t₂ = t₂} {s₁} p q) i x = trans (⟦_⟧tm-eq p i (nat-map ⟦ s₁ ⟧sub i x)) (cong (nat-map ⟦ t₂ ⟧tm i) (⟦ q ⟧sub-eq i x))
   ⟦ cong-unit-rec p ⟧tm-eq (x , tt) = ⟦ p ⟧tm-eq x
   ⟦_⟧tm-eq {∅} (cong-in₁ B p) x = cong inj₁ (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-in₁ B p) i x = cong inj₁ (⟦ p ⟧tm-eq i x)
@@ -318,10 +318,10 @@ mutual
   ⟦_⟧tm-eq {∅} (sub-[ t₁ & t₂ ] s) x = refl
   ⟦_⟧tm-eq {κ} (sub-[ t₁ & t₂ ] s) i x = refl
   ⟦_⟧tm-eq {∅} (sub-lambdaTm t s) x = refl
-  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x = funeq (λ j z → cong (λ y → nat-map ⟦ t ⟧tm j (y , z)) (sym (proj₂ ⟦ s ⟧sub i j x)))
+  ⟦_⟧tm-eq {κ} (sub-lambdaTm t s) i x = funeq (λ j z → cong (λ y → nat-map ⟦ t ⟧tm j (y , z)) (nat-com ⟦ s ⟧sub i j x))
   ⟦_⟧tm-eq {.κ} (sub-⇡ t s) i x = refl
   ⟦_⟧tm-eq {.∅} (sub-box-q t s) x = ■eq (λ _ → refl)
-  ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → sym (cong (nat-map ⟦ t ⟧tm j) (proj₂ ⟦ s ⟧sub i j x))})
+  ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → cong (nat-map ⟦ t ⟧tm j) (nat-com ⟦ s ⟧sub i j x)})
   ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x = ►eq (λ {_ → refl})
   ⟦_⟧tm-eq {.κ} (sub-fix-tm f s) i x = refl
   ⟦ sub-force t s ⟧tm-eq x = refl
@@ -377,7 +377,7 @@ mutual
   ⟦_⟧sub-eq {∅} (cong- p ,s t) x = cong₂ (_,_) (⟦ p ⟧sub-eq x) (⟦ t ⟧tm-eq x)
   ⟦_⟧sub-eq {κ} (cong- p ,s t) i x = cong₂ (_,_) (⟦ p ⟧sub-eq i x) (⟦ t ⟧tm-eq i x)
   ⟦_⟧sub-eq {∅} (cong-_o_ {s₁ = s₁} {s₂ = s₂} {σ₁ = σ₁} {σ₂ = σ₂} p q) x = trans (cong (λ z → ⟦ s₁ ⟧sub z) (⟦ q ⟧sub-eq x)) (⟦ p ⟧sub-eq _)
-  ⟦_⟧sub-eq {κ} (cong-_o_ {s₁ = s₁} {s₂ = s₂} {σ₁ = σ₁} {σ₂ = σ₂} p q) i x = trans (cong (λ z → proj₁ ⟦ s₁ ⟧sub i z) (⟦ q ⟧sub-eq i x)) (⟦ p ⟧sub-eq i _)
+  ⟦_⟧sub-eq {κ} (cong-_o_ {s₁ = s₁} {s₂ = s₂} {σ₁ = σ₁} {σ₂ = σ₂} p q) i x = trans (cong (λ z → nat-map ⟦ s₁ ⟧sub i z) (⟦ q ⟧sub-eq i x)) (⟦ p ⟧sub-eq i _)
   ⟦_⟧sub-eq {∅} (cong-pr p) x = cong proj₁ (⟦ p ⟧sub-eq x)
   ⟦_⟧sub-eq {κ} (cong-pr p) i x = cong proj₁ (⟦ p ⟧sub-eq i x)
   ⟦_⟧sub-eq {Δ} (sub-idl s) = sem-sub-idl s

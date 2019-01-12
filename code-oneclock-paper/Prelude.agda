@@ -7,3 +7,4 @@ module Prelude where
   open ≡-Reasoning public
   
   open import Prelude.Basics public
+  open import Prelude.Syntax public

@@ -3,7 +3,6 @@
 module CloTT.Structure.Contexts where
 
 open import Prelude
-open import CloTT.Structure.ClockContexts
 open import Presheaves public
 \end{code}
 }
@@ -17,7 +16,7 @@ Either the clock context is empty and then the context is a set.
 Otherwise, there is a single clock and then we use presheaves.
 
 \begin{code}
-Ctx : tag → Set₁
-Ctx set = Set
-Ctx tot = PSh
+Ctx : ClockContext → Set₁
+Ctx ∅ = Set
+Ctx κ = PSh
 \end{code}

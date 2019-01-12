@@ -229,12 +229,12 @@ mutual
   ⟦ s ,s x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
   ⟦ s o s' ⟧sub = sem-subcomp _ _ _ ⟦ s ⟧sub ⟦ s' ⟧sub
   ⟦ pr {_} {Γ} {Γ'} {A} s ⟧sub = sem-subpr ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ ⟦ A ⟧A ⟦ s ⟧sub
-  proj₁ ⟦ weakenS s ⟧sub i = ⟦ s ⟧sub
-  proj₂ ⟦ weakenS s ⟧sub i j x = refl
-  proj₁ ⟦ •-to-weaken ⟧sub i tt = tt
-  proj₂ ⟦ •-to-weaken ⟧sub i j x = refl
-  proj₁ ⟦ ,-weaken Γ A ⟧sub i x = x
-  proj₂ ⟦ ,-weaken Γ A ⟧sub i j x = refl
+  nat-map ⟦ weakenS s ⟧sub i = ⟦ s ⟧sub
+  nat-com ⟦ weakenS s ⟧sub i j x = refl
+  nat-map ⟦ •-to-weaken ⟧sub i tt = tt
+  nat-com ⟦ •-to-weaken ⟧sub i j x = refl
+  nat-map ⟦ ,-weaken Γ A ⟧sub i x = x
+  nat-com ⟦ ,-weaken Γ A ⟧sub i j x = refl
   
   ⟦_⟧tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Tm ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ sub t s ⟧tm = sem-sub _ _ _ ⟦ t ⟧tm ⟦ s ⟧sub

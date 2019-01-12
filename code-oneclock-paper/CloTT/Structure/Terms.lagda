@@ -4,7 +4,6 @@ module CloTT.Structure.Terms where
 
 open import Data.Product
 open import Prelude
-open import CloTT.Structure.ClockContexts
 open import CloTT.Structure.Contexts
 open import CloTT.Structure.Types
 
@@ -18,9 +17,9 @@ For sets, we just use functions.
 For presheaves, we use natural transformations instead.
 
 \begin{code}
-Tm : {b : tag} (Γ : Ctx b) (A : Ty b) → Set
-Tm {set} Γ A = Γ → A
-Tm {tot} Γ A = NatTrans Γ A
+Tm : {b : ClockContext} (Γ : Ctx b) (A : Ty b) → Set
+Tm {∅} Γ A = Γ → A
+Tm {κ} Γ A = NatTrans Γ A
 \end{code}
 
 We define natural transformations as a sigma type.
