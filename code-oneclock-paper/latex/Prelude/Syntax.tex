@@ -2811,12 +2811,19 @@ weakenμ P =
 \AgdaNumber{13}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{\AgdaUnderscore{}∼\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{\AgdaUnderscore{}≈\AgdaUnderscore{}}}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
+\end{code}
+}
+
+The notions of definitional equality for terms and substitutions are defined simultaneously.
+Here we only discuss term equality, we refer to the Agda formalization for the equality of substitutions.
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
+\end{code}
+}
+\begin{AgdaAlign}
+\begin{code}%
+\>[0][@{}l@{\AgdaIndent{1}}]%
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{\AgdaUnderscore{}∼\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2840,10 +2847,16 @@ weakenμ P =
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\AgdaSpace{}%
-\AgdaKeyword{where}\AgdaSpace{}%
-\AgdaComment{{-}{-} \textbackslash{}sim}\<%
-\\
-\>[2][@{}l@{\AgdaIndent{0}}]%
+\AgdaKeyword{where}\<%
+\end{code}
+The term equality includes rules for equivalence, congruence and
+substitution. There are also $\beta$ and $\eta$ rules for each type
+former. Among these rules, here we only show the ones associated to
+\IC{□}. The rules state that \IC{box-q} and \IC{unbox-q} are each
+other inverses up to \AD{∼}.
+\AgdaHide{
+\begin{code}%
+\>[2][@{}l@{\AgdaIndent{1}}]%
 \>[4]\AgdaInductiveConstructor{refl∼}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -3963,18 +3976,15 @@ weakenμ P =
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{∼}}\AgdaSpace{}%
 \AgdaInductiveConstructor{tt}\<%
-\\
+\end{code}
+}
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{□{-}β}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
@@ -3991,14 +4001,9 @@ weakenμ P =
 %
 \>[4]\AgdaInductiveConstructor{□{-}η}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
@@ -4011,7 +4016,15 @@ weakenμ P =
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{∼}}\AgdaSpace{}%
 \AgdaBound{t}\<%
-\\
+\end{code}
+The term equality contains rules exibiting that \IC{next} and \IC{⊛}
+define an applicative functor structure on \IC{▻}. There is also the
+characteristic equality of the fixpoint combinator, stating that
+\IC{fix-tm} \Ar{f} is equal to the application of the function term
+\Ar{f} to \IC{next} (\IC{fix-tm} \Ar{f}). A complete list of these
+equalities has been given by M{\o}gelberg \cite{Mogelberg14}.
+\AgdaHide{
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{⇡{-}β}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5063,7 +5076,13 @@ weakenμ P =
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)}\<%
-\\
+\end{code}
+}
+There is another group of equalities exibiting the existence of
+certain type isomorphisms. For example, we have equalities proving
+that any type \Ar{A} in \F{Type} \IC{∅} is isomorphic to \IC{□}
+(\IC{⇑} \Ar{A}).
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{const□const}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5125,7 +5144,9 @@ weakenμ P =
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{∼}}\AgdaSpace{}%
 \AgdaBound{t}\<%
-\\
+\end{code}
+\AgdaHide{
+\begin{code}%
 %
 \>[4]\AgdaInductiveConstructor{□sum□}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5980,21 +6001,21 @@ weakenμ P =
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4899I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4888I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4899I]%
+\>[.]\<[4888I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{sub}%
-\>[4903I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[4904I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
+\>[4892I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
+\>[4893I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4904I]%
+\>[.]\<[4893I]%
 \>[18]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
@@ -6010,7 +6031,7 @@ weakenμ P =
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4903I]%
+\>[.]\<[4892I]%
 \>[12]\AgdaSymbol{((}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
@@ -6085,20 +6106,20 @@ weakenμ P =
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4983I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4972I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4983I]%
+\>[.]\<[4972I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[4990I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4979I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
@@ -6112,7 +6133,7 @@ weakenμ P =
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4990I]%
+\>[.]\<[4979I]%
 \>[15]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenS}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
@@ -6304,9 +6325,12 @@ weakenμ P =
 \AgdaSymbol{(}\AgdaFunction{weaken{-},}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
+\end{code}
+}
+\end{AgdaAlign}
+
+\AgdaHide{
+\begin{code}%
 %
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{\AgdaUnderscore{}≈\AgdaUnderscore{}}}\AgdaSpace{}%

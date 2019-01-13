@@ -404,9 +404,27 @@ weakenμ P =
                            subst-μ-help • (evalP (weakenP P) (μ (weakenP P))) (evalP (weakenP P) (⇑ (μ P))))))
 -}
 infix 13 _∼_ _≈_
+\end{code}
+}
 
+The notions of definitional equality for terms and substitutions are defined simultaneously.
+Here we only discuss term equality, we refer to the Agda formalization for the equality of substitutions.
+\AgdaHide{
+\begin{code}
 mutual
-  data _∼_ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Term Γ A → Set where -- \sim
+\end{code}
+}
+\begin{AgdaAlign}
+\begin{code}
+  data _∼_ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Term Γ A → Set where
+\end{code}
+The term equality includes rules for equivalence, congruence and
+substitution. There are also $\beta$ and $\eta$ rules for each type
+former. Among these rules, here we only show the ones associated to
+\IC{□}. The rules state that \IC{box-q} and \IC{unbox-q} are each
+other inverses up to \AD{∼}.
+\AgdaHide{
+\begin{code}
     refl∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t : Term Γ A} → t ∼ t
     sym∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ A} → t₁ ∼ t₂ → t₂ ∼ t₁
     trans∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t₁ t₂ t₃ : Term Γ A} → t₁ ∼ t₂ → t₂ ∼ t₃ → t₁ ∼ t₃
@@ -444,8 +462,20 @@ mutual
         → sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ∼ sub r (idsub Γ ,s t)
     𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → sub (unit-rec t) (idsub Γ ,s tt) ∼ t
     𝟙-η : {Γ : Context ∅} (t : Term Γ 𝟙) → t ∼ tt
-    □-β : {Γ : Context ∅} {A : Type κ} (t : Term (⇑ Γ) A) → unbox-q (box-q t) ∼ t
-    □-η : {Γ : Context ∅} {A : Type κ} (t : Term Γ (□ A)) → box-q (unbox-q t) ∼ t
+\end{code}
+}
+\begin{code}
+    □-β : ∀ {Γ} {A} (t : Term (⇑ Γ) A) → unbox-q (box-q t) ∼ t
+    □-η : ∀ {Γ} {A} (t : Term Γ (□ A)) → box-q (unbox-q t) ∼ t
+\end{code}
+The term equality contains rules exibiting that \IC{next} and \IC{⊛}
+define an applicative functor structure on \IC{▻}. There is also the
+characteristic equality of the fixpoint combinator, stating that
+\IC{fix-tm} \Ar{f} is equal to the application of the function term
+\Ar{f} to \IC{next} (\IC{fix-tm} \Ar{f}). A complete list of these
+equalities has been given by M{\o}gelberg \cite{Mogelberg14}.
+\AgdaHide{
+\begin{code}
     ⇡-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → ↓ (⇡ t) ∼ t
     ⇡-η : {Γ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ) (⇑ A)) → ⇡ (↓ t) ∼ t
     next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (▻ A)) → next (idmap A) ⊛ t ∼ t
@@ -494,10 +524,20 @@ mutual
       → sub (cons P t) s ∼ cons P (sub t s)
     sub-primrec : ∀ {Δ} (P : Poly Δ) {Γ₁ Γ₂ : Context Δ} {A : Type Δ} (t : Term Γ₁ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)) (s : Subst Γ₂ Γ₁)
       → sub (primrec P t) s ∼ primrec P (sub t s)
+\end{code}
+}
+There is another group of equalities exibiting the existence of
+certain type isomorphisms. For example, we have equalities proving
+that any type \Ar{A} in \F{Type} \IC{∅} is isomorphic to \IC{□}
+(\IC{⇑} \Ar{A}).
+\begin{code}
     const□const : {Γ : Context ∅} {A : Type ∅} (t : Term Γ (□ (⇑ A)))
       → app-map (const□ Γ A) (app-map (□const A) t) ∼ t
     □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)
       → app-map (□const A) (app-map (const□ Γ A) t) ∼ t
+\end{code}
+\AgdaHide{
+\begin{code}
     □sum□ : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (□ A ⊞ □ B))
       → app-map (□sum A B) (app-map (sum□ A B) t) ∼ t
     sum□sum : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (□ (A ⊞ B)))
@@ -547,7 +587,12 @@ mutual
     ↓lambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ (Γ , A)) (⇑ B)) → lambdaTm (↓ t) ∼ ↓ (app-map (sub (⟶weaken _ _) (ε (⇑ Γ))) (lambdaTm (sub t (,-weaken Γ A))))
     ⇡app : {Γ : Context ∅} {A B : Type ∅} (t : Term Γ (A ⟶ B)) → ⇡ (appTm t) ∼ sub (appTm (app-map (sub (weaken⟶ _ _) (ε (⇑ Γ))) (⇡ t))) (weaken-, Γ A)
     ↓app : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⟶ B))) → appTm (↓ t) ∼ ↓ (sub (appTm (app-map (sub (weaken⟶ _ _) (ε (⇑ Γ))) t)) (weaken-, Γ A))
+\end{code}
+}
+\end{AgdaAlign}
 
+\AgdaHide{
+\begin{code}
   data _≈_ : ∀ {Δ} {Γ Γ' : Context Δ} → Subst Γ Γ' → Subst Γ Γ' → Set where -- ≈
     refl≈ : ∀ {Δ} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
     sym≈ : ∀ {Δ} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → s₂ ≈ s₁
