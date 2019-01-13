@@ -11,10 +11,14 @@ open PSh
 \end{code}
 }
 
-The first type constructor we discuss, is later.
-Intuitively, inhabitants of $\blacktriangleright$ \AB{A} are inhabitants of \AB{A}, but available one time step from now.
-For this reason, the main ingredient of defining the later modality is blocking computations.
-This is done in several steps and first we define a type \AD{SizeLt}
+We now provide a semantic description of the later modality. This is
+an operation on types in the \IC{κ} clock context. 
+
+
+%% Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
+%% available one time step ahead from now.  For this reason, the main
+%% ingredient of defining the later modality is blocking computations.
+%% This is done in several steps and first we define a type \AD{SizeLt}
 
 \begin{code}
 data SizeLt (i : Size) : Set where

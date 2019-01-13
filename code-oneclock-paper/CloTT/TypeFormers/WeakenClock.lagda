@@ -12,10 +12,9 @@ open NatTrans
 \end{code}
 }
 
-We now show how to model context weakening and clock quantification.
-The weakening of a context, i.e. the process of embedding contexts
-from \IC{∅} into contexts from \IC{κ}, is given by the constant
-presheaf construction.
+The weakening of a context, i.e. the process of embedding contexts in
+the \IC{∅} clock context into contexts in the \IC{κ} clock context, is
+defined using the constant presheaf construction.
 
 \begin{code}
 WC : Ctx ∅ → Ctx κ

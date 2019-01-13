@@ -43,8 +43,59 @@
 \end{code}
 }
 
-Finally we give a semantic definition of the force operation. 
-
+Finally we show the semantic description of the force operation , which
+relies on the auxiliary definition \F{sem-force'}. Given a term \Ar{t}
+in \F{■} (\F{►} \Ar{A}) we can contruct a term in \F{■} \Ar{A} as follows:
+\begin{code}%
+\>[0]\AgdaFunction{sem{-}force'}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaRecord{■}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{►}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaRecord{■}\AgdaSpace{}%
+\AgdaBound{A}\<%
+\\
+\>[0]\AgdaField{■cone}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}force'}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaField{►cone}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{■cone}\AgdaSpace{}%
+\AgdaBound{t}\AgdaSpace{}%
+\AgdaPostulate{∞}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
+\\
+\>[0]\AgdaField{■com}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}force'}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaField{►com}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaField{■cone}\AgdaSpace{}%
+\AgdaBound{t}\AgdaSpace{}%
+\AgdaPostulate{∞}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\AgdaBound{j}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
+\end{code}
+Notice the employment of the size \F{∞}. Moreover we also make use of the
+\Fi{►com} field of \F{►Obj} \Ar{A i}.
+The definition of the force combinator \F{sem-force} is a simple instance of \F{sem-force'}.
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}force}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -68,7 +119,9 @@ Finally we give a semantic definition of the force operation.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaRecord{■}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
-\\
+\end{code}
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaField{■cone}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{sem{-}force}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -107,3 +160,4 @@ Finally we give a semantic definition of the force operation.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\<%
 \end{code}
+}

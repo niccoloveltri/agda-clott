@@ -42,13 +42,12 @@
 
 Following \cite{Mogelberg14}, clock quantification is modelled by
 taking limits. Given a type \Ar{A} in the semantic clock context
-\IC{κ}, i.e. a presheaf, we take \F{□} \Ar{A} to be the limit of
+\IC{κ}, i.e. a presheaf, we take \F{■} \Ar{A} to be the limit of
 \Ar{A}.  Formally the limit of \Ar{A} is constructed as a
-$\Sigma$-type. The first component is given by for each size \Ar{i} an
+$\Sigma$-type. The first component is given by, for each size \Ar{i}, an
 element \Ar{f i} in \Fi{Obj} \Ar{A i}. The second component is a proof
 that the restriction of \Ar{f i} to a size \Ar{j} smaller than \Ar{i}
 is equal to \Ar{f j}.
-
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{■}\AgdaSpace{}%
@@ -97,7 +96,6 @@ is equal to \Ar{f j}.
 \AgdaField{■cone}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \end{code}
-
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
@@ -198,13 +196,10 @@ is equal to \Ar{f j}.
 \AgdaBound{p}\AgdaSymbol{)}\<%
 \end{code}
 }
-
 Semantically, clock quantification \F{■} is right adjoint to context
 weakening \F{WC}. In other words, the types \F{Tm} (\F{WC} \Ar{Γ})
 \Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
 underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
-
-
 \begin{code}%
 \>[0]\AgdaFunction{box}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -255,9 +250,9 @@ underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\<%
-\end{code}
-
-\begin{code}%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{unbox}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%

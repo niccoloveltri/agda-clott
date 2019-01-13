@@ -526,7 +526,7 @@ equalities has been given by M{\o}gelberg \cite{Mogelberg14}.
       → sub (primrec P t) s ∼ primrec P (sub t s)
 \end{code}
 }
-There is another group of equalities exibiting the existence of
+There is a group of term equalities exibiting the existence of
 certain type isomorphisms. For example, we have equalities proving
 that any type \Ar{A} in \F{Type} \IC{∅} is isomorphic to \IC{□}
 (\IC{⇑} \Ar{A}).
@@ -536,6 +536,10 @@ that any type \Ar{A} in \F{Type} \IC{∅} is isomorphic to \IC{□}
     □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)
       → app-map (□const A) (app-map (const□ Γ A) t) ∼ t
 \end{code}
+The last group of term equalities describes the relation between the
+weakening term constructors \IC{⇡} and \IC{↓} and other term
+formers. Here we omit the description of these rules and we refer the
+interested reader to the Agda formalization.
 \AgdaHide{
 \begin{code}
     □sum□ : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (□ A ⊞ □ B))

@@ -49,7 +49,34 @@
 \AgdaModule{NatTrans}\<%
 \end{code}
 }
-
+We omit the semantic "corrispettivi" of the terms \IC{next} and
+\IC{⊛}. Instead, we describe the construction of the fixed point
+combinator \F{fix}. First we define a delayed fixed point combinator
+\F{dfix}, which takes an element of \F{Tm} \Ar{Γ} (\F{►} \Ar{A} \F{⇒} \Ar{A}) and
+returns an element of \F{Tm} \Ar{Γ} (\F{►} \Ar{A}). The definition of the
+\Fi{nat-map} component of \F{dfix} \Ar{Γ A f} depends on an auxiliary term
+\F{dfix₁}, which for a given size \Ar{i}, takes a function \Ar{f} in \F{ExpObj} (\F{►} \Ar{A})
+\Ar{A i} and returns an element of \F{►Obj} \Ar{A i}.  Remember that
+the \Fi{►cone} field of \F{►Obj} \Ar{A i} has type \F{Later}
+(\Fi{Obj} \Ar{A}) \Ar{i}, which is a dependent function space with
+domain \F{SizeLt} \Ar{i}. Therefore in the definition of \Fi{►cone} component of \F{dfix₁}
+\Ar{A i f} we first assume an inhabitant of \F{SizeLt} \Ar{i} and we
+pattern match on it, obtaining a size \Ar{j} : \F{Size<} \Ar{i}. Then we 
+apply \Fi{fun} \Ar{f j} to \F{dfix₁} \Ar{A j f}. Notice
+that the recursive call is applied to the size \Ar{j}, which is strictly
+smaller than \Ar{i}. The termination of this recursive definition
+is ensured by the employment of \F{SizeLt} \Ar{i} in the
+definition of \F{Later} \Ar{A i}. Notice that by using \F{Size<}
+\Ar{i} instead, which results in the same definition but without the
+need for pattern matching, we would have constructed a non-productive
+recursive definition that would have been correcly rejected by Agda's
+termination checker. The use of the inductive family \F{SizeLt} is
+therefore crucial in the definition of \F{dfix₁} since it prevents it
+from unfolding indefinitely. We omit the construction of the \Fi{►com}
+component of \F{dfix₁} \Ar{A i f}, which moreover requires the
+employment of \F{elimLt} for being accepted by the termination checker.
+We also omit the definition of the \Fi{nat-com} component of \F{dfix}
+\Ar{Γ A f}.
 \begin{code}%
 \>[0]\AgdaFunction{dfix₁}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -88,7 +115,6 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\<%
 \end{code}
-
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaField{►com}\AgdaSpace{}%
@@ -171,7 +197,6 @@
 \>[2]\AgdaOperator{\AgdaFunction{∎}}\<%
 \end{code}
 }
-
 \begin{code}%
 \>[0]\AgdaFunction{dfix}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -213,7 +238,6 @@
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{γ}\AgdaSymbol{)}\<%
 \end{code}
-
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
@@ -247,9 +271,8 @@
 \AgdaBound{γ}\AgdaSymbol{)\})}\<%
 \end{code}
 }
-
-By applying \AB{f} to \F{dfix}, we can obtain the required fixpoint operations \F{fix}.
-
+The semantic fixed point operation is obtained by applying the
+function \AB{f} to \F{dfix} \Ar{Γ A f}.
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}fix}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
