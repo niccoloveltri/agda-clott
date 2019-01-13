@@ -1,19 +1,41 @@
 In dependent type theory, one usually works with terminating computations to ensure consistency.
 Yet many interesting programs are not terminating and use possibly infinite data types.
 To remain consistent, the computations must be productive \cite{Coquand93}.
-This means: every finite part of an infinite object must be compute in a finite number of steps.
+This means: every finite part of an infinite object can be computed in a finite number of steps.
 
 To allow convenient programming and reasoning with infinite objects, we need to extend our type theory with productivity checks.
-In the previous years, various approaches were developed for such extensions.
+To this end, various approaches have been developed.
 One is based on sized types \cite{A-sized,AVW-normalization}, where types are assigned a size to indicate the number of unfoldings.
-Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}.
+These are implemented in Agda \cite{norell2008}.
+Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
+At the current moment, there is no proof assistant based on guarded recursion.
 
 The relation between those approaches...
 
-To compare these two approaches, we develop denotational semantics of guarded recursive type theory in a ttype theory with sized types.
+To compare these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
 More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
-The interpretation of simple types are obtained via standard presheaf semantics.
-However, guarded recursion and guarded recursive types are more difficult to obtain.
-Since we use sizes rather than natural numbers, we cannot reuse the topos of trees \cite{BMSS-synthetic}.
+Simple types are interpreted via the usual presheaf semantics.
+
+However, the challenge lies in interpreting guarded recursion and guarded recursive types.
+The most common model in the literature is the topos of trees \cite{BMSS-synthetic}.
+This is a presheaf topos, whose objects are sets indexed by a natural number.
+We use a slightly different approach: instead of natural numbers, we use sizes.
+This means that the required interpretations need to be modified.
+
+Our contributions are as follows
+\begin{enumerate}
+	\item We give a new model of guarded recursive type theory;
+	\item We give a formal relation between sized types and guarded recursion;
+	\item The construction is formalized.
+\end{enumerate}
+
+In Section 2, we describe the meta-theory in which we work.
+In Section 3, we describe the object theory.
+This is basically a variant of guarded recursion as done by Atkey and McBride \cite{atkey2013productive}.
+In Section 4, we define the model and give the interpretation of simple type operators.
+In Section 5, we interpret guarded recursion and guarded recursive types.
+Finally, we give an overview of the interpretation in Section 6.
+
+\NW{Perhaps related work needs to be a separate section before conclusion. Alternatively, we can put it before the contributions (I think this is better)}
 
 \subsection*{Related Work}
