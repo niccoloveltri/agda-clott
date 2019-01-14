@@ -15,22 +15,27 @@ open import CloTT
 }
 
 \begin{code}
-record interpret-syntax {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ∼}{ℓ≈} : Set (lsuc (ℓTy l⊔ ℓCtx l⊔ ℓSub l⊔ ℓTm l⊔ ℓ∼ l⊔ ℓ≈)) where
+record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
   field
-    semType : ClockContext → Set ℓTy
-    semContext : ClockContext → Set ℓCtx
-    semSubst : {Δ : ClockContext} → semContext Δ → semContext Δ → Set ℓSub
-    semTerm : {Δ : ClockContext} → semContext Δ → semType Δ → Set ℓTm
-    _sem∼_ : {Δ : ClockContext} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ∼ -- \sim
-    _sem≈_ : {Δ : ClockContext} {Γ Γ' : semContext Δ} → semSubst Γ Γ' → semSubst Γ Γ' → Set ℓ≈ -- ≈
-    ⟦_⟧Type : {Δ : ClockContext} → Type Δ → semType Δ
-    ⟦_⟧Ctx : {Δ : ClockContext} → Context Δ → semContext Δ
-    ⟦_⟧Subst : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → semSubst ⟦ Γ ⟧Ctx ⟦ Γ' ⟧Ctx
-    ⟦_⟧Tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm ⟦ Γ ⟧Ctx ⟦ A ⟧Type
-    ⟦_⟧∼ : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A} → t ∼ t' → ⟦ t ⟧Tm sem∼ ⟦ t' ⟧Tm
-    ⟦_⟧≈ : {Δ : ClockContext} {Γ Γ' : Context Δ} {s s' : Subst Γ Γ'} → s ≈ s' → ⟦ s ⟧Subst sem≈ ⟦ s' ⟧Subst
+    semType : ClockContext → Set ℓ₁
+    semContext : ClockContext → Set ℓ₁
+    semSubst : ∀ {Δ} → semContext Δ → semContext Δ → Set ℓ₂
+    semTerm : ∀ {Δ} → semContext Δ → semType Δ → Set ℓ₂
+    _sem∼_ : ∀ {Δ} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ₂
+    _sem≈_ : ∀ {Δ} {Γ₁ Γ₂ : semContext Δ} → semSubst Γ₁ Γ₂ → semSubst Γ₁ Γ₂ → Set ℓ₂
+    ⟦_⟧Type : ∀ {Δ} → Type Δ → semType Δ
+    ⟦_⟧Ctx : ∀ {Δ} → Context Δ → semContext Δ
+    ⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst ⟦ Γ₁ ⟧Ctx ⟦ Γ₂ ⟧Ctx
+    ⟦_⟧Tm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm ⟦ Γ ⟧Ctx ⟦ A ⟧Type
+    ⟦_⟧∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A} → t ∼ t' → ⟦ t ⟧Tm sem∼ ⟦ t' ⟧Tm
+    ⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {s s' : Subst Γ₁ Γ₂} → s ≈ s' → ⟦ s ⟧Subst sem≈ ⟦ s' ⟧Subst
+\end{code}
+
+\AgdaHide{
+\begin{code}
 open interpret-syntax
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}
@@ -50,7 +55,7 @@ initial-interpretation = record
   ; ⟦_⟧≈ = id
   }
 
-consistent : ∀ {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{ℓ≈} → interpret-syntax {ℓTy}{ℓCtx}{ℓSub}{ℓTm}{_}{ℓ≈} → Set
+consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
 consistent sem = (_sem∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE)) → ⊥
 \end{code}
 }
