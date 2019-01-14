@@ -43,7 +43,7 @@ mutual
 }
 
 
-\GTT is a type theory with explcit substitutions. It comprises of
+\GTT\ is a type theory with explcit substitutions. It comprises
 well-formed types and contexts, well-typed terms and substitutions,
 definitional equality of terms and of substitutions. All these kinds
 are indexed by a clock context. We refer to types and contexts
@@ -59,12 +59,12 @@ products, coproducts and function spaces. Notice that \IC{𝟙} is a
     𝟙 : Type ∅
     _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
 \end{code}
-Similarly to Atkey and McBride's system, we consider a later modality
-\IC{▻} as an operation on \IC{κ}-types. We also have a nameless
-analogue to universal clock quantification, that we call \IC{□}
-following \cite{CloustonBGB15}. Differently from \loccit, the \IC{□}
-modality takes a \IC{κ}-type and returns a \IC{∅}-type. We also have a
-weakening type former \IC{⇑}, which embeds \IC{∅}-types into into
+Similarly to Atkey and McBride's system, we include a later modality
+\IC{▻} as an operation on \IC{κ}-types. We consider a nameless
+analogue of universal clock quantification, that we call \IC{□}
+following \cite{CloustonBGB15}. The \IC{□} modality takes a
+\IC{κ}-type and returns a \IC{∅}-type. The well-formed types \GTT\
+include a weakening type former \IC{⇑}, which embeds \IC{∅}-types into
 \IC{κ}-types.
 %% In addition to the usual simple type formers, there are types that
 %% allow us to specify guarded recursive and coinductive types. We have
@@ -77,14 +77,16 @@ weakening type former \IC{⇑}, which embeds \IC{∅}-types into into
     □ : Type κ → Type ∅
     ⇑ : Type ∅ → Type κ
 \end{code}
-Finally we have guarded recursive types which exist in all clock
-contexts. 
+Guarded recursive types are defined using a least fixed point
+type former \IC{μ}.
 \begin{code}
     μ : ∀ {Δ} → Poly Δ → Type Δ
 \end{code}
 \end{AgdaAlign}
-A guarded recursive type in a clock context \Ar{Δ} takes an element of
-\F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
+We allow the application of the least fixed point construction on a restricted class of functors specified by the grammar \F{Poly}, which includes constant functors, the identity functor, products, coproducts and the later modality.
+%% The type \F{Poly} \Ar{Δ} specifies a grammar for functors we allow 
+%% The constructor \IC{μ} takes an element of \F{Poly} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
+%% \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
 \begin{code}
   data Poly : ClockContext → Set where
     ∁ : ∀ {Δ} → Type Δ → Poly Δ
@@ -101,13 +103,12 @@ weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 \end{code}
 }
-We can associate to each polynomial \Ar{P} an endofunctor \F{evalP}
-\Ar{P} on \F{Type} \Ar{Δ}.
+We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} an functor \F{evalP}
+\Ar{P} acting on \F{Type} \Ar{Δ}.
 \begin{code}
 evalP : ∀ {Δ} → Poly Δ → Type Δ → Type Δ
 \end{code}
-Then \IC{μ} \Ar{P} is the least fixed point of \F{evalP} \Ar{P}. For
-this fixpoint to exist, one typically restricts the constructors of
+Then \IC{μ} \Ar{P} is then the least fixed point of \F{evalP} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
 the type family \F{Poly} so that the functor \F{evalP} \Ar{P} is
 strictly positive, for all \Ar{P}.  Here we consider a grammar for
 polynomials consisting of constant functors, the identity functor,
