@@ -74,20 +74,16 @@ This leads to the following definition.
 \AgdaKeyword{where}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\<%
-\\
-%
-\>[4]\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaRecord{PSh}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\<%
+\AgdaBound{Δ}\<%
 \\
 %
 \>[4]\AgdaInductiveConstructor{I}\AgdaSpace{}%
@@ -150,14 +146,7 @@ In each case, we use the corresponding opertion on types.
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{eval}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{X}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaBound{A}\<%
-\\
-\>[0]\AgdaFunction{eval}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -234,7 +223,7 @@ In each case, we use the corresponding opertion on types.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\<%
 \\
 %
@@ -320,8 +309,8 @@ In each case, we use the corresponding opertion on types.
 In the remainder of this section, we focus on μ-types in the clock context with a single clock variable.
 We define the object part and the morphism part mutually.
 Usually, the morphism part depends on the object part, but not the other way around.
-Since we have a constructor for later, they depend mutually on each other.
-This is because later is defined as a limit and uses the action on morphisms.
+Since ► \AB{A} is defined as a limit, it uses both the object and the morphism part of \AB{A}.
+Hence, in case of \AIC{►P}, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
 
 For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
 The constructors for this are in the data type \AD{μObj'}.
@@ -374,7 +363,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\<%
 \\
@@ -520,13 +509,13 @@ We use the same trick for \AD{μMor'}.
 %
 \>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}%
-\>[32]\AgdaSymbol{=}\AgdaSpace{}%
+\>[30]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSpace{}%
@@ -694,7 +683,7 @@ We use the same trick for \AD{μMor'}.
 \\
 \>[0]\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
@@ -844,7 +833,7 @@ We use the same trick for \AD{μMor'}.
 \\
 \>[0]\AgdaFunction{μMor'Comp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%

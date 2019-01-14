@@ -16,7 +16,7 @@ open ExpObj
 open NatTrans
 \end{code}
 }
-We omit the semantic equivalent of the terms \IC{next} and
+We omit the semantic equivalents of the terms \IC{next} and
 \IC{⊛}. Instead, we describe the construction of the fixed point
 combinator \F{fix}. First we define a delayed fixed point combinator
 \F{dfix}, which takes an element of \F{Tm} \Ar{Γ} (\F{►} \Ar{A} \F{⇒} \Ar{A}) and

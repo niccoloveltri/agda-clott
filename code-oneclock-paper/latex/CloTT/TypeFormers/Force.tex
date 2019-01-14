@@ -43,9 +43,15 @@
 \end{code}
 }
 
-Finally we show the semantic description of the force operation , which
-relies on the auxiliary definition \F{sem-force'}. Given a term \Ar{t}
-in \F{■} (\F{►} \Ar{A}) we can contruct a term in \F{■} \Ar{A} as follows:
+Finally we show the semantic description of the force operation.
+For this, we define an auxilliary function \AF{sem-force'}.
+Given a type \AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), our
+goal is to define an element of \AB{A}.
+This means that for each size \AB{i} we have to give an element of \AFi{Obj} \AB{A} \AB{i}.
+Note that \AFi{■cone} \AB{t} gives for each size \AB{j} an inhabitant of \F{Later} \AB{A} \AB{j}.
+If we find a size greater than \AB{i}, then we can use \AFi{■cone} \AB{t} for the desired element.
+Since \F{∞} is bigger than \AB{i}, we define
+
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}force'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -93,9 +99,7 @@ in \F{■} (\F{►} \Ar{A}) we can contruct a term in \F{■} \Ar{A} as follows:
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\<%
 \end{code}
-Notice the employment of the size \F{∞}. Moreover we also make use of the
-\Fi{►com} field of \F{►Obj} \Ar{A i}.
-The definition of the force combinator \F{sem-force} is a simple instance of \F{sem-force'}.
+
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}force}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -119,45 +123,15 @@ The definition of the force combinator \F{sem-force} is a simple instance of \F{
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaRecord{■}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
-\end{code}
-\AgdaHide{
-\begin{code}%
-\>[0]\AgdaField{■cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{sem{-}force}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{►cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{■cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaPostulate{∞}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
 \\
-\>[0]\AgdaField{■com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{sem{-}force}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}force}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{►com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{■cone}\AgdaSpace{}%
+\AgdaFunction{sem{-}force'}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaPostulate{∞}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
+\AgdaBound{x}\AgdaSymbol{)}\<%
 \end{code}
-}

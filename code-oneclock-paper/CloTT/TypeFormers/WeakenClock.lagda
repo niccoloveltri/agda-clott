@@ -12,9 +12,10 @@ open NatTrans
 \end{code}
 }
 
-The weakening of a context, i.e. the process of embedding contexts in
-the \IC{∅} clock context into contexts in the \IC{κ} clock context, is
-defined using the constant presheaf construction.
+Weakening a context is a map which takes a context in the empty clock
+context and maps it to one in the clock context with just one clock.
+Concretely, given a type, define a presheaf.
+We do this via the constant presheaf.
 
 \begin{code}
 WC : Ctx ∅ → Ctx κ

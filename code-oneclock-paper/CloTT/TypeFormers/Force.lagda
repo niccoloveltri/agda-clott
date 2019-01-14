@@ -15,23 +15,22 @@ open ►Obj
 \end{code}
 }
 
-Finally we show the semantic description of the force operation , which
-relies on the auxiliary definition \F{sem-force'}. Given a term \Ar{t}
-in \F{■} (\F{►} \Ar{A}) we can contruct a term in \F{■} \Ar{A} as follows:
+Finally we show the semantic description of the force operation.
+For this, we define an auxilliary function \AF{sem-force'}.
+Given a type \AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), our
+goal is to define an element of \AB{A}.
+This means that for each size \AB{i} we have to give an element of \AFi{Obj} \AB{A} \AB{i}.
+Note that \AFi{■cone} \AB{t} gives for each size \AB{j} an inhabitant of \F{Later} \AB{A} \AB{j}.
+If we find a size greater than \AB{i}, then we can use \AFi{■cone} \AB{t} for the desired element.
+Since \F{∞} is bigger than \AB{i}, we define
+
 \begin{code}
 sem-force' : (A : Ty κ) → ■ (► A) → ■ A
 ■cone (sem-force' A t) i = ►cone (■cone t ∞) [ i ]
 ■com (sem-force' A t) i j = ►com (■cone t ∞) [ i ] [ j ]
 \end{code}
-Notice the employment of the size \F{∞}. Moreover we also make use of the
-\Fi{►com} field of \F{►Obj} \Ar{A i}.
-The definition of the force combinator \F{sem-force} is a simple instance of \F{sem-force'}.
+
 \begin{code}
 sem-force : (Γ : Ctx ∅) (A : Ty κ) (t : Tm Γ (■ (► A))) → Tm Γ (■ A)
+sem-force Γ A t x = sem-force' A (t x)
 \end{code}
-\AgdaHide{
-\begin{code}
-■cone (sem-force Γ A t x) j = ►cone (■cone (t x) ∞) [ j ]
-■com (sem-force Γ A t x) i j = ►com (■cone (t x) ∞) [ i ] [ j ]
-\end{code}
-}

@@ -21,8 +21,7 @@ open NatTrans
 \begin{code}
 mutual
   ⟦_⟧poly : {Δ : ClockContext} → Poly Δ → SemPoly Δ
-  ⟦_⟧poly {∅} (∁ A) = ∁s ⟦ A ⟧A
-  ⟦_⟧poly {κ} (∁ A) = ∁ps ⟦ A ⟧A
+  ⟦_⟧poly (∁ A) = ∁ ⟦ A ⟧A
   ⟦ I ⟧poly = I
   ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly

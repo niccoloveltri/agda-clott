@@ -25,10 +25,10 @@ data SizeLt (i : Size) : Set where
   [_] : (j : Size< i) → SizeLt i
 \end{code}
 
-Functions on \AD{Size<} are defined using $\lambda$-abstraction.
-This means that, whenever it has an input, it can apply $\beta$-elimination to unfold.
-However, for \AD{SizeLt}, one can also use pattern matching.
-In this case, the definition can only be unfolded after inspecting the element, and that blocks the computation.
+Functions defined by $\lambda$-abstraction can always be unfolded via $\beta$-elimination if they have an input.
+However, functions defined by pattern matching only are unfolded if they input has the right shape.
+The type \AD{SizeLt} allows definitions via pattern matching.
+Such definitions can only be unfolded after inspecting the element, which blocks the computation.
 This is essential for defining guarded recursion.
 
 From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
@@ -44,15 +44,15 @@ size< [ j ] = j
 
 The type ▻ \AB{A} is also defined as a limit.
 On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
-Again we use a $\Sigma$-type for the definition.
-The first component is represented by the type \F{Later}.
+Again we use a record for the definition.
+The first field is represented by the type \F{Later}.
 
 \begin{code}
 Later : (Size → Set) → Size → Set
 Later A i = (j : SizeLt i) → A (size j)
 \end{code}
 
-The second component is more difficult.
+The second field is more difficult.
 Usually, one would expect a universally quantified equality.
 To make everything work with \AD{SizeLt}, we need an intermediate definition.
 
@@ -87,6 +87,10 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
 \end{code}
 }
 
+Now we put it all together and we obtain the following definition of the object part.
+In addition, we can define an action on the morphisms and show this preserves identity and composition.
+All in all, we get
+
 \begin{code}
 record ►Obj (A : Ty κ) (i : Size) : Set where
     field
@@ -112,10 +116,6 @@ open ►Obj
 module _ (A : Ty κ) where
 \end{code}
 }
-
-Now we put it all together and we obtain the following definition of the object part.
-In addition, we can define an action on the morphisms and show this preserves identity and composition.
-All in all, we get
 
 \AgdaHide{
 \begin{code}

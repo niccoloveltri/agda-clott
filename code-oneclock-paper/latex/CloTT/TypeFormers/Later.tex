@@ -29,11 +29,14 @@
 \end{code}
 }
 
-We now move to the semantic description of the later modality.
-Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
-available one time step ahead from now.  For this reason, the main
-ingredient of defining the later modality is blocking computations.
-This is done in several steps and first we define a type \AD{SizeLt}
+We now provide a semantic description of the later modality. This is
+an operation on types in the \IC{κ} clock context. 
+
+
+%% Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
+%% available one time step ahead from now.  For this reason, the main
+%% ingredient of defining the later modality is blocking computations.
+%% This is done in several steps and first we define a type \AD{SizeLt}
 
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
@@ -57,10 +60,10 @@ This is done in several steps and first we define a type \AD{SizeLt}
 \AgdaBound{i}\<%
 \end{code}
 
-Functions on \AD{Size<} are defined using $\lambda$-abstraction.
-This means that, whenever it has an input, it can apply $\beta$-elimination to unfold.
-However, for \AD{SizeLt}, one can also use pattern matching.
-In this case, the definition can only be unfolded after inspecting the element, and that blocks the computation.
+Functions defined by $\lambda$-abstraction can always be unfolded via $\beta$-elimination if they have an input.
+However, functions defined by pattern matching only are unfolded if they input has the right shape.
+The type \AD{SizeLt} allows definitions via pattern matching.
+Such definitions can only be unfolded after inspecting the element, which blocks the computation.
 This is essential for defining guarded recursion.
 
 From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
@@ -107,8 +110,8 @@ Note that this size is only available when we know it is of the shape \IC{[} \AB
 
 The type ▻ \AB{A} is also defined as a limit.
 On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
-Again we use a $\Sigma$-type for the definition.
-The first component is represented by the type \F{Later}.
+Again we use a record for the definition.
+The first field is represented by the type \F{Later}.
 
 \begin{code}%
 \>[0]\AgdaFunction{Later}\AgdaSpace{}%
@@ -135,7 +138,7 @@ The first component is represented by the type \F{Later}.
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \end{code}
 
-The second component is more difficult.
+The second field is more difficult.
 Usually, one would expect a universally quantified equality.
 To make everything work with \AD{SizeLt}, we need an intermediate definition.
 
@@ -326,6 +329,10 @@ We can thus define the type of the second component as follows.
 \end{code}
 }
 
+Now we put it all together and we obtain the following definition of the object part.
+In addition, we can define an action on the morphisms and show this preserves identity and composition.
+All in all, we get
+
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{►Obj}\AgdaSpace{}%
@@ -497,10 +504,6 @@ We can thus define the type of the second component as follows.
 \AgdaKeyword{where}\<%
 \end{code}
 }
-
-Now we put it all together and we obtain the following definition of the object part.
-In addition, we can define an action on the morphisms and show this preserves identity and composition.
-All in all, we get
 
 \AgdaHide{
 \begin{code}%

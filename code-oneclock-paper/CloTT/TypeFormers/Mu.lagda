@@ -22,8 +22,7 @@ This leads to the following definition.
 
 \begin{code}
 data SemPoly : ClockContext → Set₁ where
-    ∁s : Set → SemPoly ∅
-    ∁ps : PSh → SemPoly κ
+    ∁ : ∀ {Δ} → Ty Δ → SemPoly Δ
     I : {Δ : ClockContext} → SemPoly Δ
     _⊞_ _⊠_ : {Δ : ClockContext} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ►P : SemPoly κ → SemPoly κ
@@ -39,8 +38,7 @@ eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
 
 \AgdaHide{
 \begin{code}
-eval (∁s A) X = A
-eval (∁ps A) X = A
+eval (∁ A) X = A
 eval I X = X
 eval (P ⊞ Q) X = eval P X ⊕ eval Q X
 eval (P ⊠ Q) X = eval P X ⊗ eval Q X
@@ -51,7 +49,7 @@ eval (►P P) X = ►(eval P X)
 \AgdaHide{
 \begin{code}
 data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
-  ∁s : {X : Set} → X → μset P (∁s X)
+  ∁s : {X : Set} → X → μset P (∁ X)
   I : μset P P → μset P I
   _⊠_ : {Q R : SemPoly ∅} → μset P Q → μset P R → μset P (Q ⊠ R)
   ⊞₁ : {Q R : SemPoly ∅} → μset P Q → μset P (Q ⊞ R)
@@ -68,8 +66,8 @@ mutual
 In the remainder of this section, we focus on μ-types in the clock context with a single clock variable.
 We define the object part and the morphism part mutually.
 Usually, the morphism part depends on the object part, but not the other way around.
-Since we have a constructor for later, they depend mutually on each other.
-This is because later is defined as a limit and uses the action on morphisms.
+Since ► \AB{A} is defined as a limit, it uses both the object and the morphism part of \AB{A}.
+Hence, in case of \AIC{►P}, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
 
 For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
 The constructors for this are in the data type \AD{μObj'}.
@@ -91,7 +89,7 @@ We use the same trick for \AD{μMor'}.
 
 \begin{code}
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
-    ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ps X) i
+    ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ X) i
     I : ∀{i} → μObj' P P i → μObj' P I i
     _⊠_ : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
     ⊞₁ : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
@@ -103,7 +101,7 @@ We use the same trick for \AD{μMor'}.
 \begin{code}
   μMor' : (P Q : SemPoly κ) (i : Size) (j : Size< (↑ i))
     → μObj' P Q i → μObj' P Q j
-  μMor' P (∁ps X) i j (∁ps x)   = ∁ps (Mor X i j x)
+  μMor' P (∁ X) i j (∁ps x)   = ∁ps (Mor X i j x)
   μMor' P I i j (I x)           = I (μMor' P P i j x)
   μMor' P (Q ⊠ R) i j (x ⊠ y)  = μMor' P Q i j x ⊠ μMor' P R i j y
   μMor' P (Q ⊞ R) i j (⊞₁ x)   = ⊞₁ (μMor' P Q i j x)
@@ -117,7 +115,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaHide{
 \begin{code}
 μMor'Id : (P Q : SemPoly κ) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
-μMor'Id P (∁ps X) {i} {∁ps x} = cong ∁ps (MorId X)
+μMor'Id P (∁ X) {i} {∁ps x} = cong ∁ps (MorId X)
 μMor'Id P I {i}{I x} = cong I (μMor'Id P P)
 μMor'Id P (Q ⊠ R) {i}{x ⊠ y} = cong₂ _⊠_ (μMor'Id P Q) (μMor'Id P R)
 μMor'Id P (Q ⊞ R) {i}{⊞₁ x} = cong ⊞₁ (μMor'Id P Q)
@@ -128,7 +126,7 @@ We use the same trick for \AD{μMor'}.
 \begin{code}
 μMor'Comp : (P Q : SemPoly κ) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : μObj' P Q i}
   → μMor' P Q i k x ≡ μMor' P Q j k (μMor' P Q i j x)
-μMor'Comp P (∁ps X) {x = ∁ps x} = cong ∁ps (MorComp X)
+μMor'Comp P (∁ X) {x = ∁ps x} = cong ∁ps (MorComp X)
 μMor'Comp P I {x = I x} = cong I (μMor'Comp P P)
 μMor'Comp P (Q ⊠ R) {x = x ⊠ y} = cong₂ _⊠_ (μMor'Comp P Q) (μMor'Comp P R)
 μMor'Comp P (Q ⊞ R) {x = ⊞₁ x} = cong ⊞₁ (μMor'Comp P Q)
