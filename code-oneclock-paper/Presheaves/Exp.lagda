@@ -7,6 +7,10 @@ open import Prelude
 open import Presheaves.Presheaves
 open PSh
 \end{code}
+}
+
+Lastly, we need the exponential of presheaves.
+We only show how to define the action of objects of this presheaf.
 
 \begin{code}
 record ExpObj (P Q : PSh) (i : Size) : Set where
@@ -14,6 +18,10 @@ record ExpObj (P Q : PSh) (i : Size) : Set where
     fun : (j : Size< (↑ i)) → Obj P j → Obj Q j
     funcom : (j : Size< (↑ i)) (k : Size< (↑ j)) (x : Obj P j)
       → Mor Q j k (fun j x) ≡ fun k (Mor P j k x)
+\end{code}
+
+\AgdaHide{
+\begin{code}
 open ExpObj
 
 funeq' : {P Q : PSh} {i : Size} {s t : ExpObj P Q i} → fun s ≡ fun t → s ≡ t
@@ -44,16 +52,11 @@ module _ (P Q : PSh) where
     → ExpMor i k x ≡ ExpMor j k (ExpMor i j x)
   ExpMorComp = refl
   \end{code}
-}
-
-Lastly, we need the exponential of presheaves.
-For this, we use the standard construction of exponential objects in presheaf categories.
 
 \begin{code}
 Exp : PSh → PSh → PSh
 \end{code}
 
-\AgdaHide{
 \begin{code}
 Exp P Q = record
   { Obj = ExpObj P Q

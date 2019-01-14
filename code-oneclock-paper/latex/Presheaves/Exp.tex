@@ -21,6 +21,10 @@
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaModule{PSh}\<%
 \end{code}
+}
+
+Lastly, we need the exponential of presheaves.
+We only show how to define the action of objects of this presheaf.
 
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
@@ -92,7 +96,10 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}\<%
-\\
+\end{code}
+
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaModule{ExpObj}\<%
 \\
@@ -342,10 +349,6 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\<%
 \end{code}
-}
-
-Lastly, we need the exponential of presheaves.
-For this, we use the standard construction of exponential objects in presheaf categories.
 
 \begin{code}%
 \>[0]\AgdaFunction{Exp}\AgdaSpace{}%
@@ -357,7 +360,6 @@ For this, we use the standard construction of exponential objects in presheaf ca
 \AgdaRecord{PSh}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{Exp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%

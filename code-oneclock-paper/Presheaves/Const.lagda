@@ -34,9 +34,8 @@ module _ (A : Set) where
   \end{code}
 }
 
-We can take sums, products, and exponential of presheaves.
-Since these definitions are standard, we do not discuss them here.
-To define clock weakening, we use the constant presheaf, which we denote by
+Products and sums of presheaves are defined pointwise.
+For clock weakening, we use the constant presheaf, which we denote by
 
 \begin{code}
 Const : Set → PSh
