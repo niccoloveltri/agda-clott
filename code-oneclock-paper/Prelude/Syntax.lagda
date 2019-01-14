@@ -221,7 +221,7 @@ We have introduction and elimination rules for guarded recursive types.
       → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
 \end{code}
 Atkey and McBride assume the existence of certain type equalities
-\cite{atkey2013productive}. M\"ogelberg assumes the existence of
+\cite{atkey2013productive}. M{\o}gelberg assumes the existence of
 similar type isomorphisms \cite{Mogelberg14}. In our formalization we
 follow the second approach. In other words, we do not introduce an
 equivalence relation on types specifying what types should be

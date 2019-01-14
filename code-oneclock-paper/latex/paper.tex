@@ -217,6 +217,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \input{Streams}
 
 \section{Presheaf Semantics}
+Next we define categorical semantics for the syntax defined in \Cref{sec:syntax}.
+To do so, we use a similar method as used by M{\o}gelberg \cite{Mogelberg14}.
+The interpretation of types depend on the clock contexts.
+If the clock context is empty, then types become sets.
+If the clock context has one clock, then types are interpreted as objects in the topos of trees.
+
 \label{sec:presheaf_sem}
 \subsection{Presheaves}
 \label{sec:presheaves}
@@ -225,14 +231,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 \input{Presheaves/NaturalTransformations}
 
 \input{Presheaves/Const}
-
-\input{Presheaves/Terminal}
-
-\input{Presheaves/Sum}
-
-\input{Presheaves/Product}
-
-\input{Presheaves/Exp}
 
 \subsection{Kripke Semantics}
 %\label{sec:kripke}

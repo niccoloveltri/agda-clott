@@ -30,12 +30,13 @@ type-theoretical definitions thet we employ in our formalization.
 We write \Ar{=} for judgemental equality and \Ar{≡} for propositional
 equality. Implicit arguments of functions are delimited by curly
 brackets. We write \F{Set} and \F{Set₁} for the first and second
-universe of types. We do not use higher universes.
+universe of types. In addition, Agda supports higher universes and
+these are denoted by \F{Set} \AB{ℓ} for each universe level \AB{ℓ}.
 
-The principle of functional extensionality states that two parallel
-functions \Ar{f} and \Ar{g} are equal whenever \Ar{f x} and \Ar{g x}
-are equal for all inputs \Ar{x}. This principle is not provable in
-Agda, so we need to postulate it.
+The principle of functional extensionality states that every two
+functions \Ar{f} and \Ar{g} from \AB{A} to \AB{f} are equal whenever
+\Ar{f x} and \Ar{g x} are equal for all inputs \Ar{x}. This principle
+is not provable in Agda, so we need to postulate it.
 
 \begin{code}%
 \>[0]\AgdaKeyword{postulate}\<%
@@ -78,9 +79,9 @@ Agda, so we need to postulate it.
 \AgdaBound{g}\<%
 \end{code}
 
-Uniqueness of identity proofs states that there exist at most one
-identity proof between any two terms. Agda natively supports this
-principle, so we can easily construct a proof for it.
+Uniqueness of identity proofs states that all proofs of identity are
+equal. Agda natively supports this principle and we can prove it by
+induction.
 
 \begin{code}%
 \>[0]\AgdaFunction{uip}\AgdaSpace{}%

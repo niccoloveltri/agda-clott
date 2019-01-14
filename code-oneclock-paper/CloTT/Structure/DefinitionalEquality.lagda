@@ -15,6 +15,11 @@ open NatTrans
 \end{code}
 }
 
+Equality of terms and substitutions is defined as propositional equality.
+Since we assume function extensionality and uniqueness of identity proofs, we can state this in a more convenient way.
+For functions, we just say that their images are equal.
+For natural transformations, we say that their component maps are equal.
+
 \begin{code}
 def-eq : {b : ClockContext} (Γ : Ctx b) (A : Ty b) (s t : Tm Γ A) → Set
 def-eq {∅} Γ A s t = (x : Γ) → s x ≡ t x

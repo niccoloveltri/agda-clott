@@ -17,13 +17,10 @@
 \end{code}
 }
 
-Next we define how to interpret contexts.
-Note that in the syntax, contexts depend on clock contexts.
-Hence, the interpretation should depend on \AD{tag}, which is the interpretation of clock contexts.
-
-There are two possible cases.
-Either the clock context is empty and then the context is a set.
-Otherwise, there is a single clock and then we use presheaves.
+For the semantics, we first give an interpretation of contexts, types, and terms.
+Since contexts depending on clock contexts, there are two cases to consider.
+If the clock context is empty, then we interpret the context as a set.
+Otherwise, there is a single clock, and then we use presheaves.
 
 \begin{code}%
 \>[0]\AgdaFunction{Ctx}\AgdaSpace{}%

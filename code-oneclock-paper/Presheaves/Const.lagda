@@ -34,12 +34,9 @@ module _ (A : Set) where
   \end{code}
 }
 
-There are several operations on presheaves.
-We do not discuss them in detail since their definitions can be readily found in the literature.
-
-The first operation takes a constant presheaf.
-Given a set \AB{A}, we define a presheaf which sends each size to \AB{A}.
-Morphisms are sent to the identity function and then the functor laws hold by reflexivity.
+We can take sums, products, and exponential of presheaves.
+Since these definitions are standard, we do not discuss them here.
+To define clock weakening, we use the constant presheaf, which we denote by
 
 \begin{code}
 Const : Set → PSh
