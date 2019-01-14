@@ -93,22 +93,22 @@ We use the same trick for \AD{μMor'}.
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
     ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ps X) i
     I : ∀{i} → μObj' P P i → μObj' P I i
-    _⊠_ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
-    ⊞₁ : ∀{Q}{R}{i} → μObj' P Q i → μObj' P (Q ⊞ R) i
-    ⊞₂ : ∀{Q}{R}{i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ►P : ∀{Q}{i} (x : Later (μObj' P Q) i) → LaterLim (μObj' P Q) (μMor' P Q) i x
-      → μObj' P (►P Q) i
+    _⊠_ : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
+    ⊞₁ : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
+    ⊞₂ : ∀{Q R i} → μObj' P R i → μObj' P (Q ⊞ R) i
+    ►P : ∀{Q}{i} (x : Later (μObj' P Q) i)
+      → LaterLim (μObj' P Q) (μMor' P Q) i x → μObj' P (►P Q) i
 \end{code}
 
 \begin{code}
   μMor' : (P Q : SemPoly κ) (i : Size) (j : Size< (↑ i))
     → μObj' P Q i → μObj' P Q j
-  μMor' P (∁ps X) i j (∁ps x) = ∁ps (Mor X i j x)
-  μMor' P I i j (I x) = I (μMor' P P i j x)
-  μMor' P (Q ⊠ R) i j (x ⊠ y) = μMor' P Q i j x ⊠ μMor' P R i j y
-  μMor' P (Q ⊞ R) i j (⊞₁ x) = ⊞₁ (μMor' P Q i j x)
-  μMor' P (Q ⊞ R) i j (⊞₂ x) = ⊞₂ (μMor' P R i j x)
-  μMor' P (►P Q) i j (►P x p) = ►P x q
+  μMor' P (∁ps X) i j (∁ps x)   = ∁ps (Mor X i j x)
+  μMor' P I i j (I x)           = I (μMor' P P i j x)
+  μMor' P (Q ⊠ R) i j (x ⊠ y)  = μMor' P Q i j x ⊠ μMor' P R i j y
+  μMor' P (Q ⊞ R) i j (⊞₁ x)   = ⊞₁ (μMor' P Q i j x)
+  μMor' P (Q ⊞ R) i j (⊞₂ x)   = ⊞₂ (μMor' P R i j x)
+  μMor' P (►P Q) i j (►P x p)   = ►P x q
     where
       q : LaterLim (μObj' P Q) (μMor' P Q) j x
       q [ k ] [ l ] = p [ k ] [ l ]

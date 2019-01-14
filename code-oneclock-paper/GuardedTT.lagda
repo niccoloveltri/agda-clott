@@ -67,6 +67,27 @@ _⟦_⟧≈ initial-interpretation = id
 }
 
 \begin{code}
+sem : interpret-syntax
+\end{code}
+
+\AgdaHide{
+\begin{code}
+semType sem = Ty
+semContext sem = Ctx
+semSubst sem = sem-subst
+semTerm sem = Tm
+_[_sem∼_] sem = def-eq _ _
+_[_sem≈_] sem = subst-eq _ _
+_⟦_⟧Type sem = ⟦_⟧A
+_⟦_⟧Ctx sem = ⟦_⟧Γ
+_⟦_⟧Subst sem = ⟦_⟧sub
+_⟦_⟧Tm sem = ⟦_⟧tm
+_⟦_⟧∼ sem = ⟦_⟧tm-eq
+_⟦_⟧≈ sem = ⟦_⟧sub-eq
+\end{code}
+}
+
+\begin{code}
 bool : Type ∅
 bool = 𝟙 ⊞ 𝟙
 
@@ -120,25 +141,8 @@ sub-tt s = 𝟙-η (sub tt s)
 \end{code}
 }
 
-\begin{code}
-sem : interpret-syntax
-\end{code}
-
 \AgdaHide{
 \begin{code}
-semType sem = Ty
-semContext sem = Ctx
-semSubst sem = sem-subst
-semTerm sem = Tm
-_[_sem∼_] sem = def-eq _ _
-_[_sem≈_] sem = subst-eq _ _
-_⟦_⟧Type sem = ⟦_⟧A
-_⟦_⟧Ctx sem = ⟦_⟧Γ
-_⟦_⟧Subst sem = ⟦_⟧sub
-_⟦_⟧Tm sem = ⟦_⟧tm
-_⟦_⟧∼ sem = ⟦_⟧tm-eq
-_⟦_⟧≈ sem = ⟦_⟧sub-eq
-
 sem-consistent-help : ⊤ ⊎ ⊤ → Set
 sem-consistent-help (inj₁ x) = ⊤
 sem-consistent-help (inj₂ y) = ⊥
