@@ -14,6 +14,12 @@ open import CloTT
 \end{code}
 }
 
+Now let us put everything together and define interpretations of the syntax defined in \Cref{sec:syntax}.
+To give an interpretation, one must give a type of types, contexts, terms, substitutions, and functions mapping the syntactic objects to their interpretations.
+In addition, definitional equality and equality between terms must be interpreted and for that, we use setoids.
+This means that a relation on terms must be given, which includes the relation \D{∼} as define in \Cref{sec:syntax}, and the same must be done for substitutions.
+We define this as a record, whose type declaration is given as
+
 \begin{code}
 record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
 \end{code}
@@ -23,21 +29,25 @@ record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
   field
     semType : ClockContext → Set ℓ₁
     semContext : ClockContext → Set ℓ₁
-    semSubst : ∀ {Δ} → semContext Δ → semContext Δ → Set ℓ₂
     semTerm : ∀ {Δ} → semContext Δ → semType Δ → Set ℓ₂
+    semSubst : ∀ {Δ} → semContext Δ → semContext Δ → Set ℓ₂
     _[_sem∼_] : ∀ {Δ} {Γ : semContext Δ} {A : semType Δ}
       → semTerm Γ A → semTerm Γ A → Set ℓ₂
     _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semContext Δ} → semSubst Γ₁ Γ₂ → semSubst Γ₁ Γ₂ → Set ℓ₂
     _⟦_⟧Type : ∀ {Δ} → Type Δ → semType Δ
     _⟦_⟧Ctx : ∀ {Δ} → Context Δ → semContext Δ
-    _⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
     _⟦_⟧Tm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm (_⟦_⟧Ctx Γ) (_⟦_⟧Type A)
+    _⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
     _⟦_⟧∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A}
       → t ∼ t' → _[_sem∼_] (_⟦_⟧Tm t) (_⟦_⟧Tm t')
     _⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {s s' : Subst Γ₁ Γ₂}
       → s ≈ s' → _[_sem≈_] (_⟦_⟧Subst s) (_⟦_⟧Subst s')
 \end{code}
 }
+
+If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{f}.
+The main example is the syntax itself.
+Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 
 \AgdaHide{
 \begin{code}
@@ -66,16 +76,19 @@ _⟦_⟧≈ initial-interpretation = id
 \end{code}
 }
 
+We can also interpret the syntax using \Cref{sec:presheaf_sem,sec:guarded}.
+This gives categorical semantics of the syntax and we define it as follows.
+
 \begin{code}
 sem : interpret-syntax
+semType sem = Ty
+semContext sem = Ctx
+semTerm sem = Tm
 \end{code}
 
 \AgdaHide{
 \begin{code}
-semType sem = Ty
-semContext sem = Ctx
 semSubst sem = sem-subst
-semTerm sem = Tm
 _[_sem∼_] sem = def-eq _ _
 _[_sem≈_] sem = subst-eq _ _
 _⟦_⟧Type sem = ⟦_⟧A
@@ -86,6 +99,10 @@ _⟦_⟧∼ sem = ⟦_⟧tm-eq
 _⟦_⟧≈ sem = ⟦_⟧sub-eq
 \end{code}
 }
+
+Using this semantics, we can conclude the syntax is consistent.
+Briefly, consistency means that not every defitional equality.
+
 
 \begin{code}
 bool : Type ∅
@@ -98,9 +115,42 @@ FALSE : Term • bool
 FALSE = in₂ 𝟙 tt
 \end{code}
 
+Now we can state precisely what consistency means.
+We say an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
+
 \begin{code}
 consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
 consistent sem = sem [ sem ⟦ TRUE ⟧Tm sem∼ sem ⟦ FALSE ⟧Tm ] → ⊥
+\end{code}
+
+\AgdaHide{
+\begin{code}
+sem-consistent-help : ⊤ ⊎ ⊤ → Set
+sem-consistent-help (inj₁ x) = ⊤
+sem-consistent-help (inj₂ y) = ⊥
+\end{code}
+}
+
+The categorical semantics gives rises to a consistent interpretation of the syntax.
+To show this, we need to prove that \AB{inj₁} \AIC{tt} and \AB{inj₂} \AIC{tt} are not equal where \AIC{tt} is the unique constructor of \AD{⊤}.
+
+\begin{code}
+sem-consistent : consistent sem
+\end{code}
+
+\AgdaHide{
+\begin{code}
+sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
+\end{code}
+}
+
+Finally, we can conclude that the initial interpretation and thus the syntax is consistent.
+If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
+Since the latter leads to a contradiction, the former does too.
+
+\begin{code}
+syntax-consistent : consistent initial-interpretation
+syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
 \end{code}
 
 \AgdaHide{
@@ -140,26 +190,3 @@ sub-tt : {Γ₁ Γ₂ : Context ∅} (s : Subst Γ₂ Γ₁) → sub tt s ∼ tt
 sub-tt s = 𝟙-η (sub tt s)
 \end{code}
 }
-
-\AgdaHide{
-\begin{code}
-sem-consistent-help : ⊤ ⊎ ⊤ → Set
-sem-consistent-help (inj₁ x) = ⊤
-sem-consistent-help (inj₂ y) = ⊥
-\end{code}
-}
-
-\begin{code}
-sem-consistent : consistent sem
-\end{code}
-
-\AgdaHide{
-\begin{code}
-sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
-\end{code}
-}
-
-\begin{code}
-syntax-consistent : consistent initial-interpretation
-syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
-\end{code}

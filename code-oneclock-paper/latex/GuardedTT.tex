@@ -50,6 +50,12 @@
 \end{code}
 }
 
+Now let us put everything together and define interpretations of the syntax defined in \Cref{sec:syntax}.
+To give an interpretation, one must give a type of types, contexts, terms, substitutions, and functions mapping the syntactic objects to their interpretations.
+In addition, definitional equality and equality between terms must be interpreted and for that, we use setoids.
+This means that a relation on terms must be given, which includes the relation \D{∼} as define in \Cref{sec:syntax}, and the same must be done for substitutions.
+We define this as a record, whose type declaration is given as
+
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{interpret{-}syntax}\AgdaSpace{}%
@@ -86,21 +92,6 @@
 \AgdaBound{ℓ₁}\<%
 \\
 %
-\>[4]\AgdaField{semSubst}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{semContext}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{semContext}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\AgdaSpace{}%
-\AgdaBound{ℓ₂}\<%
-\\
-%
 \>[4]\AgdaField{semTerm}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -110,6 +101,21 @@
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaField{semType}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\AgdaSpace{}%
+\AgdaBound{ℓ₂}\<%
+\\
+%
+\>[4]\AgdaField{semSubst}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaField{semContext}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaField{semContext}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\AgdaSpace{}%
@@ -189,27 +195,6 @@
 \AgdaBound{Δ}\<%
 \\
 %
-\>[4]\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Subst}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{∀}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaBound{Γ₂}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Context}\AgdaSpace{}%
-\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Subst}\AgdaSpace{}%
-\AgdaBound{Γ₁}\AgdaSpace{}%
-\AgdaBound{Γ₂}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{semSubst}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Ctx}}\AgdaSpace{}%
-\AgdaBound{Γ₁}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Ctx}}\AgdaSpace{}%
-\AgdaBound{Γ₂}\AgdaSymbol{)}\<%
-\\
-%
 \>[4]\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Tm}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -232,6 +217,27 @@
 \AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Type}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
+\\
+%
+\>[4]\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Subst}}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ₁}\AgdaSpace{}%
+\AgdaBound{Γ₂}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Context}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Subst}\AgdaSpace{}%
+\AgdaBound{Γ₁}\AgdaSpace{}%
+\AgdaBound{Γ₂}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaField{semSubst}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Ctx}}\AgdaSpace{}%
+\AgdaBound{Γ₁}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧Ctx}}\AgdaSpace{}%
+\AgdaBound{Γ₂}\AgdaSymbol{)}\<%
 \\
 %
 \>[4]\AgdaOperator{\AgdaField{\AgdaUnderscore{}⟦\AgdaUnderscore{}⟧∼}}\AgdaSpace{}%
@@ -295,6 +301,10 @@
 \AgdaBound{s'}\AgdaSymbol{)}\<%
 \end{code}
 }
+
+If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{f}.
+The main example is the syntax itself.
+Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 
 \AgdaHide{
 \begin{code}%
@@ -373,14 +383,14 @@
 \end{code}
 }
 
+We can also interpret the syntax using \Cref{sec:presheaf_sem,sec:guarded}.
+This gives categorical semantics of the syntax and we define it as follows.
+
 \begin{code}%
 \>[0]\AgdaFunction{sem}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaRecord{interpret{-}syntax}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 \>[0]\AgdaField{semType}\AgdaSpace{}%
 \AgdaFunction{sem}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -391,15 +401,18 @@
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Ctx}\<%
 \\
-\>[0]\AgdaField{semSubst}\AgdaSpace{}%
-\AgdaFunction{sem}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{sem{-}subst}\<%
-\\
 \>[0]\AgdaField{semTerm}\AgdaSpace{}%
 \AgdaFunction{sem}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Tm}\<%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaField{semSubst}\AgdaSpace{}%
+\AgdaFunction{sem}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{sem{-}subst}\<%
 \\
 \>[0]\AgdaOperator{\AgdaField{\AgdaUnderscore{}[\AgdaUnderscore{}sem∼\AgdaUnderscore{}]}}\AgdaSpace{}%
 \AgdaFunction{sem}\AgdaSpace{}%
@@ -447,6 +460,10 @@
 \end{code}
 }
 
+Using this semantics, we can conclude the syntax is consistent.
+Briefly, consistency means that not every defitional equality.
+
+
 \begin{code}%
 \>[0]\AgdaFunction{bool}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -488,6 +505,9 @@
 \AgdaInductiveConstructor{tt}\<%
 \end{code}
 
+Now we can state precisely what consistency means.
+We say an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
+
 \begin{code}%
 \>[0]\AgdaFunction{consistent}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -519,6 +539,73 @@
 \AgdaOperator{\AgdaField{]}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{⊥}\<%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaRecord{⊤}\AgdaSpace{}%
+\AgdaOperator{\AgdaDatatype{⊎}}\AgdaSpace{}%
+\AgdaRecord{⊤}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaPrimitiveType{Set}\<%
+\\
+\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaRecord{⊤}\<%
+\\
+\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
+\AgdaBound{y}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaDatatype{⊥}\<%
+\end{code}
+}
+
+The categorical semantics gives rises to a consistent interpretation of the syntax.
+To show this, we need to prove that \AB{inj₁} \AIC{tt} and \AB{inj₂} \AIC{tt} are not equal where \AIC{tt} is the unique constructor of \AD{⊤}.
+
+\begin{code}%
+\>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaFunction{consistent}\AgdaSpace{}%
+\AgdaFunction{sem}\<%
+\end{code}
+
+\AgdaHide{
+\begin{code}%
+\>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
+\AgdaBound{p}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{subst}\AgdaSpace{}%
+\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{p}\AgdaSpace{}%
+\AgdaInductiveConstructor{⊤.tt}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaInductiveConstructor{⊤.tt}\<%
+\end{code}
+}
+
+Finally, we can conclude that the initial interpretation and thus the syntax is consistent.
+If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
+Since the latter leads to a contradiction, the former does too.
+
+\begin{code}%
+\>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaFunction{consistent}\AgdaSpace{}%
+\AgdaFunction{initial{-}interpretation}\<%
+\\
+\>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
+\AgdaBound{p}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem}\AgdaSpace{}%
+\AgdaOperator{\AgdaField{⟦}}\AgdaSpace{}%
+\AgdaBound{p}\AgdaSpace{}%
+\AgdaOperator{\AgdaField{⟧∼}}\AgdaSymbol{)}\<%
 \end{code}
 
 \AgdaHide{
@@ -573,7 +660,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{trans∼}%
-\>[388I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
+\>[422I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊠{-}β₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
@@ -584,7 +671,7 @@
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[388I]%
+\>[.]\<[422I]%
 \>[9]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}π₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{trans∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
@@ -653,7 +740,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{trans∼}%
-\>[453I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
+\>[487I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊠{-}β₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
@@ -664,7 +751,7 @@
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[453I]%
+\>[.]\<[487I]%
 \>[9]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}π₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{trans∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
@@ -735,20 +822,20 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{trans∼}%
-\>[520I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
+\>[554I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{λ{-}β}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}))}\<%
 \\
-\>[.]\<[520I]%
+\>[.]\<[554I]%
 \>[9]\AgdaSymbol{(}\AgdaInductiveConstructor{trans∼}%
-\>[523I]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}appTm}\AgdaSpace{}%
+\>[557I]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}appTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub{-}lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{appTm}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[523I]%
+\>[.]\<[557I]%
 \>[17]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}appTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{λ{-}η}\AgdaSpace{}%
@@ -800,7 +887,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{trans∼}%
-\>[567I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
+\>[601I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{□{-}β}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
@@ -808,7 +895,7 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{weakenS}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{))))}\<%
 \\
-\>[.]\<[567I]%
+\>[.]\<[601I]%
 \>[9]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}unbox{-}q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{trans∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
@@ -866,14 +953,14 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{trans∼}%
-\>[618I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
+\>[652I]\AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡{-}β}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[618I]%
+\>[.]\<[652I]%
 \>[9]\AgdaSymbol{(}\AgdaInductiveConstructor{cong{-}↓}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{trans∼}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sym∼}\AgdaSpace{}%
@@ -916,63 +1003,3 @@
 \AgdaBound{s}\AgdaSymbol{)}\<%
 \end{code}
 }
-
-\AgdaHide{
-\begin{code}%
-\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaRecord{⊤}\AgdaSpace{}%
-\AgdaOperator{\AgdaDatatype{⊎}}\AgdaSpace{}%
-\AgdaRecord{⊤}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaPrimitiveType{Set}\<%
-\\
-\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaRecord{⊤}\<%
-\\
-\>[0]\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaDatatype{⊥}\<%
-\end{code}
-}
-
-\begin{code}%
-\>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{consistent}\AgdaSpace{}%
-\AgdaFunction{sem}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
-\>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
-\AgdaBound{p}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{subst}\AgdaSpace{}%
-\AgdaFunction{sem{-}consistent{-}help}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{p}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊤.tt}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊤.tt}\<%
-\end{code}
-}
-
-\begin{code}%
-\>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{consistent}\AgdaSpace{}%
-\AgdaFunction{initial{-}interpretation}\<%
-\\
-\>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
-\AgdaBound{p}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{sem}\AgdaSpace{}%
-\AgdaOperator{\AgdaField{⟦}}\AgdaSpace{}%
-\AgdaBound{p}\AgdaSpace{}%
-\AgdaOperator{\AgdaField{⟧∼}}\AgdaSymbol{)}\<%
-\end{code}
