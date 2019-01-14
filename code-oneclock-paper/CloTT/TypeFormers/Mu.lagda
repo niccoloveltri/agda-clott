@@ -96,7 +96,7 @@ We use the same trick for \AD{μMor'}.
     _⊠_ : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
     ⊞₁ : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
     ⊞₂ : ∀{Q R i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ►P : ∀{Q}{i} (x : Later (μObj' P Q) i)
+    ►P : ∀{Q i} (x : Later (μObj' P Q) i)
       → LaterLim (μObj' P Q) (μMor' P Q) i x → μObj' P (►P Q) i
 \end{code}
 
