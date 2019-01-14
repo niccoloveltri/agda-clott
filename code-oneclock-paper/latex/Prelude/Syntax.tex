@@ -20,14 +20,25 @@
 \end{code}
 }
 
-We now give a description of the object type theory. This is a simple
-type theory with guarded recursion that can be seen as a variant of
-Atkey and McBride's type system \cite{atkey2013productive} but
-allowing the presence of at most one clock in context.
-In Atkey and McBride's system, judgements are parametrized by a clock
-context. In our case, the clock context can either be empty or contain
+As the object type theory we consider simply typed $\lambda$-calculus
+extended with additional features for programming with guarded recursive and coinductive
+types that we call \gTT. It is a variant of Atkey and McBride's type system for
+productive coprogramming \cite{atkey2013productive} with explicit
+substitutions. In Atkey and
+McBride's system, all judgements are parametrized by a clock context,
+which may contain several different clocks. They extend simply typed
+$\lambda$-calculus with two additional type formers: a later modality \IC{▻} for
+encoding time delay into types and universal quantification over clock
+variables \IC{∀κ} that allows them to specify coinductive types. In
+our variant, the clock context can either be empty or contain
 a single clock \IC{κ}.
-
+%% We now give a description of the object type theory. This is a simple
+%% type theory with guarded recursion that can be seen as a variant of
+%% Atkey and McBride's type system \cite{atkey2013productive} but
+%% allowing the presence of at most one clock in context.
+%% In Atkey and McBride's system, judgements are parametrized by a clock
+%% context. In our case, the clock context can either be empty or contain
+%% a single clock \IC{κ}.
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
 \AgdaDatatype{ClockContext}\AgdaSpace{}%
@@ -37,20 +48,21 @@ a single clock \IC{κ}.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{∅}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockContext}\<%
-\\
-%
-\>[2]\AgdaInductiveConstructor{κ}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{ClockContext}\<%
 \end{code}
+
+%% Moreover we employ explicit substitutions, so on top of the usual we
+%% define four sorts
 
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
 \end{code}
 }
+
+
 
 Types depend on a clock context. We have the unit type which exists
 only in the empty clock context. We have products, coproducts and
@@ -1434,47 +1446,6 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{bool}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\<%
-\\
-\>[0]\AgdaFunction{bool}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{𝟙}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
-\AgdaInductiveConstructor{𝟙}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{TRUE}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaInductiveConstructor{•}\AgdaSpace{}%
-\AgdaFunction{bool}\<%
-\\
-\>[0]\AgdaFunction{TRUE}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
-\AgdaInductiveConstructor{𝟙}\AgdaSpace{}%
-\AgdaInductiveConstructor{tt}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
-\>[0]\AgdaFunction{FALSE}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Term}\AgdaSpace{}%
-\AgdaInductiveConstructor{•}\AgdaSpace{}%
-\AgdaFunction{bool}\<%
-\\
-\>[0]\AgdaFunction{FALSE}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
-\AgdaInductiveConstructor{𝟙}\AgdaSpace{}%
-\AgdaInductiveConstructor{tt}\<%
-\\
-%
-\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{⇑m}%
 \>[4]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -1646,11 +1617,11 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1201I]\AgdaSymbol{(}\AgdaBound{A₂}\AgdaSpace{}%
+\>[1177I]\AgdaSymbol{(}\AgdaBound{A₂}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B₂}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1201I]%
+\>[.]\<[1177I]%
 \>[17]\AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaBound{B₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
@@ -1735,7 +1706,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}%
-\>[1272I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\>[1248I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -1753,7 +1724,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{B₁}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[1272I]%
+\>[.]\<[1248I]%
 \>[11]\AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
 \AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
@@ -2108,16 +2079,16 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}%
-\>[1565I]\AgdaInductiveConstructor{lambdaTm}\<%
+\>[1541I]\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[1565I][@{}l@{\AgdaIndent{0}}]%
+\>[1541I][@{}l@{\AgdaIndent{0}}]%
 \>[13]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1566I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\>[1542I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1566I]%
+\>[.]\<[1542I]%
 \>[19]\AgdaSymbol{(}\AgdaFunction{□functor}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
@@ -2198,16 +2169,16 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}%
-\>[1634I]\AgdaInductiveConstructor{lambdaTm}\<%
+\>[1610I]\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[1634I][@{}l@{\AgdaIndent{0}}]%
+\>[1610I][@{}l@{\AgdaIndent{0}}]%
 \>[16]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1635I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
+\>[1611I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1635I]%
+\>[.]\<[1611I]%
 \>[22]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
@@ -2268,16 +2239,16 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[1689I]\AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
+\>[1665I]\AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{sum□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[1689I][@{}l@{\AgdaIndent{0}}]%
+\>[1665I][@{}l@{\AgdaIndent{0}}]%
 \>[29]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[1695I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
+\>[1671I]\AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
@@ -2285,7 +2256,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1695I]%
+\>[.]\<[1671I]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
@@ -2348,14 +2319,14 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[1754I]\AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\<%
+\>[1730I]\AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\<%
 \\
-\>[1754I][@{}l@{\AgdaIndent{0}}]%
+\>[1730I][@{}l@{\AgdaIndent{0}}]%
 \>[30]\AgdaSymbol{(}\AgdaFunction{app{-}map}\<%
 \\
 \>[30][@{}l@{\AgdaIndent{0}}]%
 \>[32]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1755I]\AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
+\>[1731I]\AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
@@ -2370,7 +2341,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSymbol{))))}\<%
 \\
-\>[.]\<[1755I]%
+\>[.]\<[1731I]%
 \>[37]\AgdaSymbol{(}\AgdaFunction{weaken{-},}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\<%
@@ -2415,7 +2386,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1803I]\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
+\>[1779I]\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
@@ -2429,7 +2400,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})))}\<%
 \\
-\>[1803I][@{}l@{\AgdaIndent{0}}]%
+\>[1779I][@{}l@{\AgdaIndent{0}}]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -2568,7 +2539,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{split{-}prod}%
-\>[1932I]\AgdaInductiveConstructor{•}\AgdaSpace{}%
+\>[1908I]\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
@@ -2577,9 +2548,9 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1932I]%
+\>[.]\<[1908I]%
 \>[35]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[1940I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\>[1916I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{⇑m}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
@@ -2594,7 +2565,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1940I]%
+\>[.]\<[1916I]%
 \>[40]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
@@ -2640,7 +2611,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{lambdaTm}%
-\>[1992I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
+\>[1968I]\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
@@ -2662,7 +2633,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaInductiveConstructor{•{-}to{-}weaken}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1992I]%
+\>[.]\<[1968I]%
 \>[23]\AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
 \AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
@@ -2715,11 +2686,11 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaInductiveConstructor{lambdaTm}%
-\>[2055I]\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\<%
+\>[2031I]\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\<%
 \\
-\>[.]\<[2055I]%
+\>[.]\<[2031I]%
 \>[11]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[2056I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\>[2032I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{⇑m}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
@@ -2744,7 +2715,7 @@ equality on substitutions, we will ask for \IC{•-to-weaken} and
 \AgdaBound{B}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[2056I]%
+\>[.]\<[2032I]%
 \>[16]\AgdaSymbol{(}\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{•}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
@@ -5986,21 +5957,21 @@ interested reader to the Agda formalization.
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4875I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4851I]\AgdaInductiveConstructor{⇡}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4875I]%
+\>[.]\<[4851I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{sub}%
-\>[4879I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[4880I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
+\>[4855I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
+\>[4856I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4880I]%
+\>[.]\<[4856I]%
 \>[18]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
@@ -6016,7 +5987,7 @@ interested reader to the Agda formalization.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4879I]%
+\>[.]\<[4855I]%
 \>[12]\AgdaSymbol{((}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
@@ -6091,20 +6062,20 @@ interested reader to the Agda formalization.
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4959I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4935I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4959I]%
+\>[.]\<[4935I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{↓}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}%
-\>[4966I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4942I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
@@ -6118,7 +6089,7 @@ interested reader to the Agda formalization.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4966I]%
+\>[.]\<[4942I]%
 \>[15]\AgdaSymbol{(}\AgdaInductiveConstructor{weakenS}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%

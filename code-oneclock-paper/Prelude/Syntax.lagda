@@ -8,19 +8,33 @@ open import Data.Empty
 \end{code}
 }
 
-We now give a description of the object type theory. This is a simple
-type theory with guarded recursion that can be seen as a variant of
-Atkey and McBride's type system \cite{atkey2013productive} but
-allowing the presence of at most one clock in context.
-In Atkey and McBride's system, judgements are parametrized by a clock
-context. In our case, the clock context can either be empty or contain
+As the object type theory we consider simply typed $\lambda$-calculus
+extended with additional features for programming with guarded recursive and coinductive
+types that we call \GTT. It is a variant of Atkey and McBride's type system for
+productive coprogramming \cite{atkey2013productive} with explicit
+substitutions. In Atkey and
+McBride's system, all judgements are indexed by a clock context,
+which may contain several different clocks. They extend simply typed
+$\lambda$-calculus with two additional type formers: a later modality \IC{▻} for
+encoding time delay into types and universal quantification over clock
+variables \IC{∀κ} that allows them to specify coinductive types. In
+\GTT, the clock context can either be empty or contain
 a single clock \IC{κ}.
-
+%% We now give a description of the object type theory. This is a simple
+%% type theory with guarded recursion that can be seen as a variant of
+%% Atkey and McBride's type system \cite{atkey2013productive} but
+%% allowing the presence of at most one clock in context.
+%% In Atkey and McBride's system, judgements are parametrized by a clock
+%% context. In our case, the clock context can either be empty or contain
+%% a single clock \IC{κ}.
 \begin{code}
 data ClockContext : Set where
-  ∅ : ClockContext
-  κ : ClockContext
+  ∅ κ : ClockContext
 \end{code}
+
+
+%% Moreover we employ explicit substitutions, so on top of the usual we
+%% define four sorts
 
 \AgdaHide{
 \begin{code}
@@ -28,24 +42,36 @@ mutual
 \end{code}
 }
 
-Types depend on a clock context. We have the unit type which exists
-only in the empty clock context. We have products, coproducts and
-function spaces which exist in all clock contexts.
 
+\GTT is a type theory with explcit substitutions. It comprises of
+well-formed types and contexts, well-typed terms and substitutions,
+definitional equality of terms and of substitutions. All these kinds
+are indexed by a clock context. We refer to types and contexts
+existing in the empty clock context as \IC{∅}-types and
+\IC{∅}-contexts. Similarly we talk about \IC{κ}-types and
+\IC{κ}-contexts for types and contexts existing in the clock context
+with exactly one clock \IC{κ}. Well-formed types include a unit type,
+products, coproducts and function spaces. Notice that \IC{𝟙} is a
+\IC{∅}-type.
 \begin{AgdaAlign}
 \begin{code}
   data Type : ClockContext → Set where
     𝟙 : Type ∅
     _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Type Δ → Type Δ → Type Δ
 \end{code}
-In addition to the usual simple type formers, there are types that
-allow us to specify guarded recursive and coinductive types. We have
-the later modality, which takes a type in the \IC{κ} clock context and
-returns a type in the \IC{κ} clock context.
-We have clock quantification, which takes a type in the \IC{κ} clock
-context and returns a type in the \IC{∅} clock context. We also have a
-weakening type former, which embeds any type in the \IC{∅} clock context
-into types in the \IC{κ} clock context.
+Similarly to Atkey and McBride's system, we consider a later modality
+\IC{▻} as an operation on \IC{κ}-types. We also have a nameless
+analogue to universal clock quantification, that we call \IC{□}
+following \cite{CloustonBGB15}. Differently from \loccit, the \IC{□}
+modality takes a \IC{κ}-type and returns a \IC{∅}-type. We also have a
+weakening type former \IC{⇑}, which embeds \IC{∅}-types into into
+\IC{κ}-types.
+%% In addition to the usual simple type formers, there are types that
+%% allow us to specify guarded recursive and coinductive types. We have
+%% the later modality, which takes a type in the \IC{κ} clock context and
+%% returns a type in the \IC{κ} clock context.
+%% We have clock quantification, which takes a type in the \IC{κ} clock
+%% context and returns a type in the \IC{∅} clock context. 
 \begin{code}
     ▻ : Type κ → Type κ
     □ : Type κ → Type ∅
