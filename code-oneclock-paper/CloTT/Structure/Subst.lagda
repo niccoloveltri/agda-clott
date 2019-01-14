@@ -29,7 +29,9 @@ sem-subst {κ} Γ₁ Γ₂ = NatTrans Γ₁ Γ₂
 
 Next we define the interpretation of operations on substitutions.
 These all are defined in the expected way.
-The identity substitution is interpreted as the identity transformation, the composition as the composition, and so on.
+For the precise definitions, we refer the reader to the formalization.
+
+\AgdaHide{
 As an example, we show how an explicit substitution gives rise to an actual one.
 We only give the component map and not the proof of naturality.
 
@@ -39,7 +41,6 @@ sem-sub : {b : ClockContext} (Γ₁ Γ₂ : Ctx b) (A : Ty b)
 sem-sub {∅} Γ₁ Γ₂ A t α x = t(α x)
 nat-map (sem-sub {κ} Γ₁ Γ₂ A t α) i x = nat-map t i (nat-map α i x)
 \end{code}
-\AgdaHide{
 \begin{code}
 nat-com (sem-sub {κ} Γ₁ Γ₂ A t α) i j x =
   begin

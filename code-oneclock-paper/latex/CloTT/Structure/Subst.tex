@@ -86,7 +86,9 @@ If we have one clock variable, then we use  natural transformations.
 
 Next we define the interpretation of operations on substitutions.
 These all are defined in the expected way.
-The identity substitution is interpreted as the identity transformation, the composition as the composition, and so on.
+For the precise definitions, we refer the reader to the formalization.
+
+\AgdaHide{
 As an example, we show how an explicit substitution gives rise to an actual one.
 We only give the component map and not the proof of naturality.
 
@@ -151,7 +153,6 @@ We only give the component map and not the proof of naturality.
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}\<%
 \end{code}
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{sem{-}sub}\AgdaSpace{}%
