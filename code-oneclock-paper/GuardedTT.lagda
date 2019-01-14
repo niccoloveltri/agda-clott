@@ -16,20 +16,28 @@ open import CloTT
 
 \begin{code}
 record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
+\end{code}
+
+\AgdaHide{
+\begin{code}
   field
     semType : ClockContext → Set ℓ₁
     semContext : ClockContext → Set ℓ₁
     semSubst : ∀ {Δ} → semContext Δ → semContext Δ → Set ℓ₂
     semTerm : ∀ {Δ} → semContext Δ → semType Δ → Set ℓ₂
-    _sem∼_ : ∀ {Δ} {Γ : semContext Δ} {A : semType Δ} → semTerm Γ A → semTerm Γ A → Set ℓ₂
-    _sem≈_ : ∀ {Δ} {Γ₁ Γ₂ : semContext Δ} → semSubst Γ₁ Γ₂ → semSubst Γ₁ Γ₂ → Set ℓ₂
-    ⟦_⟧Type : ∀ {Δ} → Type Δ → semType Δ
-    ⟦_⟧Ctx : ∀ {Δ} → Context Δ → semContext Δ
-    ⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst ⟦ Γ₁ ⟧Ctx ⟦ Γ₂ ⟧Ctx
-    ⟦_⟧Tm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm ⟦ Γ ⟧Ctx ⟦ A ⟧Type
-    ⟦_⟧∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A} → t ∼ t' → ⟦ t ⟧Tm sem∼ ⟦ t' ⟧Tm
-    ⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {s s' : Subst Γ₁ Γ₂} → s ≈ s' → ⟦ s ⟧Subst sem≈ ⟦ s' ⟧Subst
+    _[_sem∼_] : ∀ {Δ} {Γ : semContext Δ} {A : semType Δ}
+      → semTerm Γ A → semTerm Γ A → Set ℓ₂
+    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semContext Δ} → semSubst Γ₁ Γ₂ → semSubst Γ₁ Γ₂ → Set ℓ₂
+    _⟦_⟧Type : ∀ {Δ} → Type Δ → semType Δ
+    _⟦_⟧Ctx : ∀ {Δ} → Context Δ → semContext Δ
+    _⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
+    _⟦_⟧Tm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm (_⟦_⟧Ctx Γ) (_⟦_⟧Type A)
+    _⟦_⟧∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A}
+      → t ∼ t' → _[_sem∼_] (_⟦_⟧Tm t) (_⟦_⟧Tm t')
+    _⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {s s' : Subst Γ₁ Γ₂}
+      → s ≈ s' → _[_sem≈_] (_⟦_⟧Subst s) (_⟦_⟧Subst s')
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}
@@ -37,28 +45,42 @@ open interpret-syntax
 \end{code}
 }
 
-\AgdaHide{
 \begin{code}
 initial-interpretation : interpret-syntax
-initial-interpretation = record
-  { semType = Type
-  ; semContext = Context
-  ; semSubst = Subst
-  ; semTerm = Term
-  ; _sem∼_ = _∼_
-  ; _sem≈_ = _≈_
-  ; ⟦_⟧Type = id
-  ; ⟦_⟧Ctx = id
-  ; ⟦_⟧Subst = id
-  ; ⟦_⟧Tm = id
-  ; ⟦_⟧∼ = id
-  ; ⟦_⟧≈ = id
-  }
+\end{code}
 
-consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
-consistent sem = (_sem∼_ sem (⟦ sem ⟧Tm TRUE) (⟦ sem ⟧Tm FALSE)) → ⊥
+\AgdaHide{
+\begin{code}
+semType initial-interpretation = Type
+semContext initial-interpretation = Context
+semSubst initial-interpretation = Subst
+semTerm initial-interpretation = Term
+_[_sem∼_] initial-interpretation = _∼_
+_[_sem≈_] initial-interpretation = _≈_
+_⟦_⟧Type initial-interpretation = id
+_⟦_⟧Ctx initial-interpretation = id
+_⟦_⟧Subst initial-interpretation = id
+_⟦_⟧Tm initial-interpretation = id
+_⟦_⟧∼ initial-interpretation = id
+_⟦_⟧≈ initial-interpretation = id
 \end{code}
 }
+
+\begin{code}
+bool : Type ∅
+bool = 𝟙 ⊞ 𝟙
+
+TRUE : Term • bool
+TRUE = in₁ 𝟙 tt
+
+FALSE : Term • bool
+FALSE = in₂ 𝟙 tt
+\end{code}
+
+\begin{code}
+consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
+consistent sem = sem [ sem ⟦ TRUE ⟧Tm sem∼ sem ⟦ FALSE ⟧Tm ] → ⊥
+\end{code}
 
 \AgdaHide{
 \begin{code}
@@ -100,30 +122,40 @@ sub-tt s = 𝟙-η (sub tt s)
 
 \begin{code}
 sem : interpret-syntax
-semType sem = Ty
-semContext sem = Ctx
-semSubst sem = sem-subst
-semTerm sem = Tm
-_sem∼_ sem = def-eq _ _
-_sem≈_ sem = subst-eq _ _
-⟦ sem ⟧Type = ⟦_⟧A
-⟦ sem ⟧Ctx = ⟦_⟧Γ
-⟦ sem ⟧Subst = ⟦_⟧sub
-⟦ sem ⟧Tm = ⟦_⟧tm
-⟦ sem ⟧∼ = ⟦_⟧tm-eq
-⟦ sem ⟧≈ = ⟦_⟧sub-eq
-
-sem-consistent-help : ⊤ ⊎ ⊤ → Set
-sem-consistent-help (inj₁ x) = ⊤
-sem-consistent-help (inj₂ y) = ⊥
-
-sem-consistent : consistent sem
-sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
 \end{code}
 
 \AgdaHide{
 \begin{code}
-syntax-consistent : consistent initial-interpretation
-syntax-consistent p = sem-consistent (⟦ sem ⟧∼ p)
+semType sem = Ty
+semContext sem = Ctx
+semSubst sem = sem-subst
+semTerm sem = Tm
+_[_sem∼_] sem = def-eq _ _
+_[_sem≈_] sem = subst-eq _ _
+_⟦_⟧Type sem = ⟦_⟧A
+_⟦_⟧Ctx sem = ⟦_⟧Γ
+_⟦_⟧Subst sem = ⟦_⟧sub
+_⟦_⟧Tm sem = ⟦_⟧tm
+_⟦_⟧∼ sem = ⟦_⟧tm-eq
+_⟦_⟧≈ sem = ⟦_⟧sub-eq
+
+sem-consistent-help : ⊤ ⊎ ⊤ → Set
+sem-consistent-help (inj₁ x) = ⊤
+sem-consistent-help (inj₂ y) = ⊥
 \end{code}
 }
+
+\begin{code}
+sem-consistent : consistent sem
+\end{code}
+
+\AgdaHide{
+\begin{code}
+sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
+\end{code}
+}
+
+\begin{code}
+syntax-consistent : consistent initial-interpretation
+syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
+\end{code}

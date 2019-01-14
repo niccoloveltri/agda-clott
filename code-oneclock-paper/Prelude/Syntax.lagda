@@ -138,16 +138,15 @@ and substitutions.
 We have lambda abstraction and application and the usual terms
 describing the introduction and elimination rules for simple
 types. Here we include only the terms associated to product types, for
-theunit and coproducts we refer to our Agda formalization.
+the unit and coproducts we refer to our Agda formalization.
 \begin{code}
-    lambdaTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
+    lambdaTm : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
       → Term (Γ , A) B → Term Γ (A ⟶ B)
-    appTm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
+    appTm : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
       → Term Γ (A ⟶ B) → Term (Γ , A) B
-    [_&_] : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ}
-      → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
-    π₁ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
-    π₂ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
+    [_&_] : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
+    π₁ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
+    π₂ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -250,8 +249,7 @@ needs to be isomorphic to \IC{⇑} \Ar{Γ} \IC{,} \IC{⇑}
 the context isomorphisms:
 \begin{code}
     •-to-weaken : Subst • (⇑ •)
-    ,-weaken : (Γ : Context ∅) (A : Type ∅)
-      → Subst (⇑ Γ , ⇑ A) (⇑ (Γ , A))
+    ,-weaken : (Γ : Context ∅) (A : Type ∅) → Subst (⇑ Γ , ⇑ A) (⇑ (Γ , A))
 \end{code}
 \end{AgdaAlign}
 It is possible to define an element \F{weaken-to-•} in \F{Subst}
@@ -270,15 +268,6 @@ weaken-, Γ A = weakenS (pr (idsub (Γ , A))) ,s ⇡ (varTm Γ A)
 
 weakenSA : ∀ {Δ} {Γ Γ' : Context Δ} (A : Type Δ) → Subst Γ Γ' → Subst (Γ , A) (Γ' , A)
 weakenSA {_} {Γ} {Γ'} A s = (s o pr (idsub (Γ , A))) ,s varTm Γ A
-
-bool : Type ∅
-bool = 𝟙 ⊞ 𝟙
-
-TRUE : Term • bool
-TRUE = in₁ 𝟙 tt
-
-FALSE : Term • bool
-FALSE = in₂ 𝟙 tt
 
 ⇑m  : ∀ {Δ} (Γ : Context Δ) (A B : Type Δ) → Term Γ B → Term (Γ , A) B
 ⇑m Γ A B x = sub x (pr (idsub (Γ , A)))
