@@ -50,7 +50,7 @@ are indexed by a clock context. We refer to types and contexts
 existing in the empty clock context as \IC{∅}-types and
 \IC{∅}-contexts. Similarly we talk about \IC{κ}-types and
 \IC{κ}-contexts for types and contexts existing in the clock context
-with exactly one clock \IC{κ}. Well-formed types include a unit type,
+with exactly one clock \IC{κ}. The well-formed types of \GTT\ include a unit type,
 products, coproducts and function spaces. Notice that \IC{𝟙} is a
 \IC{∅}-type.
 \begin{AgdaAlign}
@@ -77,13 +77,18 @@ include a weakening type former \IC{⇑}, which embeds \IC{∅}-types into
     □ : Type κ → Type ∅
     ⇑ : Type ∅ → Type κ
 \end{code}
-Guarded recursive types are defined using a least fixed point
+Guarded recursive types are defined using a least fixpoint
 type former \IC{μ}.
 \begin{code}
     μ : ∀ {Δ} → Poly Δ → Type Δ
 \end{code}
 \end{AgdaAlign}
-We allow the application of the least fixed point construction on a restricted class of functors specified by the grammar \F{Poly}, which includes constant functors, the identity functor, products, coproducts and the later modality.
+For the \IC{μ} operation to be well-defined, one typically limits
+its applicabiility to strictly positive functors. We instead consider
+a functor grammar \F{Poly} \Ar{Δ} which includes codes for constant functors,
+the identity functor, products, coproducts and the later modality.
+The presence of the constructor \IC{∁} for representing the code of constant functors forces the type family
+\F{Poly} to be defined simultaneously with \F{Type}.
 %% The type \F{Poly} \Ar{Δ} specifies a grammar for functors we allow 
 %% The constructor \IC{μ} takes an element of \F{Poly} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
 %% \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
@@ -103,20 +108,21 @@ weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 \end{code}
 }
-We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} an functor \F{evalP}
-\Ar{P} acting on \F{Type} \Ar{Δ}.
+The constructors of \F{Poly} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless it would not be complicated to add exponentials with
+constant domain and the box modality to the grammar, but we leave this as a future effort.
+We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} a functor \F{evalP}
+\Ar{P} acting on \F{Type} \Ar{Δ} defined by induction on \Ar{P}.
 \begin{code}
 evalP : ∀ {Δ} → Poly Δ → Type Δ → Type Δ
 \end{code}
-Then \IC{μ} \Ar{P} is then the least fixed point of \F{evalP} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
-the type family \F{Poly} so that the functor \F{evalP} \Ar{P} is
-strictly positive, for all \Ar{P}.  Here we consider a grammar for
-polynomials consisting of constant functors, the identity functor,
-products, coproducts and the later modality. Exponentials with
-constant domain and clock quantification could also be added to the
-grammar, but we did not consider them in our formalization.  Because
-of the presence of constant functors in the grammar, the type family
-\F{Poly} has to be defined simultaneously with \F{Type}.
+%% Then \IC{μ} \Ar{P} is then the least fixed point of \F{evalP} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
+%% the type family \F{Poly} so that the functor \F{evalP} \Ar{P} is
+%% strictly positive, for all \Ar{P}.  Here we consider a grammar for
+%% polynomials consisting of constant functors, the identity functor,
+%% products, coproducts and the later modality. Exponentials with
+%% constant domain and clock quantification could also be added to the
+%% grammar, but we did not consider them in our formalization.
+
 
 \AgdaHide{
 \begin{code}
@@ -128,23 +134,20 @@ evalP (▻P P) X = ▻ (evalP P X)
 \end{code}
 }
 
-Contexts also depend on a clock context. We have the empty context and
-context extension which exist in all clock contexts.
+The well-formed contexts of \GTT\ include the empty context, context extension and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
 \begin{AgdaAlign}
 \begin{code}
 data Context : ClockContext → Set where
   • : ∀ {Δ} → Context Δ
   _,_ : ∀ {Δ} → Context Δ → Type Δ → Context Δ
-\end{code}
-In addition to the usual context formers, we have context
-weakening. This operation takes a context in the \IC{∅} clock context
-and returns a context in the \IC{κ} clock context. It is the context
-analogue of the type former \IC{⇑}. Notice that we are overloading the
-constructor \IC{⇑}.
-\begin{code}
   ⇑ : Context ∅ → Context κ
 \end{code}
 \end{AgdaAlign}
+%% In addition to the usual context formers, we have context
+%% weakening. This operation takes a context in the \IC{∅} clock context
+%% and returns a context in the \IC{κ} clock context. It is the context
+%% analogue of the type former \IC{⇑}. Notice that we are overloading the
+%% constructor \IC{⇑}.
 
 \AgdaHide{
 \begin{code}
@@ -152,9 +155,8 @@ mutual
 \end{code}
 }
 
-Terms and substitutions are introduced simultaneously. Terms are
-indexed by contexts and types. They include constructors for variables
-and substitutions.
+The well-typed terms and substitutions of \GTT\ are defined simultaneously. Terms
+include constructors for variables and substitutions.
 \begin{AgdaAlign}
 \begin{code}
   data Term : ∀ {Δ} → Context Δ → Type Δ → Set where
@@ -162,10 +164,10 @@ and substitutions.
     sub : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
       → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
 \end{code}
-We have lambda abstraction and application and the usual terms
-describing the introduction and elimination rules for simple
-types. Here we include only the terms associated to product types, for
-the unit and coproducts we refer to our Agda formalization.
+We have lambda abstraction and application, plus the usual
+introduction and elimination rules for the unit types, products and
+coproducts. Among these, here we only show the terms associated to product
+types.
 \begin{code}
     lambdaTm : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
       → Term (Γ , A) B → Term Γ (A ⟶ B)
@@ -185,8 +187,7 @@ the unit and coproducts we refer to our Agda formalization.
       → Term (Γ , A) C → Term (Γ , B) C → Term (Γ , (A ⊞ B)) C
 \end{code}
 }
-We include terms stating that the later modality is an applicative
-functor. We also have a guarded fixed point combinator.
+The later modality is required to be an applicative functor, which is evindenced by the terms \IC{next} and \IC{⊛}. The fixed point combinator \IC{fix-tm} allows the specification of productive recursive programs.
 \begin{code}
     next : {Γ : Context κ} {A : Type κ} → Term Γ A → Term Γ (▻ A)
     _⊛_ : {Γ : Context κ} {A B : Type κ}
