@@ -10,9 +10,8 @@ These are implemented in Agda \cite{norell2008}.
 Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
 At the current moment, there is no proof assistant based on guarded recursion.
 
-The relation between those approaches...
-
-To compare these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
+To compare the strength of these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
+This shows that guarded recursive type theory can be done via sized types.
 More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
 Simple types are interpreted via the usual presheaf semantics.
 
@@ -24,16 +23,18 @@ This means that the required interpretations need to be modified.
 
 Our contributions are as follows
 \begin{enumerate}
-	\item We give a new model of guarded recursive type theory;
-	\item We give a formal relation between sized types and guarded recursion;
-	\item The construction is formalized.
+	\item We give a new denotational semantics of guarded recursive type theory in type theory;
+	\item We show that guarded recursion can be interpreted in sized types.
+	\item We formally prove the syntax is consistent.
 \end{enumerate}
 
 In Section 2, we describe the meta-theory in which we work.
-In Section 3, we describe the object theory.
-This is basically a variant of guarded recursion as done by Atkey and McBride \cite{atkey2013productive}.
-In Section 4, we define the model and give the interpretation of simple type operators.
-In Section 5, we interpret guarded recursion and guarded recursive types.
-Finally, we give an overview of the interpretation in Section 6.
+In Section 3, we describe the syntax of the object theory, which is basically a variant of guarded recursion as done by Atkey and McBride \cite{atkey2013productive}.
+We do this in the form of a deep embedding.
+More specifically, we define data types representing the contexts, types, terms, and so on, and we give the rules for definitional equality.
+In Sections 4 and 5, we define the denotational semantics of this syntax.
+First, we give the interpretation of context, types, and terms in the model, and we show how to interpret simple type formers.
+Then we show this model supports guarded recursion and guarded recursive types.
+Finally, we show the syntax is consistent in Section 6.
 
 \subsection*{Related Work}
