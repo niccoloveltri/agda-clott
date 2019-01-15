@@ -46,9 +46,10 @@ This works with the following principle: if in each recursive call the sizes dec
 
 Let us be more concrete.
 In Agda, there is a type \AD{Size}.
-This type is ordered meaning that for every \AB{i} we have a type \AD{Size<} \AB{i}.
+This type is ordered meaning that for every size \AB{i} we have a type \AD{Size<} \AB{i} of sizes smaller than \AB{i}.
 There is a coercion from \AD{Size<} \AB{i} to \AD{Size}.
-We use that this order is well-founded and for this reason, functions are productive if in every recursive call some size decreases \cite{A-sized}.
+The most important of this order, is that it is well-founded.
+This is used by the productivity checker of Agda, which uses that functions are productive if in every recursive call some size decreases \cite{A-sized}.
 Lastly, we use the size \F{∞}, and for each size \AB{i} we have \AB{i} : \AD{Size<} \F{∞}.
 
 \AgdaHide{

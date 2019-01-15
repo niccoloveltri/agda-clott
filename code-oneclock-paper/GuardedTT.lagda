@@ -132,7 +132,7 @@ sem-consistent-help (inj₂ y) = ⊥
 }
 
 The categorical semantics gives rises to a consistent interpretation of the syntax.
-To show this, we need to prove that \AB{inj₁} \AIC{tt} and \AB{inj₂} \AIC{tt} are not equal where \AIC{tt} is the unique constructor of \AD{⊤}.
+To show this, we need to prove that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are not equal where \AIC{tt} is the unique constructor of \AD{⊤}.
 
 \begin{code}
 sem-consistent : consistent sem
