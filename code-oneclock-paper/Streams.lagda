@@ -11,6 +11,7 @@ open import Prelude.Syntax
 \end{code}
 }
 
+We give a small taste of how to program in \GTT\ by defining the type of streams.
 \begin{code}
 g-Str : Type ∅ → Type κ
 g-Str A = μ ((∁ (⇑ A)) ⊠ (▻P I))

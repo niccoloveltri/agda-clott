@@ -8,7 +8,7 @@ open import Data.Empty
 \end{code}
 }
 
-As the object type theory we consider simply typed $\lambda$-calculus
+As the object language we consider simply typed $\lambda$-calculus
 extended with additional features for programming with guarded recursive and coinductive
 types that we call \GTT. It is a variant of Atkey and McBride's type system for
 productive coprogramming \cite{atkey2013productive} with explicit
@@ -165,20 +165,22 @@ include constructors for variables and substitutions.
       → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
 \end{code}
 We have lambda abstraction and application, plus the usual
-introduction and elimination rules for the unit types, products and
-coproducts. Among these, here we only show the terms associated to product
-types.
+introduction and elimination rules for the unit types, products, 
+coproducts and guarded recursive types. Here we only show the typing rules associated to \IC{μ} types.
 \begin{code}
     lambdaTm : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
       → Term (Γ , A) B → Term Γ (A ⟶ B)
     appTm : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
       → Term Γ (A ⟶ B) → Term (Γ , A) B
-    [_&_] : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
-    π₁ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
-    π₂ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
+    cons : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
+    primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
+      → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
 \end{code}
 \AgdaHide{
 \begin{code}
+    [_&_] : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ A → Term Γ B → Term Γ (A ⊠ B)
+    π₁ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ A
+    π₂ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⊠ B) → Term Γ B
     tt : {Γ : Context ∅} → Term Γ 𝟙
     unit-rec : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (Γ , 𝟙) A
     in₁ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} (B : Type Δ) → Term Γ A → Term Γ (A ⊞ B)
@@ -187,7 +189,7 @@ types.
       → Term (Γ , A) C → Term (Γ , B) C → Term (Γ , (A ⊞ B)) C
 \end{code}
 }
-The later modality is required to be an applicative functor, which is evindenced by the terms \IC{next} and \IC{⊛}. The fixed point combinator \IC{fix-tm} allows the specification of productive recursive programs.
+The later modality is required to be an applicative functor and this is evindenced by the terms \IC{next} and \IC{⊛}. The fixed point combinator \IC{fix-tm} allows the specification of productive recursive programs. 
 \begin{code}
     next : {Γ : Context κ} {A : Type κ} → Term Γ A → Term Γ (▻ A)
     _⊛_ : {Γ : Context κ} {A B : Type κ}
@@ -195,49 +197,40 @@ The later modality is required to be an applicative functor, which is evindenced
     fix-tm : {Γ : Context κ} {A : Type κ} → Term Γ (▻ A ⟶ A) → Term Γ A
 \end{code}
 We have introduction and elimination
-rules for clock quantification. The rule \IC{box-q} corresponds to
+rules for the \IC{□} modality. The rule \IC{box-q} is the analogue in \GTT\ of 
 Atkey and McBride's rule for clock abstraction
 \cite{atkey2013productive}. Notice that \IC{box-q} can only be applied
 to terms of type \Ar{A} over a weakened context \IC{⇑}
 \Ar{Γ}. This is in analogy with Atkey and McBride's side condition
 requiring the universally quantified clock variable to not appear free
 in the context \Ar{Γ}. Similarly, the rule \IC{unbox-q} corresponds to
-clock application. We also have a force operation for removing \IC{▻}
-when it is protected by \IC{□}.
+clock application. The operation \IC{force} is used for removing occurrences of \IC{▻} protected by the \IC{□} modality.
 \begin{code}
     box-q : {Γ : Context ∅} {A : Type κ} → Term (⇑ Γ) A → Term Γ (□ A)
     unbox-q : {Γ : Context ∅} {A : Type κ} → Term Γ (□ A) → Term (⇑ Γ) A
     force : {Γ : Context ∅} {A : Type κ} → Term Γ (□ (▻ A)) → Term Γ (□ A)
 \end{code}
-We have introduction and elimination rules for type weakening.
+We have introduction and elimination rules for type weakening:
+elements of \F{Term} \Ar{Γ A} can be embedded in \F{Term} (\IC{⇑}
+\Ar{Γ}) (\IC{⇑} \Ar{A}) and vice versa.
 \begin{code}
     ⇡ : {Γ : Context ∅} {A : Type ∅} → Term Γ A → Term (⇑ Γ) (⇑ A)
     ↓ : {Γ : Context ∅} {A : Type ∅} → Term (⇑ Γ) (⇑ A) → Term Γ A
 \end{code}
-We have introduction and elimination rules for guarded recursive types.
-\begin{code}
-    cons : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
-    primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
-      → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
-\end{code}
 Atkey and McBride assume the existence of certain type equalities
-\cite{atkey2013productive}. M{\o}gelberg assumes the existence of
-similar type isomorphisms \cite{Mogelberg14}. In our formalization we
-follow the second approach. In other words, we do not introduce an
-equivalence relation on types specifying what types should be
+\cite{atkey2013productive}. M{\o}gelberg, working in a dependently typed setting, consider similar type isomorphisms \cite{Mogelberg14}. In \GTT\ we
+follow the second approach. This means that we do not introduce an
+equivalence relation on types specifying which types should be
 considered equal, as in Chapman's type theory
 \cite{Chapman09}. Instead, we include additional term constructors
 corresponding to functions underlying the required type
-isomorphisms. For example, every type \Ar{A} in \F{Type} \IC{∅} should
-be isomorphic to the type \IC{□} (\IC{⇑} \Ar{A}). Therefore we
-add the following constructor:
+isomorphisms. For example, the clock irrevelance axiom formulated in our setting states that every \IC{∅}-type \Ar{A} is isomorphic to \IC{□} (\IC{⇑} \Ar{A}). This is obtained by adding a constructor \IC{□const}.
 \begin{code}
     □const : {Γ : Context ∅} (A : Type ∅) → Term Γ (□ (⇑ A) ⟶ A)
 \end{code}
-It is possible to define an element \F{const□} in \F{Term} \Ar{Γ}
-(\Ar{A} \IC{⟶} \IC{□} (\IC{⇑} \Ar{A})). When we
-introduce definitional equality on terms, we will
-ask for \F{□const} and \F{const□} to be each other inverses.
+It is possible to construct an element \F{const□} in \F{Term} \Ar{Γ}
+(\Ar{A} \IC{⟶} \IC{□} (\IC{⇑} \Ar{A})). In the definitional equality on terms, we
+ask for \IC{□const} and \F{const□} to be each other inverses.
 We proceed similarly with the other type isomoprhisms.
 \AgdaHide{
 \begin{code}
@@ -250,10 +243,8 @@ We proceed similarly with the other type isomoprhisms.
 \end{code}
 }
 
-Next we describe the constructors of explicit substitutions.  We have
-the empty substitution, the identity substitution, the extension of a
-substitution with an additional term, composition of substututions and
-projection.
+For explicit substitutions we consider canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
+substitution, the empty substitution, the extension with an additional term and the projection which forgets the last term.
 \begin{code}
   data Subst : ∀ {Δ} → Context Δ → Context Δ → Set where
     ε : ∀ {Δ} (Γ : Context Δ) → Subst Γ •
@@ -263,13 +254,12 @@ projection.
     _o_ : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} → Subst Γ₂ Γ₃ → Subst Γ₁ Γ₂ → Subst Γ₁ Γ₃
     pr : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} → Subst Γ₁ (Γ₂ , A) → Subst Γ₁ Γ₂
 \end{code}
-On top of the usual constructors, we add a rule embedding
-substitutions between contexts existing in the \IC{∅} clock context
-into substitutions between contexts existing in the \IC{κ} clock
+We add a rule embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
 context.
 \begin{code}
     weakenS : {Γ₁ Γ₂ : Context ∅} → Subst Γ₁ Γ₂ → Subst (⇑ Γ₁) (⇑ Γ₂)
 \end{code}
+\NV{We need to add an inverse to weakenS, in analogy with the ⇡ and ↓ term constructors.}
 We require contexts to satisfy two isomorphisms: \IC{⇑ •} needs
 to be isomorphic to \IC{•} and \IC{⇑} (\Ar{Γ} \IC{,} \Ar{A})
 needs to be isomorphic to \IC{⇑} \Ar{Γ} \IC{,} \IC{⇑}
@@ -281,8 +271,8 @@ the context isomorphisms:
 \end{code}
 \end{AgdaAlign}
 It is possible to define an element \F{weaken-to-•} in \F{Subst}
-(\IC{⇑ •}) \IC{•}. When we introduce the definitional
-equality on substitutions, we will ask for \IC{•-to-weaken} and
+(\IC{⇑ •}) \IC{•}.In the definitional
+equality on substitutions, we ask for \IC{•-to-weaken} and
 \F{weaken-to-•} to be each other inverses. We proceed similarly with
 \IC{,-weaken}.
 
@@ -424,8 +414,8 @@ infix 13 _∼_ _≈_
 \end{code}
 }
 
-The notions of definitional equality for terms and substitutions are defined simultaneously.
-Here we only discuss term equality, we refer to the Agda formalization for the equality of substitutions.
+Finally we present definitional equality on terms and substitutions, which are defined simultaneously.
+Here we only discuss equality on terms, we refer to the Agda formalization for the equality on substitutions.
 \AgdaHide{
 \begin{code}
 mutual
@@ -436,10 +426,11 @@ mutual
   data _∼_ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Term Γ A → Set where
 \end{code}
 The term equality includes rules for equivalence, congruence and
-substitution. There are also $\beta$ and $\eta$ rules for each type
-former. Among these rules, here we only show the ones associated to
-\IC{□}. The rules state that \IC{box-q} and \IC{unbox-q} are each
-other inverses up to \AD{∼}.
+substitution. There are also $\beta$ and $\eta$ rules for the type
+former. Among these rules, here we only show the ones associated to the
+\IC{□} modality. The rules state that \IC{box-q} and \IC{unbox-q} are each
+other inverses.
+%up to \AD{∼}.
 \AgdaHide{
 \begin{code}
     refl∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t : Term Γ A} → t ∼ t
@@ -485,12 +476,12 @@ other inverses up to \AD{∼}.
     □-β : ∀ {Γ} {A} (t : Term (⇑ Γ) A) → unbox-q (box-q t) ∼ t
     □-η : ∀ {Γ} {A} (t : Term Γ (□ A)) → box-q (unbox-q t) ∼ t
 \end{code}
-The term equality contains rules exibiting that \IC{next} and \IC{⊛}
-define an applicative functor structure on \IC{▻}. There is also the
-characteristic equality of the fixpoint combinator, stating that
-\IC{fix-tm} \Ar{f} is equal to the application of the function term
-\Ar{f} to \IC{next} (\IC{fix-tm} \Ar{f}). A complete list of these
-equalities has been given by M{\o}gelberg \cite{Mogelberg14}.
+There are rules exibiting that \IC{▻}, \IC{next} and \IC{⊛} satisfy the applicative functor laws. The fixpoint combinator \IC{fix-tm} must satisfy its characteristic unfolding equation.
+%% There is also the
+%% characteristic equality of the fixpoint combinator, stating that
+%% \IC{fix-tm} \Ar{f} is equal to the application of the function term
+%% \Ar{f} to \IC{next} (\IC{fix-tm} \Ar{f}).
+We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equalities that the later modality and the terms associated with it are required to satisfy.
 \AgdaHide{
 \begin{code}
     ⇡-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → ↓ (⇡ t) ∼ t
@@ -544,18 +535,17 @@ equalities has been given by M{\o}gelberg \cite{Mogelberg14}.
 \end{code}
 }
 There is a group of term equalities exibiting the existence of
-certain type isomorphisms. For example, we have equalities proving
-that any type \Ar{A} in \F{Type} \IC{∅} is isomorphic to \IC{□}
-(\IC{⇑} \Ar{A}).
+certain type isomorphisms. For example, we have equalities stating
+that \IC{□const} and \F{const□} are each other inverses.
 \begin{code}
     const□const : {Γ : Context ∅} {A : Type ∅} (t : Term Γ (□ (⇑ A)))
       → app-map (const□ Γ A) (app-map (□const A) t) ∼ t
     □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)
       → app-map (□const A) (app-map (const□ Γ A) t) ∼ t
 \end{code}
-The last group of term equalities describes the relation between the
-weakening term constructors \IC{⇡} and \IC{↓} and other term
-formers. Here we omit the description of these rules and we refer the
+\NV{Here we are using app-map, which we haven't introduced in the paper.}
+The last group of term equalities describes the relationship between the
+weakening operations \IC{⇡} and \IC{↓} and other term constructors. Here we omit the description of these rules and we refer the
 interested reader to the Agda formalization.
 \AgdaHide{
 \begin{code}
