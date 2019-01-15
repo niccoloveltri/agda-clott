@@ -34,7 +34,7 @@ postulate
 
 Uniqueness of identity proofs states that all proofs of identity are
 equal. Agda natively supports this principle and we can prove it by
-induction.
+pattern matching on the two equality proofs \Ar{p} and \Ar{q}.
 \begin{code}
 uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
 uip {A} {x} {y} {refl} {refl} = refl

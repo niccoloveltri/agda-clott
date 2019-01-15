@@ -71,7 +71,11 @@ are indexed by a clock context. We refer to types and contexts
 existing in the empty clock context as \IC{∅}-types and
 \IC{∅}-contexts. Similarly we talk about \IC{κ}-types and
 \IC{κ}-contexts for types and contexts existing in the clock context
-with exactly one clock \IC{κ}. The well-formed types of \GTT\ include a unit type,
+with exactly one clock \IC{κ}.
+
+\subsection{Types}
+
+The well-formed types of \GTT\ include a unit type,
 products, coproducts and function spaces. Notice that \IC{𝟙} is a
 \IC{∅}-type.
 \begin{AgdaAlign}
@@ -359,6 +363,7 @@ We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} a functor \F{evalP}
 \end{code}
 }
 
+\subsection{Contexts}
 The well-formed contexts of \GTT\ include the empty context, context extension and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
 \begin{AgdaAlign}
 \begin{code}%
@@ -415,6 +420,8 @@ The well-formed contexts of \GTT\ include the empty context, context extension a
 \>[0]\AgdaKeyword{mutual}\<%
 \end{code}
 }
+
+\subsection{Terms}
 
 The well-typed terms and substitutions of \GTT\ are defined simultaneously. Terms
 include constructors for variables and substitutions.
@@ -1153,6 +1160,7 @@ We proceed similarly with the other type isomoprhisms.
 \end{code}
 }
 
+\subsection{Substitutions}
 For explicit substitutions we consider canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
 substitution, the empty substitution, the extension with an additional term and the projection which forgets the last term.
 \begin{code}%
@@ -2771,7 +2779,8 @@ weakenμ P =
 \end{code}
 }
 
-Finally we present definitional equality on terms and substitutions, which are defined simultaneously.
+\subsection{Definitional equalities}
+Definitional equalities on terms and substitutions are defined simultaneously.
 Here we only discuss equality on terms, we refer to the Agda formalization for the equality on substitutions.
 \AgdaHide{
 \begin{code}%

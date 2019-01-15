@@ -86,7 +86,7 @@ sem-next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (▻ (B ⟶ C))
 sem-next-comp g f t i x = ►eq (λ {_ → refl})
 
 sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
-  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (⇑m _ _ _ t))) ⊛ f ⟧tm
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambdaTm (app-map (varTm _ _) (wk t))) ⊛ f ⟧tm
 sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
 dfix-eq : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A))

@@ -50,7 +50,11 @@ are indexed by a clock context. We refer to types and contexts
 existing in the empty clock context as \IC{∅}-types and
 \IC{∅}-contexts. Similarly we talk about \IC{κ}-types and
 \IC{κ}-contexts for types and contexts existing in the clock context
-with exactly one clock \IC{κ}. The well-formed types of \GTT\ include a unit type,
+with exactly one clock \IC{κ}.
+
+\subsection{Types}
+
+The well-formed types of \GTT\ include a unit type,
 products, coproducts and function spaces. Notice that \IC{𝟙} is a
 \IC{∅}-type.
 \begin{AgdaAlign}
@@ -134,6 +138,7 @@ evalP (▻P P) X = ▻ (evalP P X)
 \end{code}
 }
 
+\subsection{Contexts}
 The well-formed contexts of \GTT\ include the empty context, context extension and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
 \begin{AgdaAlign}
 \begin{code}
@@ -154,6 +159,8 @@ data Context : ClockContext → Set where
 mutual
 \end{code}
 }
+
+\subsection{Terms}
 
 The well-typed terms and substitutions of \GTT\ are defined simultaneously. Terms
 include constructors for variables and substitutions.
@@ -243,6 +250,7 @@ We proceed similarly with the other type isomoprhisms.
 \end{code}
 }
 
+\subsection{Substitutions}
 For explicit substitutions we consider canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
 substitution, the empty substitution, the extension with an additional term and the projection which forgets the last term.
 \begin{code}
@@ -287,8 +295,8 @@ weaken-, Γ A = weakenS (pr (idsub (Γ , A))) ,s ⇡ (varTm Γ A)
 weakenSA : ∀ {Δ} {Γ Γ' : Context Δ} (A : Type Δ) → Subst Γ Γ' → Subst (Γ , A) (Γ' , A)
 weakenSA {_} {Γ} {Γ'} A s = (s o pr (idsub (Γ , A))) ,s varTm Γ A
 
-⇑m  : ∀ {Δ} (Γ : Context Δ) (A B : Type Δ) → Term Γ B → Term (Γ , A) B
-⇑m Γ A B x = sub x (pr (idsub (Γ , A)))
+wk  : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ B → Term (Γ , A) B
+wk x = sub x (pr (idsub (_ , _)))
 
 app-map : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
 app-map {_} {Γ} {A} {B} f x = sub (appTm f) (idsub Γ ,s x)
@@ -300,19 +308,19 @@ idmap {_} {Γ} A = lambdaTm (varTm Γ A)
   → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊞ B₁) ⟶ (A₂ ⊞ B₂))
 ⊞map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
   lambdaTm (⊞rec (A₂ ⊞ B₂)
-                 (in₁ B₂ (app-map (⇑m Γ A₁ (A₁ ⟶ A₂) f) (varTm Γ A₁)))
-                 (in₂ A₂ (app-map (⇑m Γ B₁ (B₁ ⟶ B₂) g) (varTm Γ B₁))))
+                 (in₁ B₂ (app-map (wk f) (varTm Γ A₁)))
+                 (in₂ A₂ (app-map (wk g) (varTm Γ B₁))))
 
 ⊠map : ∀ {Δ} {Γ : Context Δ} {A₁ B₁ A₂ B₂ : Type Δ}
   → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊠ B₁) ⟶ (A₂ ⊠ B₂))
 ⊠map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
-  lambdaTm [ app-map (⇑m Γ (A₁ ⊠ B₁) (A₁ ⟶ A₂) f) (π₁ (varTm Γ (A₁ ⊠ B₁)))
-           & app-map (⇑m Γ (A₁ ⊠ B₁) (B₁ ⟶ B₂) g) (π₂ (varTm Γ (A₁ ⊠ B₁))) ]
+  lambdaTm [ app-map (wk f) (π₁ (varTm Γ (A₁ ⊠ B₁)))
+           & app-map (wk g) (π₂ (varTm Γ (A₁ ⊠ B₁))) ]
 
 ▻Pmap : {Γ : Context κ} {A B : Type κ}
   → Term Γ (A ⟶ B) → Term Γ (▻ A ⟶ ▻ B)
 ▻Pmap {Γ} {A} {B} f =
-  lambdaTm (⇑m Γ (▻ A) (▻ (A ⟶ B)) (next f) ⊛ varTm Γ (▻ A))
+  lambdaTm (wk (next f) ⊛ varTm Γ (▻ A))
 
 Pmap : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A B : Type Δ}
   → Term Γ (A ⟶ B) → Term Γ (evalP P A ⟶ evalP P B)
@@ -328,9 +336,9 @@ compmap {_} {Γ} {A} {B} {C} =
     (lambdaTm
       (lambdaTm
         (app-map
-          (⇑m _ _ _ (⇑m _ _ _ (varTm _ _)))
+          (wk (wk (varTm _ _)))
           (app-map
-            (⇑m _ _ _ (varTm _ _))
+            (wk (varTm _ _))
             (varTm _ _)))))
 
 □functor : {Γ : Context ∅} {A B : Type κ} → Term (⇑ Γ) (A ⟶ B) → Term Γ (□ A) → Term Γ (□ B)
@@ -363,12 +371,12 @@ help-weaken⊞ A B = lambdaTm (app-map (sum□ (⇑ A) (⇑ B))
 □-adj₁ : (A : Type ∅) (B : Type κ) → Term • (⇑ A ⟶ B) → Term • (A ⟶ □ B)
 □-adj₁ A B t = lambdaTm (box-q
                               (app-map
-                                (sub (⇑m (⇑ •) (⇑ A) (⇑ A ⟶ B) (sub t (ε (⇑ •))))
+                                (sub (wk (sub t (ε (⇑ •))))
                                      (weaken-, • A))
                                 (⇡ (varTm _ _))))
 
 □-adj₂ : (A : Type ∅) (B : Type κ) → Term • (A ⟶ □ B) → Term • (⇑ A ⟶ B)
-□-adj₂ A B t = lambdaTm (sub (unbox-q (app-map (⇑m • A (A ⟶ □ B) t) (varTm _ _)))
+□-adj₂ A B t = lambdaTm (sub (unbox-q (app-map (wk t) (varTm _ _)))
                                    (,-weaken • A o weakenSA (⇑ A) •-to-weaken))
 
 weaken⊞ : (A B : Type ∅) → Term • (⇑(A ⊞ B) ⟶ ((⇑ A) ⊞ (⇑ B)))
@@ -380,7 +388,7 @@ split-prod Γ A B C t = sub t ((pr (idsub (Γ , (A ⊠ B))) ,s π₁ (varTm _ _)
 
 ⊠weaken : (A B : Type ∅) → Term • (((⇑ A) ⊠ (⇑ B)) ⟶ ⇑(A ⊠ B))
 ⊠weaken A B = lambdaTm (split-prod • (⇑ A) (⇑ B) (⇑(A ⊠ B))
-                                   (sub (⇡ [ ⇑m _ _ _ (varTm _ _) & varTm _ _ ])
+                                   (sub (⇡ [ wk (varTm _ _) & varTm _ _ ])
                                         (,-weaken (• , A) B o weakenSA (⇑ B) (,-weaken • A o weakenSA (⇑ A) •-to-weaken))))
 
 weaken⊠ : (A B : Type ∅) → Term • (⇑(A ⊠ B) ⟶ ((⇑ A) ⊠ (⇑ B)))
@@ -390,7 +398,7 @@ weaken⊠ A B = lambdaTm [ sub (⇡ (π₁ (varTm • (A ⊠ B)))) (,-weaken •
 weaken⟶ : (A B : Type ∅) → Term • (⇑(A ⟶ B) ⟶ ((⇑ A) ⟶ (⇑ B)))
 weaken⟶ A B =
   lambdaTm (lambdaTm
-           (sub (⇡ (app-map (⇑m (• , (A ⟶ B)) A (A ⟶ B) (varTm • (A ⟶ B))) (varTm (• , (A ⟶ B)) A)))
+           (sub (⇡ (app-map (wk (varTm • (A ⟶ B))) (varTm (• , (A ⟶ B)) A)))
                 (,-weaken (• , (A ⟶ B)) A o weakenSA (⇑ A) (,-weaken • (A ⟶ B) o weakenSA (⇑ (A ⟶ B)) •-to-weaken))))
 {-
 subst-μ-help : ∀ {Δ} (Γ : Context Δ) (A B : Type Δ)
@@ -414,7 +422,8 @@ infix 13 _∼_ _≈_
 \end{code}
 }
 
-Finally we present definitional equality on terms and substitutions, which are defined simultaneously.
+\subsection{Definitional equalities}
+Definitional equalities on terms and substitutions are defined simultaneously.
 Here we only discuss equality on terms, we refer to the Agda formalization for the equality on substitutions.
 \AgdaHide{
 \begin{code}
@@ -491,7 +500,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
       → ((next compmap ⊛ g) ⊛ f) ⊛ t ∼ g ⊛ (f ⊛ t)
     next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → next f ⊛ next t ∼ next (app-map f t)
     next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
-      → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (⇑m _ _ _ t))) ⊛ f
+      → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (wk t))) ⊛ f
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) → fix-tm f ∼ app-map f (next (fix-tm f))
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix-tm f ∼ u
     primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)) (a : Term Γ (evalP P (μ P)))

@@ -32,35 +32,13 @@
 \end{code}
 }
 
-We give a small taste of how to program in \GTT\ by defining the type of streams.
-\begin{code}%
-\>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{∅}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Type}\AgdaSpace{}%
-\AgdaInductiveConstructor{κ}\<%
-\\
-\>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaSymbol{((}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSymbol{))}\<%
-\end{code}
-
-\AgdaHide{
+\subsection{Example: Streams}
+We give a taste of how to program with streams in \GTT. First we construct a function \F{cons-inv} which is definable using \IC{primrec}.
 \begin{code}%
 \>[0]\AgdaFunction{cons{-}inv}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Context}\AgdaSpace{}%
@@ -81,7 +59,9 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{))}\<%
-\\
+\end{code}
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaFunction{cons{-}inv}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{Γ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -108,7 +88,29 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaBound{P}\AgdaSymbol{)))))))}\<%
 \end{code}
 }
-
+The type of guarded streams over a \IC{∅}-type \Ar{A} is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.
+\begin{code}%
+\>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Type}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\<%
+\\
+\>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
+\AgdaInductiveConstructor{I}\AgdaSymbol{)}\<%
+\end{code}
+The head of a guarded stream \Ar{xs} is computed in three steps. First
+we apply \F{cons-inv} to \Ar{xs}, obtaining a \GTT\ pair of type \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P} (\F{g-Str} \Ar{A}). Then we take the first projection of this pair using the constructor \IC{π₁} and we conclude with an application of \IC{↓}, which is necessary since \Ar{A} is a \IC{∅}-type.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}hd}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -146,7 +148,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaInductiveConstructor{I}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\<%
 \end{code}
-
+The tail of a guarded stream is computed in a similar way, using \IC{π₂} instead of \IC{π₁} and without the application of \IC{↓} in the last step. Notice that the tail is a \GTT\ term of type \IC{▻} (\F{g-Str} \Ar{A}), meaning that it is available only one time step ahead from now.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}tl}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -184,7 +186,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaInductiveConstructor{I}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)}\<%
 \end{code}
-
+The usual type of streams over \Ar{A} is obtained by applying the \IC{□} modality to \F{g-Str} \Ar{A}.
 \begin{code}%
 \>[0]\AgdaFunction{Str}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -201,7 +203,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{(}\AgdaFunction{g{-}Str}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
 \end{code}
-
+The head of a stream \Ar{xs} is computed by applying the function \F{g-hd} to the unboxing of \Ar{xs}.
 \begin{code}%
 \>[0]\AgdaFunction{hd}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -230,7 +232,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)}\<%
 \end{code}
-
+For computing the tail of a stream \Ar{xs} we first apply the function \F{g-tl} to the unboxing of \Ar{xs}, obtaining an element of \F{Term} (\IC{⇑} \Ar{Γ}) (\IC{▻} (\F{g-Str} \Ar{A})). Then we \IC{box-q} followed by \IC{force}.
 \begin{code}%
 \>[0]\AgdaFunction{tl}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -262,7 +264,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)))}\<%
 \end{code}
-
+Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}const}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -293,10 +295,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{(}\AgdaInductiveConstructor{cons}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaFunction{⇑m}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaFunction{wk}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
@@ -305,7 +304,8 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))}\<%
 \end{code}
-
+\NV{Here we use wk, which we have not introduced. Also, it would be nice to have the first argument of cons implicit. Similarly, the two arguments of varTm should be implicit.}
+The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-const} \Ar{a}.
 \begin{code}%
 \>[0]\AgdaFunction{const{-}str}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -492,7 +492,7 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaKeyword{let}%
-\>[394I]\AgdaBound{s}\AgdaSpace{}%
+\>[390I]\AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
@@ -504,13 +504,10 @@ We give a small taste of how to program in \GTT\ by defining the type of streams
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}))}\<%
 \\
-\>[.]\<[394I]%
+\>[.]\<[390I]%
 \>[6]\AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{⇑m}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaFunction{wk}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})}\<%
