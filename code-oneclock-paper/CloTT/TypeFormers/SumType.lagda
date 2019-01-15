@@ -15,13 +15,13 @@ open NatTrans
 }
 
 \begin{code}
-_⊕_ : {b : ClockContext} (A B : Ty b) → Ty b 
+_⊕_ : {Δ : ClockContext} (A B : Ty Δ) → Ty Δ
 _⊕_ {∅} A B = A ⊎ B
 _⊕_ {κ} A B = Sum A B
 \end{code}
 
 \begin{code}
-inl : {b : ClockContext} (Γ : Ctx b) (A B : Ty b) (x : Tm Γ A) → Tm Γ (A ⊕ B)
+inl : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (x : Tm Γ A) → Tm Γ (A ⊕ B)
 inl {∅} Γ A B t x = inj₁ (t x)
 nat-map (inl {κ} Γ A B x) Δ y = inj₁ (nat-map x Δ y)
 nat-com (inl {κ}Γ A B x) Δ Δ' y = 
@@ -33,7 +33,7 @@ nat-com (inl {κ}Γ A B x) Δ Δ' y =
 \end{code}
 
 \begin{code}
-inr : {b : ClockContext} (Γ : Ctx b) (A B : Ty b) (x : Tm Γ B) → Tm Γ (A ⊕ B)
+inr : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (x : Tm Γ B) → Tm Γ (A ⊕ B)
 inr {∅} Γ A B t x = inj₂ (t x)
 nat-map (inr {κ} Γ A B x) Δ y = inj₂ (nat-map x Δ y)
 nat-com (inr {κ} Γ A B x) Δ Δ' y =
@@ -45,7 +45,7 @@ nat-com (inr {κ} Γ A B x) Δ Δ' y =
 \end{code}
 
 \begin{code}
-sum-rec : {b : ClockContext} (Γ : Ctx b) (A B C : Ty b)
+sum-rec : {Δ : ClockContext} (Γ : Ctx Δ) (A B C : Ty Δ)
           (left : Tm (Γ ,, A) C) (right : Tm (Γ ,, B) C)
           → Tm (Γ ,, (A ⊕ B)) C
 sum-rec {∅} Γ A B C left right (x , inj₁ l) = left (x , l)
