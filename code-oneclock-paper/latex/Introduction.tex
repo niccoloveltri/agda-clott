@@ -68,13 +68,31 @@ disciplines is still missing. In this paper we take a first step in
 this direction by showing how guarded recursion can be simulated in
 Agda using sized types. 
 
+Using techniques for representing ``type theory in type theory''
+\cite{Chapman09,AltenkirchK16}, in Section \ref{sec:syntax} we present
+an Agda formalization of the syntax of a simple type theory with
+guarded recursion. This object language, that we call \GTT, is a variant of Atkey and
+McBride's type system for productive coprogramming
+\cite{atkey2013productive} in which the clock context can contain at
+most one clock.
+
+In Section \ref{sec:presheaf_sem}, we develop a denotational semantics
+for \GTT\ using sized types. More precisely, we define a presheaf
+model where the type formers of simply typed lambda calculus are
+evaluated using the standard Kripke semantics. Typically the semantics
+of type theories for guarded recursion is given in the topos of
+trees or variations thereof \cite{BMSS-synthetic} \NV{Add citations here}.
+In order to make clear the connections between guarded recursion and
+sized types, we take the preorder of sizes as the indexing
+category of our presheaves. This means that types and contexts of \GTT\ are
+interpreted as antitone sized types. 
 
 \NV{WIP from this point}
 
-To compare the strength of these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
-This shows that guarded recursive type theory can be done via sized types.
-More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
-Simple types are interpreted via the usual presheaf semantics.
+%% To compare the strength of these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
+%% This shows that guarded recursive type theory can be done via sized types.
+%% More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
+%% Simple types are interpreted via the usual presheaf semantics.
 
 In contrast, interpreting guarded recursion and guarded recursive types is more challenging.
 The most common model in the literature is the topos of trees \cite{BMSS-synthetic}.
