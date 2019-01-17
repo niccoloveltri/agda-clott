@@ -1,14 +1,69 @@
-In dependent type theory, one usually works with terminating computations to ensure consistency.
-Yet many interesting programs are not terminating and use possibly infinite data types.
-To remain consistent, the computations must be productive \cite{Coquand93}.
-This means: every finite part of an infinite object can be computed in a finite number of steps.
+Dependent type theory is a very expressive functional programming
+language that underlies the deductive system of proof assistants such
+as Coq, Agda \cite{norell2008} and Lean.  It is a total language,
+meaning that every program definable inside type theory is necessarily
+terminating. This is an important requirement that ensures the
+consistency of the type system. 
 
-To allow convenient programming and reasoning with infinite objects, we need to extend our type theory with productivity checks.
-To this end, various approaches have been developed.
-One is based on sized types \cite{A-sized,AVW-normalization}, where types are assigned a size to indicate the number of unfoldings.
-These are implemented in Agda \cite{norell2008}.
-Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
-At the current moment, there is no proof assistant based on guarded recursion.
+Possibly non-terminating computations
+and infinite structures such as non-wellfounded trees can be
+represented in type theory by extending the type system with
+coinductive types. Elements of these types, which we call processes,
+are required to be productive \cite{Coquand93} in the sense that every
+finite unfolding can be computed in a finite number of steps.
+In Agda's encoding of coinductive types using ``musical notation''
+\NV{Citation? What about Coq?}, productivity is achieved using a strict method: in the
+definition of corecursive functions, the recursive
+call is required to appear directly under
+the application of a constructor. This restriction
+typically makes programming with processes cumbersome,
+which spawned the search for alternative techniques for ensuring the
+well-definedness of corecursive definitions.
+
+We focus on two of these techniques in which productivity is encoded
+at the level of types: sized types and guarded recursion. A sized type
+\NV{Cite Huges?} is a type annotated with the number of unfolding that
+elements of this type can undergo. Sized types have been implemented
+in Agda \cite{A-sized,AVW-normalization} and can be used in
+combination with coinductive records \NV{Cite Copatterns?} for the
+specification of coinductive types.  Guarded recursion \NV{Cite
+  Nakano?} is a different approach where the type system is enhanced
+with a modality, called ``later'' and written \IC{▻}, encoding time
+delay in types. The later modality comes with a general fixpoint
+combinator for programming with productive recursive functions and
+allows the specification of guarded recursive types, \eg the
+type of guarded streams satisfying the isomorphism \F{Str}
+\Ar{A} \F{≃} \Ar{A} \F{×} \IC{▻} (\F{Str} \F{A}). The tail
+of a guarded stream is available only one time step ahead from now, as
+evidenced by the application of the later modality to \F{Str}
+\F{A}. Coinductive types can be constructed from guarded recursive
+types in type theories that additionally support clock variables and
+universal quantification over them
+\cite{atkey2013productive,BahrGM17}. An implementation of
+calculi with guarded recursion is currently missing.
+%%  nor guarded recursion
+%% appears as a selectable feature in a proof assistant.
+
+%% In recent years we witnessed
+%% the development of several type theories with primitive support for guarded
+%% recursion \cite{atkey2013productive,BahrGM17}. 
+
+
+%% In dependent type theory, one usually works with terminating
+%% computations to ensure consistency.  Yet many interesting programs are
+%% not terminating and use possibly infinite data types.  To remain
+%% consistent, the computations must be productive.  This means: every
+%% finite part of an infinite object can be computed in a finite number
+%% of steps.
+
+%% To allow convenient programming and reasoning with infinite objects, we need to extend our type theory with productivity checks.
+%% To this end, various approaches have been developed.
+%% One is based on sized types \cite{A-sized,AVW-normalization}, where types are assigned a size to indicate the number of unfoldings.
+%% These are implemented in Agda \cite{norell2008}.
+%% Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
+%% At the current moment, there is no proof assistant based on guarded recursion.
+
+\NV{WIP from this point}
 
 To compare the strength of these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
 This shows that guarded recursive type theory can be done via sized types.
@@ -37,4 +92,6 @@ First, we give the interpretation of context, types, and terms in the model, and
 Then we show this model supports guarded recursion and guarded recursive types.
 Finally, we show the syntax is consistent in Section 6.
 
-\subsection*{Related Work}
+%% \subsection{Related Work}
+%% 
+%% Guarded recursion via the later modality was introduced by Nakano \NV{Citation}.
