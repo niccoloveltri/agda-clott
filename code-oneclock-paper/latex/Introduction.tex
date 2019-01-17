@@ -1,6 +1,6 @@
 Dependent type theory is a very expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Coq, Agda \cite{norell2008} and Lean.  It is a total language,
+as Coq, Agda and Lean.  It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
@@ -12,7 +12,7 @@ coinductive types. Elements of these types, which we call processes,
 are required to be productive \cite{Coquand93} in the sense that every
 finite unfolding can be computed in a finite number of steps.
 In Agda's encoding of coinductive types using ``musical notation''
-\NV{Citation? What about Coq?}, productivity is achieved using a strict method: in the
+\cite{DA10} \NV{What about Coq?}, productivity is achieved using a strict method: in the
 definition of corecursive functions, the recursive
 call is required to appear directly under
 the application of a constructor. This restriction
@@ -22,25 +22,24 @@ well-definedness of corecursive definitions.
 
 We focus on two of these techniques in which productivity is encoded
 at the level of types: sized types and guarded recursion. A sized type
-\NV{Cite Huges?} is a type annotated with the number of unfolding that
+\cite{Hughes96} is a type annotated with the number of unfolding that
 elements of this type can undergo. Sized types have been implemented
 in Agda \cite{A-sized,AVW-normalization} and can be used in
-combination with coinductive records \NV{Cite Copatterns?} for the
-specification of coinductive types.  Guarded recursion \NV{Cite
-  Nakano?} is a different approach where the type system is enhanced
-with a modality, called ``later'' and written \IC{▻}, encoding time
-delay in types. The later modality comes with a general fixpoint
-combinator for programming with productive recursive functions and
-allows the specification of guarded recursive types, \eg the
-type of guarded streams satisfying the isomorphism \F{Str}
-\Ar{A} \F{≃} \Ar{A} \F{×} \IC{▻} (\F{Str} \F{A}). The tail
-of a guarded stream is available only one time step ahead from now, as
-evidenced by the application of the later modality to \F{Str}
-\F{A}. Coinductive types can be constructed from guarded recursive
-types in type theories that additionally support clock variables and
-universal quantification over them
-\cite{atkey2013productive,BahrGM17}. An implementation of
-calculi with guarded recursion is currently missing.
+combination with coinductive records for the specification of
+coinductive types \cite{Copatterns}.  Guarded recursion \cite{Nakano}
+is a different approach where the type system is enhanced with a
+modality, called ``later'' and written \IC{▻}, encoding time delay in
+types. The later modality comes with a general fixpoint combinator for
+programming with productive recursive functions and allows the
+specification of guarded recursive types, \eg the type of guarded
+streams satisfying the isomorphism \F{Str} \Ar{A} \F{≃} \Ar{A} \F{×}
+\IC{▻} (\F{Str} \F{A}). The tail of a guarded stream is available only
+one time step ahead from now, as evidenced by the application of the
+later modality to \F{Str} \F{A}. Coinductive types can be constructed
+from guarded recursive types in type theories that additionally
+support clock variables and universal quantification over them
+\cite{atkey2013productive,BahrGM17}. Currently there is no
+implementation of a calculus with guarded recursion.
 %%  nor guarded recursion
 %% appears as a selectable feature in a proof assistant.
 
@@ -62,6 +61,13 @@ calculi with guarded recursion is currently missing.
 %% These are implemented in Agda \cite{norell2008}.
 %% Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
 %% At the current moment, there is no proof assistant based on guarded recursion.
+
+Sized types and guarded recursion are different solution to the same
+problem, but a thorough study of the relation between these two
+disciplines is still missing. In this paper we take a first step in
+this direction by showing how guarded recursion can be simulated in
+Agda using sized types. 
+
 
 \NV{WIP from this point}
 
