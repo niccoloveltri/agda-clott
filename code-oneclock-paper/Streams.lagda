@@ -12,6 +12,11 @@ open import Prelude.Syntax
 }
 
 \subsection{Example: Streams}
+
+\NV{This section is definitely too long. Perhaps hd and tl can be
+defined directly without introducing g-hd and g-tl. We could also skip
+the constant stream and refer to the Agda formalization.}
+
 We give a taste of how to program with streams in \GTT. First we construct a function \F{cons-inv} which is definable using \IC{primrec}.
 \begin{code}
 cons-inv : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (μ P) → Term Γ (eval P (μ P))
