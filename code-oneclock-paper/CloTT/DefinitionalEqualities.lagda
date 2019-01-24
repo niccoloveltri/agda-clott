@@ -180,6 +180,42 @@ sem-sub-η {∅} s x = refl
 sem-sub-η {κ} s i x = refl
 
 sem-primrec-set : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
+  → (t : Term Γ (evalP P (μ P ⊠ A) ⟶ A))
+  → (x : ⟦ Γ ⟧Γ) (a : ⟦ evalP Q (μ P) ⟧A)
+  → primrec-set' P Q A (⟦ t ⟧tm x) (consset' P Q a) ≡ ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm x a
+sem-primrec-set P (∁ X) Γ A t x a = refl
+sem-primrec-set P I Γ A t x a = refl
+sem-primrec-set P (Q ⊠ R) Γ A t x (a₁ , a₂) =
+  cong₂ _,_ (sem-primrec-set P Q Γ A t x a₁) (sem-primrec-set P R Γ A t x a₂)
+sem-primrec-set P (Q ⊞ R) Γ A t x (inj₁ a) = cong inj₁ (sem-primrec-set P Q Γ A t x a)
+sem-primrec-set P (Q ⊞ R) Γ A t x (inj₂ a) = cong inj₂ (sem-primrec-set P R Γ A t x a)
+
+sem-primrec-psh : (P Q : Poly κ) (Γ : Context κ) (A : Type κ)
+  → (t : Term Γ (evalP P (μ P ⊠ A) ⟶ A))
+  → (i : Size) (x : Obj ⟦ Γ ⟧Γ i) (j : Size< (↑ i)) (a : Obj ⟦ evalP Q (μ P) ⟧A j)
+  → primrec-psh'₁₁ P Q A i (nat-map ⟦ t ⟧tm i x) j (cons₁' P Q j a) ≡ fun (nat-map ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i x) j a
+sem-primrec-psh P (∁ X) Γ A t i x j a = refl
+sem-primrec-psh P I Γ A t i x j a =
+  cong₂ (λ z w → a , fun z j w) (nat-com ⟦ t ⟧tm i j x)
+                                (primrec-psh'₂ P P ⟦ Γ ⟧Γ A ⟦ t ⟧tm i j x j a)
+sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₁ a) =
+  cong inj₁ (trans (sem-primrec-psh P Q Γ A t i x j a)
+                   (cong (λ z → fun z j a) (nat-com ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i j x)))
+sem-primrec-psh P (Q ⊞ R) Γ A t i x j (inj₂ a) =
+  cong inj₂ (trans (sem-primrec-psh P R Γ A t i x j a)
+                   (cong (λ z → fun z j a) (nat-com ⟦ Pmap R (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i j x)))
+sem-primrec-psh P (Q ⊠ R) Γ A t i x j (a₁ , a₂) =
+  cong₂ _,_ (trans (sem-primrec-psh P Q Γ A t i x j a₁)
+                   (cong (λ z → fun z j a₁) (nat-com ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i j x)))
+            (trans (sem-primrec-psh P R Γ A t i x j a₂)
+                   (cong (λ z → fun z j a₂) (nat-com ⟦ Pmap R (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i j x)))
+sem-primrec-psh P (▻P Q) Γ A t i x j z =
+  ►eq (λ {k → trans (sem-primrec-psh P Q Γ A t i x k (►cone z [ k ]))
+                    (cong (λ y → fun y k (►cone z [ k ])) (trans (nat-com ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm i k x)
+                                                                 (cong (nat-map ⟦ Pmap Q (pairmap (idmap (μ P)) (primrec P t)) ⟧tm k) (MorComp ⟦ Γ ⟧Γ)))) })
+
+{-
+sem-primrec-set : (P Q : Poly ∅) (Γ : Context ∅) (A : Type ∅)
   → (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A))
   → (x : ⟦ Γ ⟧Γ) (a : ⟦ evalP Q (μ P) ⟧A)
   → primrec-set' P Q A (⟦ t ⟧tm x) (consset' P Q a) ≡ (a , ⟦ Pmap Q (primrec P t) ⟧tm x a) -- (a , ⟦ Pmap Q (primrec P t) ⟧tm x a)
@@ -225,6 +261,7 @@ sem-primrec-psh P (▻P Q) Γ A t i x j z =
                            (cong (λ y → fun y k (►cone z [ k ]))
                                  (trans (nat-com ⟦ Pmap Q (primrec P t) ⟧tm i k x)
                                         (cong (nat-map ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))}))
+-}
 
 μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i)
   → μweaken-help P Q (weakenμ-help P Q i x) i ≡ x

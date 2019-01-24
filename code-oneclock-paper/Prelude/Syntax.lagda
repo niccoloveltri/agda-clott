@@ -181,7 +181,7 @@ coproducts and guarded recursive types. Here we only show the typing rules assoc
       → Term Γ (A ⟶ B) → Term (Γ , A) B
     cons : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (evalP P (μ P)) → Term Γ (μ P)
     primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
-      → Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A) → Term Γ (μ P ⟶ A)
+      → Term Γ (evalP P (μ P ⊠ A) ⟶ A) → Term Γ (μ P ⟶ A)
 \end{code}
 \AgdaHide{
 \begin{code}
@@ -316,6 +316,10 @@ idmap {_} {Γ} A = lambdaTm (varTm Γ A)
 ⊠map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
   lambdaTm [ app-map (wk f) (π₁ (varTm Γ (A₁ ⊠ B₁)))
            & app-map (wk g) (π₂ (varTm Γ (A₁ ⊠ B₁))) ]
+
+pairmap : ∀ {Δ} {Γ : Context Δ} {A B₁ B₂ : Type Δ}
+  → Term Γ (A ⟶ B₁) → Term Γ (A ⟶ B₂) → Term Γ (A ⟶ (B₁ ⊠ B₂))
+pairmap {Δ} {Γ} {A} {B₁} {B₂} f g  = lambdaTm [ appTm f & appTm g ]
 
 ▻Pmap : {Γ : Context κ} {A B : Type κ}
   → Term Γ (A ⟶ B) → Term Γ (▻ A ⟶ ▻ B)
@@ -466,7 +470,7 @@ other inverses.
     cong-fix-tm  : {Γ : Context κ} {A : Type κ} {t₁ t₂ : Term Γ (▻ A ⟶ A)} → t₁ ∼ t₂ → fix-tm t₁ ∼ fix-tm t₂
     cong-force : {Γ : Context ∅} {A : Type κ} {t₁ t₂ : Term Γ (□(▻ A))} → t₁ ∼ t₂ → force t₁ ∼ force t₂
     cong-cons : ∀ {Δ} {Γ : Context Δ} {P : Poly Δ} {t₁ t₂ : Term Γ (evalP P (μ P))} → t₁ ∼ t₂ → cons P t₁ ∼ cons P t₂
-    cong-primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)}
+    cong-primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} {t₁ t₂ : Term Γ (evalP P (μ P ⊠ A) ⟶ A)}
       → t₁ ∼ t₂ → primrec P t₁ ∼ primrec P t₂
     λ-β : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} (t : Term (Γ , A) B) → appTm (lambdaTm t) ∼ t
     λ-η : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⟶ B)) → lambdaTm (appTm t) ∼ t
@@ -503,8 +507,9 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
       → f ⊛ next t ∼ next (lambdaTm (app-map (varTm _ _) (wk t))) ⊛ f
     fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) → fix-tm f ∼ app-map f (next (fix-tm f))
     fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix-tm f ∼ u
-    primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} (t : Term Γ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)) (a : Term Γ (evalP P (μ P)))
-      → app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
+    primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} (t : Term Γ (evalP P (μ P ⊠ A) ⟶ A)) (a : Term Γ (evalP P (μ P)))
+      → app-map (primrec P t) (cons P a) ∼ app-map t (app-map (Pmap P (pairmap (idmap (μ P)) (primrec P t))) a)
+      --app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
     sub-id : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} (t : Term Γ A)
       → sub t (idsub Γ) ∼ t
     sub-sub : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁) (s' : Subst Γ₃ Γ₂)
@@ -539,7 +544,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
       → sub (□sum A B) s ∼ □sum A B
     sub-cons : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {P : Poly Δ} (t : Term Γ₁ (evalP P (μ P))) (s : Subst Γ₂ Γ₁)
       → sub (cons P t) s ∼ cons P (sub t s)
-    sub-primrec : ∀ {Δ} (P : Poly Δ) {Γ₁ Γ₂ : Context Δ} {A : Type Δ} (t : Term Γ₁ ((evalP P (μ P) ⊠ evalP P A) ⟶ A)) (s : Subst Γ₂ Γ₁)
+    sub-primrec : ∀ {Δ} (P : Poly Δ) {Γ₁ Γ₂ : Context Δ} {A : Type Δ} (t : Term Γ₁ (evalP P (μ P ⊠ A) ⟶ A)) (s : Subst Γ₂ Γ₁)
       → sub (primrec P t) s ∼ primrec P (sub t s)
 \end{code}
 }

@@ -76,23 +76,77 @@ nat-map (conspsh P Q Γ t) i γ  = cons₁' P Q i (nat-map t i γ)
 nat-com (conspsh P Q Γ t) i j γ = trans (cons₂' P Q i j (nat-map t i γ)) (cong (cons₁' P Q j) (nat-com t i j γ))
 
 primrec-set' : (P Q : Poly ∅) (A : Type ∅)
-  → ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
   → (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
-  → (⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A)
-primrec-set' P (∁ X) A y (∁s z) = z , z
+  → ⟦ evalP Q (μ P ⊠ A) ⟧A
+primrec-set' P (∁ X) A y (∁s z) = z
 primrec-set' P I A y (I z) = z , y (primrec-set' P P A y z)
-primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₁ z) = inj₁ (proj₁ (primrec-set' P Q₁ A y z)) , inj₁ (proj₂ (primrec-set' P Q₁ A y z))
-primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₂ z) = inj₂ (proj₁ (primrec-set' P Q₂ A y z)) , inj₂ (proj₂ (primrec-set' P Q₂ A y z))
-proj₁ (proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₁ (primrec-set' P Q₁ A y z₁) 
-proj₂ (proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₁ (primrec-set' P Q₂ A y z₂)
-proj₁ (proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₂ (primrec-set' P Q₁ A y z₁)
-proj₂ (proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂))) = proj₂ (primrec-set' P Q₂ A y z₂)
+primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₁ z) = inj₁ (primrec-set' P Q₁ A y z)
+primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₂ z) = inj₂ (primrec-set' P Q₂ A y z)
+proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q₁ A y z₁
+proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q₂ A y z₂
 
 primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
-  → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x a = t x (primrec-set' P P A (t x) a)
 
+primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A i)
+  → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
+  → Obj ⟦ evalP Q (μ P ⊠ A) ⟧A j
+primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A i)
+  → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
+  → Mor ⟦ evalP Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
+    ≡
+    primrec-psh'₁₁ P Q A i t k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
+primrec-psh'₁₁ P (∁ X) A i t j (∁ps z) = z
+primrec-psh'₁₁ P I A i t j (I z) = (z , fun t j (primrec-psh'₁₁ P P A i t j z))
+primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) = inj₁ (primrec-psh'₁₁ P Q₁ A i t j z)
+primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) = inj₂ (primrec-psh'₁₁ P Q₂ A i t j z)
+proj₁ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₁ A i t j z₁
+proj₂ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₂ A i t j z₂
+►cone (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q A i t k (z₁ [ k ]) 
+►com (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂)) [ k ] [ l ] = 
+  trans (primrec-psh'₁₂ P Q A i t k (z₁ [ k ]) l)
+        (cong (primrec-psh'₁₁ P Q A i t l) (z₂ [ k ] [ l ]))
+primrec-psh'₁₂ P (∁ X) A i t j (∁ps z) k = refl
+primrec-psh'₁₂ P I A i f j (I z) k =
+  cong (λ z → (_ , z))
+       (trans (funcom f j k (primrec-psh'₁₁ P P A i f j z))
+              ((cong (fun f k) (primrec-psh'₁₂ P P A i f j z k))))
+primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) k = cong inj₁ (primrec-psh'₁₂ P Q₁ A i t j z k)
+primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) k = cong inj₂ (primrec-psh'₁₂ P Q₂ A i t j z k)
+primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k = 
+  cong₂ (_,_) (primrec-psh'₁₂ P Q₁ A i t j z₁ k) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)
+primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = ►eq (λ {_ → refl})
+
+primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
+  → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
+  → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
+    ≡
+    primrec-psh'₁₁ P Q A j (nat-map t j (Mor Γ i j x)) k z
+primrec-psh'₂ P (∁ X) Γ A t i j x k (∁ps z) = refl
+primrec-psh'₂ P I Γ A t i j x k (I z) =
+  cong (λ q → (z , q))
+       (trans (cong (λ q → fun q k (primrec-psh'₁₁ P P A i (nat-map t i x) k z)) (nat-com t i j x))
+              (cong (λ z → fun (nat-map t j (Mor Γ i j x)) k z) (primrec-psh'₂ P P Γ A t i j x k z)))
+primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) = cong inj₁ (primrec-psh'₂ P Q₁ Γ A t i j x k z)
+primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) = cong inj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z)
+primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
+  cong₂ (_,_) (primrec-psh'₂ P Q₁ Γ A t i j x k z₁) (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)
+primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
+  ►eq (λ {l → primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ])})
+
+primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
+  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
+funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
+  trans (funcom (nat-map f i x) j k _)
+        (cong (fun (nat-map f i x) k) (primrec-psh'₁₂ P P A i (nat-map f i x) j y k))
+nat-com (primrec-psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun a k b) (nat-com t i j x) (primrec-psh'₂ P P ⟦ Γ ⟧Γ A t i j x k z))
+
+{-
 primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
   → Obj ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A j
@@ -179,6 +233,7 @@ funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
   trans (funcom (nat-map f i x) j k _)
         (cong (fun (nat-map f i x) k) (primrec-psh'₁₂ P P A i (nat-map f i x) j y k))
 nat-com (primrec-psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun a k b) (nat-com t i j x) (primrec-psh'₂ P P ⟦ Γ ⟧Γ A t i j x k z))
+-}
 
 μweaken-help : (P Q : Poly ∅) → μset ⟦ P ⟧poly ⟦ Q ⟧poly → (i : Size) → μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i
 μweaken-help P (∁ X) (∁s x) i = ∁ps x
@@ -255,7 +310,7 @@ mutual
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm
   ⟦_⟧tm {∅} (primrec P {Γ} {A} t) = primrec-set P Γ A ⟦ t ⟧tm
-  ⟦_⟧tm {κ} (primrec P {Γ} {A} t) = primrec-psh P Γ A ⟦ t ⟧tm
+  ⟦_⟧tm {κ} (primrec P {Γ} {A} t) = primrec-psh P Γ A ⟦ t ⟧tm 
   ⟦ □const A ⟧tm = ■const-tm _ ⟦ A ⟧A
   ⟦ □sum A B ⟧tm = ■sum-tm _ ⟦ A ⟧A ⟦ B ⟧A
   fun (nat-map ⟦ ⟶weaken A B ⟧tm i x) j f = fun f j

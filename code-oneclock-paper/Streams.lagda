@@ -18,7 +18,7 @@ cons-inv : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (μ P) → Term 
 \end{code}
 \AgdaHide{
 \begin{code}
-cons-inv {Γ = Γ} P = app-map (primrec P (lambdaTm (π₁ (varTm Γ (evalP P (μ P) ⊠ evalP P (evalP P (μ P)))))))
+cons-inv {Γ = Γ} P = app-map (primrec P (Pmap P (lambdaTm (π₁ (varTm Γ (μ P ⊠ evalP P (μ P))))))) 
 \end{code}
 }
 The type of guarded streams over a \IC{∅}-type \Ar{A} is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.

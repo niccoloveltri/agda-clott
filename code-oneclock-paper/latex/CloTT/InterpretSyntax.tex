@@ -72,39 +72,27 @@
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧poly}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
+\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 %
-\>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧poly}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
-\\
-%
-\>[2]\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟦}}}\AgdaSpace{}%
-\AgdaInductiveConstructor{\AgdaCatchallClause{I}}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟧poly}}}\AgdaSpace{}%
+\>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧poly}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\<%
 \\
 %
-\>[2]\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟦}}}\AgdaSpace{}%
-\AgdaBound{\AgdaCatchallClause{P}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{\AgdaCatchallClause{⊞}}}\AgdaSpace{}%
-\AgdaBound{\AgdaCatchallClause{Q}}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟧poly}}}\AgdaSpace{}%
+\>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧poly}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -115,11 +103,11 @@
 \AgdaOperator{\AgdaFunction{⟧poly}}\<%
 \\
 %
-\>[2]\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟦}}}\AgdaSpace{}%
-\AgdaBound{\AgdaCatchallClause{P}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{\AgdaCatchallClause{⊠}}}\AgdaSpace{}%
-\AgdaBound{\AgdaCatchallClause{Q}}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{\AgdaCatchallClause{⟧poly}}}\AgdaSpace{}%
+\>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{Q}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧poly}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -869,13 +857,11 @@
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -893,16 +879,14 @@
 \\
 %
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -913,8 +897,6 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁s}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{z}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
@@ -946,22 +928,12 @@
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -974,25 +946,14 @@
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
@@ -1002,18 +963,16 @@
 \AgdaBound{y}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
+\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{)}\<%
+\AgdaBound{z₁}\<%
 \\
 \>[0]\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
@@ -1023,57 +982,14 @@
 \AgdaBound{y}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
+\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)}\<%
-\\
-\>[0]\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{)}\<%
-\\
-\>[0]\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)}\<%
+\AgdaBound{z₂}\<%
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
@@ -1099,13 +1015,11 @@
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1164,13 +1078,11 @@
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1202,11 +1114,9 @@
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \\
@@ -1228,13 +1138,11 @@
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1266,16 +1174,14 @@
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[1039I]\AgdaField{Mor}\AgdaSpace{}%
+\>[954I]\AgdaField{Mor}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
@@ -1288,7 +1194,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1039I]%
+\>[.]\<[954I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -1310,8 +1216,7 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\>[0]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
@@ -1320,21 +1225,7 @@
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaBound{z}\<%
-\\
-\>[0]\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
-\AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{z}\<%
 \\
@@ -1374,19 +1265,7 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
@@ -1394,7 +1273,7 @@
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1408,19 +1287,7 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
@@ -1428,9 +1295,10 @@
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\>[0]\AgdaField{proj₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
@@ -1441,53 +1309,41 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaSymbol{((}\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{))}\AgdaOperator{\AgdaInductiveConstructor{,}}\<%
+\AgdaBound{z₁}\<%
 \\
-\>[2][@{}l@{\AgdaIndent{0}}]%
-\>[3]\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
+\>[0]\AgdaField{proj₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{Q₁}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{Q₂}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\<%
+\AgdaBound{z₂}\<%
 \\
 \>[0]\AgdaField{►cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
@@ -1498,13 +1354,12 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{►P}\AgdaSpace{}%
 \AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1514,10 +1369,9 @@
 \AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))}\<%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaField{►com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
@@ -1528,7 +1382,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{►P}\AgdaSpace{}%
 \AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
+\AgdaBound{z₂}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
@@ -1539,9 +1393,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[1281I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
+\>[1148I]\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1552,119 +1404,24 @@
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSymbol{))}\<%
+\AgdaBound{l}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1281I]%
-\>[8]\AgdaSymbol{((}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{q}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
+\>[.]\<[1148I]%
+\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaBound{q}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z₂}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)))}\<%
-\\
-\>[0]\AgdaField{►cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{►P}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))}\<%
-\\
-\>[0]\AgdaField{►com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{►P}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{trans}%
-\>[1361I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSymbol{))}\<%
-\\
-\>[.]\<[1361I]%
-\>[8]\AgdaSymbol{((}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{q}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaBound{q}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₂}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)))}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1694,16 +1451,16 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1416I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1196I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1416I]%
+\>[.]\<[1196I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1422I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1202I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
@@ -1716,7 +1473,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1422I]%
+\>[.]\<[1202I]%
 \>[14]\AgdaSymbol{((}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
@@ -1743,19 +1500,9 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1458I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1458I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₁}\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{cong}\AgdaSpace{}%
+\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
@@ -1764,24 +1511,7 @@
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₁}\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
+\AgdaBound{k}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1795,19 +1525,9 @@
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1499I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1499I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₂}\AgdaSymbol{(}\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{cong}\AgdaSpace{}%
+\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
@@ -1816,24 +1536,7 @@
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₂}\AgdaSymbol{(}\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
+\AgdaBound{k}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1851,20 +1554,8 @@
 \AgdaSymbol{=}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1541I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1541I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong₂}%
-\>[1542I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1542I]%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
+\>[2]\AgdaFunction{cong₂}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
@@ -1873,15 +1564,7 @@
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
-\\
-%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaBound{k}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
@@ -1890,45 +1573,7 @@
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z₂}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{)))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong₂}%
-\>[1571I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1571I]%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{))}\<%
-\\
-%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSymbol{)))}\<%
+\AgdaBound{k}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1943,18 +1588,11 @@
 \AgdaBound{z₂}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{cong₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{►eq}\AgdaSpace{}%
+\AgdaFunction{►eq}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaSymbol{\{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{refl}\AgdaSymbol{\}))}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{►eq}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaSymbol{\{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaInductiveConstructor{refl}\AgdaSymbol{\}))}\<%
+\AgdaInductiveConstructor{refl}\AgdaSymbol{\})}\<%
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
@@ -1978,13 +1616,11 @@
 \AgdaFunction{Tm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -2023,7 +1659,7 @@
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[1682I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\>[1377I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -2035,7 +1671,7 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{z}\<%
 \\
-\>[.]\<[1682I]%
+\>[.]\<[1377I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -2087,16 +1723,16 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1733I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1428I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1733I]%
+\>[.]\<[1428I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1739I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
+\>[1434I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -2120,7 +1756,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1739I]%
+\>[.]\<[1434I]%
 \>[14]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
@@ -2162,17 +1798,9 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1801I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1801I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
@@ -2183,24 +1811,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -2216,17 +1827,9 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{=}\<%
-\\
-\>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1844I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1844I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
@@ -2237,24 +1840,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{inj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z}\AgdaSymbol{)))}\<%
+\AgdaBound{z}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -2274,16 +1860,8 @@
 \AgdaSymbol{=}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1888I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1888I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong₂}%
-\>[1889I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1889I]%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
+\>[2]\AgdaFunction{cong₂}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₁}\AgdaSpace{}%
@@ -2294,11 +1872,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{))}\<%
-\\
-%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
+\AgdaBound{z₁}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q₂}\AgdaSpace{}%
@@ -2309,41 +1883,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{cong₂}%
-\>[1914I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1914I]%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₁}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z₁}\AgdaSymbol{))}\<%
-\\
-%
-\>[15]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q₂}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{k}\AgdaSpace{}%
-\AgdaBound{z₂}\AgdaSymbol{)))}\<%
+\AgdaBound{z₂}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -2362,17 +1902,11 @@
 \AgdaSymbol{=}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
-\>[2]\AgdaFunction{cong₂}%
-\>[1953I]\AgdaSymbol{(}\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSymbol{)}\<%
-\\
-\>[.]\<[1953I]%
-\>[8]\AgdaSymbol{(}\AgdaFunction{►eq}\AgdaSpace{}%
+\>[2]\AgdaFunction{►eq}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{l}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
+\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
@@ -2385,29 +1919,7 @@
 \AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))\}))}\<%
-\\
-%
-\>[8]\AgdaSymbol{(}\AgdaFunction{►eq}\AgdaSpace{}%
-\AgdaSymbol{(λ}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{l}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{cong}\AgdaSpace{}%
-\AgdaField{proj₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₂}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaBound{t}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaBound{z₁}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))\}))}\<%
+\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)\})}\<%
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
@@ -2433,13 +1945,11 @@
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaFunction{evalP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
+\AgdaBound{P}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -2506,7 +2016,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[2073I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1684I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -2515,7 +2025,7 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})}\<%
 \\
-\>[.]\<[2073I]%
+\>[.]\<[1684I]%
 \>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
@@ -2578,6 +2088,97 @@
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
+\>[0]\AgdaComment{\{{-}
+primrec{-}psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A i)
+  → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
+  → Obj ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A j
+primrec{-}psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A i)
+  → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
+  → Mor ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A j k (primrec{-}psh'₁₁ P Q A i t j z)
+    ≡
+    primrec{-}psh'₁₁ P Q A i t k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
+proj₁ (primrec{-}psh'₁₁ P (∁ X) A i t j (∁ps z)) = z
+proj₂ (primrec{-}psh'₁₁ P (∁ X) A i t j (∁ps z)) = z
+primrec{-}psh'₁₁ P I A i t j (I z) = (z , fun t j (primrec{-}psh'₁₁ P P A i t j z))
+primrec{-}psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) = (inj₁ (proj₁ (primrec{-}psh'₁₁ P Q₁ A i t j z)) , inj₁ (proj₂ (primrec{-}psh'₁₁ P Q₁ A i t j z)))
+primrec{-}psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) = (inj₂ (proj₁ (primrec{-}psh'₁₁ P Q₂ A i t j z)) , inj₂ (proj₂ (primrec{-}psh'₁₁ P Q₂ A i t j z)))
+primrec{-}psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) =
+  ((proj₁ (primrec{-}psh'₁₁ P Q₁ A i t j z₁) , proj₁ (primrec{-}psh'₁₁ P Q₂ A i t j z₂)),
+   (proj₂ (primrec{-}psh'₁₁ P Q₁ A i t j z₁) , proj₂ (primrec{-}psh'₁₁ P Q₂ A i t j z₂)))
+►cone (proj₁ (primrec{-}psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] = proj₁ (primrec{-}psh'₁₁ P Q A i t k (z₁ [ k ]))
+►com (proj₁ (primrec{-}psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
+  trans (cong proj₁ (primrec{-}psh'₁₂ P Q A i t k (z₁ [ k ]) l))
+        ((cong (λ q → proj₁ (primrec{-}psh'₁₁ P Q A i t l q)) (z₂ [ k ] [ l ])))
+►cone (proj₂ (primrec{-}psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] = proj₂ (primrec{-}psh'₁₁ P Q A i t k (z₁ [ k ]))
+►com (proj₂ (primrec{-}psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂))) [ k ] [ l ] =
+  trans (cong proj₂ (primrec{-}psh'₁₂ P Q A i t k (z₁ [ k ]) l))
+        ((cong (λ q → proj₂ (primrec{-}psh'₁₁ P Q A i t l q)) (z₂ [ k ] [ l ])))
+primrec{-}psh'₁₂ P (∁ X) A i t j (∁ps z) k = refl
+primrec{-}psh'₁₂ P I A i f j (I z) k =
+  cong (λ z → (\AgdaUnderscore{} , z))
+       (trans (funcom f j k (primrec{-}psh'₁₁ P P A i f j z))
+              ((cong (fun f k) (primrec{-}psh'₁₂ P P A i f j z k))))
+primrec{-}psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) k =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong (λ z → inj₁(proj₁ z)) (primrec{-}psh'₁₂ P Q₁ A i t j z k))
+        (cong (λ z → inj₁(proj₂ z)) (primrec{-}psh'₁₂ P Q₁ A i t j z k))
+primrec{-}psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) k =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong (λ z → inj₂(proj₁ z)) (primrec{-}psh'₁₂ P Q₂ A i t j z k))
+        (cong (λ z → inj₂(proj₂ z)) (primrec{-}psh'₁₂ P Q₂ A i t j z k))
+primrec{-}psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+               (cong (λ z → proj₁ z) (primrec{-}psh'₁₂ P Q₁ A i t j z₁ k))
+               (cong (λ z → proj₁ z) (primrec{-}psh'₁₂ P Q₂ A i t j z₂ k)))
+        (cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+               (cong (λ z → proj₂ z) (primrec{-}psh'₁₂ P Q₁ A i t j z₁ k))
+               (cong (λ z → proj₂ z) (primrec{-}psh'₁₂ P Q₂ A i t j z₂ k)))
+primrec{-}psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = cong₂ (\AgdaUnderscore{},\AgdaUnderscore{}) (►eq (λ \{\AgdaUnderscore{} → refl\})) (►eq (λ \{\AgdaUnderscore{} → refl\}))
+
+primrec{-}psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
+  → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
+  → primrec{-}psh'₁₁ P Q A i (nat{-}map t i x) k z
+    ≡
+    primrec{-}psh'₁₁ P Q A j (nat{-}map t j (Mor Γ i j x)) k z
+primrec{-}psh'₂ P (∁ X) Γ A t i j x k (∁ps z) = refl
+primrec{-}psh'₂ P I Γ A t i j x k (I z) =
+  cong (λ q → (z , q))
+       (trans (cong (λ q → fun q k (primrec{-}psh'₁₁ P P A i (nat{-}map t i x) k z)) (nat{-}com t i j x))
+              (cong (λ z → fun (nat{-}map t j (Mor Γ i j x)) k z) (primrec{-}psh'₂ P P Γ A t i j x k z)))
+primrec{-}psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong inj₁ (cong proj₁ (primrec{-}psh'₂ P Q₁ Γ A t i j x k z)))
+        (cong inj₁ (cong proj₂ (primrec{-}psh'₂ P Q₁ Γ A t i j x k z)))
+primrec{-}psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong inj₂ (cong proj₁ (primrec{-}psh'₂ P Q₂ Γ A t i j x k z)))
+        (cong inj₂ (cong proj₂ (primrec{-}psh'₂ P Q₂ Γ A t i j x k z)))
+primrec{-}psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+               (cong proj₁ (primrec{-}psh'₂ P Q₁ Γ A t i j x k z₁))
+               (cong proj₁ (primrec{-}psh'₂ P Q₂ Γ A t i j x k z₂)))
+        (cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+               (cong proj₂ (primrec{-}psh'₂ P Q₁ Γ A t i j x k z₁))
+               (cong proj₂ (primrec{-}psh'₂ P Q₂ Γ A t i j x k z₂)))
+primrec{-}psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
+  cong₂ (\AgdaUnderscore{},\AgdaUnderscore{})
+        (►eq (λ \{l → cong proj₁ (primrec{-}psh'₂ P Q Γ A t i j x l (z₁ [ l ]))\}))
+        (►eq (λ \{l → cong proj₂ (primrec{-}psh'₂ P Q Γ A t i j x l (z₁ [ l ]))\}))
+
+primrec{-}psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
+  → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+fun (nat{-}map (primrec{-}psh P Γ A f) i x) j y = fun (nat{-}map f i x) j (primrec{-}psh'₁₁ P P A i (nat{-}map f i x) j y)
+funcom (nat{-}map (primrec{-}psh P Γ A f) i x) j k y =
+  trans (funcom (nat{-}map f i x) j k \AgdaUnderscore{})
+        (cong (fun (nat{-}map f i x) k) (primrec{-}psh'₁₂ P P A i (nat{-}map f i x) j y k))
+nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun a k b) (nat{-}com t i j x) (primrec{-}psh'₂ P P ⟦ Γ ⟧Γ A t i j x k z))
+{-}\}}\<%
 \\
 %
 \\[\AgdaEmptyExtraSkip]%
@@ -2725,8 +2326,8 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[2266I]\AgdaFunction{μMor'}%
-\>[2267I]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\>[1877I]\AgdaFunction{μMor'}%
+\>[1878I]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{weakenP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧poly}}\AgdaSpace{}%
@@ -2737,14 +2338,14 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\<%
 \\
-\>[.]\<[2267I]%
+\>[.]\<[1878I]%
 \>[10]\AgdaSymbol{(}\AgdaFunction{μweaken{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[2266I]%
+\>[.]\<[1877I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -3002,13 +2603,13 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[2500I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
+\>[2111I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\<%
 \\
-\>[.]\<[2500I]%
+\>[.]\<[2111I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
