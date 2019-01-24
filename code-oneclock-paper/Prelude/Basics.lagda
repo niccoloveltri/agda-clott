@@ -9,9 +9,9 @@ open import Size
 }
 
 We work in Martin-L\"of type theory extended with functional
-extensionality, uniqueness of identity proofs (\F{uip}) and sized
+extensionality, uniqueness of identity proofs (UIP) and sized
 types.  Practically, we work in Agda, which supports sized types and
-where \F{uip} holds by default. In this section we give a brief
+where UIP holds by default. In this section we give a brief
 overview of these principles and we introduce the basic Agda notation
 %type-theoretical definitions
 that we employ in our formalization.
@@ -32,32 +32,48 @@ postulate
   funext : {A : Set} {B : A → Set} {f g : (x : A) → B x} → ((x : A) → f x ≡ g x) → f ≡ g
 \end{code}
 
-Uniqueness of identity proofs states that all proofs of identity are
-equal. Agda natively supports this principle and we can prove it by
-pattern matching on the two equality proofs \Ar{p} and \Ar{q}.
+UIP states that all proofs of an identity are propositionally
+equal. Agda natively supports this principle, which is therefore easily derivable.
+%and we can prove it by
+%pattern matching on the two equality proofs \Ar{p} and \Ar{q}.
 \begin{code}
 uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
+\end{code}
+\AgdaHide{
+\begin{code}
 uip {A} {x} {y} {refl} {refl} = refl
 \end{code}
+}
 
 Agda also natively support sized types
 \cite{A-sized,AVW-normalization}. Intuitively, a sized type is a type
 annotated with an abstract ordinal indicating the number of possible
 unfoldings that can be performed of elements of the type.  These
 abstract ordinals, called sizes, assist the termination checker in
-assessing the well-definedness of corecursive definitions.
-In Agda there is a type \AD{Size} of sizes and a type \AD{Size<}
-\AB{i} of sizes strictly smaller than \AB{i}.  Every size \AB{j} :
-\AD{Size<} \AB{i} is coerced to \AB{j} : \AD{Size}. The order relation
-on sizes is transitive: if \AB{j} : \AD{Size<} \AB{i} and \AB{k} :
-\AD{Size<} \AB{j} then \AB{k} : \AD{Size<} \AB{i}.
-The order relation is also well-founded, which allows the definition of productive corecursive functions \cite{A-sized}. We will see this principle at work on the construction of the semantic fixpoint operation in Section \ref{sec:later}.
-There is a successor operation \F{↑} on sizes and a greatest size
-\F{∞}, \ie \AB{i} : \AD{Size<} \F{∞} for each size \AB{i}. Practically
-sized types are used in combination with coinductive records for the
-specification of coinductive types \NV{Cite Andreas}. Data of a
-coinductive type at size \F{∞} can be subjected to an infinite number
-of observations.
+assessing the well-definedness of corecursive definitions.  In Agda
+there is a type \AD{Size} of sizes and a type \AD{Size<} \AB{i} of
+sizes strictly smaller than \AB{i}.  Every size \AB{j} : \AD{Size<}
+\AB{i} is coerced to \AB{j} : \AD{Size}. The order relation on sizes
+is transitive: if \AB{j} : \AD{Size<} \AB{i} and \AB{k} : \AD{Size<}
+\AB{j} then \AB{k} : \AD{Size<} \AB{i}.  The order relation is also
+well-founded, which allows the definition of productive corecursive
+functions \cite{A-sized}. We will see this principle at work on the
+construction of the semantic fixpoint operation in Section
+\ref{sec:later}.  There is a successor operation \F{↑} on sizes and a
+greatest size \F{∞}, \ie \AB{i} : \AD{Size<} \F{∞} for each size
+\AB{i}.  A sized type \Ar{A} is an inhabitant of \AD{Size} \Ar{→}
+\AD{Set} and \Ar{A i} consists of elements of \Ar{A} which can be
+subjected to \Ar{i}-many observations. In particular, elements of
+\Ar{A} \F{∞} can undergo an infinite number of observations.  Notice
+that the size \F{∞} additionally satisfies \F{∞} : \F{Size< ∞}, but we
+do not make use of this property in our development.
+
+
+Practically, sized types are used in combination with
+coinductive records for the specification of coinductive types
+\cite{Copatterns}. For an example of this encoding we refer the reader
+to Abel and Chapman's work \cite{AC14}.
+
 
 %Lastly, we use the size \F{∞}, and for each size \AB{i} we have .
 %% Let us be more concrete.

@@ -75,7 +75,7 @@
 
 \AgdaHide{
 \begin{code}%
-\>[0]\AgdaFunction{lambda}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}lambda}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -105,7 +105,7 @@
 \AgdaOperator{\AgdaFunction{⇒}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{lambda}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}lambda}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -121,7 +121,7 @@
 \\
 \>[0]\AgdaField{fun}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{lambda}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}lambda}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -145,7 +145,7 @@
 \\
 \>[0]\AgdaField{funcom}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{lambda}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}lambda}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -247,7 +247,7 @@
 \>[2]\AgdaOperator{\AgdaFunction{∎}}\<%
 \\
 \>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{lambda}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}lambda}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -277,9 +277,9 @@
 \end{code}
 
 \begin{code}%
-\>[0]\AgdaFunction{app}\AgdaSpace{}%
-\AgdaSymbol{:}%
-\>[206I]\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}app}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{ClockContext}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
@@ -292,7 +292,7 @@
 \AgdaFunction{Ty}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[206I]%
+\>[0][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{(}\AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Tm}\AgdaSpace{}%
@@ -309,7 +309,7 @@
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{B}\<%
 \\
-\>[0]\AgdaFunction{app}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}app}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -324,7 +324,7 @@
 \AgdaBound{y}\<%
 \\
 \>[0]\AgdaField{nat{-}map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{app}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}app}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -344,7 +344,7 @@
 \AgdaBound{y}\<%
 \\
 \>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{app}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}app}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -483,7 +483,7 @@
 \AgdaOperator{\AgdaFunction{,,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{app}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}app}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%

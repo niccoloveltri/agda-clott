@@ -167,24 +167,24 @@ sub-π₂ t s =
   trans∼ (sym∼ (⊠-β₂ (sub (π₁ t) s) (sub (π₂ t) s)))
          (cong-π₂ (trans∼ (sym∼ (sub-[ (π₁ t) & (π₂ t) ] s)) (cong-sub (⊠-η t) refl≈)))
 
-sub-appTm : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⟶ B)) (s : Subst Γ₂ Γ₁)
-  → sub (appTm t) (weakenSA A s) ∼ appTm (sub t s)
-sub-appTm t s =
+sub-app : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⟶ B)) (s : Subst Γ₂ Γ₁)
+  → sub (app t) (upA A s) ∼ app (sub t s)
+sub-app t s =
   trans∼ (sym∼ (λ-β _))
-         (trans∼ (cong-appTm (sym∼ (sub-lambdaTm (appTm t) s)))
-                 (cong-appTm (cong-sub (λ-η t) refl≈)))
+         (trans∼ (cong-app (sym∼ (sub-lambda (app t) s)))
+                 (cong-app (cong-sub (λ-η t) refl≈)))
 
-sub-unbox-q : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (□ A)) (s : Subst Γ₂ Γ₁)
-  → sub (unbox-q t) (weakenS s) ∼ unbox-q (sub t s)
-sub-unbox-q t s =
-  trans∼ (sym∼ (□-β (sub (unbox-q t) (weakenS s))))
-         (cong-unbox-q (trans∼ (sym∼ (sub-box-q (unbox-q t) s)) (cong-sub (□-η t) refl≈)))
+sub-unbox : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (□ A)) (s : Subst Γ₂ Γ₁)
+  → sub (unbox t) (up s) ∼ unbox (sub t s)
+sub-unbox t s =
+  trans∼ (sym∼ (□-β (sub (unbox t) (up s))))
+         (cong-unbox (trans∼ (sym∼ (sub-box (unbox t) s)) (cong-sub (□-η t) refl≈)))
 
-sub-↓ : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ₁) (⇑ A)) (s : Subst Γ₂ Γ₁)
-  → sub (↓ t) s ∼ ↓(sub t (weakenS s))
-sub-↓ t s =
-  trans∼ (sym∼ (⇡-β (sub (↓ t) s)))
-         (cong-↓ (trans∼ (sym∼ (sub-⇡ (↓ t) s)) (cong-sub (⇡-η t) refl≈)))
+sub-down : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ₁) (⇑ A)) (s : Subst Γ₂ Γ₁)
+  → sub (down t) s ∼ down(sub t (up s))
+sub-down t s =
+  trans∼ (sym∼ (up-β (sub (down t) s)))
+         (cong-down (trans∼ (sym∼ (sub-up (down t) s)) (cong-sub (up-η t) refl≈)))
 
 sub-tt : {Γ₁ Γ₂ : Context ∅} (s : Subst Γ₂ Γ₁) → sub tt s ∼ tt
 sub-tt s = 𝟙-η (sub tt s)

@@ -24,13 +24,13 @@ WC Γ = Const Γ
 
 \AgdaHide{
 \begin{code}
-WC-fun : (Γ : Ctx ∅) (A : Ty ∅) → Tm Γ A → Tm (WC Γ) (WC A)
-nat-map (WC-fun Γ A t) _ = t
-nat-com (WC-fun Γ A t) _ _ _ = refl
+sem-up : (Γ : Ctx ∅) (A : Ty ∅) → Tm Γ A → Tm (WC Γ) (WC A)
+nat-map (sem-up Γ A t) _ = t
+nat-com (sem-up Γ A t) _ _ _ = refl
 \end{code}
 
 \begin{code}
-WC-unfun : (Γ : Ctx ∅) (A : Ty ∅) → Tm (WC Γ) (WC A) → Tm Γ A 
-WC-unfun Γ A t = nat-map t ∞
+sem-down : (Γ : Ctx ∅) (A : Ty ∅) → Tm (WC Γ) (WC A) → Tm Γ A 
+sem-down Γ A t = nat-map t ∞
 \end{code}
 }

@@ -34,10 +34,10 @@ _,,_ {κ} Γ A = Prod Γ A
 \end{code}
 
 \begin{code}
-var : {b : ClockContext} (Γ : Ctx b) (A : Ty b) → Tm (Γ ,, A) A
-var {∅} Γ A = proj₂
-nat-map (var {κ} Γ A) i (γ , x) = x
-nat-com (var {κ} Γ A) i j (γ , x) = refl
+sem-var : {b : ClockContext} (Γ : Ctx b) (A : Ty b) → Tm (Γ ,, A) A
+sem-var {∅} Γ A = proj₂
+nat-map (sem-var {κ} Γ A) i (γ , x) = x
+nat-com (sem-var {κ} Γ A) i j (γ , x) = refl
 \end{code}
 
 \begin{code}

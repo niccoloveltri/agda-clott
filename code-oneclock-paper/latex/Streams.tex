@@ -55,7 +55,7 @@ We give a taste of how to program with streams in \GTT. First we construct a fun
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Term}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{evalP}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{eval}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{))}\<%
@@ -73,14 +73,14 @@ We give a taste of how to program with streams in \GTT. First we construct a fun
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{Pmap}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaFunction{evalP}\AgdaSpace{}%
+\AgdaFunction{eval}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)))))))}\<%
@@ -104,11 +104,11 @@ The type of guarded streams over a \IC{∅}-type \Ar{A} is the least fixpoint of
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
+\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSymbol{)}\<%
 \end{code}
 The head of a guarded stream \Ar{xs} is computed in three steps. First
-we apply \F{cons-inv} to \Ar{xs}, obtaining a \GTT\ pair of type \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P} (\F{g-Str} \Ar{A}). Then we take the first projection of this pair using the constructor \IC{π₁} and we conclude with an application of \IC{↓}, which is necessary since \Ar{A} is a \IC{∅}-type.
+we apply \F{cons-inv} to \Ar{xs}, obtaining a \GTT\ pair of type \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P} (\F{g-Str} \Ar{A}). Then we take the first projection of this pair using the constructor \IC{π₁} and we conclude with an application of \IC{down}, which is necessary since \Ar{A} is a \IC{∅}-type.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}hd}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -135,18 +135,18 @@ we apply \F{cons-inv} to \Ar{xs}, obtaining a \GTT\ pair of type \IC{∁} (\IC{�
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{↓}\AgdaSpace{}%
+\AgdaInductiveConstructor{down}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{π₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{cons{-}inv}\AgdaSpace{}%
 \AgdaSymbol{((}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\<%
 \end{code}
-The tail of a guarded stream is computed in a similar way, using \IC{π₂} instead of \IC{π₁} and without the application of \IC{↓} in the last step. Notice that the tail is a \GTT\ term of type \IC{▻} (\F{g-Str} \Ar{A}), meaning that it is available only one time step ahead from now.
+The tail of a guarded stream is computed in a similar way, using \IC{π₂} instead of \IC{π₁} and without the application of \IC{down} in the last step. Notice that the tail is a \GTT\ term of type \IC{▻} (\F{g-Str} \Ar{A}), meaning that it is available only one time step ahead from now.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}tl}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -180,7 +180,7 @@ The tail of a guarded stream is computed in a similar way, using \IC{π₂} inst
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇑}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▻P}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)}\<%
 \end{code}
@@ -227,7 +227,7 @@ The head of a stream \Ar{xs} is computed by applying the function \F{g-hd} to th
 \AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{g{-}hd}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{unbox}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)}\<%
 \end{code}
 For computing the tail of a stream \Ar{xs} we first apply the function \F{g-tl} to the unboxing of \Ar{xs}, obtaining an element of \F{Term} (\IC{⇑} \Ar{Γ}) (\IC{▻} (\F{g-Str} \Ar{A})). Then we \IC{box-q} followed by \IC{force}.
@@ -257,9 +257,9 @@ For computing the tail of a stream \Ar{xs} we first apply the function \F{g-tl} 
 \AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{force}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{box}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{g{-}tl}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{unbox{-}q}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{unbox}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{)))}\<%
 \end{code}
 Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
@@ -288,16 +288,16 @@ Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded 
 \>[0]\AgdaFunction{g{-}const}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{fix{-}tm}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\AgdaInductiveConstructor{fix}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{cons}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{wk}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
-\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))}\<%
@@ -328,7 +328,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \>[0]\AgdaFunction{const{-}str}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{box}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{g{-}const}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{)}\<%
 \end{code}
@@ -377,7 +377,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,s}}\AgdaSpace{}%
-\AgdaInductiveConstructor{appTm}\AgdaSpace{}%
+\AgdaInductiveConstructor{app}\AgdaSpace{}%
 \AgdaBound{s}\<%
 \end{code}
 
@@ -417,15 +417,15 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{B}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{fix{-}tm}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\AgdaInductiveConstructor{fix}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{weakenSΓ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
@@ -443,7 +443,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaBound{A}\AgdaSymbol{)))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊛}}\AgdaSpace{}%
 \AgdaInductiveConstructor{next}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaInductiveConstructor{▻}\AgdaSpace{}%
@@ -492,11 +492,11 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \>[2]\AgdaKeyword{let}%
 \>[388I]\AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{,{-}weaken}\AgdaSpace{}%
+\AgdaInductiveConstructor{,⇑}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{o}}\AgdaSpace{}%
-\AgdaFunction{weakenSA}\AgdaSpace{}%
+\AgdaFunction{upA}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
@@ -506,14 +506,14 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \>[6]\AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{wk}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})}\<%
 \\
 %
 \>[6]\AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{varTm}\AgdaSpace{}%
+\AgdaInductiveConstructor{var}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\<%
 \\
@@ -521,12 +521,12 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \>[2]\AgdaKeyword{in}\<%
 \\
 %
-\>[2]\AgdaInductiveConstructor{lambdaTm}\AgdaSpace{}%
+\>[2]\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{cons}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaInductiveConstructor{sub}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{hd}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
@@ -534,7 +534,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{tl}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSymbol{)}\AgdaSpace{}%
@@ -566,11 +566,11 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \>[0]\AgdaFunction{odd}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{box{-}q}\AgdaSpace{}%
+\AgdaInductiveConstructor{box}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{pfix{-}tm}\AgdaSpace{}%
 \AgdaFunction{oddrec}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\<%
 \end{code}
 }

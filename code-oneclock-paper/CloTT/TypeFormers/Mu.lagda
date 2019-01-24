@@ -33,16 +33,16 @@ This is defined by induction on the polynomial.
 In each case, we use the corresponding opertion on types.
 
 \begin{code}
-eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
+sem-eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
 \end{code}
 
 \AgdaHide{
 \begin{code}
-eval (∁ A) X = A
-eval I X = X
-eval (P ⊞ Q) X = eval P X ⊕ eval Q X
-eval (P ⊠ Q) X = eval P X ⊗ eval Q X
-eval (►P P) X = ►(eval P X)
+sem-eval (∁ A) X = A
+sem-eval I X = X
+sem-eval (P ⊞ Q) X = sem-eval P X ⊕ sem-eval Q X
+sem-eval (P ⊠ Q) X = sem-eval P X ⊗ sem-eval Q X
+sem-eval (►P P) X = ►(sem-eval P X)
 \end{code}
 }
 

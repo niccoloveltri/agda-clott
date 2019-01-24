@@ -8,15 +8,17 @@ consistency of the type system.
 Possibly non-terminating computations
 and infinite structures such as non-wellfounded trees can be
 represented in type theory by extending the type system with
-coinductive types. Elements of these types, which we call processes,
+coinductive types. Recursively defined elements of these types
 are required to be productive \cite{Coquand93} in the sense that every
 finite unfolding can be computed in a finite number of steps.
 In Agda's encoding of coinductive types using ``musical notation''
-\cite{DA10} \NV{What about Coq?}, productivity is achieved using a strict method: in the
-definition of corecursive functions, the recursive
+\cite{DA10}, productivity is enforced via a strict obligation: in the
+definition of a corecursive function, the recursive
 call is required to appear directly under
-the application of a constructor. This restriction
-typically makes programming with processes cumbersome,
+the application of a constructor. A similar syntactic
+check is employed in Coq.
+This restriction
+typically makes programming with coinductive types cumbersome,
 which spawned the search for alternative techniques for ensuring the
 well-definedness of corecursive definitions.
 
@@ -68,53 +70,76 @@ disciplines is still missing. In this paper we take a first step in
 this direction by showing how guarded recursion can be simulated in
 Agda using sized types. 
 
-Using techniques for representing ``type theory in type theory''
-\cite{Chapman09,AltenkirchK16}, in Section \ref{sec:syntax} we present
+Utilizing techniques for representing ``type theory in type theory''
+\cite{Chapman09,AltenkirchK16}, we present
 an Agda formalization of the syntax of a simple type theory with
 guarded recursion. This object language, that we call \GTT, is a variant of Atkey and
 McBride's type system for productive coprogramming
 \cite{atkey2013productive} in which the clock context can contain at
-most one clock.
+most one clock. The types of \GTT\ include the aformentioned \IC{▻} modality and a
+\IC{□}  modality, the nameless analogue of  Atkey and
+McBride's universal clock quantification.
 
-In Section \ref{sec:presheaf_sem}, we develop a denotational semantics
+Afterwards we develop a categorical semantics
 for \GTT\ using sized types. More precisely, we define a presheaf
 model where the type formers of simply typed lambda calculus are
 evaluated using the standard Kripke semantics. Typically the semantics
 of type theories for guarded recursion is given in the topos of
-trees or variations thereof \cite{BMSS-synthetic} \NV{Add citations here}.
-In order to make clear the connections between guarded recursion and
+trees or variations thereof \cite{BMSS-synthetic,Mogelberg14,MannaaM18}.
+Here, in order to make clear the connections between guarded recursion and
 sized types, we take the preorder of sizes as the indexing
 category of our presheaves. This means that types and contexts of \GTT\ are
 interpreted as antitone sized types. 
+The well-order relation on sizes is fundamental for giving a
+terminating definition of the semantic fixpoint combinator. 
 
-\NV{WIP from this point}
+%% A detailed account of how to model the characteristic features of
+%% \GTT, consisting of the \IC{▻} and
+%% \IC{□}  modality together with guarded recursive types, is given in
+%% Section \ref{sec:guarded}. 
+
+To summarize, the contributions of this paper are twofold:
+\begin{enumerate}
+  \item We formalize syntax and semantics of a type theory with
+    guarded recursion in Agda. This is the first such denotational model developed using an extension of Martin-L\"of intensional
+    type theory as the metalanguage, in contrast with the previous
+    set-theoretic models of guarded recursion.
+\item The interpretation of the characteristic features of guarded
+  recursion crucially requires the employment of sized types. This shows that
+  guarded recursive types can be reduced to sized types and
+  constitutes a stepping stone towards a clear understanding of  the connections
+  between different approaches to productive coprogramming.
+%	\item We formally prove the syntax is consistent.
+\end{enumerate}
+
+This paper only include the essential parts of our Agda
+formalization. The full code is available at
+\url{https://github.com/niccoloveltri/agda-clott}. The formalization
+uses Agda 2.5.4.1 and Agda standard library 0.16.
+
+%\NV{WIP from this point}
 
 %% To compare the strength of these two approaches, we develop denotational semantics of guarded recursive type theory in a type theory with sized types.
 %% This shows that guarded recursive type theory can be done via sized types.
 %% More specifically, we define a presheaf model of a simple type theory with guarded recursion \cite{BMSS-synthetic}.
 %% Simple types are interpreted via the usual presheaf semantics.
 
-In contrast, interpreting guarded recursion and guarded recursive types is more challenging.
-The most common model in the literature is the topos of trees \cite{BMSS-synthetic}.
-This is a presheaf topos, whose objects are sets indexed by a natural number.
-We use a slightly different approach: instead of natural numbers, we use sizes.
-This means that the required interpretations need to be modified.
+%% In contrast, interpreting guarded recursion and guarded recursive types is more challenging.
+%% The most common model in the literature is the topos of trees \cite{BMSS-synthetic}.
+%% This is a presheaf topos, whose objects are sets indexed by a natural number.
+%% We use a slightly different approach: instead of natural numbers, we use sizes.
+%% This means that the required interpretations need to be modified.
 
-Our contributions are as follows
-\begin{enumerate}
-	\item We give a new denotational semantics of guarded recursive type theory in type theory;
-	\item We show that guarded recursion can be interpreted in sized types.
-	\item We formally prove the syntax is consistent.
-\end{enumerate}
+%% Our contributions are as follows
 
-In Section 2, we describe the meta-theory in which we work.
-In Section 3, we describe the syntax of the object theory, which is basically a variant of guarded recursion as done by Atkey and McBride \cite{atkey2013productive}.
-We do this in the form of a deep embedding.
-More specifically, we define data types representing the contexts, types, terms, and so on, and we give the rules for definitional equality.
-In Sections 4 and 5, we define the denotational semantics of this syntax.
-First, we give the interpretation of context, types, and terms in the model, and we show how to interpret simple type formers.
-Then we show this model supports guarded recursion and guarded recursive types.
-Finally, we show the syntax is consistent in Section 6.
+%% In Section 2, we describe the meta-theory in which we work.
+%% In Section 3, we describe the syntax of the object theory, which is basically a variant of guarded recursion as done by Atkey and McBride \cite{atkey2013productive}.
+%% We do this in the form of a deep embedding.
+%% More specifically, we define data types representing the contexts, types, terms, and so on, and we give the rules for definitional equality.
+%% In Sections 4 and 5, we define the denotational semantics of this syntax.
+%% First, we give the interpretation of context, types, and terms in the model, and we show how to interpret simple type formers.
+%% Then we show this model supports guarded recursion and guarded recursive types.
+%% Finally, we show the syntax is consistent in Section 6.
 
 %% \subsection{Related Work}
 %% 

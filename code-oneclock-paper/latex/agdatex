@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ..
+/usr/local/bin/agda --latex $1
+cd latex
+pdflatex paper.tex

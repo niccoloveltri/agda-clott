@@ -25,7 +25,7 @@ mutual
   ⟦ I ⟧poly = I
   ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
-  ⟦ ▻P P ⟧poly = ►P ⟦ P ⟧poly
+  ⟦ ▻ P ⟧poly = ►P ⟦ P ⟧poly
 
   ⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty Δ
   ⟦ 𝟙 ⟧A = Unit
@@ -42,22 +42,22 @@ mutual
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ ⇑ Γ ⟧Γ = WC ⟦ Γ ⟧Γ
 
-consset' : (P Q : Poly ∅) → ⟦ evalP Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
+consset' : (P Q : Poly ∅) → ⟦ eval Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
 consset' P (∁ x) t = ∁s t -- ∁s t
 consset' P I t = I t -- I t
 consset' P (Q ⊞ Q₁) (inj₁ x) = ⊞₁ (consset' P Q x)
 consset' P (Q ⊞ Q₁) (inj₂ y) = ⊞₂ (consset' P Q₁ y)
 consset' P (Q₁ ⊠ Q₂) t = consset' P Q₁ (proj₁ t) ⊠ consset' P Q₂ (proj₂ t)
 
-cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ evalP Q (μ P) ⟧A i → μObj' ⟦ P ⟧poly ⟦ Q ⟧poly i
-cons₂' : (P Q : Poly κ) (i : Size) (j : Size< (↑ i)) (t : Obj ⟦ evalP Q (μ P) ⟧A i)
-  → μMor' ⟦ P ⟧poly ⟦ Q ⟧poly i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor ⟦ evalP Q (μ P) ⟧A i j t)
+cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ eval Q (μ P) ⟧A i → μObj' ⟦ P ⟧poly ⟦ Q ⟧poly i
+cons₂' : (P Q : Poly κ) (i : Size) (j : Size< (↑ i)) (t : Obj ⟦ eval Q (μ P) ⟧A i)
+  → μMor' ⟦ P ⟧poly ⟦ Q ⟧poly i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor ⟦ eval Q (μ P) ⟧A i j t)
 cons₁' P (∁ X) i t = ∁ps t
 cons₁' P I i t = I t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
 cons₁' P (Q ⊞ R) i (inj₁ t) = ⊞₁ (cons₁' P Q i t)
 cons₁' P (Q ⊞ R) i (inj₂ t) = ⊞₂ (cons₁' P R i t)
-cons₁' P (▻P Q) i t = ►P c₁ c₂
+cons₁' P (▻ Q) i t = ►P c₁ c₂
   where
     c₁ : Later (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) i
     c₁ [ j ] = cons₁' P Q j (►cone t [ j ])
@@ -68,17 +68,17 @@ cons₂' P I i j t = refl
 cons₂' P (Q ⊠ R) i j (t , u) = cong₂ _⊠_ (cons₂' P Q i j t) (cons₂' P R i j u)
 cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
-cons₂' P (▻P Q) i j t =
+cons₂' P (▻ Q) i j t =
   cong₂-dep ►P (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
 
-conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ evalP Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
+conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
 nat-map (conspsh P Q Γ t) i γ  = cons₁' P Q i (nat-map t i γ)
 nat-com (conspsh P Q Γ t) i j γ = trans (cons₂' P Q i j (nat-map t i γ)) (cong (cons₁' P Q j) (nat-com t i j γ))
 
 primrec-set' : (P Q : Poly ∅) (A : Type ∅)
-  → ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
   → (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
-  → ⟦ evalP Q (μ P ⊠ A) ⟧A
+  → ⟦ eval Q (μ P ⊠ A) ⟧A
 primrec-set' P (∁ X) A y (∁s z) = z
 primrec-set' P I A y (I z) = z , y (primrec-set' P P A y z)
 primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₁ z) = inj₁ (primrec-set' P Q₁ A y z)
@@ -87,16 +87,16 @@ proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q�
 proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q₂ A y z₂
 
 primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
-  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x a = t x (primrec-set' P P A (t x) a)
 
-primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A i)
+primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
-  → Obj ⟦ evalP Q (μ P ⊠ A) ⟧A j
-primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A i)
+  → Obj ⟦ eval Q (μ P ⊠ A) ⟧A j
+primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
-  → Mor ⟦ evalP Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
+  → Mor ⟦ eval Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
     ≡
     primrec-psh'₁₁ P Q A i t k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
 primrec-psh'₁₁ P (∁ X) A i t j (∁ps z) = z
@@ -105,8 +105,8 @@ primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) = inj₁ (primrec-psh'�
 primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) = inj₂ (primrec-psh'₁₁ P Q₂ A i t j z)
 proj₁ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₁ A i t j z₁
 proj₂ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₂ A i t j z₂
-►cone (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q A i t k (z₁ [ k ]) 
-►com (primrec-psh'₁₁ P (▻P Q) A i t j (►P z₁ z₂)) [ k ] [ l ] = 
+►cone (primrec-psh'₁₁ P (▻ Q) A i t j (►P z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q A i t k (z₁ [ k ]) 
+►com (primrec-psh'₁₁ P (▻ Q) A i t j (►P z₁ z₂)) [ k ] [ l ] = 
   trans (primrec-psh'₁₂ P Q A i t k (z₁ [ k ]) l)
         (cong (primrec-psh'₁₁ P Q A i t l) (z₂ [ k ] [ l ]))
 primrec-psh'₁₂ P (∁ X) A i t j (∁ps z) k = refl
@@ -118,9 +118,9 @@ primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) k = cong inj₁ (primrec
 primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) k = cong inj₂ (primrec-psh'₁₂ P Q₂ A i t j z k)
 primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k = 
   cong₂ (_,_) (primrec-psh'₁₂ P Q₁ A i t j z₁ k) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)
-primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = ►eq (λ {_ → refl})
+primrec-psh'₁₂ P (▻ Q) A i t j (►P z₁ z₂) k = ►eq (λ {_ → refl})
 
-primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A)
+primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
   → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
     ≡
@@ -134,11 +134,11 @@ primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) = cong inj₁ (primr
 primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) = cong inj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z)
 primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
   cong₂ (_,_) (primrec-psh'₂ P Q₁ Γ A t i j x k z₁) (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)
-primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
+primrec-psh'₂ P (▻ Q) Γ A t i j x k (►P z₁ z₂) =
   ►eq (λ {l → primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ])})
 
 primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
-  → Tm ⟦ Γ ⟧Γ ⟦ evalP P (μ P ⊠ A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
 funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
@@ -147,12 +147,12 @@ funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
 nat-com (primrec-psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun a k b) (nat-com t i j x) (primrec-psh'₂ P P ⟦ Γ ⟧Γ A t i j x k z))
 
 {-
-primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A i)
+primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
-  → Obj ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A j
-primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A i)
+  → Obj ⟦ eval Q (μ P) ⊠ eval Q A ⟧A j
+primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
-  → Mor ⟦ evalP Q (μ P) ⊠ evalP Q A ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
+  → Mor ⟦ eval Q (μ P) ⊠ eval Q A ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
     ≡
     primrec-psh'₁₁ P Q A i t k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
 proj₁ (primrec-psh'₁₁ P (∁ X) A i t j (∁ps z)) = z
@@ -194,7 +194,7 @@ primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
                (cong (λ z → proj₂ z) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)))
 primrec-psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = cong₂ (_,_) (►eq (λ {_ → refl})) (►eq (λ {_ → refl}))
 
-primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A)
+primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
   → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
     ≡
@@ -226,7 +226,7 @@ primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
         (►eq (λ {l → cong proj₂ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))}))
 
 primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
-  → Tm ⟦ Γ ⟧Γ ⟦ (evalP P (μ P) ⊠ evalP P A) ⟶ A ⟧A
+  → Tm ⟦ Γ ⟧Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
 funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
@@ -279,16 +279,16 @@ mutual
   ⟦ s ,s x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
   ⟦ s o s' ⟧sub = sem-subcomp _ _ _ ⟦ s ⟧sub ⟦ s' ⟧sub
   ⟦ pr {_} {Γ} {Γ'} {A} s ⟧sub = sem-subpr ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ ⟦ A ⟧A ⟦ s ⟧sub
-  nat-map ⟦ weakenS s ⟧sub i = ⟦ s ⟧sub
-  nat-com ⟦ weakenS s ⟧sub i j x = refl
-  nat-map ⟦ •-to-weaken ⟧sub i tt = tt
-  nat-com ⟦ •-to-weaken ⟧sub i j x = refl
-  nat-map ⟦ ,-weaken Γ A ⟧sub i x = x
-  nat-com ⟦ ,-weaken Γ A ⟧sub i j x = refl
+  nat-map ⟦ up s ⟧sub i = ⟦ s ⟧sub
+  nat-com ⟦ up s ⟧sub i j x = refl
+  nat-map ⟦ •⇑ ⟧sub i tt = tt
+  nat-com ⟦ •⇑ ⟧sub i j x = refl
+  nat-map ⟦ ,⇑ Γ A ⟧sub i x = x
+  nat-com ⟦ ,⇑ Γ A ⟧sub i j x = refl
   
   ⟦_⟧tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Tm ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ sub t s ⟧tm = sem-sub _ _ _ ⟦ t ⟧tm ⟦ s ⟧sub
-  ⟦ varTm Γ A ⟧tm = var ⟦ Γ ⟧Γ ⟦ A ⟧A
+  ⟦ var Γ A ⟧tm = sem-var ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ tt ⟧tm = ⋆ _
   ⟦ unit-rec t ⟧tm = Unit-rec _ _ ⟦ t ⟧tm
   ⟦ in₁ B t ⟧tm = inl _ _ ⟦ B ⟧A ⟦ t ⟧tm
@@ -297,15 +297,15 @@ mutual
   ⟦ [ t₁ & t₂ ] ⟧tm = pair _ _ _ ⟦ t₁ ⟧tm ⟦ t₂ ⟧tm
   ⟦ π₁ t ⟧tm = pr₁ _ _ _ ⟦ t ⟧tm
   ⟦ π₂ t ⟧tm = pr₂ _ _ _ ⟦ t ⟧tm
-  ⟦ lambdaTm t ⟧tm = lambda _ _ _ ⟦ t ⟧tm
-  ⟦ appTm f ⟧tm = app _ _ _ ⟦ f ⟧tm
-  ⟦ ⇡ t ⟧tm = WC-fun _ _ ⟦ t ⟧tm
-  ⟦ ↓ t ⟧tm = WC-unfun _ _ ⟦ t ⟧tm
-  ⟦ box-q {Γ} {A} t ⟧tm = box ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
-  ⟦ unbox-q {Γ} {A} t ⟧tm = unbox ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
+  ⟦ lambda t ⟧tm = sem-lambda _ _ _ ⟦ t ⟧tm
+  ⟦ app f ⟧tm = sem-app _ _ _ ⟦ f ⟧tm
+  ⟦ up t ⟧tm = sem-up _ _ ⟦ t ⟧tm
+  ⟦ down t ⟧tm = sem-down _ _ ⟦ t ⟧tm
+  ⟦ box {Γ} {A} t ⟧tm = sem-box ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
+  ⟦ unbox {Γ} {A} t ⟧tm = sem-unbox ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦ next {Γ} {A} t ⟧tm = sem-next ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
-  ⟦ fix-tm {Γ} {A} f ⟧tm = sem-fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
+  ⟦ fix {Γ} {A} f ⟧tm = sem-fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = sem-force ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm

@@ -26,11 +26,11 @@ _⇒_ {κ} A B = Exp A B
 
 \AgdaHide{
 \begin{code}
-lambda : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (t : Tm (Γ ,, A) B)
+sem-lambda : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (t : Tm (Γ ,, A) B)
   → Tm Γ (A ⇒ B)
-lambda {∅} Γ A B t x y = t (x , y)
-fun (nat-map (lambda {κ} Γ A B t) i x) j z = nat-map t j (Mor Γ i j x , z)
-funcom (nat-map (lambda {κ} Γ A B t) i x) j k z =
+sem-lambda {∅} Γ A B t x y = t (x , y)
+fun (nat-map (sem-lambda {κ} Γ A B t) i x) j z = nat-map t j (Mor Γ i j x , z)
+funcom (nat-map (sem-lambda {κ} Γ A B t) i x) j k z =
   begin
     Mor B j k (nat-map t j (Mor Γ i j x , z))
   ≡⟨ nat-com t j k (Mor Γ i j x , z) ⟩
@@ -38,16 +38,16 @@ funcom (nat-map (lambda {κ} Γ A B t) i x) j k z =
   ≡⟨ cong (λ z → nat-map t k (z , _)) (sym (MorComp Γ)) ⟩
     nat-map t k (Mor Γ i k x , Mor A j k z)
   ∎
-nat-com (lambda {κ} Γ A B t) i j x = funeq (λ k z → cong (λ z → nat-map t k (z , _)) (MorComp Γ))
+nat-com (sem-lambda {κ} Γ A B t) i j x = funeq (λ k z → cong (λ z → nat-map t k (z , _)) (MorComp Γ))
 \end{code}
 
 \begin{code}
-app : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ)
+sem-app : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ)
       (f : Tm Γ (A ⇒ B))
   → Tm (Γ ,, A) B
-app {∅} Γ A B f (x , y) = f x y
-nat-map (app {κ} Γ A B f) i (x , y) = fun (nat-map f i x) i y
-nat-com (app {κ} Γ A B f) i j (x , y) =
+sem-app {∅} Γ A B f (x , y) = f x y
+nat-map (sem-app {κ} Γ A B f) i (x , y) = fun (nat-map f i x) i y
+nat-com (sem-app {κ} Γ A B f) i j (x , y) =
   begin
     Mor B i j (fun (nat-map f i x) i y)
   ≡⟨ funcom (nat-map f i x) i j y ⟩
@@ -59,6 +59,6 @@ nat-com (app {κ} Γ A B f) i j (x , y) =
 
 \begin{code}
 sem-app-map : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) → Tm Γ (A ⇒ B) → Tm Γ A → Tm Γ B
-sem-app-map Γ A B f t = sem-sub Γ (Γ ,, A) B (app Γ A B f) (sem-subst-tm Γ Γ A (sem-idsub Γ) t)
+sem-app-map Γ A B f t = sem-sub Γ (Γ ,, A) B (sem-app Γ A B f) (sem-subst-tm Γ Γ A (sem-idsub Γ) t)
 \end{code}
 }

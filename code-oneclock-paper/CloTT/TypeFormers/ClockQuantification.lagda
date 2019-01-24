@@ -45,11 +45,11 @@ weakening \F{WC}. In other words, the types \F{Tm} (\F{WC} \Ar{Γ})
 \Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
 underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 \begin{code}
-box : (Γ : Ctx ∅) (A : Ty κ) (t : Tm (WC Γ) A) → Tm Γ (■ A)
-■cone (box Γ A t x) i        = nat-map t i x
-■com (box Γ A t x) i j       = nat-com t i j x
+sem-box : (Γ : Ctx ∅) (A : Ty κ) (t : Tm (WC Γ) A) → Tm Γ (■ A)
+■cone (sem-box Γ A t x) i        = nat-map t i x
+■com (sem-box Γ A t x) i j       = nat-com t i j x
 
-unbox : (Γ : Ctx ∅) (A : Ty κ) (t : Tm Γ (■ A)) → Tm (WC Γ) A
-nat-map (unbox Γ A t) i x    = ■cone (t x) i
-nat-com (unbox Γ A t) i j x  = ■com (t x) i j
+sem-unbox : (Γ : Ctx ∅) (A : Ty κ) (t : Tm Γ (■ A)) → Tm (WC Γ) A
+nat-map (sem-unbox Γ A t) i x    = ■cone (t x) i
+nat-com (sem-unbox Γ A t) i j x  = ■com (t x) i j
 \end{code}
