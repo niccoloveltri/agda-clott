@@ -23,18 +23,18 @@ If the clock context is empty, then we interpret the context as a set.
 Otherwise, there is a single clock, and then we use presheaves.
 
 \begin{code}%
-\>[0]\AgdaFunction{Ctx}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockContext}\AgdaSpace{}%
+\AgdaDatatype{ClockCtx}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set₁}\<%
 \\
-\>[0]\AgdaFunction{Ctx}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\<%
 \\
-\>[0]\AgdaFunction{Ctx}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%

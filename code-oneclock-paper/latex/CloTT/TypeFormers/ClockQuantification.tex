@@ -52,10 +52,10 @@ smaller than \Ar{i} is equal to \Ar{f j}.
 \AgdaRecord{■}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
 \\
@@ -106,7 +106,7 @@ smaller than \Ar{i} is equal to \Ar{f j}.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{s}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
@@ -163,7 +163,7 @@ smaller than \Ar{i} is equal to \Ar{f j}.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{s}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
@@ -197,7 +197,7 @@ smaller than \Ar{i} is equal to \Ar{f j}.
 }
 
 Semantically, clock quantification \F{■} is right adjoint to context
-weakening \F{WC}. In other words, the types \F{Tm} (\F{WC} \Ar{Γ})
+weakening \F{⇑}. In other words, the types \F{Tm} (\F{⇑} \Ar{Γ})
 \Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
 underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 \begin{code}%
@@ -205,20 +205,20 @@ underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ctx}\AgdaSpace{}%
+\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Tm}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{WC}\AgdaSpace{}%
+\AgdaFunction{SemTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{⇑}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{Tm}\AgdaSpace{}%
+\AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaRecord{■}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
@@ -257,21 +257,21 @@ underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ctx}\AgdaSpace{}%
+\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Tm}\AgdaSpace{}%
+\AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaRecord{■}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{Tm}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{WC}\AgdaSpace{}%
+\AgdaFunction{SemTm}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{⇑}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{A}\<%
 \\

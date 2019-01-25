@@ -35,23 +35,23 @@ For sets, we just use functions.
 For presheaves, we use natural transformations instead.
 
 \begin{code}%
-\>[0]\AgdaFunction{Tm}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockContext}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ctx}\AgdaSpace{}%
+\AgdaFunction{SemCtx}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{Ty}\AgdaSpace{}%
+\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\<%
 \\
-\>[0]\AgdaFunction{Tm}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -60,7 +60,7 @@ For presheaves, we use natural transformations instead.
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{A}\<%
 \\
-\>[0]\AgdaFunction{Tm}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%

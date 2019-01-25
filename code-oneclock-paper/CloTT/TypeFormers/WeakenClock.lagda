@@ -18,19 +18,19 @@ Concretely, given a type, define a presheaf.
 We do this via the constant presheaf.
 
 \begin{code}
-WC : Ctx ∅ → Ctx κ
-WC Γ = Const Γ
+⇑ : SemCtx ∅ → SemCtx κ
+⇑ Γ = Const Γ
 \end{code}
 
 \AgdaHide{
 \begin{code}
-sem-up : (Γ : Ctx ∅) (A : Ty ∅) → Tm Γ A → Tm (WC Γ) (WC A)
+sem-up : (Γ : SemCtx ∅) (A : SemTy ∅) → SemTm Γ A → SemTm (⇑ Γ) (⇑ A)
 nat-map (sem-up Γ A t) _ = t
 nat-com (sem-up Γ A t) _ _ _ = refl
 \end{code}
 
 \begin{code}
-sem-down : (Γ : Ctx ∅) (A : Ty ∅) → Tm (WC Γ) (WC A) → Tm Γ A 
+sem-down : (Γ : SemCtx ∅) (A : SemTy ∅) → SemTm (⇑ Γ) (⇑ A) → SemTm Γ A 
 sem-down Γ A t = nat-map t ∞
 \end{code}
 }

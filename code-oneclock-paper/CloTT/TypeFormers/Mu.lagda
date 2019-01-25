@@ -21,10 +21,10 @@ The reason why we cannot use the syntactic ones, is because we need to use inhab
 This leads to the following definition.
 
 \begin{code}
-data SemPoly : ClockContext → Set₁ where
-    ∁ : ∀ {Δ} → Ty Δ → SemPoly Δ
-    I : {Δ : ClockContext} → SemPoly Δ
-    _⊞_ _⊠_ : {Δ : ClockContext} → SemPoly Δ → SemPoly Δ → SemPoly Δ
+data SemPoly : ClockCtx → Set₁ where
+    ∁ : ∀ {Δ} → SemTy Δ → SemPoly Δ
+    I : {Δ : ClockCtx} → SemPoly Δ
+    _⊞_ _⊠_ : {Δ : ClockCtx} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ►P : SemPoly κ → SemPoly κ
 \end{code}
 
@@ -33,7 +33,7 @@ This is defined by induction on the polynomial.
 In each case, we use the corresponding opertion on types.
 
 \begin{code}
-sem-eval : {Δ : ClockContext} → SemPoly Δ → Ty Δ → Ty Δ
+sem-eval : {Δ : ClockCtx} → SemPoly Δ → SemTy Δ → SemTy Δ
 \end{code}
 
 \AgdaHide{
@@ -138,7 +138,7 @@ We use the same trick for \AD{μMor'}.
 In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
 
 \begin{code}
-μpsh : SemPoly κ → SemPoly κ → Ty κ
+μpsh : SemPoly κ → SemPoly κ → SemTy κ
 \end{code}
 
 \AgdaHide{
@@ -157,7 +157,7 @@ We make a case distinction based on the clock context.
 For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
 
 \begin{code}
-mu : {Δ : ClockContext} → (P : SemPoly Δ) → Ty Δ
+mu : {Δ : ClockCtx} → (P : SemPoly Δ) → SemTy Δ
 mu {κ} P = μpsh P P
 \end{code}
 

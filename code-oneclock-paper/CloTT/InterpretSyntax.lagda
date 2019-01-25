@@ -20,27 +20,27 @@ open NatTrans
 
 \begin{code}
 mutual
-  ⟦_⟧poly : {Δ : ClockContext} → Poly Δ → SemPoly Δ
+  ⟦_⟧poly : {Δ : ClockCtx} → Poly Δ → SemPoly Δ
   ⟦_⟧poly (∁ A) = ∁ ⟦ A ⟧A
   ⟦ I ⟧poly = I
   ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
   ⟦ ▻ P ⟧poly = ►P ⟦ P ⟧poly
 
-  ⟦_⟧A : {Δ : ClockContext} → Type Δ → Ty Δ
+  ⟦_⟧A : {Δ : ClockCtx} → Ty Δ → SemTy Δ
   ⟦ 𝟙 ⟧A = Unit
   ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
   ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-  ⟦ ⇑ A ⟧A = WC ⟦ A ⟧A
+  ⟦ ⇡ A ⟧A = ⇑ ⟦ A ⟧A
   ⟦ ▻ A ⟧A = ►(⟦ A ⟧A)
   ⟦ □ A ⟧A = ■(⟦ A ⟧A)
   ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
   
-⟦_⟧Γ : {Δ : ClockContext} → Context Δ → Ctx Δ
+⟦_⟧Γ : {Δ : ClockCtx} → Ctx Δ → SemCtx Δ
 ⟦ • ⟧Γ = ∙ _
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
-⟦ ⇑ Γ ⟧Γ = WC ⟦ Γ ⟧Γ
+⟦ ⇡ Γ ⟧Γ = ⇑ ⟦ Γ ⟧Γ
 
 consset' : (P Q : Poly ∅) → ⟦ eval Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
 consset' P (∁ x) t = ∁s t -- ∁s t
@@ -71,11 +71,11 @@ cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (▻ Q) i j t =
   cong₂-dep ►P (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
 
-conspsh : (P Q : Poly κ) (Γ : Context κ) → Tm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → Tm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
+conspsh : (P Q : Poly κ) (Γ : Ctx κ) → SemTm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → SemTm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
 nat-map (conspsh P Q Γ t) i γ  = cons₁' P Q i (nat-map t i γ)
 nat-com (conspsh P Q Γ t) i j γ = trans (cons₂' P Q i j (nat-map t i γ)) (cong (cons₁' P Q j) (nat-com t i j γ))
 
-primrec-set' : (P Q : Poly ∅) (A : Type ∅)
+primrec-set' : (P Q : Poly ∅) (A : Ty ∅)
   → ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
   → (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
   → ⟦ eval Q (μ P ⊠ A) ⟧A
@@ -86,15 +86,15 @@ primrec-set' P (Q₁ ⊞ Q₂) A y (⊞₂ z) = inj₂ (primrec-set' P Q₂ A y 
 proj₁ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q₁ A y z₁
 proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q₂ A y z₂
 
-primrec-set : (P : Poly ∅) (Γ : Context ∅) (A : Type ∅)
-  → Tm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
-  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-set : (P : Poly ∅) (Γ : Ctx ∅) (A : Ty ∅)
+  → SemTm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
+  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x a = t x (primrec-set' P P A (t x) a)
 
-primrec-psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
+primrec-psh'₁₁ : (P Q : Poly κ) (A : Ty κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
   → Obj ⟦ eval Q (μ P ⊠ A) ⟧A j
-primrec-psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
+primrec-psh'₁₂ : (P Q : Poly κ) (A : Ty κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
   → Mor ⟦ eval Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
     ≡
@@ -120,7 +120,7 @@ primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
   cong₂ (_,_) (primrec-psh'₁₂ P Q₁ A i t j z₁ k) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)
 primrec-psh'₁₂ P (▻ Q) A i t j (►P z₁ z₂) k = ►eq (λ {_ → refl})
 
-primrec-psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A)
+primrec-psh'₂ : (P Q : Poly κ) (Γ : SemCtx κ) (A : Ty κ) (t : SemTm Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
   → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
     ≡
@@ -137,9 +137,9 @@ primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
 primrec-psh'₂ P (▻ Q) Γ A t i j x k (►P z₁ z₂) =
   ►eq (λ {l → primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ])})
 
-primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
-  → Tm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
-  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec-psh : (P : Poly κ) (Γ : Ctx κ) (A : Ty κ)
+  → SemTm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
+  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
 funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
   trans (funcom (nat-map f i x) j k _)
@@ -225,7 +225,7 @@ primrec-psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
         (►eq (λ {l → cong proj₁ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))}))
         (►eq (λ {l → cong proj₂ (primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ]))}))
 
-primrec-psh : (P : Poly κ) (Γ : Context κ) (A : Type κ)
+primrec-psh : (P : Poly κ) (Γ : Ctx κ) (A : Type κ)
   → Tm ⟦ Γ ⟧Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A
   → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
 fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
@@ -273,7 +273,7 @@ weakenμ-eq P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) j =
   cong₂ (_⊠_) (weakenμ-eq P Q₁ i x₁ j) (weakenμ-eq P Q₂ i x₂ j)
 
 mutual
-  ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
+  ⟦_⟧sub : {Δ : ClockCtx} {Γ Γ' : Ctx Δ} → Sub Γ Γ' → SemSub ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
   ⟦ id Γ ⟧sub = sem-idsub ⟦ Γ ⟧Γ
   ⟦ s , x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
@@ -282,12 +282,12 @@ mutual
   ⟦ down s ⟧sub = nat-map ⟦ s ⟧sub ∞ 
   nat-map ⟦ up s ⟧sub i = ⟦ s ⟧sub
   nat-com ⟦ up s ⟧sub i j x = refl
-  nat-map ⟦ •⇑ ⟧sub i tt = tt
-  nat-com ⟦ •⇑ ⟧sub i j x = refl
-  nat-map ⟦ ,⇑ Γ A ⟧sub i x = x
-  nat-com ⟦ ,⇑ Γ A ⟧sub i j x = refl
+  nat-map ⟦ •⇡ ⟧sub i tt = tt
+  nat-com ⟦ •⇡ ⟧sub i j x = refl
+  nat-map ⟦ ,⇡ Γ A ⟧sub i x = x
+  nat-com ⟦ ,⇡ Γ A ⟧sub i j x = refl
   
-  ⟦_⟧tm : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} → Term Γ A → Tm ⟦ Γ ⟧Γ ⟦ A ⟧A
+  ⟦_⟧tm : {Δ : ClockCtx} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → SemTm ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ sub t s ⟧tm = sem-sub _ _ _ ⟦ t ⟧tm ⟦ s ⟧sub
   ⟦ var Γ A ⟧tm = sem-var ⟦ Γ ⟧Γ ⟦ A ⟧A
   ⟦ tt ⟧tm = ⋆ _

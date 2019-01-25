@@ -27,27 +27,27 @@ record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
 \AgdaHide{
 \begin{code}
   field
-    semType : ClockContext → Set ℓ₁
-    semContext : ClockContext → Set ℓ₁
-    semTerm : ∀ {Δ} → semContext Δ → semType Δ → Set ℓ₂
-    semSubst : ∀ {Δ} → semContext Δ → semContext Δ → Set ℓ₂
-    _[_sem∼_] : ∀ {Δ} {Γ : semContext Δ} {A : semType Δ}
-      → semTerm Γ A → semTerm Γ A → Set ℓ₂
-    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semContext Δ} → semSubst Γ₁ Γ₂ → semSubst Γ₁ Γ₂ → Set ℓ₂
-    _⟦_⟧Type : ∀ {Δ} → Type Δ → semType Δ
-    _⟦_⟧Ctx : ∀ {Δ} → Context Δ → semContext Δ
-    _⟦_⟧Tm : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} → Term Γ A → semTerm (_⟦_⟧Ctx Γ) (_⟦_⟧Type A)
-    _⟦_⟧Subst : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} → Subst Γ₁ Γ₂ → semSubst (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
-    _⟦_⟧∼ : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} {t t' : Term Γ A}
+    semTy : ClockCtx → Set ℓ₁
+    semCtx : ClockCtx → Set ℓ₁
+    semTm : ∀ {Δ} → semCtx Δ → semTy Δ → Set ℓ₂
+    semSub : ∀ {Δ} → semCtx Δ → semCtx Δ → Set ℓ₂
+    _[_sem∼_] : ∀ {Δ} {Γ : semCtx Δ} {A : semTy Δ}
+      → semTm Γ A → semTm Γ A → Set ℓ₂
+    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semCtx Δ} → semSub Γ₁ Γ₂ → semSub Γ₁ Γ₂ → Set ℓ₂
+    _⟦_⟧Ty : ∀ {Δ} → Ty Δ → semTy Δ
+    _⟦_⟧Ctx : ∀ {Δ} → Ctx Δ → semCtx Δ
+    _⟦_⟧Tm : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → semTm (_⟦_⟧Ctx Γ) (_⟦_⟧Ty A)
+    _⟦_⟧Sub : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} → Sub Γ₁ Γ₂ → semSub (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
+    _⟦_⟧∼ : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} {t t' : Tm Γ A}
       → t ∼ t' → _[_sem∼_] (_⟦_⟧Tm t) (_⟦_⟧Tm t')
-    _⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {s s' : Subst Γ₁ Γ₂}
-      → s ≈ s' → _[_sem≈_] (_⟦_⟧Subst s) (_⟦_⟧Subst s')
+    _⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {s s' : Sub Γ₁ Γ₂}
+      → s ≈ s' → _[_sem≈_] (_⟦_⟧Sub s) (_⟦_⟧Sub s')
 \end{code}
 }
 
 If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{f}.
 The main example is the syntax itself.
-Types, contexts, substitutions, terms, and so on are interpreted by themselves.
+Tys, contexts, substitutions, terms, and so on are interpreted by themselves.
 
 \AgdaHide{
 \begin{code}
@@ -61,15 +61,15 @@ initial-interpretation : interpret-syntax
 
 \AgdaHide{
 \begin{code}
-semType initial-interpretation = Type
-semContext initial-interpretation = Context
-semSubst initial-interpretation = Subst
-semTerm initial-interpretation = Term
+semTy initial-interpretation = Ty
+semCtx initial-interpretation = Ctx
+semSub initial-interpretation = Sub
+semTm initial-interpretation = Tm
 _[_sem∼_] initial-interpretation = _∼_
 _[_sem≈_] initial-interpretation = _≈_
-_⟦_⟧Type initial-interpretation x = x 
+_⟦_⟧Ty initial-interpretation x = x 
 _⟦_⟧Ctx initial-interpretation x = x
-_⟦_⟧Subst initial-interpretation x = x
+_⟦_⟧Sub initial-interpretation x = x
 _⟦_⟧Tm initial-interpretation x = x
 _⟦_⟧∼ initial-interpretation x = x
 _⟦_⟧≈ initial-interpretation x = x
@@ -81,19 +81,19 @@ This gives categorical semantics of the syntax and we define it as follows.
 
 \begin{code}
 sem : interpret-syntax
-semType sem = Ty
-semContext sem = Ctx
-semTerm sem = Tm
+semTy sem = SemTy
+semCtx sem = SemCtx
+semTm sem = SemTm
 \end{code}
 
 \AgdaHide{
 \begin{code}
-semSubst sem = sem-subst
+semSub sem = SemSub
 _[_sem∼_] sem = def-eq _ _
 _[_sem≈_] sem = subst-eq _ _
-_⟦_⟧Type sem = ⟦_⟧A
+_⟦_⟧Ty sem = ⟦_⟧A
 _⟦_⟧Ctx sem = ⟦_⟧Γ
-_⟦_⟧Subst sem = ⟦_⟧sub
+_⟦_⟧Sub sem = ⟦_⟧sub
 _⟦_⟧Tm sem = ⟦_⟧tm
 _⟦_⟧∼ sem = ⟦_⟧tm-eq
 _⟦_⟧≈ sem = ⟦_⟧sub-eq
@@ -105,13 +105,13 @@ Briefly, consistency means that not every defitional equality.
 
 
 \begin{code}
-bool : Type ∅
+bool : Ty ∅
 bool = 𝟙 ⊞ 𝟙
 
-TRUE : Term • bool
+TRUE : Tm • bool
 TRUE = in₁ 𝟙 tt
 
-FALSE : Term • bool
+FALSE : Tm • bool
 FALSE = in₂ 𝟙 tt
 \end{code}
 
@@ -155,38 +155,38 @@ syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
 
 \AgdaHide{
 \begin{code}
-sub-π₁ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⊠ B)) (s : Subst Γ₂ Γ₁)
+sub-π₁ : {Δ : ClockCtx} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} {B : Ty Δ} (t : Tm Γ₁ (A ⊠ B)) (s : Sub Γ₂ Γ₁)
   → sub (π₁ t) s ∼ π₁ (sub t s)
 sub-π₁ t s =
   trans∼ (sym∼ (⊠-β₁ (sub (π₁ t) s) (sub (π₂ t) s)))
          (cong-π₁ (trans∼ (sym∼ (sub-[ (π₁ t) & (π₂ t) ] s)) (cong-sub (⊠-η t) refl≈)))
 
-sub-π₂ : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⊠ B)) (s : Subst Γ₂ Γ₁)
+sub-π₂ : {Δ : ClockCtx} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} {B : Ty Δ} (t : Tm Γ₁ (A ⊠ B)) (s : Sub Γ₂ Γ₁)
   → sub (π₂ t) s ∼ π₂ (sub t s)
 sub-π₂ t s =
   trans∼ (sym∼ (⊠-β₂ (sub (π₁ t) s) (sub (π₂ t) s)))
          (cong-π₂ (trans∼ (sym∼ (sub-[ (π₁ t) & (π₂ t) ] s)) (cong-sub (⊠-η t) refl≈)))
 
-sub-app : {Δ : ClockContext} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} {B : Type Δ} (t : Term Γ₁ (A ⟶ B)) (s : Subst Γ₂ Γ₁)
+sub-app : {Δ : ClockCtx} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} {B : Ty Δ} (t : Tm Γ₁ (A ⟶ B)) (s : Sub Γ₂ Γ₁)
   → sub (app t) (upA A s) ∼ app (sub t s)
 sub-app t s =
   trans∼ (sym∼ (λ-β _))
          (trans∼ (cong-app (sym∼ (sub-lambda (app t) s)))
                  (cong-app (cong-sub (λ-η t) refl≈)))
 
-sub-unbox : {Γ₁ Γ₂ : Context ∅} {A : Type κ} (t : Term Γ₁ (□ A)) (s : Subst Γ₂ Γ₁)
+sub-unbox : {Γ₁ Γ₂ : Ctx ∅} {A : Ty κ} (t : Tm Γ₁ (□ A)) (s : Sub Γ₂ Γ₁)
   → sub (unbox t) (up s) ∼ unbox (sub t s)
 sub-unbox t s =
   trans∼ (sym∼ (□-β (sub (unbox t) (up s))))
          (cong-unbox (trans∼ (sym∼ (sub-box (unbox t) s)) (cong-sub (□-η t) refl≈)))
 
-sub-down : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ₁) (⇑ A)) (s : Subst Γ₂ Γ₁)
+sub-down : {Γ₁ Γ₂ : Ctx ∅} {A : Ty ∅} (t : Tm (⇡ Γ₁) (⇡ A)) (s : Sub Γ₂ Γ₁)
   → sub (down t) s ∼ down(sub t (up s))
 sub-down t s =
   trans∼ (sym∼ (up-β (sub (down t) s)))
          (cong-down (trans∼ (sym∼ (sub-up (down t) s)) (cong-sub (up-η t) refl≈)))
 
-sub-tt : {Γ₁ Γ₂ : Context ∅} (s : Subst Γ₂ Γ₁) → sub tt s ∼ tt
+sub-tt : {Γ₁ Γ₂ : Ctx ∅} (s : Sub Γ₂ Γ₁) → sub tt s ∼ tt
 sub-tt s = 𝟙-η (sub tt s)
 \end{code}
 }

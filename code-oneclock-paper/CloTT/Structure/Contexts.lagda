@@ -13,7 +13,7 @@ If the clock context is empty, then we interpret the context as a set.
 Otherwise, there is a single clock, and then we use presheaves.
 
 \begin{code}
-Ctx : ClockContext → Set₁
-Ctx ∅ = Set
-Ctx κ = PSh
+SemCtx : ClockCtx → Set₁
+SemCtx ∅ = Set
+SemCtx κ = PSh
 \end{code}

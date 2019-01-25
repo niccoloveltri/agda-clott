@@ -14,7 +14,7 @@ open NatTrans
 }
 
 \begin{code}
-_⇒_ : {Δ : ClockContext} (A B : Ty Δ) → Ty Δ
+_⇒_ : {Δ : ClockCtx} (A B : SemTy Δ) → SemTy Δ
 \end{code}
 
 \AgdaHide{
@@ -26,8 +26,8 @@ _⇒_ {κ} A B = Exp A B
 
 \AgdaHide{
 \begin{code}
-sem-lambda : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (t : Tm (Γ ,, A) B)
-  → Tm Γ (A ⇒ B)
+sem-lambda : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B : SemTy Δ) (t : SemTm (Γ ,, A) B)
+  → SemTm Γ (A ⇒ B)
 sem-lambda {∅} Γ A B t x y = t (x , y)
 fun (nat-map (sem-lambda {κ} Γ A B t) i x) j z = nat-map t j (Mor Γ i j x , z)
 funcom (nat-map (sem-lambda {κ} Γ A B t) i x) j k z =
@@ -42,9 +42,9 @@ nat-com (sem-lambda {κ} Γ A B t) i j x = funeq (λ k z → cong (λ z → nat-
 \end{code}
 
 \begin{code}
-sem-app : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ)
-      (f : Tm Γ (A ⇒ B))
-  → Tm (Γ ,, A) B
+sem-app : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B : SemTy Δ)
+      (f : SemTm Γ (A ⇒ B))
+  → SemTm (Γ ,, A) B
 sem-app {∅} Γ A B f (x , y) = f x y
 nat-map (sem-app {κ} Γ A B f) i (x , y) = fun (nat-map f i x) i y
 nat-com (sem-app {κ} Γ A B f) i j (x , y) =
@@ -58,7 +58,7 @@ nat-com (sem-app {κ} Γ A B f) i j (x , y) =
 \end{code}
 
 \begin{code}
-sem-app-map : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) → Tm Γ (A ⇒ B) → Tm Γ A → Tm Γ B
+sem-app-map : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B : SemTy Δ) → SemTm Γ (A ⇒ B) → SemTm Γ A → SemTm Γ B
 sem-app-map Γ A B f t = sem-sub Γ (Γ ,, A) B (sem-app Γ A B f) (sem-subst-tm Γ Γ A (sem-idsub Γ) t)
 \end{code}
 }

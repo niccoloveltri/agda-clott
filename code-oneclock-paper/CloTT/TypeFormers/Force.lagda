@@ -25,12 +25,12 @@ If we find a size greater than \AB{i}, then we can use \AFi{■cone} \AB{t} for 
 Since \F{∞} is bigger than \AB{i}, we define
 
 \begin{code}
-sem-force' : (A : Ty κ) → ■ (► A) → ■ A
+sem-force' : (A : SemTy κ) → ■ (► A) → ■ A
 ■cone (sem-force' A t) i = ►cone (■cone t ∞) [ i ]
 ■com (sem-force' A t) i j = ►com (■cone t ∞) [ i ] [ j ]
 \end{code}
 
 \begin{code}
-sem-force : (Γ : Ctx ∅) (A : Ty κ) (t : Tm Γ (■ (► A))) → Tm Γ (■ A)
+sem-force : (Γ : SemCtx ∅) (A : SemTy κ) (t : SemTm Γ (■ (► A))) → SemTm Γ (■ A)
 sem-force Γ A t x = sem-force' A (t x)
 \end{code}

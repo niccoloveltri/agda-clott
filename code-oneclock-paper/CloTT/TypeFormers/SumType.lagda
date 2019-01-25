@@ -15,13 +15,13 @@ open NatTrans
 }
 
 \begin{code}
-_⊕_ : {Δ : ClockContext} (A B : Ty Δ) → Ty Δ
+_⊕_ : {Δ : ClockCtx} (A B : SemTy Δ) → SemTy Δ
 _⊕_ {∅} A B = A ⊎ B
 _⊕_ {κ} A B = Sum A B
 \end{code}
 
 \begin{code}
-inl : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (x : Tm Γ A) → Tm Γ (A ⊕ B)
+inl : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B : SemTy Δ) (x : SemTm Γ A) → SemTm Γ (A ⊕ B)
 inl {∅} Γ A B t x = inj₁ (t x)
 nat-map (inl {κ} Γ A B x) Δ y = inj₁ (nat-map x Δ y)
 nat-com (inl {κ}Γ A B x) Δ Δ' y = 
@@ -33,7 +33,7 @@ nat-com (inl {κ}Γ A B x) Δ Δ' y =
 \end{code}
 
 \begin{code}
-inr : {Δ : ClockContext} (Γ : Ctx Δ) (A B : Ty Δ) (x : Tm Γ B) → Tm Γ (A ⊕ B)
+inr : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B : SemTy Δ) (x : SemTm Γ B) → SemTm Γ (A ⊕ B)
 inr {∅} Γ A B t x = inj₂ (t x)
 nat-map (inr {κ} Γ A B x) Δ y = inj₂ (nat-map x Δ y)
 nat-com (inr {κ} Γ A B x) Δ Δ' y =
@@ -45,9 +45,9 @@ nat-com (inr {κ} Γ A B x) Δ Δ' y =
 \end{code}
 
 \begin{code}
-sum-rec : {Δ : ClockContext} (Γ : Ctx Δ) (A B C : Ty Δ)
-          (left : Tm (Γ ,, A) C) (right : Tm (Γ ,, B) C)
-          → Tm (Γ ,, (A ⊕ B)) C
+sum-rec : {Δ : ClockCtx} (Γ : SemCtx Δ) (A B C : SemTy Δ)
+          (left : SemTm (Γ ,, A) C) (right : SemTm (Γ ,, B) C)
+          → SemTm (Γ ,, (A ⊕ B)) C
 sum-rec {∅} Γ A B C left right (x , inj₁ l) = left (x , l)
 sum-rec {∅} Γ A B C left right (x , inj₂ r) = right (x , r)          
 nat-map (sum-rec {κ} Γ A B C left right) i (x , inj₁ l) = nat-map left i (x , l)

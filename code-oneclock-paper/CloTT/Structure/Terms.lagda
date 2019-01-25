@@ -17,7 +17,7 @@ For sets, we just use functions.
 For presheaves, we use natural transformations instead.
 
 \begin{code}
-Tm : {Δ : ClockContext} (Γ : Ctx Δ) (A : Ty Δ) → Set
-Tm {∅} Γ A = Γ → A
-Tm {κ} Γ A = NatTrans Γ A
+SemTm : {Δ : ClockCtx} (Γ : SemCtx Δ) (A : SemTy Δ) → Set
+SemTm {∅} Γ A = Γ → A
+SemTm {κ} Γ A = NatTrans Γ A
 \end{code}

@@ -32,7 +32,7 @@ The use of \F{SizeLt} is therefore crucial in the definition of \F{dfix₁} sinc
 We omit the construction of the \Fi{►com} component of \F{dfix₁} \Ar{A i f}, which also requires the usage of \F{elimLt} for acceptance by the termination checker.
 We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f}.
 \begin{code}
-dfix₁ : (A : Ty κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
+dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
 ►cone (dfix₁ A i f) [ j ] = fun f j (dfix₁ A j f)
 \end{code}
 \AgdaHide{
@@ -48,7 +48,7 @@ dfix₁ : (A : Ty κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
 \end{code}
 }
 \begin{code}
-dfix : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) → Tm Γ (► A)
+dfix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ (► A)
 nat-map (dfix Γ A f) i γ = dfix₁ A i (nat-map f i γ)
 \end{code}
 \AgdaHide{
@@ -59,7 +59,7 @@ nat-com (dfix Γ A f) i j γ = ►eq (λ {k → cong (λ a → fun a k (dfix₁ 
 The semantic fixed point operation is obtained by applying the
 function \AB{f} to \F{dfix} \Ar{Γ A f}.
 \begin{code}
-sem-fix : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) → Tm Γ A
+sem-fix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ A
 \end{code}
 
 \AgdaHide{

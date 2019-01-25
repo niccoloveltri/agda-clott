@@ -22,18 +22,18 @@ Note that we are modelling a simple type theory and thus types do not depend on 
 For this reason, we can interpet types the same way as contexts.
 
 \begin{code}%
-\>[0]\AgdaFunction{Ty}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockContext}\AgdaSpace{}%
+\AgdaDatatype{ClockCtx}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set₁}\<%
 \\
-\>[0]\AgdaFunction{Ty}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\<%
 \\
-\>[0]\AgdaFunction{Ty}\AgdaSpace{}%
+\>[0]\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%

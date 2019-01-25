@@ -14,17 +14,17 @@ open PSh
 }
 
 \begin{code}
-Unit : {b : ClockContext} → Ty b
+Unit : {b : ClockCtx} → SemTy b
 Unit {∅} = ⊤
 Unit {κ} = Terminal
 
-⋆ : {b : ClockContext} (Γ : Ctx b) → Tm Γ Unit
+⋆ : {b : ClockCtx} (Γ : SemCtx b) → SemTm Γ Unit
 ⋆ {∅} Γ x = tt
 nat-map (⋆ {κ} Γ) i x = tt
 nat-com (⋆ {κ} Γ) i j x = refl
 
-Unit-rec : {b : ClockContext} (Γ : Ctx b) (A : Ty b)
-  → Tm Γ A → Tm (Γ ,, Unit) A
+Unit-rec : {b : ClockCtx} (Γ : SemCtx b) (A : SemTy b)
+  → SemTm Γ A → SemTm (Γ ,, Unit) A
 Unit-rec {∅} Γ A t x = t (proj₁ x)
 nat-map (Unit-rec {κ} Γ A t) i x = nat-map t i (proj₁ x)
 nat-com (Unit-rec {κ} Γ A t) i j x =

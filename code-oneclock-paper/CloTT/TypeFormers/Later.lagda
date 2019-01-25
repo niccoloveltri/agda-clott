@@ -92,7 +92,7 @@ In addition, we can define an action on the morphisms and show this preserves id
 All in all, we get
 
 \begin{code}
-record ►Obj (A : Ty κ) (i : Size) : Set where
+record ►Obj (A : SemTy κ) (i : Size) : Set where
     field
       ►cone : Later (Obj A) i
       ►com : LaterLim (Obj A) (Mor A) i ►cone
@@ -102,18 +102,18 @@ record ►Obj (A : Ty κ) (i : Size) : Set where
 \begin{code}
 open ►Obj
 
-►eq' : {A : Ty κ} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
+►eq' : {A : SemTy κ} {i : Size} {s t : ►Obj A i} → ►cone s ≡ ►cone t → s ≡ t
 ►eq' {_} {s} {t} refl = cong (λ z → record { ►cone = ►cone t ; ►com = z})
                              (funext (λ {[ j ] → funext (λ {[ k ] → uip})}))
 
-►eq : {A : Ty κ} {i : Size} {s t : ►Obj A i} → ((j : Size< i) → ►cone s [ j ] ≡ ►cone t [ j ]) → s ≡ t
+►eq : {A : SemTy κ} {i : Size} {s t : ►Obj A i} → ((j : Size< i) → ►cone s [ j ] ≡ ►cone t [ j ]) → s ≡ t
 ►eq p = ►eq' (funext (λ {[ j ] → p j}))
 \end{code}
 }
 
 \AgdaHide{
 \begin{code}
-module _ (A : Ty κ) where
+module _ (A : SemTy κ) where
 \end{code}
 }
 
@@ -135,7 +135,7 @@ module _ (A : Ty κ) where
 }
 
 \begin{code}
-► : Ty κ → Ty κ
+► : SemTy κ → SemTy κ
 \end{code}
 
 \AgdaHide{

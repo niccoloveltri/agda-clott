@@ -12,9 +12,9 @@ Note that we are modelling a simple type theory and thus types do not depend on 
 For this reason, we can interpet types the same way as contexts.
 
 \begin{code}
-Ty : ClockContext → Set₁
-Ty ∅ = Set
-Ty κ = PSh
+SemTy : ClockCtx → Set₁
+SemTy ∅ = Set
+SemTy κ = PSh
 \end{code}
 
 
