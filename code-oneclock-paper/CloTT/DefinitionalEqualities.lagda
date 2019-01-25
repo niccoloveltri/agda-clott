@@ -48,16 +48,16 @@ sem-⊠-η {∅} {Γ} {A} {B} t x = refl
 sem-⊠-η {κ} {Γ} {A} {B} t i x = refl
 
 sem-⊞-β₁ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ A)
-  → def-eq _ _ ⟦ sub (⊞rec C l r) (idsub Γ ,s in₁ B t) ⟧tm ⟦ sub l (idsub Γ ,s t) ⟧tm
+  → def-eq _ _ ⟦ sub (⊞rec C l r) (id Γ , in₁ B t) ⟧tm ⟦ sub l (id Γ , t) ⟧tm
 sem-⊞-β₁ {∅} {Γ} {A} {B} {C} l r t x = refl
 sem-⊞-β₁ {κ} {Γ} {A} {B} {C} l r t i x = refl
 
 sem-⊞-β₂ : {Δ : ClockContext} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ B)
-  → def-eq _ _ ⟦ sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ⟧tm ⟦ sub r (idsub Γ ,s t) ⟧tm
+  → def-eq _ _ ⟦ sub (⊞rec C l r) (id Γ , in₂ A t) ⟧tm ⟦ sub r (id Γ , t) ⟧tm
 sem-⊞-β₂ {∅} {Γ} {A} {B} {C} l r t x = refl
 sem-⊞-β₂ {κ} {Γ} {A} {B} {C} l r t i x = refl
 
-sem-𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → def-eq _ _ ⟦ sub (unit-rec t) (idsub Γ ,s tt) ⟧tm ⟦ t ⟧tm
+sem-𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → def-eq _ _ ⟦ sub (unit-rec t) (id Γ , tt) ⟧tm ⟦ t ⟧tm
 sem-𝟙-β {Γ} {A} t x = refl
 
 sem-𝟙-η : {Γ : Context ∅} (t : Term Γ 𝟙) → def-eq ⟦ Γ ⟧Γ ⟦ 𝟙 ⟧A ⟦ t ⟧tm ⟦ tt {Γ} ⟧tm
@@ -78,7 +78,7 @@ sem-up-η t = nat-com ⟦ t ⟧tm ∞
 sem-next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (▻ A)) → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A ⟦ next (idmap A) ⊛ t ⟧tm ⟦ t ⟧tm
 sem-next-id t i x = ►eq (λ {_ → refl})
 
-sem-next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ next f ⊛ next t ⟧tm ⟦ next (app-map f t) ⟧tm
+sem-next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ next f ⊛ next t ⟧tm ⟦ next (f $ t) ⟧tm
 sem-next-⊛ f t i x = ►eq (λ {_ → refl})
 
 sem-next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (▻ (B ⟶ C))) (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ (▻ A))
@@ -86,7 +86,7 @@ sem-next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (▻ (B ⟶ C))
 sem-next-comp g f t i x = ►eq (λ {_ → refl})
 
 sem-next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
-  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambda (app-map (var _ _) (wk t))) ⊛ f ⟧tm
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambda ((var _ _) $ (wk t))) ⊛ f ⟧tm
 sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
 dfix-eq : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A))
@@ -102,7 +102,7 @@ fix-eq Γ A f i x = cong (fun (nat-map f i x) i) (dfix-eq Γ A f i x)
 sem-fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A))
   → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
            ⟦ fix f ⟧tm
-           ⟦ app-map f (next (fix f)) ⟧tm
+           ⟦ f $ (next (fix f)) ⟧tm
 sem-fix-f f = fix-eq _ _ ⟦ f ⟧tm
 
 dfix-un : (Γ : Ctx κ) (A : Ty κ) (f : Tm Γ (► A ⇒ A)) (u : Tm Γ A) (i : Size) (x : Obj Γ i)
@@ -140,28 +140,28 @@ fix-un Γ A f u p i x =
 
 sem-fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A)
   → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
-           ⟦ app-map f (next u) ⟧tm
+           ⟦ f $ (next u) ⟧tm
            ⟦ u ⟧tm
   → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
            ⟦ fix f ⟧tm
            ⟦ u ⟧tm
 sem-fix-u f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
 
-sem-sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ idsub Γ' o s ⟧sub ⟦ s ⟧sub
+sem-sub-idl : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ id Γ' ∘ s ⟧sub ⟦ s ⟧sub
 sem-sub-idl {∅} s x = refl
 sem-sub-idl {κ} s i x = refl
 
-sem-sub-idr : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ s o idsub Γ ⟧sub ⟦ s ⟧sub
+sem-sub-idr : {Δ : ClockContext} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → subst-eq _ _ ⟦ s ∘ id Γ ⟧sub ⟦ s ⟧sub
 sem-sub-idr {∅} s x = refl
 sem-sub-idr {κ} s i x = refl
 
 sem-sub-assoc : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ Γ₄ : Context Δ} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃) (s₃ : Subst Γ₃ Γ₄)
-  → subst-eq _ _ ⟦ s₃ o (s₂ o s₁) ⟧sub ⟦ (s₃ o s₂) o s₁ ⟧sub
+  → subst-eq _ _ ⟦ s₃ ∘ (s₂ ∘ s₁) ⟧sub ⟦ (s₃ ∘ s₂) ∘ s₁ ⟧sub
 sem-sub-assoc {∅} s₁ s₂ s₃ x = refl
 sem-sub-assoc {κ} s₁ s₂ s₃ i x = refl
 
 sem-sub-π₁β : {Δ : ClockContext} {Γ Γ' : Context Δ} {A : Type Δ} {t : Term Γ A} (s : Subst Γ Γ')
-  → subst-eq _ _ ⟦ pr (s ,s t) ⟧sub ⟦ s ⟧sub
+  → subst-eq _ _ ⟦ pr (s , t) ⟧sub ⟦ s ⟧sub
 sem-sub-π₁β {∅} s x = refl
 sem-sub-π₁β {κ} s i x = refl
 
@@ -170,12 +170,12 @@ sem-sub-εη {∅} s x = refl
 sem-sub-εη {κ} s i x = refl
 
 sem-sub-,o : {Δ : ClockContext} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} {t : Term Γ₂ A} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃)
-  → subst-eq _ _ ⟦ (s₂ ,s t) o s₁ ⟧sub ⟦ (s₂ o s₁) ,s sub t s₁ ⟧sub
+  → subst-eq _ _ ⟦ (s₂ , t) ∘ s₁ ⟧sub ⟦ (s₂ ∘ s₁) , sub t s₁ ⟧sub
 sem-sub-,o {∅} s₁ s₂ x = refl
 sem-sub-,o {κ} s₁ s₂ i x = refl
 
 sem-sub-η : {Δ : ClockContext} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
-  → subst-eq _ _ ⟦ pr s ,s sub (var Γ A) s ⟧sub ⟦ s ⟧sub
+  → subst-eq _ _ ⟦ pr s , sub (var Γ A) s ⟧sub ⟦ s ⟧sub
 sem-sub-η {∅} s x = refl
 sem-sub-η {κ} s i x = refl
 
@@ -411,8 +411,8 @@ mutual
   ⟦_⟧sub-eq {Δ} refl≈ = refl-subst-eq
   ⟦_⟧sub-eq {Δ} (sym≈ p) = sym-subst-eq ⟦ p ⟧sub-eq
   ⟦_⟧sub-eq {Δ} (trans≈ {Γ} {Γ'} p q) = trans-subst-eq ⟦ p ⟧sub-eq ⟦ q ⟧sub-eq
-  ⟦_⟧sub-eq {∅} (cong- p ,s t) x = cong₂ (_,_) (⟦ p ⟧sub-eq x) (⟦ t ⟧tm-eq x)
-  ⟦_⟧sub-eq {κ} (cong- p ,s t) i x = cong₂ (_,_) (⟦ p ⟧sub-eq i x) (⟦ t ⟧tm-eq i x)
+  ⟦_⟧sub-eq {∅} (cong-_,s_ p t) x = cong₂ (_,_) (⟦ p ⟧sub-eq x) (⟦ t ⟧tm-eq x)
+  ⟦_⟧sub-eq {κ} (cong-_,s_ p t) i x = cong₂ (_,_) (⟦ p ⟧sub-eq i x) (⟦ t ⟧tm-eq i x)
   ⟦_⟧sub-eq {∅} (cong-_o_ {s₁ = s₁} {s₂ = s₂} {σ₁ = σ₁} {σ₂ = σ₂} p q) x = trans (cong (λ z → ⟦ s₁ ⟧sub z) (⟦ q ⟧sub-eq x)) (⟦ p ⟧sub-eq _)
   ⟦_⟧sub-eq {κ} (cong-_o_ {s₁ = s₁} {s₂ = s₂} {σ₁ = σ₁} {σ₂ = σ₂} p q) i x = trans (cong (λ z → nat-map ⟦ s₁ ⟧sub i z) (⟦ q ⟧sub-eq i x)) (⟦ p ⟧sub-eq i _)
   ⟦_⟧sub-eq {∅} (cong-pr p) x = cong proj₁ (⟦ p ⟧sub-eq x)
@@ -424,13 +424,22 @@ mutual
   ⟦_⟧sub-eq {Δ} (sub-εη s) = sem-sub-εη s
   ⟦_⟧sub-eq {Δ} (sub-,o {Γ} {A} {B} {C} {D} {t} s₁ s₂) = sem-sub-,o {Γ} {A} {B} {C} {D} {t} s₁ s₂
   ⟦_⟧sub-eq {Δ} (sub-η s) = sem-sub-η s
-  ⟦_⟧sub-eq {Δ} (weaken-o s₁ s₂) i x = refl
-  ⟦_⟧sub-eq {Δ} (weaken-idsub Γ) i x = refl
-  ⟦ weaken-ε Γ ⟧sub-eq i x = refl
-  ⟦ ⇑,s s t ⟧sub-eq i x = refl
-  ⟦ weaken-pr s ⟧sub-eq i x = refl
+  ⟦_⟧sub-eq {Δ} (up-o s₁ s₂) i x = refl
+  ⟦_⟧sub-eq {Δ} (up-idsub Γ) i x = refl
+  ⟦ up-ε Γ ⟧sub-eq i x = refl
+  ⟦ up-,s s t ⟧sub-eq i x = refl
+  ⟦ up-pr s ⟧sub-eq i x = refl
+  ⟦_⟧sub-eq {Δ} (down-o s₁ s₂) x = refl
+  ⟦_⟧sub-eq {Δ} (down-idsub Γ) x = refl
+  ⟦ down-ε Γ ⟧sub-eq x = refl
+  ⟦ down-,s s t ⟧sub-eq x = refl
+  ⟦ down-pr s ⟧sub-eq x = refl
   ⟦ ⇑•-id ⟧sub-eq i x = refl
   ⟦ •⇑-id ⟧sub-eq i x = refl
   ⟦ ⇑,-id Γ A ⟧sub-eq i x = refl
   ⟦ ,⇑-id Γ A ⟧sub-eq i x = refl
+  ⟦ updown s ⟧sub-eq i x = nat-com ⟦ s ⟧sub ∞ i x
+  ⟦ downup s ⟧sub-eq i = refl
+  ⟦ cong-up p ⟧sub-eq i x = ⟦ p ⟧sub-eq x
+  ⟦ cong-down p ⟧sub-eq x = ⟦ p ⟧sub-eq ∞ x 
 \end{code}

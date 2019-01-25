@@ -3,7 +3,7 @@
 module Prelude.Syntax where
 
 open import Level
-open import Function
+open import Function hiding (_$_; id; _∘_)
 open import Data.Empty
 \end{code}
 }
@@ -166,18 +166,18 @@ include constructors for variables and substitutions.
 \begin{code}
   data Term : ∀ {Δ} → Context Δ → Type Δ → Set where
     var : ∀ {Δ} (Γ : Context Δ) (A : Type Δ) → Term (Γ , A) A
-    sub : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
-      → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
+    sub : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} → Term Γ₂ A → Subst Γ₁ Γ₂ → Term Γ₁ A
 \end{code}
 We have lambda abstraction and application, plus the usual
 introduction and elimination rules for the unit types, products, 
 coproducts and guarded recursive types. Here we only show the typing rules associated to the latter.
 The function \F{eval} evaluates a code in \F{Poly} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
+We use a categorical combinator \IC{app} for application.
+The conventional application, which we call \F{\$}, taking additionally an element
+in \F{Term} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Term} \Ar{Γ} \Ar{B}, is derivable.
 \begin{code}
-    lambda : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
-      → Term (Γ , A) B → Term Γ (A ⟶ B)
-    app : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ}
-      → Term Γ (A ⟶ B) → Term (Γ , A) B
+    lambda : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term (Γ , A) B → Term Γ (A ⟶ B)
+    app : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term (Γ , A) B
     cons : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (eval P (μ P)) → Term Γ (μ P)
     primrec : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ}
       → Term Γ (eval P (μ P ⊠ A) ⟶ A) → Term Γ (μ P ⟶ A)
@@ -255,18 +255,17 @@ substitution, the empty substitution, the extension with an additional term and 
 \begin{code}
   data Subst : ∀ {Δ} → Context Δ → Context Δ → Set where
     ε : ∀ {Δ} (Γ : Context Δ) → Subst Γ •
-    idsub : ∀ {Δ} (Γ : Context Δ) → Subst Γ Γ
-    _,s_ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
+    id : ∀ {Δ} (Γ : Context Δ) → Subst Γ Γ
+    _,_ : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ}
       → Subst Γ₁ Γ₂ → Term Γ₁ A → Subst Γ₁ (Γ₂ , A)
-    _o_ : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} → Subst Γ₂ Γ₃ → Subst Γ₁ Γ₂ → Subst Γ₁ Γ₃
+    _∘_ : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} → Subst Γ₂ Γ₃ → Subst Γ₁ Γ₂ → Subst Γ₁ Γ₃
     pr : ∀ {Δ} {Γ₁ Γ₂ : Context Δ} {A : Type Δ} → Subst Γ₁ (Γ₂ , A) → Subst Γ₁ Γ₂
 \end{code}
-We add a rule embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
-context.
+We add rules for embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
 \begin{code}
     up : {Γ₁ Γ₂ : Context ∅} → Subst Γ₁ Γ₂ → Subst (⇑ Γ₁) (⇑ Γ₂)
+    down : {Γ₁ Γ₂ : Context ∅} → Subst (⇑ Γ₁) (⇑ Γ₂) → Subst Γ₁ Γ₂
 \end{code}
-\NV{We need to add an inverse to up, in analogy with the up and down term constructors.}
 We require contexts to satisfy two isomorphisms: \IC{⇑ •} needs
 to be isomorphic to \IC{•} and \IC{⇑} (\Ar{Γ} \IC{,} \Ar{A})
 needs to be isomorphic to \IC{⇑} \Ar{Γ} \IC{,} \IC{⇑}
@@ -289,16 +288,16 @@ equality on substitutions, we ask for \IC{•⇑} and
 ⇑• = ε (⇑ •)
 
 ⇑, : (Γ : Context ∅) (A : Type ∅) → Subst (⇑ (Γ , A)) (⇑ Γ , ⇑ A)
-⇑, Γ A = up (pr (idsub (Γ , A))) ,s up (var Γ A)
+⇑, Γ A = up (pr (id (Γ , A))) , up (var Γ A)
 
 upA : ∀ {Δ} {Γ Γ' : Context Δ} (A : Type Δ) → Subst Γ Γ' → Subst (Γ , A) (Γ' , A)
-upA {_} {Γ} {Γ'} A s = (s o pr (idsub (Γ , A))) ,s var Γ A
+upA {_} {Γ} {Γ'} A s = (s ∘ pr (id (Γ , A))) , var Γ A
 
 wk  : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ B → Term (Γ , A) B
-wk x = sub x (pr (idsub (_ , _)))
+wk x = sub x (pr (id (_ , _)))
 
-app-map : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
-app-map {_} {Γ} {A} {B} f x = sub (app f) (idsub Γ ,s x)
+_$_ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Term Γ A → Term Γ B
+_$_ {_} {Γ} {A} {B} f x = sub (app f) (id Γ , x)
 
 idmap : ∀ {Δ} {Γ : Context Δ} (A : Type Δ) → Term Γ (A ⟶ A)
 idmap {_} {Γ} A = lambda (var Γ A)
@@ -307,14 +306,14 @@ idmap {_} {Γ} A = lambda (var Γ A)
   → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊞ B₁) ⟶ (A₂ ⊞ B₂))
 ⊞map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
   lambda (⊞rec (A₂ ⊞ B₂)
-                 (in₁ B₂ (app-map (wk f) (var Γ A₁)))
-                 (in₂ A₂ (app-map (wk g) (var Γ B₁))))
+                 (in₁ B₂ ((wk f) $ (var Γ A₁)))
+                 (in₂ A₂ ((wk g) $ (var Γ B₁))))
 
 ⊠map : ∀ {Δ} {Γ : Context Δ} {A₁ B₁ A₂ B₂ : Type Δ}
   → Term Γ (A₁ ⟶ A₂) → Term Γ (B₁ ⟶ B₂) → Term Γ ((A₁ ⊠ B₁) ⟶ (A₂ ⊠ B₂))
 ⊠map {Δ} {Γ} {A₁} {B₁} {A₂} {B₂} f g =
-  lambda [ app-map (wk f) (π₁ (var Γ (A₁ ⊠ B₁)))
-           & app-map (wk g) (π₂ (var Γ (A₁ ⊠ B₁))) ]
+  lambda [ (wk f) $ (π₁ (var Γ (A₁ ⊠ B₁)))
+           & (wk g) $ (π₂ (var Γ (A₁ ⊠ B₁))) ]
 
 pairmap : ∀ {Δ} {Γ : Context Δ} {A B₁ B₂ : Type Δ}
   → Term Γ (A ⟶ B₁) → Term Γ (A ⟶ B₂) → Term Γ (A ⟶ (B₁ ⊠ B₂))
@@ -338,17 +337,15 @@ compmap {_} {Γ} {A} {B} {C} =
   lambda
     (lambda
       (lambda
-        (app-map
-          (wk (wk (var _ _)))
-          (app-map
-            (wk (var _ _))
+        ((wk (wk (var _ _))) $
+          ((wk (var _ _)) $
             (var _ _)))))
 
 □functor : {Γ : Context ∅} {A B : Type κ} → Term (⇑ Γ) (A ⟶ B) → Term Γ (□ A) → Term Γ (□ B)
-□functor f t = box (app-map f (unbox t))
+□functor f t = box (f $ (unbox t))
 
-const□ : (Γ : Context ∅) (A : Type ∅) → Term Γ (A ⟶ □ (⇑ A))
-const□ Γ A = lambda (box (sub (var (⇑ Γ) (⇑ A)) (⇑, Γ A)))
+const□ : {Γ : Context ∅} (A : Type ∅) → Term Γ (A ⟶ □ (⇑ A))
+const□ {Γ} A = lambda (box (sub (var (⇑ Γ) (⇑ A)) (⇑, Γ A)))
 
 sum□ : {Γ : Context ∅} (A B : Type κ) → Term Γ ((□ A ⊞ □ B) ⟶ □ (A ⊞ B))
 sum□ A B = lambda
@@ -362,47 +359,46 @@ sum□ A B = lambda
 ⊞weaken : (A B : Type ∅) → Term • (((⇑ A) ⊞ (⇑ B)) ⟶ ⇑(A ⊞ B))
 ⊞weaken A B = lambda
                 (⊞rec (⇑ (A ⊞ B))
-                      (sub (up (in₁ B (var _ _))) (,⇑ • A o upA (⇑ A) •⇑))
-                      (sub (up (in₂ A (var _ _))) (,⇑ • B o upA (⇑ B) •⇑)))
+                      (sub (up (in₁ B (var _ _))) (,⇑ • A ∘ upA (⇑ A) •⇑))
+                      (sub (up (in₂ A (var _ _))) (,⇑ • B ∘ upA (⇑ B) •⇑)))
 
 help-weaken⊞ : (A B : Type ∅) → Term • ((A ⊞ B) ⟶ □(⇑ A ⊞ ⇑ B))
-help-weaken⊞ A B = lambda (app-map (sum□ (⇑ A) (⇑ B))
+help-weaken⊞ A B = lambda ((sum□ (⇑ A) (⇑ B)) $
                              (⊞rec (□ (⇑ A) ⊞ □ (⇑ B))
                                    (in₁ (□ (⇑ B)) (box (sub (var (⇑ •) _) (⇑, • A))))
                                    (in₂ (□ (⇑ A)) (box (sub (var (⇑ •) _) (⇑, • B))))))
 
 □-adj₁ : (A : Type ∅) (B : Type κ) → Term • (⇑ A ⟶ B) → Term • (A ⟶ □ B)
 □-adj₁ A B t = lambda (box
-                              (app-map
-                                (sub (wk (sub t (ε (⇑ •))))
-                                     (⇑, • A))
+                              ((sub (wk (sub t (ε (⇑ •))))
+                                     (⇑, • A)) $
                                 (up (var _ _))))
 
 □-adj₂ : (A : Type ∅) (B : Type κ) → Term • (A ⟶ □ B) → Term • (⇑ A ⟶ B)
-□-adj₂ A B t = lambda (sub (unbox (app-map (wk t) (var _ _)))
-                                   (,⇑ • A o upA (⇑ A) •⇑))
+□-adj₂ A B t = lambda (sub (unbox ((wk t) $ (var _ _)))
+                                   (,⇑ • A ∘ upA (⇑ A) •⇑))
 
 weaken⊞ : (A B : Type ∅) → Term • (⇑(A ⊞ B) ⟶ ((⇑ A) ⊞ (⇑ B)))
 weaken⊞ A B = □-adj₂ (A ⊞ B) (⇑ A ⊞ ⇑ B) (help-weaken⊞ A B)
 
 split-prod : ∀ {Δ} (Γ : Context Δ) (A B C : Type Δ)
   → Term ((Γ , A) , B) C → Term (Γ , (A ⊠ B)) C
-split-prod Γ A B C t = sub t ((pr (idsub (Γ , (A ⊠ B))) ,s π₁ (var _ _)) ,s π₂ (var _ _))
+split-prod Γ A B C t = sub t ((pr (id (Γ , (A ⊠ B))) , π₁ (var _ _)) , π₂ (var _ _))
 
 ⊠weaken : (A B : Type ∅) → Term • (((⇑ A) ⊠ (⇑ B)) ⟶ ⇑(A ⊠ B))
 ⊠weaken A B = lambda (split-prod • (⇑ A) (⇑ B) (⇑(A ⊠ B))
                                    (sub (up [ wk (var _ _) & var _ _ ])
-                                        (,⇑ (• , A) B o upA (⇑ B) (,⇑ • A o upA (⇑ A) •⇑))))
+                                        (,⇑ (• , A) B ∘ upA (⇑ B) (,⇑ • A ∘ upA (⇑ A) •⇑))))
 
 weaken⊠ : (A B : Type ∅) → Term • (⇑(A ⊠ B) ⟶ ((⇑ A) ⊠ (⇑ B)))
-weaken⊠ A B = lambda [ sub (up (π₁ (var • (A ⊠ B)))) (,⇑ • (A ⊠ B) o upA (⇑ (A ⊠ B)) •⇑)
-                       & sub (up (π₂ (var • (A ⊠ B)))) (,⇑ • (A ⊠ B) o upA (⇑ (A ⊠ B)) •⇑) ]
+weaken⊠ A B = lambda [ sub (up (π₁ (var • (A ⊠ B)))) (,⇑ • (A ⊠ B) ∘ upA (⇑ (A ⊠ B)) •⇑)
+                       & sub (up (π₂ (var • (A ⊠ B)))) (,⇑ • (A ⊠ B) ∘ upA (⇑ (A ⊠ B)) •⇑) ]
 
 weaken⟶ : (A B : Type ∅) → Term • (⇑(A ⟶ B) ⟶ ((⇑ A) ⟶ (⇑ B)))
 weaken⟶ A B =
   lambda (lambda
-           (sub (up (app-map (wk (var • (A ⟶ B))) (var (• , (A ⟶ B)) A)))
-                (,⇑ (• , (A ⟶ B)) A o upA (⇑ A) (,⇑ • (A ⟶ B) o upA (⇑ (A ⟶ B)) •⇑))))
+           (sub (up ((wk (var • (A ⟶ B))) $ (var (• , (A ⟶ B)) A)))
+                (,⇑ (• , (A ⟶ B)) A ∘ upA (⇑ A) (,⇑ • (A ⟶ B) ∘ upA (⇑ (A ⟶ B)) •⇑))))
 {-
 subst-μ-help : ∀ {Δ} (Γ : Context Δ) (A B : Type Δ)
   → Subst (Γ , (A ⊠ B)) (Γ , A)
@@ -479,10 +475,10 @@ other inverses.
     ⊠-β₂ : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} (t₁ : Term Γ A) (t₂ : Term Γ B) → π₂ [ t₁ & t₂ ] ∼ t₂
     ⊠-η : ∀ {Δ} {Γ : Context Δ} {A B : Type Δ} (t : Term Γ (A ⊠ B)) → [ π₁ t & π₂ t ] ∼ t
     ⊞-β₁ : ∀ {Δ} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ A)
-        → sub (⊞rec C l r) (idsub Γ ,s in₁ B t) ∼ sub l (idsub Γ ,s t)
+        → sub (⊞rec C l r) (id Γ , in₁ B t) ∼ sub l (id Γ , t)
     ⊞-β₂ : ∀ {Δ} {Γ : Context Δ} {A B C : Type Δ} (l : Term (Γ , A) C) (r : Term (Γ , B) C) (t : Term Γ B)
-        → sub (⊞rec C l r) (idsub Γ ,s in₂ A t) ∼ sub r (idsub Γ ,s t)
-    𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → sub (unit-rec t) (idsub Γ ,s tt) ∼ t
+        → sub (⊞rec C l r) (id Γ , in₂ A t) ∼ sub r (id Γ , t)
+    𝟙-β : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → sub (unit-rec t) (id Γ , tt) ∼ t
     𝟙-η : {Γ : Context ∅} (t : Term Γ 𝟙) → t ∼ tt
 \end{code}
 }
@@ -503,18 +499,18 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
     next-id : {Γ : Context κ} {A : Type κ} (t : Term Γ (▻ A)) → next (idmap A) ⊛ t ∼ t
     next-comp : {Γ : Context κ} {A B C : Type κ} (g : Term Γ (▻ (B ⟶ C))) (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ (▻ A))
       → ((next compmap ⊛ g) ⊛ f) ⊛ t ∼ g ⊛ (f ⊛ t)
-    next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → next f ⊛ next t ∼ next (app-map f t)
+    next-⊛ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (A ⟶ B)) (t : Term Γ A) → next f ⊛ next t ∼ next (f $ t)
     next-λ : {Γ : Context κ} {A B : Type κ} (f : Term Γ (▻ (A ⟶ B))) (t : Term Γ A)
-      → f ⊛ next t ∼ next (lambda (app-map (var _ _) (wk t))) ⊛ f
-    fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) → fix f ∼ app-map f (next (fix f))
-    fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A) → app-map f (next u) ∼ u → fix f ∼ u
+      → f ⊛ next t ∼ next (lambda ((var _ _) $ (wk t))) ⊛ f
+    fix-f : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) → fix f ∼ f $ (next (fix f))
+    fix-u : {Γ : Context κ} {A : Type κ} (f : Term Γ (▻ A ⟶ A)) (u : Term Γ A) → f $ (next u) ∼ u → fix f ∼ u
     primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Context Δ} {A : Type Δ} (t : Term Γ (eval P (μ P ⊠ A) ⟶ A)) (a : Term Γ (eval P (μ P)))
-      → app-map (primrec P t) (cons P a) ∼ app-map t (app-map (Pmap P (pairmap (idmap (μ P)) (primrec P t))) a)
+      → (primrec P t) $ (cons P a) ∼ t $ ((Pmap P (pairmap (idmap (μ P)) (primrec P t))) $ a)
       --app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
     sub-id : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} (t : Term Γ A)
-      → sub t (idsub Γ) ∼ t
+      → sub t (id Γ) ∼ t
     sub-sub : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁) (s' : Subst Γ₃ Γ₂)
-      → sub (sub t s) s' ∼ sub t (s o s')
+      → sub (sub t s) s' ∼ sub t (s ∘ s')
     sub-var : ∀ {Δ} (Γ₁ Γ₂ : Context Δ) (A : Type Δ) (s : Subst Γ₂ Γ₁)
       → sub (var Γ₁ A) (upA A s) ∼ var Γ₂ A
     sub-unit-rec : {Γ₁ Γ₂ : Context ∅} {A : Type ∅} (t : Term Γ₁ A) (s : Subst Γ₂ Γ₁)
@@ -553,66 +549,63 @@ There is a group of term equalities exibiting the existence of
 certain type isomorphisms. For example, we have equalities stating
 that \IC{□const} and \F{const□} are each other inverses.
 \begin{code}
-    const□const : {Γ : Context ∅} {A : Type ∅} (t : Term Γ (□ (⇑ A)))
-      → app-map (const□ Γ A) (app-map (□const A) t) ∼ t
-    □const□ : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A)
-      → app-map (□const A) (app-map (const□ Γ A) t) ∼ t
+    const□const : ∀ {Γ} {A} (t : Term Γ (□ (⇑ A))) → const□ A $ (□const A $ t) ∼ t
+    □const□ : ∀ {Γ} {A} (t : Term Γ A) → □const A $ (const□ A $ t) ∼ t
 \end{code}
-\NV{Here we are using app-map, which we haven't introduced in the paper.}
 The last group of term equalities describes the relationship between the
 weakening operations \IC{up} and \IC{down} and other term constructors. Here we omit the description of these rules and we refer the
 interested reader to the Agda formalization.
 \AgdaHide{
 \begin{code}
     □sum□ : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (□ A ⊞ □ B))
-      → app-map (□sum A B) (app-map (sum□ A B) t) ∼ t
+      → (□sum A B) $ ((sum□ A B) $ t) ∼ t
     sum□sum : {Γ : Context ∅} (A B : Type κ) (t : Term Γ (□ (A ⊞ B)))
-      → app-map (sum□ A B) (app-map (□sum A B) t) ∼ t
+      → (sum□ A B) $ ((□sum A B) $ t) ∼ t
     force-□next : {Γ : Context ∅} {A : Type κ} (t : Term Γ (□ A))
       → force(□next t) ∼ t
     □next-force : {Γ : Context ∅} {A : Type κ} (t : Term Γ (□ (▻ A)))
       → □next(force t) ∼ t
     ⟶weaken⟶ : (A B : Type ∅) (t : Term • (⇑ (A ⟶ B)))
-      → app-map (⟶weaken A B) (app-map (weaken⟶ A B) t) ∼ t
+      → (⟶weaken A B) $ ((weaken⟶ A B) $ t) ∼ t
     weaken⟶weaken : (A B : Type ∅) (t : Term • (⇑ A ⟶ ⇑ B))
-      → app-map (weaken⟶ A B) (app-map (⟶weaken A B) t) ∼ t
+      → (weaken⟶ A B) $ ((⟶weaken A B) $ t) ∼ t
     μweakenμ : (P : Poly ∅) (t : Term • (μ (weakenP P)))
-      → app-map (μweaken P) (app-map (weakenμ P) t) ∼ t
+      → (μweaken P) $ ((weakenμ P) $ t) ∼ t
     weakenμweaken : (P : Poly ∅) (t : Term • (⇑ (μ P)))
-      → app-map (weakenμ P) (app-map (μweaken P) t) ∼ t
+      → (weakenμ P) $ ((μweaken P) $ t) ∼ t
     updown : {Γ : Context ∅} {A : Type ∅} (t : Term (⇑ Γ) (⇑ A)) → up(down t) ∼ t
     downup : {Γ : Context ∅} {A : Type ∅} (t : Term Γ A) → down(up t) ∼ t
     upvar : (Γ : Context ∅) (A : Type ∅) → up(var Γ A) ∼ sub (var (⇑ Γ) (⇑ A)) (⇑, Γ A)
     downvar : (Γ : Context ∅) (A : Type ∅) → down(sub (var (⇑ Γ) (⇑ A)) (⇑, Γ A)) ∼ var Γ A
     upsub : {Γ Γ' : Context ∅} {A : Type ∅} (t : Term Γ' A) (s : Subst Γ Γ') → up(sub t s) ∼ sub (up t) (up s)
     downsub : {Γ Γ' : Context ∅} {A : Type ∅} (t : Term (⇑ Γ') (⇑ A)) (s : Subst Γ Γ') → down(sub t (up s)) ∼ sub (down t) s
-    upπ₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → up(π₁ t) ∼ π₁ (app-map (sub (weaken⊠ _ _) (ε (⇑ Γ))) (up t))
-    upπ₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → up(π₂ t) ∼ π₂ (app-map (sub (weaken⊠ _ _) (ε (⇑ Γ))) (up t))
-    downπ₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⊠ B))) → π₁(down t) ∼ down(π₁(app-map (sub (weaken⊠ _ _) (ε (⇑ Γ))) t))
-    downπ₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⊠ B))) → π₂(down t) ∼ down(π₂(app-map (sub (weaken⊠ _ _) (ε (⇑ Γ))) t))
-    uppair : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t₁ : Term Γ A) (t₂ : Term Γ B) → up [ t₁ & t₂ ] ∼ app-map (sub (⊠weaken _ _) (ε (⇑ Γ))) [ up t₁ & up t₂ ]
+    upπ₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → up(π₁ t) ∼ π₁ ((sub (weaken⊠ _ _) (ε (⇑ Γ))) $ (up t))
+    upπ₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ (A ⊠ B)) → up(π₂ t) ∼ π₂ ((sub (weaken⊠ _ _) (ε (⇑ Γ))) $ (up t))
+    downπ₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⊠ B))) → π₁(down t) ∼ down(π₁((sub (weaken⊠ _ _) (ε (⇑ Γ))) $ t))
+    downπ₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⊠ B))) → π₂(down t) ∼ down(π₂((sub (weaken⊠ _ _) (ε (⇑ Γ))) $ t))
+    uppair : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t₁ : Term Γ A) (t₂ : Term Γ B) → up [ t₁ & t₂ ] ∼ (sub (⊠weaken _ _) (ε (⇑ Γ))) $ [ up t₁ & up t₂ ]
     downpair : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t₁ : Term (⇑ Γ) (⇑ A)) (t₂ : Term (⇑ Γ) (⇑ B))
-      → [ down t₁ & down t₂ ] ∼ down (app-map (sub (⊠weaken _ _) (ε (⇑ Γ))) [ t₁ & t₂ ])
-    upin₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ A) → up(in₁ B t) ∼ app-map (sub (⊞weaken _ _) (ε (⇑ Γ))) (in₁ (⇑ B) (up t))
-    upin₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ B) → up(in₂ A t) ∼ app-map (sub (⊞weaken _ _) (ε (⇑ Γ))) (in₂ (⇑ A) (up t))
-    downin₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ A)) → in₁ B (down t) ∼ down(app-map (sub (⊞weaken _ _) (ε (⇑ Γ))) (in₁ (⇑ B) t))
-    downin₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ B)) → in₂ A (down t) ∼ down(app-map (sub (⊞weaken _ _) (ε (⇑ Γ))) (in₂ (⇑ A) t))
+      → [ down t₁ & down t₂ ] ∼ down ((sub (⊠weaken _ _) (ε (⇑ Γ))) $ [ t₁ & t₂ ])
+    upin₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ A) → up(in₁ B t) ∼ (sub (⊞weaken _ _) (ε (⇑ Γ))) $ (in₁ (⇑ B) (up t))
+    upin₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term Γ B) → up(in₂ A t) ∼ (sub (⊞weaken _ _) (ε (⇑ Γ))) $ (in₂ (⇑ A) (up t))
+    downin₁ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ A)) → in₁ B (down t) ∼ down((sub (⊞weaken _ _) (ε (⇑ Γ))) $ (in₁ (⇑ B) t))
+    downin₂ : {Γ : Context ∅} {A : Type ∅} {B : Type ∅} (t : Term (⇑ Γ) (⇑ B)) → in₂ A (down t) ∼ down((sub (⊞weaken _ _) (ε (⇑ Γ))) $ (in₂ (⇑ A) t))
     up⊞rec : {Γ : Context ∅} {A B : Type ∅} (C : Type ∅) (l : Term (Γ , A) C) (r : Term (Γ , B) C)
       → up(⊞rec C l r)
         ∼
         sub (⊞rec (⇑ C)
                   (sub (up l) (,⇑ Γ A))
                   (sub (up r) (,⇑ Γ B)))
-            ((pr (idsub (⇑ Γ , ⇑ (A ⊞ B))) ,s app-map (sub (weaken⊞ _ _) (ε (⇑ Γ , ⇑ (A ⊞ B)))) (var (⇑ Γ) (⇑ (A ⊞ B)))) o ⇑, Γ (A ⊞ B))
+            ((pr (id (⇑ Γ , ⇑ (A ⊞ B))) , ((sub (weaken⊞ _ _) (ε (⇑ Γ , ⇑ (A ⊞ B)))) $ (var (⇑ Γ) (⇑ (A ⊞ B))))) ∘ ⇑, Γ (A ⊞ B))
     down⊞rec : {Γ : Context ∅} {A B : Type ∅} (C : Type ∅) (l : Term (⇑ (Γ , A)) (⇑ C)) (r : Term (⇑ (Γ , B)) (⇑ C))
       → ⊞rec C (down l) (down r)
         ∼
         down (sub (⊞rec (⇑ C) (sub l (,⇑ Γ A)) (sub r (,⇑ Γ B)))
-               (up (pr (idsub (Γ , (A ⊞ B)))) ,s app-map (sub (weaken⊞ _ _) (ε (⇑ (Γ , (A ⊞ B))))) (up (var Γ (A ⊞ B)))))
-    uplambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (Γ , A) B) → up (lambda t) ∼ app-map (sub (⟶weaken _ _) (ε (⇑ Γ))) (lambda (sub (up t) (,⇑ Γ A)))
-    downlambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ (Γ , A)) (⇑ B)) → lambda (down t) ∼ down (app-map (sub (⟶weaken _ _) (ε (⇑ Γ))) (lambda (sub t (,⇑ Γ A))))
-    upapp : {Γ : Context ∅} {A B : Type ∅} (t : Term Γ (A ⟶ B)) → up (app t) ∼ sub (app (app-map (sub (weaken⟶ _ _) (ε (⇑ Γ))) (up t))) (⇑, Γ A)
-    downapp : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⟶ B))) → app (down t) ∼ down (sub (app (app-map (sub (weaken⟶ _ _) (ε (⇑ Γ))) t)) (⇑, Γ A))
+               (up (pr (id (Γ , (A ⊞ B)))) , ((sub (weaken⊞ _ _) (ε (⇑ (Γ , (A ⊞ B))))) $ (up (var Γ (A ⊞ B))))))
+    uplambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (Γ , A) B) → up (lambda t) ∼ (sub (⟶weaken _ _) (ε (⇑ Γ))) $ (lambda (sub (up t) (,⇑ Γ A)))
+    downlambda : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ (Γ , A)) (⇑ B)) → lambda (down t) ∼ down ((sub (⟶weaken _ _) (ε (⇑ Γ))) $ (lambda (sub t (,⇑ Γ A))))
+    upapp : {Γ : Context ∅} {A B : Type ∅} (t : Term Γ (A ⟶ B)) → up (app t) ∼ sub (app ((sub (weaken⟶ _ _) (ε (⇑ Γ))) $ (up t))) (⇑, Γ A)
+    downapp : {Γ : Context ∅} {A B : Type ∅} (t : Term (⇑ Γ) (⇑ (A ⟶ B))) → app (down t) ∼ down (sub (app ((sub (weaken⟶ _ _) (ε (⇑ Γ))) $ t)) (⇑, Γ A))
 \end{code}
 }
 \end{AgdaAlign}
@@ -623,28 +616,47 @@ interested reader to the Agda formalization.
     refl≈ : ∀ {Δ} {Γ Γ' : Context Δ} {s : Subst Γ Γ'} → s ≈ s
     sym≈ : ∀ {Δ} {Γ Γ' : Context Δ} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → s₂ ≈ s₁
     trans≈ : ∀ {Δ} {Γ Γ' : Context Δ} {s₁ s₂ s₃ : Subst Γ Γ'} → s₁ ≈ s₂ → s₂ ≈ s₃ → s₁ ≈ s₃
-    cong-_,s_ : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} {s₁ s₂ : Subst Γ Γ'} {t₁ t₂ : Term Γ A} → s₁ ≈ s₂ → t₁ ∼ t₂ → s₁ ,s t₁ ≈ s₂ ,s t₂
-    cong-_o_ : ∀ {Δ} {Γ Γ' Γ'' : Context Δ} {s₁ s₂ : Subst Γ' Γ''} {σ₁ σ₂ : Subst Γ Γ'} → s₁ ≈ s₂ → σ₁ ≈ σ₂ → s₁ o σ₁ ≈ s₂ o σ₂
+    cong-_,s_ : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} {s₁ s₂ : Subst Γ Γ'} {t₁ t₂ : Term Γ A} → s₁ ≈ s₂ → t₁ ∼ t₂ → s₁ , t₁ ≈ s₂ , t₂
+    cong-_o_ : ∀ {Δ} {Γ Γ' Γ'' : Context Δ} {s₁ s₂ : Subst Γ' Γ''} {σ₁ σ₂ : Subst Γ Γ'} → s₁ ≈ s₂ → σ₁ ≈ σ₂ → s₁ ∘ σ₁ ≈ s₂ ∘ σ₂
     cong-pr : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} {s₁ s₂ : Subst Γ (Γ' , A)} → s₁ ≈ s₂ → pr s₁ ≈ pr s₂
-    sub-idl : ∀ {Δ} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → idsub Γ' o s ≈ s
-    sub-idr : ∀ {Δ} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → s o idsub Γ ≈ s
+    cong-up : {Γ Γ' : Context ∅} {s₁ s₂ : Subst Γ Γ'} → s₁ ≈ s₂ → up s₁ ≈ up s₂
+    cong-down : {Γ Γ' : Context ∅} {s₁ s₂ : Subst (⇑ Γ) (⇑ Γ')} → s₁ ≈ s₂ → down s₁ ≈ down s₂
+    sub-idl : ∀ {Δ} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → id Γ' ∘ s ≈ s
+    sub-idr : ∀ {Δ} {Γ Γ' : Context Δ} (s : Subst Γ Γ') → s ∘ id Γ ≈ s
     sub-assoc : ∀ {Δ} {Γ₁ Γ₂ Γ₃ Γ₄ : Context Δ} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃) (s₃ : Subst Γ₃ Γ₄)
-      → s₃ o (s₂ o s₁) ≈ (s₃ o s₂) o s₁
+      → s₃ ∘ (s₂ ∘ s₁) ≈ (s₃ ∘ s₂) ∘ s₁
     sub-π₁β : ∀ {Δ} {Γ Γ' : Context Δ} {A : Type Δ} {t : Term Γ A} (s : Subst Γ Γ')
-      → pr (s ,s t) ≈ s
+      → pr (s , t) ≈ s
     sub-εη : ∀ {Δ} {Γ : Context Δ} (s : Subst Γ •) → s ≈ ε Γ
     sub-,o : ∀ {Δ} {Γ₁ Γ₂ Γ₃ : Context Δ} {A : Type Δ} {t : Term Γ₂ A} (s₁ : Subst Γ₁ Γ₂) (s₂ : Subst Γ₂ Γ₃)
-      → (s₂ ,s t) o s₁ ≈ (s₂ o s₁) ,s sub t s₁
+      → (s₂ , t) ∘ s₁ ≈ (s₂ ∘ s₁) , sub t s₁
     sub-η : ∀ {Δ} {Γ : Context Δ} {A : Type Δ} (s : Subst Γ (Γ , A))
-      → pr s ,s sub (var Γ A) s ≈ s
-    weaken-ε : (Γ : Context ∅) → up (ε Γ) ≈ (•⇑ o ε (⇑ Γ))
-    weaken-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst Γ' Γ'') (s₂ : Subst Γ Γ') → up (s₁ o s₂) ≈ (up s₁ o up s₂)
-    weaken-pr : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ (Γ' , A)) → up (pr s) ≈ pr (⇑, Γ' A o up s)
-    weaken-idsub : (Γ : Context ∅) → up (idsub Γ) ≈ idsub (⇑ Γ)
-    ⇑,s : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ Γ') (t : Term Γ A) → up (s ,s t) ≈ up (s ,s t)
-    •⇑-id : •⇑ o ⇑• ≈ idsub (⇑ •)
-    ⇑•-id : ⇑• o •⇑ ≈ idsub •
-    ,⇑-id : (Γ : Context ∅) (A : Type ∅) → ,⇑ Γ A o ⇑, Γ A ≈ idsub (⇑ (Γ , A))
-    ⇑,-id : (Γ : Context ∅) (A : Type ∅) → ⇑, Γ A o ,⇑ Γ A ≈ idsub (⇑ Γ , ⇑ A)
+      → pr s , sub (var Γ A) s ≈ s
+    updown : {Γ Γ' : Context ∅} (s : Subst (⇑ Γ) (⇑ Γ')) → up (down s) ≈ s
+    downup : {Γ Γ' : Context ∅} (s : Subst Γ Γ') → down (up s) ≈ s
+    up-ε : (Γ : Context ∅) → up (ε Γ) ≈ (•⇑ ∘ ε (⇑ Γ))
+    up-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst Γ' Γ'') (s₂ : Subst Γ Γ') → up (s₁ ∘ s₂) ≈ (up s₁ ∘ up s₂)
+    up-pr : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ (Γ' , A)) → up (pr s) ≈ pr (⇑, Γ' A ∘ up s)
+    up-idsub : (Γ : Context ∅) → up (id Γ) ≈ id (⇑ Γ)
+    up-,s : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst Γ Γ') (t : Term Γ A) → up (s , t) ≈ ,⇑ Γ' A ∘ (up s , up t)
+    down-ε : (Γ : Context ∅) → down (•⇑ ∘ ε (⇑ Γ)) ≈ ε Γ
+    down-o : {Γ Γ' Γ'' : Context ∅} (s₁ : Subst (⇑ Γ') (⇑ Γ'')) (s₂ : Subst (⇑ Γ) (⇑ Γ')) → down (s₁ ∘ s₂) ≈ (down s₁ ∘ down s₂)
+    down-pr : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst (⇑ Γ) (⇑ (Γ' , A))) → down (pr (⇑, Γ' A ∘ s)) ≈ pr (down s)
+    down-idsub : (Γ : Context ∅) → down (id (⇑ Γ)) ≈ id Γ
+    down-,s : {Γ Γ' : Context ∅} {A : Type ∅} (s : Subst (⇑ Γ) (⇑ Γ')) (t : Term (⇑ Γ) (⇑ A)) → down (,⇑ Γ' A ∘ (s , t)) ≈ (down s , down t)
+    •⇑-id : •⇑ ∘ ⇑• ≈ id (⇑ •)
+    ⇑•-id : ⇑• ∘ •⇑ ≈ id •
+    ,⇑-id : (Γ : Context ∅) (A : Type ∅) → ,⇑ Γ A ∘ ⇑, Γ A ≈ id (⇑ (Γ , A))
+    ⇑,-id : (Γ : Context ∅) (A : Type ∅) → ⇑, Γ A ∘ ,⇑ Γ A ≈ id (⇑ Γ , ⇑ A)
+
+{-
+up' : {Γ₁ Γ₂ : Context ∅} → Subst Γ₁ Γ₂ → Subst (⇑ Γ₁) (⇑ Γ₂)
+up' (ε Γ) = •⇑ ∘ (ε (⇑ Γ))
+up' (id Γ) = id (⇑ Γ)
+up' (s , x) = ,⇑ _ _ ∘ (up' s , up x)
+up' (s ∘ s') = (up' s) ∘ (up' s')
+up' (pr s) = pr (⇑, _ _ ∘ up' s)
+up' (down s) = s
+-}
 \end{code}
 }

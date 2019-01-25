@@ -275,10 +275,11 @@ weakenμ-eq P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) j =
 mutual
   ⟦_⟧sub : {Δ : ClockContext} {Γ Γ' : Context Δ} → Subst Γ Γ' → sem-subst ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ
   ⟦ ε Γ ⟧sub = sem-ε ⟦ Γ ⟧Γ
-  ⟦ idsub Γ ⟧sub = sem-idsub ⟦ Γ ⟧Γ
-  ⟦ s ,s x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
-  ⟦ s o s' ⟧sub = sem-subcomp _ _ _ ⟦ s ⟧sub ⟦ s' ⟧sub
+  ⟦ id Γ ⟧sub = sem-idsub ⟦ Γ ⟧Γ
+  ⟦ s , x ⟧sub = sem-subst-tm _ _ _ ⟦ s ⟧sub ⟦ x ⟧tm
+  ⟦ s ∘ s' ⟧sub = sem-subcomp _ _ _ ⟦ s ⟧sub ⟦ s' ⟧sub
   ⟦ pr {_} {Γ} {Γ'} {A} s ⟧sub = sem-subpr ⟦ Γ ⟧Γ ⟦ Γ' ⟧Γ ⟦ A ⟧A ⟦ s ⟧sub
+  ⟦ down s ⟧sub = nat-map ⟦ s ⟧sub ∞ 
   nat-map ⟦ up s ⟧sub i = ⟦ s ⟧sub
   nat-com ⟦ up s ⟧sub i j x = refl
   nat-map ⟦ •⇑ ⟧sub i tt = tt

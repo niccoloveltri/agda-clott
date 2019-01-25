@@ -23,7 +23,7 @@ cons-inv : ∀ {Δ} {Γ : Context Δ} (P : Poly Δ) → Term Γ (μ P) → Term 
 \end{code}
 \AgdaHide{
 \begin{code}
-cons-inv {Γ = Γ} P = app-map (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
+cons-inv {Γ = Γ} P = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
 \end{code}
 }
 The type of guarded streams over a \IC{∅}-type \Ar{A} is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.
@@ -72,27 +72,27 @@ const-str a = box (g-const a)
 \AgdaHide{
 \begin{code}
 weakenSΓ : {Δ : ClockContext} {Γ : Context Δ} {A B : Type Δ} → Term Γ (A ⟶ B) → Subst (Γ , A) (Γ , B)
-weakenSΓ {_} {Γ} {A} {B} s = pr (idsub (Γ , A)) ,s app s
+weakenSΓ {_} {Γ} {A} {B} s = pr (id (Γ , A)) , app s
 \end{code}
 
 \begin{code}
 pfix-tm : {Γ : Context κ} {A B : Type κ}
   → Term (Γ , (A ⟶ ▻ B)) (A ⟶ B) → Term Γ (A ⟶ B)
-pfix-tm {Γ}{A}{B} f = fix (lambda (sub f (weakenSΓ (lambda (lambda (sub (var Γ (▻ (A ⟶ B))) (pr (idsub ((Γ , ▻ (A ⟶ B)) , A))) ⊛ next (var (Γ , ▻ (A ⟶ B)) A)))))))
+pfix-tm {Γ}{A}{B} f = fix (lambda (sub f (weakenSΓ (lambda (lambda (sub (var Γ (▻ (A ⟶ B))) (pr (id ((Γ , ▻ (A ⟶ B)) , A))) ⊛ next (var (Γ , ▻ (A ⟶ B)) A)))))))
 \end{code}
 
 \begin{code}
 oddrec : {Γ : Context ∅} {A : Type ∅} → Term (⇑ Γ , (⇑ (Str A) ⟶ ▻ (g-Str A))) (⇑ (Str A) ⟶ g-Str A)
 oddrec {Γ} {A} =
-  let s = ,⇑ _ _ o upA _ (pr (idsub _))
+  let s = ,⇑ _ _ ∘ upA _ (pr (id _))
       f = wk (var _ _)
       xs = var _ _
   in
-  lambda (cons _ [ sub (up (hd xs)) s & app-map f (sub (up (tl xs)) s) ])
+  lambda (cons _ [ sub (up (hd xs)) s & f $ (sub (up (tl xs)) s) ])
 \end{code}
 
 \begin{code}
 odd : {Γ : Context ∅} {A : Type ∅} → Term Γ (Str A) → Term Γ (Str A)
-odd xs = box (app-map (pfix-tm oddrec) (up xs))
+odd xs = box ((pfix-tm oddrec) $ (up xs))
 \end{code}
 }

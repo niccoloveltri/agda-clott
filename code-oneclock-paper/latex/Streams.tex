@@ -73,7 +73,7 @@ We give a taste of how to program with streams in \GTT. First we construct a fun
 \AgdaBound{Γ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{app{-}map}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{\AgdaUnderscore{}\$\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{primrec}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{Pmap}\AgdaSpace{}%
@@ -377,11 +377,11 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{pr}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,s}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaInductiveConstructor{app}\AgdaSpace{}%
 \AgdaBound{s}\<%
 \end{code}
@@ -437,7 +437,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaSymbol{((}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaInductiveConstructor{▻}\AgdaSpace{}%
@@ -500,11 +500,11 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaInductiveConstructor{,⇑}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{o}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{∘}}\AgdaSpace{}%
 \AgdaFunction{upA}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}))}\<%
 \\
 \>[.]\<[388I]%
@@ -536,8 +536,8 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaBound{xs}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
-\AgdaFunction{app{-}map}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{\$}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{tl}\AgdaSpace{}%
@@ -572,9 +572,9 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaBound{xs}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{box}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{app{-}map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{pfix{-}tm}\AgdaSpace{}%
+\AgdaSymbol{((}\AgdaFunction{pfix{-}tm}\AgdaSpace{}%
 \AgdaFunction{oddrec}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{\$}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaBound{xs}\AgdaSymbol{))}\<%
 \end{code}

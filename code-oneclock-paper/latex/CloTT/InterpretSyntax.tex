@@ -2765,7 +2765,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
-\AgdaInductiveConstructor{idsub}\AgdaSpace{}%
+\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧sub}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -2777,7 +2777,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{,s}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧sub}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -2795,7 +2795,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{o}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{∘}}\AgdaSpace{}%
 \AgdaBound{s'}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧sub}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -2833,6 +2833,18 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧sub}}\<%
+\\
+%
+\>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaInductiveConstructor{down}\AgdaSpace{}%
+\AgdaBound{s}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧sub}}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaField{nat{-}map}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaBound{s}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧sub}}\AgdaSpace{}%
+\AgdaPostulate{∞}\<%
 \\
 %
 \>[2]\AgdaField{nat{-}map}\AgdaSpace{}%

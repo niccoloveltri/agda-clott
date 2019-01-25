@@ -67,12 +67,12 @@ semSubst initial-interpretation = Subst
 semTerm initial-interpretation = Term
 _[_sem∼_] initial-interpretation = _∼_
 _[_sem≈_] initial-interpretation = _≈_
-_⟦_⟧Type initial-interpretation = id
-_⟦_⟧Ctx initial-interpretation = id
-_⟦_⟧Subst initial-interpretation = id
-_⟦_⟧Tm initial-interpretation = id
-_⟦_⟧∼ initial-interpretation = id
-_⟦_⟧≈ initial-interpretation = id
+_⟦_⟧Type initial-interpretation x = x 
+_⟦_⟧Ctx initial-interpretation x = x
+_⟦_⟧Subst initial-interpretation x = x
+_⟦_⟧Tm initial-interpretation x = x
+_⟦_⟧∼ initial-interpretation x = x
+_⟦_⟧≈ initial-interpretation x = x
 \end{code}
 }
 
