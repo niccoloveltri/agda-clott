@@ -14,11 +14,10 @@ open NatTrans
 \end{code}
 }
 
-Following \cite{Mogelberg14}, clock quantification is modelled by
-taking limits. Given a type a presheaf \Ar{A}, we take \F{■} \Ar{A}
-to be the limit of \Ar{A}.  Formally the limit of \Ar{A} is constructed as
-record with two fields. The field \AFi{■cone} is given by a family of
-element \Ar{f i} in \Fi{Obj} \Ar{A i} for each size \Ar{i}.
+Following M{\o}gelberg \cite{Mogelberg14}, clock quantification is defined via
+taking limits. Given a presheaf \Ar{A}, we take \F{■} \Ar{A}
+to be the limit of \Ar{A}. Formally, the limit of \Ar{A} is constructed as
+record with two fields. The field \AFi{■cone} is given by a family \Ar{f i} in \Fi{Obj} \Ar{A i} for each size \Ar{i}.
 The field \AFi{■com} is a proof that the restriction of \Ar{f i} to a size \Ar{j}
 smaller than \Ar{i} is equal to \Ar{f j}.
 \begin{code}

@@ -14,8 +14,7 @@ open NatTrans
 
 Weakening a context is a map which takes a context in the empty clock
 context and maps it to one in the clock context with just one clock.
-Concretely, given a type, define a presheaf.
-We do this via the constant presheaf.
+Concretely, we define a presheaf using a type, and we do this via the constant presheaf.
 
 \begin{code}
 ⇑ : SemCtx ∅ → SemCtx κ
