@@ -129,31 +129,32 @@ sem-consistent-help : ⊤ ⊎ ⊤ → Set
 sem-consistent-help (inj₁ x) = ⊤
 sem-consistent-help (inj₂ y) = ⊥
 \end{code}
-}
-
-The categorical semantics gives rises to a consistent interpretation of the syntax.
-For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
 
 \begin{code}
 sem-consistent : consistent sem
 \end{code}
 
-\AgdaHide{
 \begin{code}
 sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
 \end{code}
 }
 
-Finally, we conclude that the initial interpretation and thus the syntax is consistent.
+The categorical semantics gives rises to a consistent interpretation of the syntax.
+For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
+Now we conclude that the initial interpretation and thus the syntax is consistent.
 If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
-Since the latter leads to a contradiction, the former does so too.
+Since the latter is a contradiction, the former is so too.
+All in all, we get
 
 \begin{code}
 syntax-consistent : consistent initial-interpretation
-syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
 \end{code}
 
 \AgdaHide{
+\begin{code}
+syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
+\end{code}
+
 \begin{code}
 sub-π₁ : {Δ : ClockCtx} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} {B : Ty Δ} (t : Tm Γ₁ (A ⊠ B)) (s : Sub Γ₂ Γ₁)
   → sub (π₁ t) s ∼ π₁ (sub t s)

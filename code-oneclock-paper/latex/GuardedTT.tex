@@ -569,10 +569,6 @@ More precisely, an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do n
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaDatatype{⊥}\<%
 \end{code}
-}
-
-The categorical semantics gives rises to a consistent interpretation of the syntax.
-For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
 
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
@@ -581,7 +577,6 @@ For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequa
 \AgdaFunction{sem}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}consistent}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSpace{}%
@@ -594,16 +589,22 @@ For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequa
 \end{code}
 }
 
-Finally, we conclude that the initial interpretation and thus the syntax is consistent.
+The categorical semantics gives rises to a consistent interpretation of the syntax.
+For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
+Now we conclude that the initial interpretation and thus the syntax is consistent.
 If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
-Since the latter leads to a contradiction, the former does so too.
+Since the latter is a contradiction, the former is so too.
+All in all, we get
 
 \begin{code}%
 \>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{consistent}\AgdaSpace{}%
 \AgdaFunction{initial{-}interpretation}\<%
-\\
+\end{code}
+
+\AgdaHide{
+\begin{code}%
 \>[0]\AgdaFunction{syntax{-}consistent}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -614,7 +615,6 @@ Since the latter leads to a contradiction, the former does so too.
 \AgdaOperator{\AgdaField{⟧∼}}\AgdaSymbol{)}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{sub{-}π₁}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
