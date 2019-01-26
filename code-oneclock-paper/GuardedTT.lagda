@@ -17,7 +17,7 @@ open import CloTT
 Now let us put everything together and define interpretations of the syntax defined in \Cref{sec:syntax}.
 To give an interpretation, one must give a type of types, contexts, terms, substitutions, and functions mapping the syntactic objects to their interpretations.
 In addition, definitional equality and equality between terms must be interpreted and for that, we use setoids.
-This means that a relation on terms must be given, which includes the relation \D{∼} as define in \Cref{sec:syntax}, and the same must be done for substitutions.
+This means that a relation on terms must be given, which includes the relation \D{∼} as defined in \Cref{sec:syntax}, and the same must be done for substitutions.
 We define this as a record, whose type declaration is given as
 
 \begin{code}
@@ -45,9 +45,9 @@ record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
 \end{code}
 }
 
-If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{f}.
+If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{t}.
 The main example is the syntax itself.
-Tys, contexts, substitutions, terms, and so on are interpreted by themselves.
+Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 
 \AgdaHide{
 \begin{code}
@@ -101,9 +101,11 @@ _⟦_⟧≈ sem = ⟦_⟧sub-eq
 }
 
 Using this semantics, we can conclude the syntax is consistent.
-Briefly, consistency means that not every defitional equality.
+Briefly, consistency means that not every defitional equality holds.
+For this, we define a type \F{bool} : \F{Ty} \IC{∅} by \IC{𝟙 ⊞ 𝟙} and two terms \F{TRUE} and \F{FALSE} by \IC{in₁ 𝟙 tt} and \IC{in₂ 𝟙 tt} respectively.
+More precisely, an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
 
-
+\AgdaHide{
 \begin{code}
 bool : Ty ∅
 bool = 𝟙 ⊞ 𝟙
@@ -114,9 +116,7 @@ TRUE = in₁ 𝟙 tt
 FALSE : Tm • bool
 FALSE = in₂ 𝟙 tt
 \end{code}
-
-Now we can state precisely what consistency means.
-We say an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
+}
 
 \begin{code}
 consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
@@ -132,7 +132,7 @@ sem-consistent-help (inj₂ y) = ⊥
 }
 
 The categorical semantics gives rises to a consistent interpretation of the syntax.
-To show this, we need to prove that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are not equal where \AIC{tt} is the unique constructor of \AD{⊤}.
+For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
 
 \begin{code}
 sem-consistent : consistent sem
@@ -144,9 +144,9 @@ sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
 \end{code}
 }
 
-Finally, we can conclude that the initial interpretation and thus the syntax is consistent.
+Finally, we conclude that the initial interpretation and thus the syntax is consistent.
 If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
-Since the latter leads to a contradiction, the former does too.
+Since the latter leads to a contradiction, the former does so too.
 
 \begin{code}
 syntax-consistent : consistent initial-interpretation
