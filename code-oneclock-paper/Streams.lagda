@@ -12,51 +12,56 @@ open import Prelude.Syntax
 }
 
 \subsection{Example: Streams}
-
-\NV{This section is definitely too long. Perhaps hd and tl can be
-defined directly without introducing g-hd and g-tl. We could also skip
-the constant stream and refer to the Agda formalization.}
-
-We give a taste of how to program with streams in \GTT. First we construct a function \F{cons-inv} which is definable using \IC{primrec}.
+We give a taste of how to program with streams in \GTT.
+First we define a function \F{decons} which destructs an element of an inductive type.
 \begin{code}
-cons-inv : ∀ {Δ} {Γ : Ctx Δ} (P : Poly Δ) → Tm Γ (μ P) → Tm Γ (eval P (μ P))
+decons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
 \end{code}
 \AgdaHide{
 \begin{code}
-cons-inv {Γ = Γ} P = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
+decons {Γ = Γ} {P} = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
 \end{code}
 }
-The type of guarded streams over a \IC{∅}-type \Ar{A} is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.
+
+To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
+It is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.
 \begin{code}
 g-Str : Ty ∅ → Ty κ
 g-Str A = μ (∁ (⇡ A) ⊠ ▻ I)
 \end{code}
+\AgdaHide{
 The head of a guarded stream \Ar{xs} is computed in three steps. First
 we apply \F{cons-inv} to \Ar{xs}, obtaining a \GTT\ pair of type \IC{∁} (\IC{⇡} \Ar{A}) \IC{⊠} \IC{▻P} (\F{g-Str} \Ar{A}). Then we take the first projection of this pair using the constructor \IC{π₁} and we conclude with an application of \IC{down}, which is necessary since \Ar{A} is a \IC{∅}-type.
 \begin{code}
 g-hd : {Γ : Ctx ∅} {A : Ty ∅} → Tm (⇡ Γ) (g-Str A) → Tm Γ A
-g-hd {Γ}{A} xs = down (π₁ (cons-inv ((∁ (⇡ A)) ⊠ (▻ I)) xs))
+g-hd {Γ}{A} xs = down (π₁ (decons xs))
 \end{code}
 The tail of a guarded stream is computed in a similar way, using \IC{π₂} instead of \IC{π₁} and without the application of \IC{down} in the last step. Notice that the tail is a \GTT\ term of type \IC{▻} (\F{g-Str} \Ar{A}), meaning that it is available only one time step ahead from now.
 \begin{code}
 g-tl : {Γ : Ctx κ} {A : Ty ∅} → Tm Γ (g-Str A) → Tm Γ (▻ (g-Str A))
-g-tl {Γ}{A} xs = π₂ (cons-inv ((∁ (⇡ A)) ⊠ (▻ I)) xs)
+g-tl {Γ}{A} xs = π₂ (decons xs)
 \end{code}
-The usual type of streams over \Ar{A} is obtained by applying the \IC{□} modality to \F{g-Str} \Ar{A}.
+}
+The usual type of streams over \Ar{A} is then obtained by applying the \IC{□} modality to \F{g-Str} \Ar{A}.
 \begin{code}
 Str : Ty ∅ → Ty ∅
 Str A = □ (g-Str A)
 \end{code}
-The head of a stream \Ar{xs} is computed by applying the function \F{g-hd} to the unboxing of \Ar{xs}.
+
+We compute the head and tail of a stream via \F{decons}.
+Note that in both cases, we need to use \IC{unbox}, because of the \IC{□}.
+For the tail, we also need to use \IC{force}.
+
 \begin{code}
 hd : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ A
-hd xs = g-hd (unbox xs)
+hd xs = down (π₁ (decons (unbox xs)))
 \end{code}
-For computing the tail of a stream \Ar{xs} we first apply the function \F{g-tl} to the unboxing of \Ar{xs}, obtaining an element of \F{Tm} (\IC{⇡} \Ar{Γ}) (\IC{▻} (\F{g-Str} \Ar{A})). Then we \IC{box-q} followed by \IC{force}.
 \begin{code}
 tl : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ (Str A)
-tl xs = force (box (g-tl (unbox xs)))
+tl xs = force (box (π₂ (decons (unbox xs))))
 \end{code}
+
+\AgdaHide{
 Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
 \begin{code}
 g-const : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ A → Tm (⇡ Γ) (g-Str A)
@@ -68,6 +73,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 const-str : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ A → Tm Γ (Str A)
 const-str a = box (g-const a)
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}
