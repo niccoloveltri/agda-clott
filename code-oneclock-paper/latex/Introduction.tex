@@ -1,4 +1,4 @@
-Dependent type theory is a very expressive functional programming
+Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
 as Coq, Agda and Lean.  It is a total language,
 meaning that every program definable inside type theory is necessarily
@@ -27,7 +27,7 @@ at the level of types: sized types and guarded recursion. A sized type
 \cite{Hughes96} is a type annotated with the number of unfolding that
 elements of this type can undergo. Sized types have been implemented
 in Agda \cite{A-sized,AVW-normalization} and can be used in
-combination with coinductive records for the specification of
+combination with coinductive records to specify
 coinductive types \cite{Copatterns}.  Guarded recursion \cite{Nakano}
 is a different approach where the type system is enhanced with a
 modality, called ``later'' and written \IC{▻}, encoding time delay in
@@ -64,27 +64,27 @@ implementation of a calculus with guarded recursion.
 %% Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
 %% At the current moment, there is no proof assistant based on guarded recursion.
 
-Sized types and guarded recursion are different solution to the same
+Sized types and guarded recursion are different solutions to the same
 problem, but a thorough study of the relation between these two
 disciplines is still missing. In this paper we take a first step in
 this direction by showing how guarded recursion can be simulated in
 Agda using sized types. 
 
 Utilizing techniques for representing ``type theory in type theory''
-\cite{Chapman09,AltenkirchK16}, we present an Agda formalization of
+\cite{AltenkirchK16,Chapman09}, we present an Agda formalization of
 the syntax of a simple type theory with guarded recursion. This object
-language, that we call \GTT, is a variant of Atkey and McBride's type
+language, which we call \GTT, is a variant of Atkey and McBride's type
 system for productive coprogramming \cite{atkey2013productive} in
 which the clock context can contain at most one clock. The types of
 \GTT\ include the aformentioned \IC{▻} modality and a \IC{□} modality,
 a nameless analogue of Atkey and McBride's universal clock
-quantification. Clouston et al. \cite{CloustonBGB15} have studied a
+quantification. Clouston \etal \cite{CloustonBGB15} studied a
 guarded variant of lambda calculus extended with a \IC{□} operation,
 which they call ``constant'' .  Our object calculus differs from
 theirs in that our judgments are indexed by a clock context, which can
 be empty or containing exactly one clock. In this respect \GTT\ is
 closer in spirit to Atkey and McBride's language. The design of \GTT\
-also has the benefit of allowing a more pleasant introduction rule for
+also has the benefit of allowing a more appealing introduction rule for
 \IC{□} than Clouston et al.'s.
 
 
@@ -93,15 +93,15 @@ for \GTT\ using sized types. More precisely, we define a presheaf
 model where the type formers of simply typed lambda calculus are
 evaluated using the standard Kripke semantics. Typically the semantics
 of type theories for guarded recursion is given in the topos of
-trees or variations thereof \cite{BMSS-synthetic,Mogelberg14,MannaaM18}.
-Here, in order to make clear the connections between guarded recursion and
+trees or variations thereof \cite{BMSS-synthetic,MannaaM18,Mogelberg14}.
+Here, to clarify the connection between guarded recursion and
 sized types, we take the preorder of sizes as the indexing
 category of our presheaves. This means that types and contexts of \GTT\ are
 interpreted as antitone sized types. 
 The well-order relation on sizes is fundamental for constructing a
 terminating definition of the semantic fixpoint combinator. 
 
-Abel and Vezzosi \cite{AbelV14} have also formalized a simple type theory
+Abel and Vezzosi \cite{AbelV14} also formalized a simple type theory
 extended with the later modality in Agda. They focus on operational
 properties of the calculus and give a certified proof of strong
 normalization. In our work we consider a richer type system and we
