@@ -35,9 +35,9 @@ types. The later modality comes with a general fixpoint combinator for
 programming with productive recursive functions and allows the
 specification of guarded recursive types, \eg the type of guarded
 streams satisfying the isomorphism \F{Str} \Ar{A} \F{≃} \Ar{A} \F{×}
-\IC{▻} (\F{Str} \F{A}). The tail of a guarded stream is available only
+\IC{▻} (\F{Str} \Ar{A}). The tail of a guarded stream is available only
 one time step ahead from now, as evidenced by the application of the
-later modality to \F{Str} \F{A}. Coinductive types can be constructed
+later modality to \F{Str} \Ar{A}. Coinductive types can be constructed
 from guarded recursive types in type theories that additionally
 support clock variables and universal quantification over them
 \cite{atkey2013productive,BahrGM17}. Currently there is no

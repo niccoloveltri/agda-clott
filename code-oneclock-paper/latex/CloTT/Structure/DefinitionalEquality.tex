@@ -45,16 +45,14 @@
 }
 
 Equality of terms and substitutions is defined as propositional equality.
-Since we assume function extensionality and uniqueness of identity proofs, we can state this in a more convenient way.
-For functions, we just say that their images are equal.
-For natural transformations, we say that their component maps are equal.
+For proofs, we use function extensionality and UIP.
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -116,13 +114,11 @@ For natural transformations, we say that their component maps are equal.
 \AgdaBound{x}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{refl{-}def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -162,9 +158,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{sym{-}def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -218,9 +213,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{trans{-}def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -288,9 +282,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{eq{-}to{-}def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -327,9 +320,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{def{-}eq{-}to{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -375,9 +367,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{eq{-}to{-}def{-}eq{-}to{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
@@ -436,17 +427,16 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{def{-}eq{-}to{-}eq{-}to{-}def{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{b}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemCtx}\AgdaSpace{}%
-\AgdaBound{b}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{SemTy}\AgdaSpace{}%
-\AgdaBound{b}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{s}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -472,14 +462,12 @@ For natural transformations, we say that their component maps are equal.
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{uip}\<%
 \end{code}
-}
 
 \begin{code}%
 \>[0]\AgdaFunction{subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -538,13 +526,11 @@ For natural transformations, we say that their component maps are equal.
 \AgdaBound{x}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{refl{-}subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -581,9 +567,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{sym{-}subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -634,9 +619,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{trans{-}subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -701,9 +685,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{eq{-}to{-}subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -737,9 +720,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{subst{-}eq{-}to{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -782,9 +764,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{subst{-}eq{-}to{-}eq{-}to{-}subst{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -821,9 +802,8 @@ For natural transformations, we say that their component maps are equal.
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{eq{-}to{-}subst{-}eq{-}to{-}eq}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{Γ'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%

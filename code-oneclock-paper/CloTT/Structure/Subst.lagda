@@ -16,10 +16,7 @@ open NatTrans
 }
 
 The type theory we study, has explicit substitutions and we must also provide an interpretation for these.
-Substitutions are maps between contexts.
-Again there are two cases.
-If the clock context is empty, then we just use functions.
-If we have one clock variable, then we use  natural transformations.
+Substitutions are maps between contexts, so we interpret them the same way as terms.
 
 \begin{code}
 SemSub : {Δ : ClockCtx} → SemCtx Δ → SemCtx Δ → Set

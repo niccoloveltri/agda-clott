@@ -8,7 +8,7 @@ open PSh
 \end{code}
 }
 
-Beside presheaves, we also consider natural transformations between them.
+Beside presheaves, we also need natural transformations between them.
 A natural transformation consists of a map \Fi{nat-map} which satisfies a commutativity requirement.
 More precisely, we use the following record
 
