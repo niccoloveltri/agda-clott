@@ -32,7 +32,7 @@ We write \Ar{=} for judgemental equality and \Ar{≡} for propositional
 equality. Implicit arguments of functions are delimited by curly
 brackets. We write \F{Set} and \F{Set₁} for the first and second
 universe of types. In addition, Agda supports higher universes and
-these are denoted by \F{Set} \AB{ℓ} for each universe level \AB{ℓ}.
+these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
 
 The principle of functional extensionality states that every two
 functions \Ar{f} and \Ar{g} in the same function space are
@@ -140,8 +140,8 @@ that the size \F{∞} additionally satisfies \F{∞} : \F{Size< ∞}, but we
 do not make use of this property in our development.
 
 
-Practically, sized types are used in combination with
-coinductive records for the specification of coinductive types
+In practice sized types are used in combination with
+coinductive records to specify coinductive types
 \cite{Copatterns}. For an example of this encoding we refer the reader
 to Abel and Chapman's work \cite{AC14}.
 
