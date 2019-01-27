@@ -17,23 +17,23 @@ open PSh
 \end{code}
 }
 To define guarded recursive types, we first need to define the semantics of polynomials.
-The reason why we cannot use the syntactic ones, is because we need to use inhabitants of \AD{Ty} in the constant polynomial.
+The reason why we cannot use the syntactic ones, is because we need the constant polynomial depends on \AD{SemTy} rather than \AD{Ty}.
 This leads to the following definition.
 
 \begin{code}
 data SemPoly : ClockCtx → Set₁ where
     ∁ : ∀ {Δ} → SemTy Δ → SemPoly Δ
-    I : {Δ : ClockCtx} → SemPoly Δ
-    _⊞_ _⊠_ : {Δ : ClockCtx} → SemPoly Δ → SemPoly Δ → SemPoly Δ
+    I : ∀ {Δ} → SemPoly Δ
+    _⊞_ _⊠_ : ∀ {Δ} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ►P : SemPoly κ → SemPoly κ
 \end{code}
 
-Note that we can evaluate polynomials into functors on types.
+Note that we can evaluate polynomials as endofunctors on types.
 This is defined by induction on the polynomial.
 In each case, we use the corresponding opertion on types.
 
 \begin{code}
-sem-eval : {Δ : ClockCtx} → SemPoly Δ → SemTy Δ → SemTy Δ
+sem-eval : ∀ {Δ} → SemPoly Δ → SemTy Δ → SemTy Δ
 \end{code}
 
 \AgdaHide{
@@ -63,50 +63,45 @@ mutual
 \end{code}
 }
 
-In the remainder of this section, we focus on μ-types in the clock context with a single clock variable.
+In the remainder of this section, we focus on μ-types in the clock context κ.
 We define the object part and the morphism part mutually.
 Usually, the morphism part depends on the object part, but not the other way around.
-Since ► \AB{A} is defined as a limit, it uses both the object and the morphism part of \AB{A}.
-Hence, in case of \AIC{►P}, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
+Since \F{►} \AB{A} is defined as a limit, it depends on both the object and the morphism part of \AB{A}.
+Hence, to define the action of \AIC{►P} on the objecs, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
 
-For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
-The constructors for this are in the data type \AD{μObj'}.
-The morphism part \AD{μMor'} is defined by induction.
+To define the elements of \AIC{μ} \AB{P}, we use an intermediate step.
+We define a type family \AD{μObj'}, which does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
+In the end, we take the object part of \AIC{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
+This allows us to do induction on \AB{Q} while remembering \AB{P}.
 
-The type family \AD{μObj'} does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
-In the end, we take the object part of \AD{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
-This allows to induction on \AB{Q} while remembering \AB{P}.
-
-Most cases are straightforward.
-For the sum, we can use both inclusions, for the product, we use pairing, and so on.
+For the product, sum, and constant polynomial, it is straightforward to define the elements.
 For later, we use \F{LaterLim} as defined before.
-The identity case goes differently.
-The input then is something from the presheaf \AD{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
+The identity case, on the other hand, requires more thinking.
+The input then is something from the presheaf \AIC{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
 If we were using induction and we arrived at the identity polynomial, we are unable to get the original polynomial.
-For that reason, we must keep track of the original polynomial, which is added as an extra argument.
-We use the same trick for \AD{μMor'}.
-
+For that reason, we must keep track of the original polynomial, which is the argument \Ar{P}.
+The morphism part \AD{μMor'} also depends on two polynomials and it is defined by induction.
 
 \begin{code}
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
-    ∁ps : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ X) i
-    I : ∀{i} → μObj' P P i → μObj' P I i
-    _⊠_ : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
-    ⊞₁ : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
-    ⊞₂ : ∀{Q R i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ►P : ∀{Q i} (x : Later (μObj' P Q) i)
+    ∁ps   : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ X) i
+    I     : ∀{i} → μObj' P P i → μObj' P I i
+    _⊠_  : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
+    ⊞₁   : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
+    ⊞₂   : ∀{Q R i} → μObj' P R i → μObj' P (Q ⊞ R) i
+    ►P    : ∀{Q i} (x : Later (μObj' P Q) i)
       → LaterLim (μObj' P Q) (μMor' P Q) i x → μObj' P (►P Q) i
 \end{code}
 
 \begin{code}
   μMor' : (P Q : SemPoly κ) (i : Size) (j : Size< (↑ i))
     → μObj' P Q i → μObj' P Q j
-  μMor' P (∁ X) i j (∁ps x)   = ∁ps (Mor X i j x)
-  μMor' P I i j (I x)           = I (μMor' P P i j x)
-  μMor' P (Q ⊠ R) i j (x ⊠ y)  = μMor' P Q i j x ⊠ μMor' P R i j y
-  μMor' P (Q ⊞ R) i j (⊞₁ x)   = ⊞₁ (μMor' P Q i j x)
-  μMor' P (Q ⊞ R) i j (⊞₂ x)   = ⊞₂ (μMor' P R i j x)
-  μMor' P (►P Q) i j (►P x p)   = ►P x q
+  μMor' P (∁ X) i j (∁ps x)        = ∁ps (Mor X i j x)
+  μMor' P I i j (I x)              = I (μMor' P P i j x)
+  μMor' P (Q ⊠ R) i j (x ⊠ y)     = μMor' P Q i j x ⊠ μMor' P R i j y
+  μMor' P (Q ⊞ R) i j (⊞₁ x)      = ⊞₁ (μMor' P Q i j x)
+  μMor' P (Q ⊞ R) i j (⊞₂ x)      = ⊞₂ (μMor' P R i j x)
+  μMor' P (►P Q) i j (►P x p)      = ►P x q
     where
       q : LaterLim (μObj' P Q) (μMor' P Q) j x
       q [ k ] [ l ] = p [ k ] [ l ]
@@ -136,11 +131,9 @@ We use the same trick for \AD{μMor'}.
 }
 
 In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
-
 \begin{code}
 μpsh : SemPoly κ → SemPoly κ → SemTy κ
 \end{code}
-
 \AgdaHide{
 \begin{code}
 μpsh P Q = record
@@ -151,15 +144,16 @@ In addition, we can show that \AD{μMor'} preserves the identity and composition
   }
 \end{code}
 }
+The interpretation of \AIC{μ} is defined via a case distinction based on the clock context.
+For presheaves, we use \AD{μpsh} \AB{P} \AB{P}.
+For sets, we use a similar approach.
 
-Finally, we define \AD{μ}.
-We make a case distinction based on the clock context.
-For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
-
+\AgdaHide{
 \begin{code}
-mu : {Δ : ClockCtx} → (P : SemPoly Δ) → SemTy Δ
+mu : ∀ {Δ} → (P : SemPoly Δ) → SemTy Δ
 mu {κ} P = μpsh P P
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}

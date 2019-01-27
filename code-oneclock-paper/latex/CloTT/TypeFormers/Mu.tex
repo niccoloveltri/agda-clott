@@ -61,7 +61,7 @@
 \end{code}
 }
 To define guarded recursive types, we first need to define the semantics of polynomials.
-The reason why we cannot use the syntactic ones, is because we need to use inhabitants of \AD{Ty} in the constant polynomial.
+The reason why we cannot use the syntactic ones, is because we need the constant polynomial depends on \AD{SemTy} rather than \AD{Ty}.
 This leads to the following definition.
 
 \begin{code}%
@@ -88,9 +88,8 @@ This leads to the following definition.
 %
 \>[4]\AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
@@ -99,9 +98,8 @@ This leads to the following definition.
 \>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊞\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
@@ -122,16 +120,15 @@ This leads to the following definition.
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
 
-Note that we can evaluate polynomials into functors on types.
+Note that we can evaluate polynomials as endofunctors on types.
 This is defined by induction on the polynomial.
 In each case, we use the corresponding opertion on types.
 
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}eval}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
@@ -306,29 +303,24 @@ In each case, we use the corresponding opertion on types.
 \end{code}
 }
 
-In the remainder of this section, we focus on μ-types in the clock context with a single clock variable.
+In the remainder of this section, we focus on μ-types in the clock context κ.
 We define the object part and the morphism part mutually.
 Usually, the morphism part depends on the object part, but not the other way around.
-Since ► \AB{A} is defined as a limit, it uses both the object and the morphism part of \AB{A}.
-Hence, in case of \AIC{►P}, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
+Since \F{►} \AB{A} is defined as a limit, it depends on both the object and the morphism part of \AB{A}.
+Hence, to define the action of \AIC{►P} on the objecs, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
 
-For each polynomial \AB{P}, we indicate how to construct elements of \F{μ} \AB{P}.
-The constructors for this are in the data type \AD{μObj'}.
-The morphism part \AD{μMor'} is defined by induction.
+To define the elements of \AIC{μ} \AB{P}, we use an intermediate step.
+We define a type family \AD{μObj'}, which does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
+In the end, we take the object part of \AIC{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
+This allows us to do induction on \AB{Q} while remembering \AB{P}.
 
-The type family \AD{μObj'} does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
-In the end, we take the object part of \AD{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
-This allows to induction on \AB{Q} while remembering \AB{P}.
-
-Most cases are straightforward.
-For the sum, we can use both inclusions, for the product, we use pairing, and so on.
+For the product, sum, and constant polynomial, it is straightforward to define the elements.
 For later, we use \F{LaterLim} as defined before.
-The identity case goes differently.
-The input then is something from the presheaf \AD{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
+The identity case, on the other hand, requires more thinking.
+The input then is something from the presheaf \AIC{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
 If we were using induction and we arrived at the identity polynomial, we are unable to get the original polynomial.
-For that reason, we must keep track of the original polynomial, which is added as an extra argument.
-We use the same trick for \AD{μMor'}.
-
+For that reason, we must keep track of the original polynomial, which is the argument \Ar{P}.
+The morphism part \AD{μMor'} also depends on two polynomials and it is defined by induction.
 
 \begin{code}%
 \>[0][@{}l@{\AgdaIndent{1}}]%
@@ -348,8 +340,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaKeyword{where}\<%
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{∁ps}%
+\>[10]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{X}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaRecord{PSh}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -368,8 +360,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{I}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{I}%
+\>[10]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
@@ -383,8 +375,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}%
+\>[9]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -407,8 +399,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{⊞₁}%
+\>[9]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -426,8 +418,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{⊞₂}%
+\>[9]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -445,8 +437,8 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{►P}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{►P}%
+\>[10]\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
@@ -515,7 +507,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}%
-\>[30]\AgdaSymbol{=}\AgdaSpace{}%
+\>[35]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSpace{}%
@@ -531,7 +523,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}%
-\>[32]\AgdaSymbol{=}\AgdaSpace{}%
+\>[35]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -551,7 +543,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSymbol{)}%
-\>[31]\AgdaSymbol{=}\AgdaSpace{}%
+\>[34]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -576,7 +568,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}%
-\>[31]\AgdaSymbol{=}\AgdaSpace{}%
+\>[34]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -595,7 +587,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{)}%
-\>[31]\AgdaSymbol{=}\AgdaSpace{}%
+\>[34]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -614,7 +606,7 @@ We use the same trick for \AD{μMor'}.
 \AgdaSymbol{(}\AgdaInductiveConstructor{►P}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{)}%
-\>[32]\AgdaSymbol{=}\AgdaSpace{}%
+\>[35]\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{►P}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaFunction{q}\<%
@@ -945,7 +937,6 @@ We use the same trick for \AD{μMor'}.
 }
 
 In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
-
 \begin{code}%
 \>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -958,7 +949,6 @@ In addition, we can show that \AD{μMor'} preserves the identity and composition
 \AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
-
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
@@ -1003,17 +993,16 @@ In addition, we can show that \AD{μMor'} preserves the identity and composition
 \>[2]\AgdaSymbol{\}}\<%
 \end{code}
 }
+The interpretation of \AIC{μ} is defined via a case distinction based on the clock context.
+For presheaves, we use \AD{μpsh} \AB{P} \AB{P}.
+For sets, we use a similar approach.
 
-Finally, we define \AD{μ}.
-We make a case distinction based on the clock context.
-For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
-
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{mu}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1031,6 +1020,7 @@ For presheaves, we \AD{μpsh} taking \AB{P} for both polynomials.
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\<%
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}%
