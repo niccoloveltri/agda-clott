@@ -35,13 +35,12 @@ module _ (A : Set) where
 }
 
 Products and sums of presheaves are defined pointwise.
-For clock weakening, we use the constant presheaf, which we denote by
-
+For clock weakening, we use the constant presheaf, which we denote by \AF{Const}.
+\AgdaHide{
 \begin{code}
 Const : Set → PSh
 \end{code}
 
-\AgdaHide{
 \begin{code}
 Const A = record
   { Obj = ConstObj A

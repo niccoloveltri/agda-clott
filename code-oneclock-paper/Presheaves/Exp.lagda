@@ -8,7 +8,6 @@ open import Presheaves.Presheaves
 open PSh
 \end{code}
 }
-
 Lastly, we need the exponential of presheaves.
 We only show how to define the action of objects of this presheaf.
 
