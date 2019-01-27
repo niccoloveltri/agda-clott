@@ -13,7 +13,7 @@ open PSh
 
 We now provide a semantic description of the later modality. This is
 an operation on types in the \IC{κ} clock context. 
-
+For this, we first define a mechanism to suspend computations.
 
 %% Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
 %% available one time step ahead from now.  For this reason, the main
@@ -28,7 +28,7 @@ data SizeLt (i : Size) : Set where
 Functions defined by $\lambda$-abstraction can always be unfolded via $\beta$-elimination if they have an input.
 However, functions defined by pattern matching only are unfolded if they input has the right shape.
 The type \AD{SizeLt} allows definitions via pattern matching.
-Such definitions can only be unfolded after inspecting the element, which blocks the computation.
+Such definitions can only be unfolded after inspecting the element, which suspends the computation.
 This is essential for defining guarded recursion.
 
 From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
@@ -37,12 +37,9 @@ Note that this size is only available when we know it is of the shape \IC{[} \AB
 \begin{code}
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
-
-size< : ∀ {i} → SizeLt i → Size< i
-size< [ j ] = j
 \end{code}
 
-The type ▻ \AB{A} is also defined as a limit.
+The type \AD{►} \AB{A} is also defined as a limit.
 On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
 Again we use a record for the definition.
 The first field is represented by the type \F{Later}.
@@ -53,8 +50,8 @@ Later A i = (j : SizeLt i) → A (size j)
 \end{code}
 
 The second field is more difficult.
-Usually, one would expect a universally quantified equality.
-To make everything work with \AD{SizeLt}, we need an intermediate definition.
+Usually, it would be a universally quantified equality, but since the computations are blocked, the equalities must be blocked as well.
+To do so, we need an intermediate definition.
 
 \begin{code}
 elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
@@ -62,9 +59,8 @@ elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
 elimLt f [ j ] = f j
 \end{code}
 
-This function does pattern matching on \F{SizeLt} and we use it to build predicate on \AD{SizeLt}.
-Rather than using an element from \AD{SizeLt}, we put an element from \AD{Size<} into this predicate.
-We can thus define the type of the second component as follows.
+This function does pattern matching on \F{SizeLt} and we use it to build predicates on \AD{SizeLt}.
+Note that the compuation of such predicates are blocked, which allows us to define the type of the second component as follows.
 
 \AgdaHide{
 \begin{code}
