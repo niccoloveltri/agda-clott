@@ -16,10 +16,9 @@
 \AgdaKeyword{public}\<%
 \end{code}
 }
-
-Note that we are modelling a simple type theory and thus types do not depend on contexts.
-For this reason, we interpet types the same way as contexts.
-
+Note that \GTT\ is a simple type theory and thus types do not depend on contexts.
+For this reason, we can take semantic types and semantic contexts to be the same, \ie \F{SemTy} = \F{SemCtx}.
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -37,5 +36,6 @@ For this reason, we interpet types the same way as contexts.
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaRecord{PSh}\<%
 \end{code}
+}
 
 

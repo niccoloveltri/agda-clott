@@ -8,14 +8,14 @@ open import Data.Empty
 \end{code}
 }
 
-The object language we consider is the simply typed $\lambda$-calculus
+The object language we consider is the simply typed lambda calculus
 extended with additional features for programming with guarded recursive and coinductive
 types. We call this language \GTT. It is a variant of Atkey and McBride's type system for
 productive coprogramming \cite{atkey2013productive} with explicit
 substitutions. In Atkey and
 McBride's system, all judgements are indexed by a clock context,
 which may contain several different clocks. They extend the simply typed
-$\lambda$-calculus with two additional type formers: a later modality \IC{▻} for
+lambda calculus with two additional type formers: a later modality \IC{▻} for
 encoding time delay into types and universal quantification over clock
 variables \IC{∀}, which is used in combination with \IC{▻} for the specification of coinductive types. In
 \GTT, the clock context can either be empty or contain

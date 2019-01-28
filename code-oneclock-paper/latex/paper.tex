@@ -157,6 +157,7 @@ valuable hints.}%optional
 \newcommand{\loccit}{\emph{loc. cit.} }
 
 \newcommand{\GTT}{\textbf{GTT}}
+\newcommand{\Set}{\mathbf{Set}}
 
 %This is a template for producing LIPIcs articles. 
 %See lipics-manual.pdf for further information.
@@ -228,11 +229,36 @@ The model is variation of the topos of trees, and it is formalized in Agda.
 
 \section{Categorical Semantics}
 
-Next we define categorical semantics for the syntax defined in \Cref{sec:syntax}.
-To do so, we use a similar method as used by M{\o}gelberg \cite{Mogelberg14}.
-The interpretation of types depend on the clock contexts.
-If the clock context is empty, then types become sets.
-If the clock context has one clock, then types are interpreted as objects in the topos of trees.
+Next we give a categorical semantics for the calculus introduced in
+\Cref{sec:syntax}.  We take inspiration from M{\o}gelberg's model
+\cite{Mogelberg14}, where a (simple) type in a clock context
+containing $n$ clocks is interpreted
+as a presheaf in $\Set^{(\omega^n)^{\text{op}}}$, where $\omega$ is
+the preorder of ordered natural numbers. In our model we replace the
+category $\omega$ with the preorder of sizes. Moreover we only
+consider the cases where either the clock context is empty or it
+contains exactly one clock. This means that a type in \GTT\ is either
+interpreted as an element of \F{Set} or as a presheaf over \F{Size}. 
+In this section we show how to implement presheaves and how to model
+the fragment of \GTT\ corresponding to simply typed lambda
+calculus. The interpretation of the guarded recursive and coinductive
+features of \GTT\ is given in Section \ref{sec:guarded}.
+%% interpreted a $n = 0$ or $n = 1$. where Since in \GTT\
+%% every 
+%% consider clock contexts containing at most one clock.
+%% The type
+%% \AD{ClockCtx}  of syntactic clock contexts is also used for semantic clock contexts.
+%% 
+%% 
+%% 
+%% a variation of the topos of
+%% trees, where as the indexing category we replace the category of
+%% ordered natural numbers with the preorder of sizes.
+%% 
+%% he similar to To do so, we use a similar method as used by M{\o}gelberg \cite{Mogelberg14}.
+%% The interpretation of types depend on the clock contexts.
+%% If the clock context is empty, then types become sets.
+%% If the clock context has one clock, then types are interpreted as objects in the topos of trees.
 
 \label{sec:presheaf_sem}
 \subsection{Presheaves}
@@ -247,15 +273,10 @@ If the clock context has one clock, then types are interpreted as objects in the
 \subsection{Modelling Simple Types}
 %\label{sec:kripke}
 \input{CloTT/Structure/Contexts}
-
 \input{CloTT/Structure/Types}
-
 \input{CloTT/Structure/Terms}
-
 \input{CloTT/Structure/Subst}
-
 \input{CloTT/Structure/DefinitionalEquality}
-
 \input{CloTT/Structure/ContextOperations}
 
 Lastly, we use operations on sets and presheaves to define the type operators in simple type theory.

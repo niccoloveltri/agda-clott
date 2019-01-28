@@ -24,7 +24,7 @@ decons {Γ = Γ} {P} = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ e
 }
 
 To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
-It is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻P I}.
+It is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻ I}.
 \begin{code}
 g-Str : Ty ∅ → Ty κ
 g-Str A = μ (∁ (⇡ A) ⊠ ▻ I)
@@ -49,7 +49,7 @@ Str A = □ (g-Str A)
 \end{code}
 
 We compute the head and tail of a stream via \F{decons}.
-Note that in both cases, we need to use \IC{unbox}, because of the \IC{□}.
+Note that in both cases, we need to use \IC{unbox}, because of the application of the box modality.
 For the tail, we also need to use \IC{force}.
 
 \begin{code}

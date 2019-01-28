@@ -35,7 +35,7 @@ module _ (A : Set) where
 }
 
 Products and sums of presheaves are defined pointwise.
-For clock weakening, we use the constant presheaf, which we denote by \AF{Const}.
+The weakening type former \IC{↑} of \GTT\ is modelled using the constant presheaf, which we denote by \AF{Const}.
 \AgdaHide{
 \begin{code}
 Const : Set → PSh

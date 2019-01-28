@@ -14,15 +14,15 @@ open PSh
 open NatTrans
 \end{code}
 }
-
-The type theory we study, has explicit substitutions and we must also provide an interpretation for these.
-Substitutions are maps between contexts, so we interpret them the same way as terms.
-
+\GTT\ is a type theory with explicit substitutions so we must provide an interpretation for these.
+Semantic substitutions are maps between contexts and we can define them is the same way as semantic terms, \ie \F{SemSub} = \F{SemTm}.
+\AgdaHide{
 \begin{code}
 SemSub : {Δ : ClockCtx} → SemCtx Δ → SemCtx Δ → Set
 SemSub {∅} Γ₁ Γ₂ = Γ₁ → Γ₂
 SemSub {κ} Γ₁ Γ₂ = NatTrans Γ₁ Γ₂
 \end{code}
+}
 
 Next we define the interpretation of operations on substitutions.
 These all are defined in the expected way.

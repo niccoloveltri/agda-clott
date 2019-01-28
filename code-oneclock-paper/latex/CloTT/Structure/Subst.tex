@@ -43,10 +43,9 @@
 \AgdaModule{NatTrans}\<%
 \end{code}
 }
-
-The type theory we study, has explicit substitutions and we must also provide an interpretation for these.
-Substitutions are maps between contexts, so we interpret them the same way as terms.
-
+\GTT\ is a type theory with explicit substitutions so we must provide an interpretation for these.
+Semantic substitutions are maps between contexts and we can define them is the same way as semantic terms, \ie \F{SemSub} = \F{SemTm}.
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{SemSub}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -80,6 +79,7 @@ Substitutions are maps between contexts, so we interpret them the same way as te
 \AgdaBound{Γ₁}\AgdaSpace{}%
 \AgdaBound{Γ₂}\<%
 \end{code}
+}
 
 Next we define the interpretation of operations on substitutions.
 These all are defined in the expected way.

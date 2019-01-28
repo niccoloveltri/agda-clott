@@ -8,9 +8,8 @@ open import Presheaves.Presheaves
 open PSh
 \end{code}
 }
-Lastly, we need the exponential of presheaves.
-We only show how to define the action of objects of this presheaf.
-
+For modelling function spaces we need to construct exponentials of presheaves.
+Here we only present how to define the action of objects of this presheaf.
 \begin{code}
 record ExpObj (P Q : PSh) (i : Size) : Set where
   field

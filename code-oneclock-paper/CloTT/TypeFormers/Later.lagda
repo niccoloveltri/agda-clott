@@ -25,7 +25,7 @@ data SizeLt (i : Size) : Set where
   [_] : (j : Size< i) → SizeLt i
 \end{code}
 
-Functions defined by $\lambda$-abstraction can always be unfolded via $\beta$-elimination if they have an input.
+Functions defined by lambda abstraction can always be unfolded via $\beta$-elimination if they have an input.
 However, functions defined by pattern matching only are unfolded if they input has the right shape.
 The type \AD{SizeLt} allows definitions via pattern matching.
 Such definitions can only be unfolded after inspecting the element, which suspends the computation.

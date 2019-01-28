@@ -9,9 +9,8 @@ open PSh
 }
 
 Beside presheaves, we also need natural transformations between them.
-A natural transformation consists of a map \Fi{nat-map} which satisfies a commutativity requirement.
-More precisely, we use the following record
-
+These are defined as a record \F{NatTrans}, consisting of a map \Fi{nat-map} satisfying the usual commutativity requirement.
+%More precisely, we use the following record
 \begin{code}
 record NatTrans (P Q : PSh) : Set where
   field
