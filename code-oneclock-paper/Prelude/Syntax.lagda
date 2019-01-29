@@ -130,7 +130,8 @@ eval (▻ P) X = ▻ (eval P X)
 }
 
 \subsection{Contexts}
-The well-formed contexts of \GTT\ are built from the empty context, context extension, and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
+The well-formed contexts of \GTT\ are built from the empty context, context extension, and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts. 
+Notice that we are overloading the symbol \IC{⇡}, used also for type weakening.
 \begin{AgdaAlign}
 \begin{code}
 data Ctx : ClockCtx → Set where

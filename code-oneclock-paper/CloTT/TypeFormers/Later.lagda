@@ -11,6 +11,14 @@ open PSh
 \end{code}
 }
 
+Ideally, we would like to define the object part of the semantic later modality \F{►} as the following limit: 
+\begin{code}
+record ►ObjTry (A : SemTy κ) (i : Size) : Set where
+  field
+    ►cone : (j : Size< i) → Obj A j
+    ►com : (j : Size< i) (k : Size< (↑ j)) → Mor A j k (►cone j) ≡ ►cone k
+\end{code}
+
 We now provide a semantic description of the later modality. This is
 an operation on types in the \IC{κ} clock context. 
 For this, we first define a mechanism to suspend computations.
@@ -61,24 +69,20 @@ elimLt f [ j ] = f j
 
 This function does pattern matching on \F{SizeLt} and we use it to build predicates on \AD{SizeLt}.
 Note that the compuation of such predicates are blocked, which allows us to define the type of the second component as follows.
+\begin{code}
+LaterLim : (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
+  → (i : Size) (x : Later A i) → Set
+LaterLim A m i x = (j : SizeLt i)
+  → elimLt (λ { j' → (k : SizeLt (↑ j'))
+    → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
+\end{code}
 
 \AgdaHide{
 \begin{code}
 module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)  where
-\end{code}
-}
 
-\begin{code}
-  LaterLim : (i : Size) (x : Later A i) → Set
-  LaterLim i x = (j : SizeLt i)
-    → elimLt (λ { j' → (k : SizeLt (↑ j'))
-      → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
-\end{code}
-
-\AgdaHide{
-\begin{code}
   LaterLimMor : (i : Size) (j : Size< (↑ i)) (x : Later A i)
-    → LaterLim i x → LaterLim j x
+    → LaterLim A m i x → LaterLim A m j x
   LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 }
@@ -89,9 +93,9 @@ All in all, we get
 
 \begin{code}
 record ►Obj (A : SemTy κ) (i : Size) : Set where
-    field
-      ►cone : Later (Obj A) i
-      ►com : LaterLim (Obj A) (Mor A) i ►cone
+  field
+    ►cone : Later (Obj A) i
+    ►com : LaterLim (Obj A) (Mor A) i ►cone
 \end{code}
 
 \AgdaHide{
