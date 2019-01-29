@@ -16,7 +16,7 @@ open NatTrans
 }
 
 Equality of terms and substitutions is defined as propositional equality.
-For proofs, we use function extensionality and UIP.
+Since we assume both function extensionality and UIP, we can formulate this in a more convenient way.
 
 \AgdaHide{
 \begin{code}

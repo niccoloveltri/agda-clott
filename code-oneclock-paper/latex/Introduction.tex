@@ -1,6 +1,6 @@
 Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Coq, Agda and Lean.  It is a total language,
+as Coq, Agda, and Lean \cite{norell}.  It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
@@ -9,8 +9,8 @@ Possibly non-terminating computations
 and infinite structures such as non-wellfounded trees can be
 represented in type theory by extending the type system with
 coinductive types. Recursively defined elements of these types
-are required to be productive \cite{Coquand93} in the sense that every
-finite unfolding can be computed in a finite number of steps.
+are required to be productive in the sense that every
+finite unfolding can be computed in a finite number of steps \cite{Coquand93}.
 In Agda's encoding of coinductive types using ``musical notation''
 \cite{DA10}, productivity is enforced via a strict obligation: in the
 definition of a corecursive function, the recursive
@@ -24,11 +24,11 @@ well-definedness of corecursive definitions.
 
 We focus on two of these techniques in which productivity is encoded
 at the level of types: sized types and guarded recursion. A sized type
-\cite{Hughes96} is a type annotated with the number of unfolding that
-elements of this type can undergo. Sized types have been implemented
-in Agda \cite{A-sized,AVW-normalization} and can be used in
+ is a type annotated with the number of unfolding that
+elements of this type can undergo \cite{Hughes96}. Sized types have been implemented
+in Agda and can be used in
 combination with coinductive records to specify
-coinductive types \cite{Copatterns}.  Guarded recursion \cite{Nakano}
+coinductive types \cite{Copatterns,AVW-normalization,norell}.  Guarded recursion \cite{Nakano}
 is a different approach where the type system is enhanced with a
 modality, called ``later'' and written \IC{▻}, encoding time delay in
 types. The later modality comes with a general fixpoint combinator for
@@ -80,7 +80,7 @@ which the clock context can contain at most one clock. The types of
 a nameless analogue of Atkey and McBride's universal clock
 quantification. Clouston \etal \cite{CloustonBGB15} studied a
 guarded variant of lambda calculus extended with a \IC{□} operation,
-which they call ``constant'' .  Our object calculus differs from
+which they call ``constant''.  Our object calculus differs from
 theirs in that our judgments are indexed by a clock context, which can
 be empty or containing exactly one clock. In this respect \GTT\ is
 closer in spirit to Atkey and McBride's language. The design of \GTT\
@@ -133,7 +133,7 @@ formalization. The full code is available at
 \url{https://github.com/niccoloveltri/agda-clott}. The formalization
 uses Agda 2.5.4.1 and Agda standard library 0.16. The paper is
 extracted from a literate Agda file, which implies that all the
-displayed code has passed Agda's type-check.
+displayed code has passed Agda's type and termination checker.
 
 %\NV{WIP from this point}
 

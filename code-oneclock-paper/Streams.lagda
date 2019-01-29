@@ -50,7 +50,7 @@ Str A = □ (g-Str A)
 
 We compute the head and tail of a stream via \F{decons}.
 Note that in both cases, we need to use \IC{unbox}, because of the application of the box modality.
-For the tail, we also need to use \IC{force}.
+For the tail, we also use \IC{force}.
 
 \begin{code}
 hd : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ A

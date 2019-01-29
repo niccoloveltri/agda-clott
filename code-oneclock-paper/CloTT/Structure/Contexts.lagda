@@ -7,10 +7,10 @@ open import Presheaves public
 \end{code}
 }
 
-Semantic judgements, similarly to their syntactic counterparts, are also indexed by
-a clock context. We can reuse the type \AD{ClockCtx} for the semantic
-clock context.
-The semantic variable contexts are sets if the clock context is empty,
+Semantic judgements, similar to their syntactic counterparts, are indexed by
+a clock context. We reuse the type \AD{ClockCtx} for the semantic
+clock contexts.
+The semantic variable contexts are sets if the clock context is empty, and
 otherwise they are presheaves.
 %% For the semantics, we first give an interpretation of contexts, types, and terms.
 %% Since contexts depend on clock contexts, there are two cases to consider.

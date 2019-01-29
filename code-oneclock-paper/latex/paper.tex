@@ -157,6 +157,7 @@ valuable hints.}%optional
 \newcommand{\loccit}{\emph{loc. cit.} }
 
 \newcommand{\GTT}{\textbf{GTT}}
+\newcommand{\AM}{\textbf{AM}}
 \newcommand{\Set}{\mathbf{Set}}
 
 %This is a template for producing LIPIcs articles. 
@@ -277,13 +278,12 @@ features of \GTT\ is given in Section \ref{sec:guarded}.
 \input{CloTT/Structure/Terms}
 \input{CloTT/Structure/Subst}
 \input{CloTT/Structure/DefinitionalEquality}
-\input{CloTT/Structure/ContextOperations}
 
-Lastly, we use operations on sets and presheaves to define the type operators in simple type theory.
-For sets, we use products, sums, and function types in Agda.
-Products, sums, and exponentials of presheaves are interpreted with the operations in \Cref{sec:presheaves}.
-We only give the notation for function types.
-
+To interpret simple type theory, we also need to give the context operations, simple type formers, and operations on substitutions.
+Since their definitions are standard, we do not discuss them formally.
+For each of them, we need to make a case distinction based on the clock context.
+For example, the empty context is interpreted by the unit type and terminal presheaf depending on the clock context.
+We use the operations on presheaves defined in \Cref{sec:presheaves} to interpret simple type formers.
 \input{CloTT/TypeFormers/FunctionType}
 
 \section{Modelling Guarded Recursion}

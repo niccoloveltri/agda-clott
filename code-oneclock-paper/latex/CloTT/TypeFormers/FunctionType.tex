@@ -34,13 +34,15 @@
 \AgdaModule{NatTrans}\<%
 \end{code}
 }
+In the remainder, we use the interpretation of function types.
+This is denoted by \AB{A} \F{⇒} \AB{B} for types \AB{A} and \AB{B}.
 
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaOperator{\AgdaFunction{\AgdaUnderscore{}⇒\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -50,6 +52,7 @@
 \AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}%

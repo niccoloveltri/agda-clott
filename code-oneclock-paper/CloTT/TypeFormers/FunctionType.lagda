@@ -12,10 +12,14 @@ open ExpObj
 open NatTrans
 \end{code}
 }
+In the remainder, we use the interpretation of function types.
+This is denoted by \AB{A} \F{⇒} \AB{B} for types \AB{A} and \AB{B}.
 
+\AgdaHide{
 \begin{code}
-_⇒_ : {Δ : ClockCtx} (A B : SemTy Δ) → SemTy Δ
+_⇒_ : ∀ {Δ} (A B : SemTy Δ) → SemTy Δ
 \end{code}
+}
 
 \AgdaHide{
 \begin{code}

@@ -8,18 +8,20 @@ open import Data.Empty
 \end{code}
 }
 
-The object language we consider is the simply typed lambda calculus
+The object language we consider, is the simply typed lambda calculus
 extended with additional features for programming with guarded recursive and coinductive
-types. We call this language \GTT. It is a variant of Atkey and McBride's type system for
-productive coprogramming \cite{atkey2013productive} with explicit
-substitutions. In Atkey and
-McBride's system, all judgements are indexed by a clock context,
+types. We call this language \GTT. It is a variant of Atkey and McBride's type system, which we call \AM, for
+productive coprogramming \cite{atkey2013productive}. In \AM, all judgements are indexed by a clock context,
 which may contain several different clocks. They extend the simply typed
-lambda calculus with two additional type formers: a later modality \IC{▻} for
+lambda calculus with two additional type formers: a later modality ▻ for
 encoding time delay into types and universal quantification over clock
-variables \IC{∀}, which is used in combination with \IC{▻} for the specification of coinductive types. In
-\GTT, the clock context can either be empty or contain
-a single clock \IC{κ}.
+variables ∀, which is used in combination with ▻ for the specification of coinductive types.
+
+\GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
+well-formed types and contexts, well-typed terms and substitutions,
+definitional equality of terms and of substitutions. All them depend on a clock context.
+In \GTT, the clock context can either be empty or contain a single clock \IC{κ}.
+
 %% We now give a description of the object type theory. This is a simple
 %% type theory with guarded recursion that can be seen as a variant of
 %% Atkey and McBride's type system \cite{atkey2013productive} but
@@ -42,18 +44,13 @@ mutual
 \end{code}
 }
 
-\GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
-well-formed types and contexts, well-typed terms and substitutions,
-definitional equality of terms and of substitutions. All these kinds
-are indexed by a clock context. We refer to types and contexts
-existing in the empty clock context as \IC{∅}-types and
-\IC{∅}-contexts respectively. Similarly we talk about \IC{κ}-types and
-\IC{κ}-contexts for types and contexts existing in the clock context
-with exactly one clock \IC{κ}.
+We refer to types and contexts in the empty clock context as \IC{∅}-types and
+\IC{∅}-contexts respectively. Similarly, we talk about \IC{κ}-types and
+\IC{κ}-contexts for types and contexts if they depend on \IC{κ}.
 
 \subsection{Types}
 
-The well-formed types of \GTT\ include a unit type,
+The well-formed types of \GTT\ include the unit type,
 products, coproducts, and function spaces. Notice that \IC{𝟙} is a
 \IC{∅}-type.
 \begin{AgdaAlign}
@@ -62,12 +59,12 @@ products, coproducts, and function spaces. Notice that \IC{𝟙} is a
     𝟙 : Ty ∅
     _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
 \end{code}
-Similarly to Atkey and McBride's system, we include a later modality
-\IC{▻} as an operation on \IC{κ}-types. We consider a nameless
-analogue of universal clock quantification, that we call "box" and we denote \IC{□}
+
+We include a later modality \IC{▻} as an operation on \IC{κ}-types similar to the one in \AM.
+There also is a nameless analogue of clock quantification, which we call ``box'' and denote by \IC{□}
 following \cite{CloustonBGB15}. The box modality takes a
 \IC{κ}-type and returns a \IC{∅}-type. The well-formed types of \GTT\
-include a weakening type former \IC{⇡}, which embeds \IC{∅}-types into
+include a weakening type former \IC{⇡}, which maps \IC{∅}-types to
 \IC{κ}-types.
 %% In addition to the usual simple type formers, there are types that
 %% allow us to specify guarded recursive and coinductive types. We have
@@ -80,18 +77,19 @@ include a weakening type former \IC{⇡}, which embeds \IC{∅}-types into
     □ : Ty κ → Ty ∅
     ⇡ : Ty ∅ → Ty κ
 \end{code}
+
 Guarded recursive types are defined using a least fixpoint
 type former \IC{μ}.
 \begin{code}
     μ : ∀ {Δ} → Poly Δ → Ty Δ
 \end{code}
 \end{AgdaAlign}
-For the \IC{μ} operation to be well-defined, one typically limits
+For \IC{μ} to be well-defined, one typically limits
 its applicability to strictly positive functors. We instead consider
-a functor grammar \F{Poly} \Ar{Δ} which includes codes for constant functors,
+a grammar \F{Poly} \Ar{Δ} for functors, which has codes for constant functors,
 the identity, products, coproducts, and the later modality.
-The presence of the constructor \IC{∁} for representing the code of constant functors forces the type family
-\F{Poly} to be defined simultaneously with \F{Ty}.
+Since there is a code for constant functors, the type family
+\F{Poly} needs to be defined simultaneously with \F{Ty}.
 %% The type \F{Poly} \Ar{Δ} specifies a grammar for functors we allow 
 %% The constructor \IC{μ} takes an element of \F{Poly} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
 %% \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
@@ -136,7 +134,7 @@ eval (▻ P) X = ▻ (eval P X)
 }
 
 \subsection{Contexts}
-The well-formed contexts of \GTT\ include the empty context, context extension and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
+The well-formed contexts of \GTT\ are built from the empty context, context extension, and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts.
 \begin{AgdaAlign}
 \begin{code}
 data Ctx : ClockCtx → Set where
@@ -170,7 +168,7 @@ include constructors for variables and substitutions.
 
 We have lambda abstraction and application, plus the usual
 introduction and elimination rules for the unit types, products, 
-coproducts and guarded recursive types. Here we only show the typing rules associated to the latter.
+coproducts, and guarded recursive types. Here we only show the typing rules associated to function types and guarded recursive types.
 The function \F{eval} evaluates a code in \F{Poly} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
 We use a categorical combinator \IC{app} for application.
 The conventional application, which we call \F{\$}, taking additionally an element
@@ -196,7 +194,8 @@ in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, i
 \end{code}
 }
 
-The later modality is required to be an applicative functor, which is evidenced by the terms \IC{next} and \IC{⊛}. The fixpoint combinator \IC{fix} allows defining productive recursive programs. 
+The later modality is required to be an applicative functor, which means we have terms \IC{next} and \IC{⊛}.
+The fixpoint combinator \IC{fix} allows defining productive recursive programs. 
 \begin{code}
     next : {Γ : Ctx κ} {A : Ty κ} → Tm Γ A → Tm Γ (▻ A)
     _⊛_ : {Γ : Ctx κ} {A B : Ty κ} → Tm Γ (▻ (A ⟶ B)) → Tm Γ (▻ A) → Tm Γ (▻ B)
@@ -227,7 +226,7 @@ elements of \F{Tm} \Ar{Γ A} can be embedded in \F{Tm} (\IC{⇡}
 \end{code}
 
 Atkey and McBride assume the existence of certain type equalities
-\cite{atkey2013productive}. M{\o}gelberg, working in a dependently typed setting, considers similar type isomorphisms \cite{Mogelberg14}. In \GTT\ we
+\cite{atkey2013productive}. M{\o}gelberg, working in a dependently typed setting, considers similar type isomorphisms \cite{Mogelberg14}. In \GTT, we
 follow the second approach. This means that we do not introduce an
 equivalence relation on types specifying which types should be
 considered equal as in Chapman's object type theory
@@ -254,7 +253,7 @@ The other type isomorphisms are done similarly.
 }
 
 \subsection{Substitutions}
-First of all, we need the canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
+For substitutions, we need the canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
 substitution, the empty substitution, the extension with an additional term and the projection which forgets the last term.
 \begin{code}
   data Sub : ∀ {Δ} → Ctx Δ → Ctx Δ → Set where
@@ -265,17 +264,17 @@ substitution, the empty substitution, the extension with an additional term and 
     pr : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} → Sub Γ₁ (Γ₂ , A) → Sub Γ₁ Γ₂
 \end{code}
 
-In addition, we add rules for embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
+We also add rules for embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
 
 \begin{code}
     up : {Γ₁ Γ₂ : Ctx ∅} → Sub Γ₁ Γ₂ → Sub (⇡ Γ₁) (⇡ Γ₂)
     down : {Γ₁ Γ₂ : Ctx ∅} → Sub (⇡ Γ₁) (⇡ Γ₂) → Sub Γ₁ Γ₂
 \end{code}
 
-We also need two isomorphismsbetween contexts. The context \IC{⇡ •} needs
+We also need two isomorphisms between contexts. The context \IC{⇡ •} needs
 to be isomorphic to \IC{•} and \IC{⇡} (\Ar{Γ} \IC{,} \Ar{A})
 needs to be isomorphic to \IC{⇡} \Ar{Γ} \IC{,} \IC{⇡}
-\Ar{A}. For both of them, we add a constructor representing the underlying functions :
+\Ar{A}. For both of them, we add a constructor representing the underlying functions.
 
 \begin{code}
     •⇡ : Sub • (⇡ •)
@@ -432,7 +431,7 @@ infix 13 _∼_ _≈_
 \label{sec:defeq}
 
 Definitional equalities on terms and substitutions are defined simultaneously.
-Here we only discuss equality on terms, we refer to the Agda formalization for the equality on substitutions.
+Here we only discuss equality on terms and we refer to the formalization for the equality on substitutions.
 \AgdaHide{
 \begin{code}
 mutual
@@ -443,11 +442,11 @@ mutual
   data _∼_ : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → Tm Γ A → Set where
 \end{code}
 
-The term equality includes rules for equivalence, congruence and
+The term equality includes rules for equivalence, congruence, and
 substitution. There are also $\beta$ and $\eta$ rules for the type
 formers. Among these rules, here we only show the ones associated to the
 \IC{□} modality. The rules state that \IC{box} and \IC{unbox} are each
-other inverses.
+other's inverses.
 %up to \AD{∼}.
 \AgdaHide{
 \begin{code}
@@ -495,7 +494,7 @@ other inverses.
     □-η : ∀ {Γ} {A} (t : Tm Γ (□ A)) → box (unbox t) ∼ t
 \end{code}
 
-There are rules exibiting that \IC{▻}, \IC{next} and \IC{⊛} satisfy the applicative functor laws. The fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
+There are rules exibiting that \IC{next} and \IC{⊛} satisfy the applicative functor laws for \IC{▻}. The fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
 %% There is also the
 %% characteristic equality of the fixpoint combinator, stating that
 %% \IC{fix} \Ar{f} is equal to the application of the function term
@@ -555,9 +554,8 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
 \end{code}
 }
 
-There also are term equalities which exhibit that certain maps are inverses.
-This required for the type isomorphisms. For example, we have equalities stating
-that \IC{□const} and \F{const□} are each other's inverses.
+For the type isomorphisms, we need term equalities which exhibit that certain maps are inverses.
+For example, we have the following two equalities about \IC{□const} and \F{const□}:
 
 \begin{code}
     const□const : ∀ {Γ} {A} (t : Tm Γ (□ (⇡ A))) → const□ A $ (□const A $ t) ∼ t
@@ -565,7 +563,7 @@ that \IC{□const} and \F{const□} are each other's inverses.
 \end{code}
 
 The last group of term equalities describes the relationship between the
-weakening operations \IC{up} and \IC{down} and other term constructors. Here we omit the description of them and we refer the
+weakening operations \IC{up} and \IC{down} and other term constructors. Here we omit the description of them, and we refer the
 interested reader to the Agda formalization.
 \AgdaHide{
 \begin{code}

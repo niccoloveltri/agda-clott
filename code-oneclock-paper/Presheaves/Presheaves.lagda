@@ -15,12 +15,11 @@ open import Prelude
 Presheaves are defined as a record \AD{PSh}.  The fields \AFi{Obj} and
 \AFi{Mor} represent the actions on objects and morphisms respectively,
 while \AFi{MorId} and \AFi{MorComp} are the functor laws. In the type
-of \AFi{MorId} we employ the reflexivity of the partial order on size,
-so that \Ar{i} : \F{Size<} (\F{↑} \Ar{i}). In the type of
-\AFi{MorComp} we use the transitivity of the order, so that \Ar{k} :
+of \AFi{MorId} we use the reflexivity of the order on sizes using that \Ar{i} : \F{Size<} (\F{↑} \Ar{i}).
+In the type of \AFi{MorComp}, we use transitivity. \remove{so that \Ar{k} :
 \F{Size<} (\F{↑} \Ar{j}) implies \Ar{k} : \F{Size<} (\F{↑} \Ar{i}),
 and the coercion of \Ar{j} : \F{Size<} (\F{↑} \Ar{i}) to \Ar{j} :
-\F{Size}.
+\F{Size}.}
 \begin{code}
 record PSh : Set₁ where
   field

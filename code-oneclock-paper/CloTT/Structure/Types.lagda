@@ -7,7 +7,8 @@ open import Presheaves public
 \end{code}
 }
 Note that \GTT\ is a simple type theory and thus types do not depend on contexts.
-For this reason, we can take semantic types to be the same as semantic contexts, \ie \F{SemTy} = \F{SemCtx}.
+For this reason, we define the type \F{SemTy} of semantic types the same way.
+
 \AgdaHide{
 \begin{code}
 SemTy : ClockCtx → Set₁
@@ -15,5 +16,3 @@ SemTy ∅ = Set
 SemTy κ = PSh
 \end{code}
 }
-
-
