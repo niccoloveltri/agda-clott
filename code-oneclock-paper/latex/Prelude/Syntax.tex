@@ -3983,12 +3983,13 @@ other's inverses.
 \AgdaBound{t}\<%
 \end{code}
 
-There are rules exibiting that \IC{next} and \IC{⊛} satisfy the applicative functor laws for \IC{▻}. The fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
+We have definitional equalities which say that \IC{▻} is an applicative functor with the operations \IC{next} and \IC{⊛}.
+Furhermore, the fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
 %% There is also the
 %% characteristic equality of the fixpoint combinator, stating that
 %% \IC{fix} \Ar{f} is equal to the application of the function term
 %% \Ar{f} to \IC{next} (\IC{fix} \Ar{f}).
-We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equalities that the later modality and the terms associated with it are required to satisfy.
+We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the required definitional equalities for \IC{▻} and \IC{□}.
 \AgdaHide{
 \begin{code}%
 %
