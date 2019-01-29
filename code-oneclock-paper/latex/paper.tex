@@ -232,7 +232,7 @@ The model is variation of the topos of trees, and it is formalized in Agda.
 
 Next we give a categorical semantics for the calculus introduced in
 \Cref{sec:syntax}.  We take inspiration from M{\o}gelberg's model
-\cite{Mogelberg14}, where a (simple) type in a clock context
+\cite{Mogelberg14} in which a (simple) type in a clock context
 containing $n$ clocks is interpreted
 as a presheaf in $\Set^{(\omega^n)^{\text{op}}}$, where $\omega$ is
 the preorder of ordered natural numbers. In our model we replace the
@@ -291,13 +291,24 @@ We use the operations on presheaves defined in \Cref{sec:presheaves} to interpre
 
 \section{Modelling Guarded Recursion}
 \label{sec:guarded}
-Now we have the simple type formers and their terms.
-The next step is to add the type formers required for guarded recursion.
-We start by defining clock quantification and the later modality, and how to construct terms of those types.
-With this in place, we define the fixpoint combinator.
-In the end, we give the type former for guarded recursive types.
+In this section we add the guarded
+recursive and coinductive features to the denotational semantics.
+%Now we have the simple type formers and their terms.
+%The next step is to add the type formers required for guarded recursion.
+We start by defining the semantic box modality together with its
+introduction and elimination rule. Then we construct the semantic
+later modality. We show how to define the fixpoint combinator and the
+force operation using sized types. In the end we discuss how to model
+guarded recursive types.
+%% introduce the
+%% semantic 
+%%  together with the
+%% terms associated 
+%% and how to construct terms of those types.
+%% With this in place, we define the fixpoint combinator.
+%% In the end, we give the type former for guarded recursive types.
 
-\subsection{Context Weakening and Clock Quantification}
+\subsection{Context Weakening and the Box Modality}
 \input{CloTT/TypeFormers/WeakenClock}
 \input{CloTT/TypeFormers/ClockQuantification}
 

@@ -14,12 +14,14 @@ open NatTrans
 \end{code}
 }
 
-Following M{\o}gelberg \cite{Mogelberg14}, clock quantification is defined via
-taking limits. Given a presheaf \Ar{A}, we take \F{■} \Ar{A}
-to be the limit of \Ar{A}. Formally, the limit of \Ar{A} is constructed as
-record with two fields. The field \AFi{■cone} is given by a family \Ar{f i} in \Fi{Obj} \Ar{A i} for each size \Ar{i}.
-The field \AFi{■com} is a proof that the restriction of \Ar{f i} to a size \Ar{j}
-smaller than \Ar{i} is equal to \Ar{f j}.
+M{\o}gelberg models universal clock
+quantification by taking limits \cite{Mogelberg14}. We define he semantic box modality \F{■} in the same way:
+given a presheaf \Ar{A},
+we take \F{■} \Ar{A} to be the limit of \Ar{A}. Formally, the limit of
+\Ar{A} is constructed as a record with two fields. The field \AFi{■cone}
+is given by a family \Ar{f i} in \Fi{Obj} \Ar{A i} for each size
+\Ar{i}.  The field \AFi{■com} is a proof that the restriction of \Ar{f
+i} to a size \Ar{j} smaller than \Ar{i} is equal to \Ar{f j}.
 \begin{code}
 record ■ (A : SemTy κ) : SemTy ∅ where
   field
@@ -38,11 +40,10 @@ open ■
 ■eq p = ■eq' (funext p)
 \end{code}
 }
-
-Semantically, clock quantification \F{■} is right adjoint to context
+The semantic box modality \F{■} is right adjoint to context
 weakening \F{⇑}. In other words, the types \F{Tm} (\F{⇑} \Ar{Γ})
 \Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
-underlying the isomorphism is \F{box} and its inverse is \F{unbox}.
+underlying the isomorphism is \F{sem-box} and its inverse is \F{sem-unbox}, which are used to model \IC{box} and \IC{unbox}.
 \begin{code}
 sem-box : (Γ : SemCtx ∅) (A : SemTy κ) (t : SemTm (⇑ Γ) A) → SemTm Γ (■ A)
 ■cone (sem-box Γ A t x) i        = nat-map t i x
