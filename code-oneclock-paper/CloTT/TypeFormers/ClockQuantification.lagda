@@ -15,7 +15,7 @@ open NatTrans
 }
 
 M{\o}gelberg models universal clock
-quantification by taking limits \cite{Mogelberg14}. We define he semantic box modality \F{■} in the same way:
+quantification by taking limits \cite{Mogelberg14}. We define he semantic box modality \F{■} similarly:
 given a presheaf \Ar{A},
 we take \F{■} \Ar{A} to be the limit of \Ar{A}. Formally, the limit of
 \Ar{A} is constructed as a record with two fields. The field \AFi{■cone}
@@ -40,6 +40,7 @@ open ■
 ■eq p = ■eq' (funext p)
 \end{code}
 }
+
 The semantic box modality \F{■} is right adjoint to context
 weakening \F{⇑}. In other words, the types \F{Tm} (\F{⇑} \Ar{Γ})
 \Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
