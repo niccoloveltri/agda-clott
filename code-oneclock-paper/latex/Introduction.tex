@@ -1,6 +1,6 @@
 Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Coq, Agda, and Lean \cite{norell}.  It is a total language,
+as Coq, Agda \cite{norell} and Lean.  It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
@@ -28,7 +28,7 @@ at the level of types: sized types and guarded recursion. A sized type
 elements of this type can undergo \cite{Hughes96}. Sized types have been implemented
 in Agda and can be used in
 combination with coinductive records to specify
-coinductive types \cite{Copatterns,AVW-normalization,norell}.  Guarded recursion \cite{Nakano}
+coinductive types \cite{Copatterns,AVW-normalization}.  Guarded recursion \cite{Nakano}
 is a different approach where the type system is enhanced with a
 modality, called ``later'' and written \IC{▻}, encoding time delay in
 types. The later modality comes with a general fixpoint combinator for
