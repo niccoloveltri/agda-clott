@@ -306,7 +306,7 @@ mutual
   ⟦ unbox {Γ} {A} t ⟧tm = sem-unbox ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦ next {Γ} {A} t ⟧tm = sem-next ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦ _⊛_ {Γ} {A} {B} f t ⟧tm = fmap ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ B ⟧A ⟦ f ⟧tm ⟦ t ⟧tm
-  ⟦ fix {Γ} {A} f ⟧tm = sem-fix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
+  ⟦ dfix {Γ} {A} f ⟧tm = sem-dfix ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ f ⟧tm
   ⟦ force {Γ} {A} t ⟧tm = sem-force ⟦ Γ ⟧Γ ⟦ A ⟧A ⟦ t ⟧tm
   ⟦_⟧tm {∅} {Γ} (cons P t) z = consset' P P (⟦ t ⟧tm z)
   ⟦_⟧tm {κ} {Γ} (cons P t) = conspsh P P Γ ⟦ t ⟧tm

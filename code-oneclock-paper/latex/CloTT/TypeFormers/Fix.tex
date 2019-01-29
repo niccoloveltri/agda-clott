@@ -65,7 +65,7 @@ The use of \F{SizeLt} is therefore crucial in the definition of \F{dfix₁} sinc
 We omit the construction of the \Fi{►com} component of \F{dfix₁} \Ar{A i f}, which also requires the usage of \F{elimLt} for acceptance by the termination checker.
 We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f}.
 \begin{code}%
-\>[0]\AgdaFunction{dfix₁}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -86,7 +86,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaBound{i}\<%
 \\
 \>[0]\AgdaField{►cone}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
@@ -97,7 +97,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\<%
@@ -105,7 +105,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaField{►com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
@@ -128,7 +128,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{))}\<%
@@ -139,7 +139,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
@@ -153,7 +153,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{))}\<%
@@ -175,7 +175,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \>[4]\AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\<%
@@ -185,7 +185,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \end{code}
 }
 \begin{code}%
-\>[0]\AgdaFunction{dfix}\AgdaSpace{}%
+\>[0]\AgdaFunction{sem{-}dfix}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -210,14 +210,14 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaField{nat{-}map}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{γ}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
@@ -228,7 +228,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaField{nat{-}com}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\AgdaSpace{}%
@@ -247,7 +247,7 @@ We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f
 \AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{))}\AgdaSpace{}%
@@ -298,7 +298,7 @@ function \AB{f} to \F{dfix} \Ar{Γ A f}.
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{dfix}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{sem{-}dfix}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSymbol{)}\<%

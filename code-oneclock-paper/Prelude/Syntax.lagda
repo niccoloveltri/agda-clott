@@ -196,9 +196,9 @@ The fixpoint combinator \IC{fix} allows defining productive recursive programs.
 \begin{code}
     next : {Γ : Ctx κ} {A : Ty κ} → Tm Γ A → Tm Γ (▻ A)
     _⊛_ : {Γ : Ctx κ} {A B : Ty κ} → Tm Γ (▻ (A ⟶ B)) → Tm Γ (▻ A) → Tm Γ (▻ B)
-    fix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ A
+    dfix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ (▻ A)
 \end{code}
-
+%     fix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ A
 We have introduction and elimination
 rules for the \IC{□} modality. The rule \IC{box} is the analogue in \GTT\ of 
 Atkey and McBride's rule for clock abstraction
@@ -401,6 +401,10 @@ weaken⟶ A B =
   lambda (lambda
            (sub (up ((wk (var • (A ⟶ B))) $ (var (• , (A ⟶ B)) A)))
                 (,⇡ (• , (A ⟶ B)) A ∘ upA (⇡ A) (,⇡ • (A ⟶ B) ∘ upA (⇡ (A ⟶ B)) •⇡))))
+
+fix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ A
+fix f = f $ dfix f
+
 {-
 subst-μ-help : ∀ {Δ} (Γ : Ctx Δ) (A B : Ty Δ)
   → Sub (Γ , (A ⊠ B)) (Γ , A)
@@ -467,7 +471,7 @@ other's inverses.
     cong-unbox : {Γ : Ctx ∅} {A : Ty κ} {t₁ t₂ : Tm Γ (□ A)} → t₁ ∼ t₂ → unbox t₁ ∼ unbox t₂
     cong-next : {Γ : Ctx κ} {A : Ty κ} {t₁ t₂ : Tm Γ A} → t₁ ∼ t₂ → next t₁ ∼ next t₂
     cong-_⊛_ : {Γ : Ctx κ} {A B : Ty κ} {t₁ t₂ : Tm Γ (▻ (A ⟶ B))} {u₁ u₂ : Tm Γ (▻ A)} → t₁ ∼ t₂ → u₁ ∼ u₂ → t₁ ⊛ u₁ ∼ t₂ ⊛ u₂
-    cong-fix  : {Γ : Ctx κ} {A : Ty κ} {t₁ t₂ : Tm Γ (▻ A ⟶ A)} → t₁ ∼ t₂ → fix t₁ ∼ fix t₂
+    cong-dfix  : {Γ : Ctx κ} {A : Ty κ} {t₁ t₂ : Tm Γ (▻ A ⟶ A)} → t₁ ∼ t₂ → dfix t₁ ∼ dfix t₂
     cong-force : {Γ : Ctx ∅} {A : Ty κ} {t₁ t₂ : Tm Γ (□(▻ A))} → t₁ ∼ t₂ → force t₁ ∼ force t₂
     cong-cons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} {t₁ t₂ : Tm Γ (eval P (μ P))} → t₁ ∼ t₂ → cons P t₁ ∼ cons P t₂
     cong-primrec : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A : Ty Δ} {t₁ t₂ : Tm Γ (eval P (μ P ⊠ A) ⟶ A)}
@@ -507,8 +511,8 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
     next-⊛ : {Γ : Ctx κ} {A B : Ty κ} (f : Tm Γ (A ⟶ B)) (t : Tm Γ A) → next f ⊛ next t ∼ next (f $ t)
     next-λ : {Γ : Ctx κ} {A B : Ty κ} (f : Tm Γ (▻ (A ⟶ B))) (t : Tm Γ A)
       → f ⊛ next t ∼ next (lambda ((var _ _) $ (wk t))) ⊛ f
-    fix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) → fix f ∼ f $ (next (fix f))
-    fix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ A) → f $ (next u) ∼ u → fix f ∼ u
+    dfix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) → dfix f ∼ next (f $ dfix f) --f $ (next (fix f))
+    dfix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ (▻ A)) → next (f $ u) ∼ u → dfix f ∼ u
     primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A : Ty Δ} (t : Tm Γ (eval P (μ P ⊠ A) ⟶ A)) (a : Tm Γ (eval P (μ P)))
       → (primrec P t) $ (cons P a) ∼ t $ ((Pmap P (pairmap (idmap (μ P)) (primrec P t))) $ a)
       --app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
@@ -536,8 +540,8 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
       → sub (next t) s ∼ next (sub t s)
     sub-⊛ : {Γ₁ Γ₂ : Ctx κ} {A B : Ty κ} (f : Tm Γ₁ (▻ (A ⟶ B))) (t : Tm Γ₁ (▻ A)) (s : Sub Γ₂ Γ₁)
       → sub (f ⊛ t) s ∼ (sub f s) ⊛ (sub t s)
-    sub-fix : {Γ₁ Γ₂ : Ctx κ} {A : Ty κ} (f : Tm Γ₁ (▻ A ⟶ A)) (s : Sub Γ₂ Γ₁)
-      → sub (fix f) s ∼ fix (sub f s)
+    sub-dfix : {Γ₁ Γ₂ : Ctx κ} {A : Ty κ} (f : Tm Γ₁ (▻ A ⟶ A)) (s : Sub Γ₂ Γ₁)
+      → sub (dfix f) s ∼ dfix (sub f s)
     sub-force : {Γ₁ Γ₂ : Ctx ∅} {A : Ty κ} (t : Tm Γ₁ (□(▻ A))) (s : Sub Γ₂ Γ₁)
       → sub (force t) s ∼ force (sub t s)
     sub-□const : {Γ₁ Γ₂ : Ctx ∅} (A : Ty ∅) (s : Sub Γ₂ Γ₁)

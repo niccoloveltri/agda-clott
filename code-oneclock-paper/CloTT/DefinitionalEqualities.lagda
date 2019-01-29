@@ -89,26 +89,32 @@ sem-next-λ : {Γ : Ctx κ} {A B : Ty κ} (f : Tm Γ (▻ (A ⟶ B))) (t : Tm Γ
   → def-eq ⟦ Γ ⟧Γ ⟦ ▻ B ⟧A ⟦ f ⊛ next t ⟧tm ⟦ next (lambda ((var _ _) $ (wk t))) ⊛ f ⟧tm
 sem-next-λ {Γ} f t i x = ►eq (λ { j → cong (λ z → fun (►cone (nat-map ⟦ f ⟧tm i x) [ j ]) j (nat-map ⟦ t ⟧tm j z)) (sym (MorId ⟦ Γ ⟧Γ))})
 
-dfix-eq : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A))
-  → def-eq {κ} Γ (► A) (dfix Γ A f) (sem-next Γ A (sem-fix Γ A f))
-dfix-eq Γ A f i γ = ►eq (λ {j → cong (λ a → fun a j (dfix₁ A j a)) (nat-com f i j γ)})
+sem-dfix-eq : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A))
+  → def-eq {κ} Γ (► A) (sem-dfix Γ A f) (sem-next Γ A (sem-fix Γ A f))
+sem-dfix-eq Γ A f i γ = ►eq (λ {j → cong (λ a → fun a j (sem-dfix₁ A j a)) (nat-com f i j γ)})
 
-fix-eq : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A))
-  → def-eq Γ A
-           (sem-fix Γ A f)
-           (sem-app-map Γ (► A) A f (sem-next Γ A (sem-fix Γ A f)))
-fix-eq Γ A f i x = cong (fun (nat-map f i x) i) (dfix-eq Γ A f i x)
+sem-dfix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A))
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A
+           ⟦ dfix f ⟧tm
+           ⟦ next (f $ dfix f) ⟧tm
+sem-dfix-f f = sem-dfix-eq _ _ ⟦ f ⟧tm
 
-sem-fix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A))
-  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
-           ⟦ fix f ⟧tm
-           ⟦ f $ (next (fix f)) ⟧tm
-sem-fix-f f = fix-eq _ _ ⟦ f ⟧tm
+--fix-eq : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A))
+--  → def-eq Γ A
+--           (sem-fix Γ A f)
+--           (sem-app-map Γ (► A) A f (sem-next Γ A (sem-fix Γ A f)))
+--fix-eq Γ A f i x = cong (fun (nat-map f i x) i) (dfix-eq Γ A f i x)
 
-dfix-un : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) (u : SemTm Γ A) (i : Size) (x : Obj Γ i)
-  → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
-  → dfix₁ A i (nat-map f i x) ≡ nat-map (sem-next Γ A u) i x
-dfix-un Γ A z₁ z₂ i x r =
+--sem-fix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A))
+--  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
+--           ⟦ fix f ⟧tm
+--           ⟦ f $ (next (fix f)) ⟧tm
+--sem-fix-f f = fix-eq _ _ ⟦ f ⟧tm
+
+sem-dfix-un : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) (u : SemTm Γ (► A)) (i : Size) (x : Obj Γ i)
+  → def-eq Γ (► A) (sem-next Γ A (sem-app-map Γ (► A) A f u)) u
+  → sem-dfix₁ A i (nat-map f i x) ≡ nat-map u i x
+sem-dfix-un Γ A z₁ z₂ i x r = 
   let f = nat-map z₁ in
   let p = nat-com z₁ in
   let u = nat-map z₂ in
@@ -116,36 +122,57 @@ dfix-un Γ A z₁ z₂ i x r =
   ►eq'
   (funext (λ {[ j ] →
     begin
-      fun (f i x) j (dfix₁ A j (f i x))
-    ≡⟨ cong (λ z → fun z j (dfix₁ A j z)) (p i j x) ⟩
-      fun (f j (Mor Γ i j x)) j (dfix₁ A j (f j (Mor Γ i j x)))
-    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (dfix-un Γ A z₁ z₂ j (Mor Γ i j x) r) ⟩
+      fun (f i x) j (sem-dfix₁ A j (f i x))
+     ≡⟨ cong (λ z → fun z j (sem-dfix₁ A j z)) (p i j x) ⟩
+      fun (f j (Mor Γ i j x)) j (sem-dfix₁ A j (f j (Mor Γ i j x)))
+    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (sem-dfix-un Γ A z₁ z₂ j (Mor Γ i j x) r) ⟩
+      fun (f j (Mor Γ i j x)) j (u j (Mor Γ i j x))
+   ≡⟨ cong (λ a → ►cone a [ j ]) (r i x) ⟩
+      ►cone (u i x) [ j ]
+    ∎ }))
+{-    
+    begin
+      fun (f i x) j (sem-dfix₁ A j (f i x))
+    ≡⟨ cong (λ z → fun z j (sem-dfix₁ A j z)) (p i j x) ⟩
+      fun (f j (Mor Γ i j x)) j (sem-dfix₁ A j (f j (Mor Γ i j x)))
+    ≡⟨ cong (fun (f j (Mor Γ i j x)) j) (sem-dfix-un Γ A z₁ z₂ j (Mor Γ i j x) r) ⟩
       fun (f j (Mor Γ i j x)) j (nat-map (sem-next Γ A z₂) j (Mor Γ i j x))
     ≡⟨ r j (Mor Γ i j x) ⟩
       u j (Mor Γ i j x)
     ∎
     }))
+-}
 
-fix-un : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) (u : SemTm Γ A)
-  → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
-  → def-eq Γ A (sem-fix Γ A f) u
-fix-un Γ A f u p i x =
-  begin
-    nat-map (sem-fix Γ A f) i x
-  ≡⟨ cong (λ z → fun (nat-map f i x) i z) (dfix-un Γ A f u i x p) ⟩
-    nat-map (sem-app-map Γ (► A) A f (sem-next Γ A u)) i x
-  ≡⟨ p i x ⟩
-    nat-map u i x
-  ∎
+sem-dfix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ (▻ A))
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A
+           ⟦ next (f $ u) ⟧tm
+           ⟦ u ⟧tm
+  → def-eq ⟦ Γ ⟧Γ ⟦ ▻ A ⟧A
+           ⟦ dfix f ⟧tm
+           ⟦ u ⟧tm
+sem-dfix-u f u p i x = sem-dfix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm i x p
 
-sem-fix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ A)
-  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
-           ⟦ f $ (next u) ⟧tm
-           ⟦ u ⟧tm
-  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
-           ⟦ fix f ⟧tm
-           ⟦ u ⟧tm
-sem-fix-u f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
+--fix-un : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) (u : SemTm Γ A)
+--  → def-eq Γ A (sem-app-map Γ (► A) A f (sem-next Γ A u)) u
+--  → def-eq Γ A (sem-fix Γ A f) u
+--fix-un Γ A f u p i x =
+--  begin
+--    nat-map (sem-fix Γ A f) i x
+--  ≡⟨ cong (λ z → fun (nat-map f i x) i z) (sem-dfix-un Γ A f u i x p) ⟩
+--    nat-map (sem-app-map Γ (► A) A f (sem-next Γ A u)) i x
+--  ≡⟨ p i x ⟩
+--    nat-map u i x
+--  ∎
+
+
+--sem-fix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ A)
+--  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
+--           ⟦ f $ (next u) ⟧tm
+--           ⟦ u ⟧tm
+--  → def-eq ⟦ Γ ⟧Γ ⟦ A ⟧A
+--           ⟦ fix f ⟧tm
+--           ⟦ u ⟧tm
+--sem-fix-u f u p = fix-un _ _ ⟦ f ⟧tm ⟦ u ⟧tm p
 
 sem-sub-idl : {Δ : ClockCtx} {Γ Γ' : Ctx Δ} (s : Sub Γ Γ') → subst-eq _ _ ⟦ id Γ' ∘ s ⟧sub ⟦ s ⟧sub
 sem-sub-idl {∅} s x = refl
@@ -314,7 +341,7 @@ mutual
   ⟦ cong-unbox p ⟧tm-eq i x = cong (λ z → ■cone z i) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq (cong-next {Γ = Γ} p) i x = ►eq (λ{ j → ⟦ p ⟧tm-eq j (Mor ⟦ Γ ⟧Γ i j x) })
   ⟦_⟧tm-eq (cong- p ⊛ q) i x = ►eq (λ{ j → cong₂ (λ a b → fun (►cone a [ j ]) j (►cone b [ j ])) (⟦ p ⟧tm-eq i x) (⟦ q ⟧tm-eq i x)})
-  ⟦_⟧tm-eq (cong-fix {A = A} p) i x = cong (λ z → fun z i (dfix₁ ⟦ A ⟧A i z)) (⟦ p ⟧tm-eq i x)
+  ⟦_⟧tm-eq (cong-dfix {A = A} p) i x = cong (sem-dfix₁ ⟦ A ⟧A i) (⟦ p ⟧tm-eq i x)
   ⟦ cong-force {Γ} {A} {t₁} {t₂} p ⟧tm-eq x = ■eq (λ i → cong (λ z → ►cone (■cone z ∞) [ i ]) (⟦ p ⟧tm-eq x))
   ⟦_⟧tm-eq {∅} (cong-cons p) x = cong (consset' _ _) (⟦ p ⟧tm-eq x)
   ⟦_⟧tm-eq {κ} (cong-cons p) i x = cong (cons₁' _ _ i) (⟦ p ⟧tm-eq i x)
@@ -337,8 +364,8 @@ mutual
   ⟦ next-comp g f t ⟧tm-eq = sem-next-comp g f t
   ⟦ next-⊛ f t ⟧tm-eq = sem-next-⊛ f t
   ⟦ next-λ f t ⟧tm-eq = sem-next-λ f t
-  ⟦ fix-f f ⟧tm-eq = sem-fix-f f
-  ⟦ fix-u f u p ⟧tm-eq = sem-fix-u f u ⟦ p ⟧tm-eq
+  ⟦ dfix-f f ⟧tm-eq = sem-dfix-f f
+  ⟦ dfix-u f u p ⟧tm-eq = sem-dfix-u f u ⟦ p ⟧tm-eq
   ⟦_⟧tm-eq {∅} (primrec-cons P t a) x = cong (⟦ t ⟧tm x) (sem-primrec-set P P _ _ t x (⟦ a ⟧tm x))
   ⟦_⟧tm-eq {κ} (primrec-cons P t a) i x = cong (fun (nat-map ⟦ t ⟧tm i x) i) (sem-primrec-psh P P _ _ t i x i (nat-map ⟦ a ⟧tm i x))
   ⟦_⟧tm-eq {∅} (sub-id t) x = refl
@@ -360,7 +387,7 @@ mutual
   ⟦_⟧tm-eq {.∅} (sub-box t s) x = ■eq (λ _ → refl)
   ⟦_⟧tm-eq {.κ} (sub-next t s) i x = ►eq (λ { j → cong (nat-map ⟦ t ⟧tm j) (nat-com ⟦ s ⟧sub i j x)})
   ⟦_⟧tm-eq {.κ} (sub-⊛ f t s) i x = ►eq (λ {_ → refl})
-  ⟦_⟧tm-eq {.κ} (sub-fix f s) i x = refl
+  ⟦_⟧tm-eq {.κ} (sub-dfix f s) i x = refl
   ⟦ sub-force t s ⟧tm-eq x = refl
   ⟦ sub-□const A s ⟧tm-eq x = refl
   ⟦ sub-□sum A B s ⟧tm-eq x = refl

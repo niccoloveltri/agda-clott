@@ -11,13 +11,20 @@ open PSh
 \end{code}
 }
 
-Ideally, we would like to define the object part of the semantic later modality \F{►} as the following limit: 
+Ideally, we would like to define the object part of the semantic later modality \F{►} as a limit in the following way:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
     ►cone : (j : Size< i) → Obj A j
     ►com : (j : Size< i) (k : Size< (↑ j)) → Mor A j k (►cone j) ≡ ►cone k
 \end{code}
+Notice that the usual recursive definition of the later modality in
+the topos of trees \cite{BMSS-synthetic} is equivalent to
+$(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore \F{
+►ObjTry} can be seen as an adaptation of this construction to our
+setting. Nevertheless, using this definition, we have not been able to
+implement a terminating semantic fixpoint combinator.
+
 
 We now provide a semantic description of the later modality. This is
 an operation on types in the \IC{κ} clock context. 

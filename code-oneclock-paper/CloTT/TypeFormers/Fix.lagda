@@ -32,28 +32,28 @@ The use of \F{SizeLt} is therefore crucial in the definition of \F{dfix₁} sinc
 We omit the construction of the \Fi{►com} component of \F{dfix₁} \Ar{A i f}, which also requires the usage of \F{elimLt} for acceptance by the termination checker.
 We also omit the definition of the \Fi{nat-com} component of \F{dfix} \Ar{Γ A f}.
 \begin{code}
-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
-►cone (dfix₁ A i f) [ j ] = fun f j (dfix₁ A j f)
+sem-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
+►cone (sem-dfix₁ A i f) [ j ] = fun f j (sem-dfix₁ A j f)
 \end{code}
 \AgdaHide{
 \begin{code}
-►com (dfix₁ A i f) [ j ] [ k ] =
+►com (sem-dfix₁ A i f) [ j ] [ k ] =
   begin
-    Mor A j k (fun f j (dfix₁ A j f))
-  ≡⟨ funcom f j k (dfix₁ A j f) ⟩
-    fun f k (►Mor A j k (dfix₁ A j f))
+    Mor A j k (fun f j (sem-dfix₁ A j f))
+  ≡⟨ funcom f j k (sem-dfix₁ A j f) ⟩
+    fun f k (►Mor A j k (sem-dfix₁ A j f))
   ≡⟨ cong (fun f k) (►eq (λ {_ → refl})) ⟩
-    fun f k (dfix₁ A k f)
+    fun f k (sem-dfix₁ A k f)
   ∎
 \end{code}
 }
 \begin{code}
-dfix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ (► A)
-nat-map (dfix Γ A f) i γ = dfix₁ A i (nat-map f i γ)
+sem-dfix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ (► A)
+nat-map (sem-dfix Γ A f) i γ = sem-dfix₁ A i (nat-map f i γ)
 \end{code}
 \AgdaHide{
 \begin{code}
-nat-com (dfix Γ A f) i j γ = ►eq (λ {k → cong (λ a → fun a k (dfix₁ A k a)) (nat-com f i j γ)})
+nat-com (sem-dfix Γ A f) i j γ = ►eq (λ {k → cong (λ a → fun a k (sem-dfix₁ A k a)) (nat-com f i j γ)})
 \end{code}
 }
 The semantic fixed point operation is obtained by applying the
@@ -64,6 +64,6 @@ sem-fix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm
 
 \AgdaHide{
 \begin{code}
-sem-fix Γ A f = sem-app-map Γ (► A) A f (dfix Γ A f)
+sem-fix Γ A f = sem-app-map Γ (► A) A f (sem-dfix Γ A f)
 \end{code}
 }
