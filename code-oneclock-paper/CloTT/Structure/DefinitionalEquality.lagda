@@ -15,8 +15,8 @@ open NatTrans
 \end{code}
 }
 
-Equality of terms and substitutions is defined as propositional equality.
-Since we assume both function extensionality and UIP, we can formulate this in a more convenient way.
+Equality of semantic terms and substitutions is defined as propositional equality.
+%Since we assume both function extensionality and UIP, we can formulate this in a more convenient way.
 
 \AgdaHide{
 \begin{code}

@@ -12,7 +12,7 @@ open ExpObj
 open NatTrans
 \end{code}
 }
-In the remainder, we use the interpretation of function types.
+In the next section we will use the interpretation of function types.
 This is denoted by \AB{A} \F{⇒} \AB{B} for types \AB{A} and \AB{B}.
 
 \AgdaHide{

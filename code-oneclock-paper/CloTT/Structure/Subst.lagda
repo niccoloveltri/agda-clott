@@ -16,7 +16,7 @@ open NatTrans
 }
 
 Since \GTT\ is a type theory with explicit substitutions, we must provide an interpretation for them as well.
-Semantic substitutions are maps between contexts and we define the type \F{SemSub} the same way as \F{SemTm}.
+Semantic substitutions are maps between contexts and we define the type \F{SemSub} in the same way as \F{SemTm}.
 \AgdaHide{
 \begin{code}
 SemSub : {Δ : ClockCtx} → SemCtx Δ → SemCtx Δ → Set

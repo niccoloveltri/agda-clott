@@ -13,7 +13,7 @@ open PSh
 
 The semantic terms of type $A$ in context $\Gamma$ are functions from $\Gamma$ to $A$ if the clock context is empty, otherwise they are natural transformations between $\Gamma$ and $A$.
 %% Again we need to distinguish two cases, because morphisms between sets are something different than morphisms between presheaves.
-%% For sets, we just use functions.
+%% For sets, we just use functions. 
 %% For presheaves, we use natural transformations instead.
 \begin{code}
 SemTm : {Δ : ClockCtx} (Γ : SemCtx Δ) (A : SemTy Δ) → Set
