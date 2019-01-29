@@ -19,7 +19,7 @@ variables ∀, which is used in combination with ▻ for the specification of co
 
 \GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
 well-formed types and contexts, well-typed terms and substitutions,
-definitional equality of terms and of substitutions. All them depend on a clock context.
+definitional equality of terms and of substitutions. All of them depend on a clock context.
 In \GTT, the clock context can either be empty or contain a single clock \IC{κ}.
 
 %% We now give a description of the object type theory. This is a simple
@@ -33,17 +33,13 @@ In \GTT, the clock context can either be empty or contain a single clock \IC{κ}
 data ClockCtx : Set where
   ∅ κ : ClockCtx
 \end{code}
-
-
 %% Moreover we employ explicit substitutions \cite{AbadiCCL91}, so on top of the usual we
 %% define four sorts
-
 \AgdaHide{
 \begin{code}
 mutual
 \end{code}
 }
-
 We refer to types and contexts in the empty clock context as \IC{∅}-types and
 \IC{∅}-contexts respectively. Similarly, we talk about \IC{κ}-types and
 \IC{κ}-contexts for types and contexts if they depend on \IC{κ}.
@@ -194,7 +190,7 @@ in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, i
 \end{code}
 }
 
-The later modality is required to be an applicative functor, which means we have terms \IC{next} and \IC{⊛}.
+The later modality is required to be an applicative functor, which means that we have terms \IC{next} and \IC{⊛}.
 The fixpoint combinator \IC{fix} allows defining productive recursive programs. 
 \begin{code}
     next : {Γ : Ctx κ} {A : Ty κ} → Tm Γ A → Tm Γ (▻ A)
@@ -240,7 +236,7 @@ isomorphisms. For example, the clock irrevelance axiom formulated in our setting
 We can define a function \F{const□} \Ar{A} in the other direction.
 In the definitional equality on terms, described in Section \ref{sec:defeq}, we
 ask for \IC{□const} and \F{const□} to be each other inverses.
-The other type isomorphisms are done similarly.
+The other type isomorphisms are constructed in a similar way.
 \AgdaHide{
 \begin{code}
     □sum : {Γ : Ctx ∅} (A B : Ty κ)
@@ -254,7 +250,7 @@ The other type isomorphisms are done similarly.
 
 \subsection{Substitutions}
 For substitutions, we need the canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
-substitution, the empty substitution, the extension with an additional term and the projection which forgets the last term.
+substitutions, the empty substitution, the extension with an additional term and the projection which forgets the last term.
 \begin{code}
   data Sub : ∀ {Δ} → Ctx Δ → Ctx Δ → Set where
     ε : ∀ {Δ} (Γ : Ctx Δ) → Sub Γ •
@@ -281,7 +277,6 @@ needs to be isomorphic to \IC{⇡} \Ar{Γ} \IC{,} \IC{⇡}
     ,⇡ : (Γ : Ctx ∅) (A : Ty ∅) → Sub (⇡ Γ , ⇡ A) (⇡ (Γ , A))
 \end{code}
 \end{AgdaAlign}
-
 It is possible to define an element \F{⇡•} in \F{Sub}
 (\IC{⇡ •}) \IC{•}. In the definitional
 equality on substitutions, we ask for \IC{•⇡} and
@@ -554,7 +549,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of equal
 \end{code}
 }
 
-For the type isomorphisms, we need term equalities which exhibit that certain maps are inverses.
+For the type isomorphisms, we need term equalities which exhibit that certain maps are inverses of each other.
 For example, we have the following two equalities about \IC{□const} and \F{const□}:
 
 \begin{code}
@@ -563,7 +558,7 @@ For example, we have the following two equalities about \IC{□const} and \F{con
 \end{code}
 
 The last group of term equalities describes the relationship between the
-weakening operations \IC{up} and \IC{down} and other term constructors. Here we omit the description of them, and we refer the
+weakening operations \IC{up} and \IC{down} and other term constructors. Here we omit their description and we refer the
 interested reader to the Agda formalization.
 \AgdaHide{
 \begin{code}
