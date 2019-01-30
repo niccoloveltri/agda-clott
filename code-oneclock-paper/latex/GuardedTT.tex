@@ -50,11 +50,10 @@
 \end{code}
 }
 
-Now let us put everything together and define interpretations of the syntax defined in \Cref{sec:syntax}.
-To give an interpretation, one must give a type of types, contexts, terms, substitutions, and functions mapping the syntactic objects to their interpretations.
-In addition, definitional equality and equality between terms must be interpreted and for that, we use setoids.
-This means that a relation on terms must be given, which includes the relation \D{∼} as defined in \Cref{sec:syntax}, and the same must be done for substitutions.
-We define this as a record, whose type declaration is given as
+Now let us put everything together and define the notion of an interpretation of \GTT.
+To give an interpretation, one must give a type of semantical types, contexts, terms, substitutions, and functions mapping the syntactic objects to their semantical counterparts.
+In addition, definitional equality is interpreted as a relation on terms which includes the relation \D{∼} defined in \Cref{sec:syntax}, and the same is be done for substitutions.
+We define a record containing all this data, whose type declaration is given as
 
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
@@ -303,8 +302,9 @@ We define this as a record, whose type declaration is given as
 }
 
 If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{t}.
-The main example is the syntax itself.
+The primary example is the syntax itself.
 Types, contexts, substitutions, terms, and so on are interpreted by themselves.
+This gives rise to the initial interpretation.
 
 \AgdaHide{
 \begin{code}%
@@ -389,8 +389,9 @@ Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 \end{code}
 }
 
-We can also interpret the syntax using \Cref{sec:presheaf_sem,sec:guarded}.
-This gives categorical semantics of the syntax and we define it as follows.
+We also define categorical semantics of the syntax by using the material in \Cref{sec:presheaf_sem,sec:guarded}.
+Types and contexts are interpreted as presheaves, and terms are interpreted as natural transformations.
+Formally, we define an interpretation \F{sem}.
 
 \begin{code}%
 \>[0]\AgdaFunction{sem}\AgdaSpace{}%
@@ -466,10 +467,10 @@ This gives categorical semantics of the syntax and we define it as follows.
 \end{code}
 }
 
-Using this semantics, we can conclude the syntax is consistent.
-Briefly, consistency means that not every defitional equality holds.
+Now we show that the syntax is consistent.
+Consistency means that not every defitional equality holds.
 For this, we define a type \F{bool} : \F{Ty} \IC{∅} by \IC{𝟙 ⊞ 𝟙} and two terms \F{TRUE} and \F{FALSE} by \IC{in₁ 𝟙 tt} and \IC{in₂ 𝟙 tt} respectively.
-More precisely, an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
+Now we say that an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
 
 \AgdaHide{
 \begin{code}%
@@ -589,11 +590,10 @@ More precisely, an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do n
 \end{code}
 }
 
-The categorical semantics gives rises to a consistent interpretation of the syntax.
-For this, we use that \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the unique constructor of \AD{⊤}, so we get
-Now we conclude that the initial interpretation and thus the syntax is consistent.
-If we would have a definitional equality between \AF{TRUE} and \AF{FALSE}, then we could interpret that equality in \AF{sem}.
-Since the latter is a contradiction, the former is so too.
+Note that the categorical semantics gives rises to a consistent interpretation of the syntax, because \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the constructor of \AD{⊤}.
+From this, we conclude that the initial interpretation is consistent.
+This is because whenever we have a definitional equality between \AF{TRUE} and \AF{FALSE}, we could interpret that equality in \AF{sem}.
+Since the latter leads to a contradiction, the former does so too.
 All in all, we get
 
 \begin{code}%
