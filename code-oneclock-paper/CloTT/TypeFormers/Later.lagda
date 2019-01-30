@@ -13,23 +13,23 @@ open PSh
 
 We now provide a semantic description of the later modality. This is
 an operation on semantic \IC{κ}-types.
-Ideally, we would like to define the object part of the semantic later modality \F{►} as the following limit:
+Recall that the usual definition of the later modality in
+the topos of trees \cite{BMSS-synthetic} is equivalent to
+$(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
+Adapting this definition to our setting, would lead to the following definition
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
     ►cone : (j : Size< i) → Obj A j
     ►com : (j : Size< i) (k : Size< (↑ j)) → Mor A j k (►cone j) ≡ ►cone k
 \end{code}
-Notice that the usual recursive definition of the later modality in
-the topos of trees \cite{BMSS-synthetic} is equivalent to
-$(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore, \F{
-►ObjTry} is an adaptation of this construction to our
-setting. Nevertheless, with this definition, we would have been unable to
-implement a terminating semantic fixpoint combinator. Later in this section we will discuss why this is the case.
+However, with this definition, we are unable to
+implement a terminating semantic fixpoint combinator.
+Later in this section we discuss why this is the case.
 
 There are several ways to modify the above definiton and implement a
-terminating fixpoint operation. A possible solution, which has been
-suggested to us by Andrea Vezzosi, consists in using an inductive analogue of the predicate \F{Size<}, that we call \F{SizeLt}.
+terminating fixpoint operation. A possible solution, which was
+suggested to us by Andrea Vezzosi, is using an inductive analogue of the predicate \F{Size<}, which we call \F{SizeLt}.
 %%solution to this problem 
 %%To solve this problem, we need a mechanism to suspend computations.
 %%For that, we define
@@ -41,10 +41,12 @@ suggested to us by Andrea Vezzosi, consists in using an inductive analogue of th
 data SizeLt (i : Size) : Set where
   [_] : Size< i → SizeLt i
 \end{code}
-The employment of \F{SizeLt} is a mechanism for suspending
-computations: if we define a function \Ar{f} of type (\Ar{j} :
+
+%The employment  \F{SizeLt} is a mechanism for suspending computations:
+The type \F{SizeLt} is a mechanism for suspending computations.
+If we define a function \Ar{f} of type (\Ar{j} :
 \F{SizeLt} \Ar{i}) \Ar{→} \Fi{Obj} \Ar{A j} by pattern matching, then
-\Ar{f j} does not compute unless \Ar{j} is of the form \IC{[} \Ar{j'}
+\Ar{f j} does not reduce unless \Ar{j} is of the form \IC{[} \Ar{j'}
 \IC{]} for some \Ar{j'} : \F{Size<} \Ar{i}. This simple observation
 turns out to be essential for a terminating implementation of the
 fixpoint combinator.
@@ -55,22 +57,24 @@ fixpoint combinator.
 %%Such definitions can only be unfolded after inspecting the element, which suspends the computation.
 %%This is essential for defining guarded recursion.
 
-From an inhabitant of \AD{SizeLt} we can obtain an actual size by
+From an inhabitant of \AD{SizeLt}, we obtain an actual size by
 pattern matching.
 %Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
 \begin{code}
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
 \end{code}
-Every function with domain \F{SizeLt} \Ar{i} can be specified in terms of a function with domain \F{Size<} \Ar{i}.
+Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified in terms of functions with domain \F{Size<} \Ar{i}.
 \begin{code}
 elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
   → (j : SizeLt i) → A (size j)
 elimLt f [ j ] = f j
 \end{code}
 
-We can  define the object part of the semantic later modality similarly to
-\AD{►ObjTry} but using \F{SizeLt} in place of \F{Size<}. Practically, we introduce a couple of auxiliary functions that will become handy when modelling guarded recursive types in Section \ref{sec:grt}. The first is the function \F{Later}. It takes a sized type as its input, not a semantic \IC{κ}-type. Otherwise its definition is the same as the type of the field \IC{►cone} in \AD{►ObjTry} with \F{Size<} replaced by \F{SizeLt}.
+We define the object part of the semantic later modality similarly to \AD{►ObjTry} but with \F{SizeLt} in place of \F{Size<}.
+Before we do so, we introduce two auxiliary functions, which turn out to be handy when modelling guarded recursive types.
+The first is a function \F{Later}, which instead of a semantic \IC{κ}-type, takes a sized type as its input.
+Its definition is the same as the type of the field \AFi{►cone} in \AD{►ObjTry} but with \F{Size<} replaced by \F{SizeLt}.
 %, and again we use a record for the definition.
 %The first field is represented by the type \F{Later}.
 %On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
@@ -78,7 +82,8 @@ We can  define the object part of the semantic later modality similarly to
 Later : (Size → Set) → Size → Set
 Later A i = (j : SizeLt i) → A (size j)
 \end{code}
-The second auxiliary function is \F{LaterLim}. It takes as its input a sized type \Ar{A} together with a proof that it is antitone, not a semantic \IC{κ}-type. Otherwise its definition is the same as the type of the field \IC{►com} in \AD{►ObjTry} with \F{Size<} replaced by \F{SizeLt} and with two applications of \F{elimLt}.
+
+The second auxiliary function is \F{LaterLim}. It takes as input a sized type \Ar{A} together with a proof that it is antitone. Again its definition is the same as the type of the field \AFi{►com} in \AD{►ObjTry} but with two applications of \F{elimLt} and \F{Size<} replaced by \F{SizeLt}.
 \begin{code}
 LaterLim : (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
   → (i : Size) (x : Later A i) → Set

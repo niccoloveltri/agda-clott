@@ -64,12 +64,15 @@ construction of the semantic fixpoint operation in Section
 \ref{sec:later}.}
 There is a successor operation \F{↑} on sizes and a size \F{∞} such that \AB{i} : \AD{Size<} \F{∞} for all
 \AB{i}.
+Lastly, we define a sized type to be a type indexed by \AD{Size}.
 \remove{A sized type \Ar{A} is an inhabitant of \AD{Size} \Ar{→}
 \AD{Set} and \Ar{A i} consists of elements of \Ar{A} which can be
 subjected to \Ar{i}-many observations. In particular, elements of
 \Ar{A} \F{∞} can undergo an infinite number of observations.}
+\remove{
 Notice that \F{∞} also satisfies \F{∞} : \F{Size< ∞}, but we
 do not make use of this property in our development.
+}
 
 Combining sizes with coinductive records allows the definition of coinductive types
 \cite{Copatterns}. An example of this encoding can be found
