@@ -15,7 +15,7 @@ open ►Obj
 \end{code}
 }
 
-Finally we show the semantic description of the force operation.
+Finally, we give the interpretation of \AIC{force}.
 For this, we define an auxilliary function \AF{sem-force'}.
 Given a type \AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), our
 goal is to define an element of \F{■} \AB{A}.

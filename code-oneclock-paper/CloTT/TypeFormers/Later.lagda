@@ -11,25 +11,24 @@ open PSh
 \end{code}
 }
 
-Ideally, we would like to define the object part of the semantic later modality \F{►} as a limit in the following way:
+We now provide a semantic description of the later modality. This is
+an operation on types in the \IC{κ} clock context. 
+Ideally, we would like to define the object part of the semantic later modality \F{►} as the following limit:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
     ►cone : (j : Size< i) → Obj A j
     ►com : (j : Size< i) (k : Size< (↑ j)) → Mor A j k (►cone j) ≡ ►cone k
 \end{code}
+
 Notice that the usual recursive definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
-$(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore \F{
-►ObjTry} can be seen as an adaptation of this construction to our
-setting. Nevertheless, using this definition, we have not been able to
+$(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore, \F{
+►ObjTry} is an adaptation of this construction to our
+setting. Nevertheless, with this definition, we have been unable to
 implement a terminating semantic fixpoint combinator.
-
-
-We now provide a semantic description of the later modality. This is
-an operation on types in the \IC{κ} clock context. 
-For this, we first define a mechanism to suspend computations.
-
+To solve this problem, we need a mechanism to suspend computations.
+For that, we define
 %% Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
 %% available one time step ahead from now.  For this reason, the main
 %% ingredient of defining the later modality is blocking computations.
@@ -54,10 +53,9 @@ size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
 \end{code}
 
-The type \AD{►} \AB{A} is also defined as a limit.
-On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
-Again we use a record for the definition.
+The type \AD{►Obj} \AB{A} is defined similarly to \AD{►ObjTry} \AB{A}, and again we use a record for the definition.
 The first field is represented by the type \F{Later}.
+On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
 
 \begin{code}
 Later : (Size → Set) → Size → Set
@@ -95,7 +93,7 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
 }
 
 Now we put it all together and we obtain the following definition of the object part.
-In addition, we can define an action on the morphisms and show this preserves identity and composition.
+We can also define an action on the morphisms and show this preserves identity and composition.
 All in all, we get
 
 \begin{code}
