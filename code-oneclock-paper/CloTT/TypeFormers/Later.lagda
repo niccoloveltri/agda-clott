@@ -12,11 +12,11 @@ open PSh
 }
 
 We now provide a semantic description of the later modality. This is
-an operation on semantic \IC{κ}-types.
+an operation \F{►} on semantic \IC{κ}-types.
 Recall that the usual definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
-Adapting this definition to our setting, would lead to the following definition
+Adapting this to our setting would lead to the following definition:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
@@ -151,11 +151,11 @@ module _ (A : SemTy κ) where
   ►MorComp = ►eq (λ {j → refl})
 \end{code}
 }
-
+\AgdaHide{
 \begin{code}
 ► : SemTy κ → SemTy κ
 \end{code}
-
+}
 \AgdaHide{
 \begin{code}
 ► A = record

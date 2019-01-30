@@ -30,11 +30,11 @@
 }
 
 We now provide a semantic description of the later modality. This is
-an operation on semantic \IC{κ}-types.
+an operation \F{►} on semantic \IC{κ}-types.
 Recall that the usual definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
-Adapting this definition to our setting, would lead to the following definition
+Adapting this to our setting would lead to the following definition:
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{►ObjTry}\AgdaSpace{}%
@@ -713,7 +713,7 @@ Putting everything  together, we obtain the following definition of the object p
 \AgdaInductiveConstructor{refl}\AgdaSymbol{\})}\<%
 \end{code}
 }
-
+\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{►}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -723,7 +723,7 @@ Putting everything  together, we obtain the following definition of the object p
 \AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
-
+}
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{►}\AgdaSpace{}%
