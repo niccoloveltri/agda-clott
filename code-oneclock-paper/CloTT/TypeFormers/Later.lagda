@@ -25,7 +25,7 @@ Notice that the usual recursive definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore, \F{
 ►ObjTry} is an adaptation of this construction to our
-setting. Nevertheless, with this definition, we have been unable to
+setting. Nevertheless, with this definition, we would have been unable to
 implement a terminating semantic fixpoint combinator.
 To solve this problem, we need a mechanism to suspend computations.
 For that, we define

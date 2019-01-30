@@ -50,7 +50,7 @@
 \end{code}
 }
 We omit the semantic equivalents of the terms \IC{next} and \IC{⊛}.
-Instead, we describe the fixed point combinator \F{dfix}.
+Instead, we interpret the delayed fixpoint combinator \F{dfix}.
 The field \Fi{nat-map} of \F{sem-dfix} \Ar{Γ A f} depends on an auxiliary term \F{sem-dfix₁}, which for each size \Ar{i}, gives a map \F{ExpObj} (\F{►} \Ar{A}) \Ar{A i} → \F{►Obj} \Ar{A i}.
 
 We just show how to define the \Fi{►cone} field of \F{sem-dfix₁} \Ar{A i f}.
