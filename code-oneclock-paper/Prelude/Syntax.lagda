@@ -192,7 +192,7 @@ in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, i
 }
 
 The later modality is required to be an applicative functor, which means that we have terms \IC{next} and \IC{⊛}.
-The fixpoint combinator \IC{fix} allows defining productive recursive programs. 
+The delayed fixpoint combinator \IC{dfix} \cite{BahrGM17,BirkedalBCGSV16} allows defining productive recursive programs. The usual fixpoint returning a term in \Ar{A} instead of \IC{▻} \Ar{A} is derivable.
 \begin{code}
     next : {Γ : Ctx κ} {A : Ty κ} → Tm Γ A → Tm Γ (▻ A)
     _⊛_ : {Γ : Ctx κ} {A B : Ty κ} → Tm Γ (▻ (A ⟶ B)) → Tm Γ (▻ A) → Tm Γ (▻ B)

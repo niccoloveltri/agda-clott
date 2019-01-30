@@ -12,7 +12,7 @@ open PSh
 }
 
 We now provide a semantic description of the later modality. This is
-an operation on types in the \IC{κ} clock context. 
+an operation on semantic \IC{κ}-types.
 Ideally, we would like to define the object part of the semantic later modality \F{►} as the following limit:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
@@ -20,60 +20,65 @@ record ►ObjTry (A : SemTy κ) (i : Size) : Set where
     ►cone : (j : Size< i) → Obj A j
     ►com : (j : Size< i) (k : Size< (↑ j)) → Mor A j k (►cone j) ≡ ►cone k
 \end{code}
-
 Notice that the usual recursive definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. Therefore, \F{
 ►ObjTry} is an adaptation of this construction to our
 setting. Nevertheless, with this definition, we would have been unable to
-implement a terminating semantic fixpoint combinator.
-To solve this problem, we need a mechanism to suspend computations.
-For that, we define
+implement a terminating semantic fixpoint combinator. Later in this section we will discuss why this is the case.
+
+There are several ways to modify the above definiton and implement a
+terminating fixpoint operation. A possible solution, which has been
+suggested to us by Andrea Vezzosi, consists in using an inductive analogue of the predicate \F{Size<}, that we call \F{SizeLt}.
+%%solution to this problem 
+%%To solve this problem, we need a mechanism to suspend computations.
+%%For that, we define
 %% Intuitively, an element of type \F{►} \AB{A} is an element of \AB{A}
 %% available one time step ahead from now.  For this reason, the main
 %% ingredient of defining the later modality is blocking computations.
 %% This is done in several steps and first we define a type \AD{SizeLt}
-
 \begin{code}
 data SizeLt (i : Size) : Set where
-  [_] : (j : Size< i) → SizeLt i
+  [_] : Size< i → SizeLt i
 \end{code}
+The employment of \F{SizeLt} is a mechanism for suspending
+computations: if we define a function \Ar{f} of type (\Ar{j} :
+\F{SizeLt} \Ar{i}) \Ar{→} \Fi{Obj} \Ar{A j} by pattern matching, then
+\Ar{f j} does not compute unless \Ar{j} is of the form \IC{[} \Ar{j'}
+\IC{]} for some \Ar{j'} : \F{Size<} \Ar{i}. This simple observation
+turns out to be essential for a terminating implementation of the
+fixpoint combinator.
 
-Functions defined by lambda abstraction can always be unfolded via $\beta$-elimination if they have an input.
-However, functions defined by pattern matching only are unfolded if they input has the right shape.
-The type \AD{SizeLt} allows definitions via pattern matching.
-Such definitions can only be unfolded after inspecting the element, which suspends the computation.
-This is essential for defining guarded recursion.
+%%Functions defined by lambda abstraction can always be unfolded via $\beta$-elimination if they have an input.
+%%However, functions defined by pattern matching only are unfolded if they input has the right shape.
+%%The type \AD{SizeLt} allows definitions via pattern matching.
+%%Such definitions can only be unfolded after inspecting the element, which suspends the computation.
+%%This is essential for defining guarded recursion.
 
-From an inhabitant of \AD{SizeLt}, we can obtain an actual size.
-Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
-
+From an inhabitant of \AD{SizeLt} we can obtain an actual size by
+pattern matching.
+%Note that this size is only available when we know it is of the shape \IC{[} \AB{j} \IC{]}.
 \begin{code}
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
 \end{code}
-
-The type \AD{►Obj} \AB{A} is defined similarly to \AD{►ObjTry} \AB{A}, and again we use a record for the definition.
-The first field is represented by the type \F{Later}.
-On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
-
-\begin{code}
-Later : (Size → Set) → Size → Set
-Later A i = (j : SizeLt i) → A (size j)
-\end{code}
-
-The second field is more difficult.
-Usually, it would be a universally quantified equality, but since the computations are blocked, the equalities must be blocked as well.
-To do so, we need an intermediate definition.
-
+Every function with domain \F{SizeLt} \Ar{i} can be specified in terms of a function with domain \F{Size<} \Ar{i}.
 \begin{code}
 elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
   → (j : SizeLt i) → A (size j)
 elimLt f [ j ] = f j
 \end{code}
 
-This function does pattern matching on \F{SizeLt} and we use it to build predicates on \AD{SizeLt}.
-Note that the compuation of such predicates are blocked, which allows us to define the type of the second component as follows.
+We can  define the object part of the semantic later modality similarly to
+\AD{►ObjTry} but using \F{SizeLt} in place of \F{Size<}. Practically, we introduce a couple of auxiliary functions that will become handy when modelling guarded recursive types in Section \ref{sec:grt}. The first is the function \F{Later}. It takes a sized type as its input, not a semantic \IC{κ}-type. Otherwise its definition is the same as the type of the field \IC{►cone} in \AD{►ObjTry} with \F{Size<} replaced by \F{SizeLt}.
+%, and again we use a record for the definition.
+%The first field is represented by the type \F{Later}.
+%On each coordinate \AB{i}, we take the limit of \AB{A} restricted to the sizes smaller than \AB{i}.
+\begin{code}
+Later : (Size → Set) → Size → Set
+Later A i = (j : SizeLt i) → A (size j)
+\end{code}
+The second auxiliary function is \F{LaterLim}. It takes as its input a sized type \Ar{A} together with a proof that it is antitone, not a semantic \IC{κ}-type. Otherwise its definition is the same as the type of the field \IC{►com} in \AD{►ObjTry} with \F{Size<} replaced by \F{SizeLt} and with two applications of \F{elimLt}.
 \begin{code}
 LaterLim : (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
   → (i : Size) (x : Later A i) → Set
@@ -81,6 +86,13 @@ LaterLim A m i x = (j : SizeLt i)
   → elimLt (λ { j' → (k : SizeLt (↑ j'))
     → elimLt (λ k' → m j' k' (x [ j' ]) ≡ x [ k' ]) k }) j
 \end{code}
+
+
+%%The second field is more difficult.
+%%Usually, it would be a universally quantified equality, but since the computations are blocked, the equalities must be blocked as well.
+%%To do so, we need an intermediate definition.
+%%This function does pattern matching on \F{SizeLt} and we use it to build predicates on \AD{SizeLt}.
+%%Note that the compuation of such predicates are blocked, which allows us to define the type of the second component as follows.
 
 \AgdaHide{
 \begin{code}
@@ -91,11 +103,7 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
   LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 }
-
-Now we put it all together and we obtain the following definition of the object part.
-We can also define an action on the morphisms and show this preserves identity and composition.
-All in all, we get
-
+Putting everything  together, we obtain the following definition of the object part of the semantic later modality \F{►}. We refer to the Agda formalization for the action on the morphisms and functor laws.
 \begin{code}
 record ►Obj (A : SemTy κ) (i : Size) : Set where
   field
