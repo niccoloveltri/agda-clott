@@ -16,8 +16,8 @@ open import CloTT.TypeFormers.WeakenClock
 open PSh
 \end{code}
 }
-To define guarded recursive types, we first need to define the semantics of polynomials.
-The reason why we cannot use the syntactic ones, is because we need the constant polynomial depends on \AD{SemTy} rather than \AD{Ty}.
+To define guarded recursive types, we define the semantics of polynomials.
+The reason why we cannot use the syntactic ones, is because the constant polynomial should depend on \AD{SemTy} rather than \AD{Ty}.
 This leads to the following definition.
 
 \begin{code}
@@ -27,17 +27,10 @@ data SemPoly : ClockCtx → Set₁ where
     _⊞_ _⊠_ : ∀ {Δ} → SemPoly Δ → SemPoly Δ → SemPoly Δ
     ►P : SemPoly κ → SemPoly κ
 \end{code}
-
-Note that we can evaluate polynomials as endofunctors on types.
-This is defined by induction on the polynomial.
-In each case, we use the corresponding opertion on types.
-
+\AgdaHide{
+Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \begin{code}
 sem-eval : ∀ {Δ} → SemPoly Δ → SemTy Δ → SemTy Δ
-\end{code}
-
-\AgdaHide{
-\begin{code}
 sem-eval (∁ A) X = A
 sem-eval I X = X
 sem-eval (P ⊞ Q) X = sem-eval P X ⊕ sem-eval Q X
@@ -63,24 +56,27 @@ mutual
 \end{code}
 }
 
-In the remainder of this section, we focus on μ-types in the clock context κ.
-We define the object part and the morphism part mutually.
-Usually, the morphism part depends on the object part, but not the other way around.
-Since \F{►} \AB{A} is defined as a limit, it depends on both the object and the morphism part of \AB{A}.
-Hence, to define the action of \AIC{►P} on the objecs, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
+In the remainder of this section, we only consider guarded recursive types in the clock context \AIC{κ}.
+Those in \AIC{∅} are interpreted similarly.
+Given a polynomial \AB{P}, we must define the object and morphism part of a presheaf \F{μpsh} \AB{P}.
+Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
 
-To define the elements of \AIC{μ} \AB{P}, we use an intermediate step.
-We define a type family \AD{μObj'}, which does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
-In the end, we take the object part of \AIC{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
-This allows us to do induction on \AB{Q} while remembering \AB{P}.
+A first attempt to define \F{μObj} \AB{P}, would be using induction on \AB{P}.
+However, there is a problem when we arrive at the identity polynomial.
+In that case, a recursive call is made, so we need to refer back to original polynomial \AB{P}, which is unavailable at this point.
+To solve that, we use a trick: we define a data type \F{μObj'}, which depends on two polynomials instead of one.
+The first polynomial is the polynomial used to define the guarded recursive type and we do induction on the second one.
+In the end, we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
 
-For the product, sum, and constant polynomial, it is straightforward to define the elements.
-For later, we use \F{LaterLim} as defined before.
-The identity case, on the other hand, requires more thinking.
-The input then is something from the presheaf \AIC{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
-If we were using induction and we arrived at the identity polynomial, we are unable to get the original polynomial.
-For that reason, we must keep track of the original polynomial, which is the argument \Ar{P}.
-The morphism part \AD{μMor'} also depends on two polynomials and it is defined by induction.
+The data type \F{μObj'} \AB{P} \AB{Q} is defined as an inductive type.
+The constructors say how to construct inhabitans depending on whether \AB{Q} is constant, a product, a sum, \etc.
+If \AB{Q} is a product or sum, they are pairs or injections respectively.
+For the identity, we need to use \AB{P} to make a recursive call.
+
+However, the main difficulty is \AIC{►P}.
+This is because the later modality depends on both the object and morphism part of its argument.
+For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
+We define them formally as follows.
 
 \begin{code}
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
@@ -107,6 +103,26 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
       q [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 
+\remove{
+We define the object part and the morphism part mutually.
+Usually, the morphism part depends on the object part, but not the other way around.
+Since \F{►} \AB{A} is defined as a limit, it depends on both the object and the morphism part of \AB{A}.
+Hence, to define the action of \AIC{►P} on the objecs, both parts are needed, and thus \F{μObj'} and \F{μMor'} are defined mutually.
+
+\To define the elements of \AIC{μ} \AB{P}, we use an intermediate step.
+We define a type family \AD{μObj'}, which does not just depend on \AB{P}, but also on a second polynomial \AB{Q}.
+In the end, we take the object part of \AIC{μ} \AB{P} to be \AD{μobj} \AB{P} \AB{P} and similar for the morphisms.
+This allows us to do induction on \AB{Q} while remembering \AB{P}.
+
+For the product, sum, and constant polynomial, it is straightforward to define the elements.
+For later, we use \F{LaterLim} as defined before.
+The identity case, on the other hand, requires more thinking.
+The input then is something from the presheaf \AIC{μ} \AB{P} of which the object map is \AD{μobj} \AB{P} \AB{P}.
+If we were using induction and we arrived at the identity polynomial, we are unable to get the original polynomial.
+For that reason, we must keep track of the original polynomial, which is the argument \Ar{P}.
+The morphism part \AD{μMor'} also depends on two polynomials and it is defined by induction.
+}
+
 \AgdaHide{
 \begin{code}
 μMor'Id : (P Q : SemPoly κ) {i : Size} {x : μObj' P Q i} → μMor' P Q i i x ≡ x
@@ -130,7 +146,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \end{code}
 }
 
-In addition, we can show that \AD{μMor'} preserves the identity and composition and thus we get a presheaf \AD{μpsh}.
+Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{μpsh}.
 \begin{code}
 μpsh : SemPoly κ → SemPoly κ → SemTy κ
 \end{code}
@@ -144,9 +160,7 @@ In addition, we can show that \AD{μMor'} preserves the identity and composition
   }
 \end{code}
 }
-The interpretation of \AIC{μ} is defined via a case distinction based on the clock context.
-For presheaves, we use \AD{μpsh} \AB{P} \AB{P}.
-For sets, we use a similar approach.
+The presheaf \AD{μpsh} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in the clock context \AIC{κ}.
 
 \AgdaHide{
 \begin{code}
