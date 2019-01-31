@@ -85,7 +85,7 @@ We define them formally as follows.
     _⊠_  : ∀{Q R i} → μObj' P Q i → μObj' P R i → μObj' P (Q ⊠ R) i
     ⊞₁   : ∀{Q R i} → μObj' P Q i → μObj' P (Q ⊞ R) i
     ⊞₂   : ∀{Q R i} → μObj' P R i → μObj' P (Q ⊞ R) i
-    ►P    : ∀{Q i} (x : Later (μObj' P Q) i)
+    ▸    : ∀{Q i} (x : Later (μObj' P Q) i)
       → LaterLim (μObj' P Q) (μMor' P Q) i x → μObj' P (▸ Q) i
 \end{code}
 
@@ -97,7 +97,7 @@ We define them formally as follows.
   μMor' P (Q ⊠ R) i j (x ⊠ y)     = μMor' P Q i j x ⊠ μMor' P R i j y
   μMor' P (Q ⊞ R) i j (⊞₁ x)      = ⊞₁ (μMor' P Q i j x)
   μMor' P (Q ⊞ R) i j (⊞₂ x)      = ⊞₂ (μMor' P R i j x)
-  μMor' P (▸ Q) i j (►P x p)      = ►P x q
+  μMor' P (▸ Q) i j (▸ x p)      = ▸ x q
     where
       q : LaterLim (μObj' P Q) (μMor' P Q) j x
       q [ k ] [ l ] = p [ k ] [ l ]
@@ -131,7 +131,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 μMor'Id P (Q ⊠ R) {i}{x ⊠ y} = cong₂ _⊠_ (μMor'Id P Q) (μMor'Id P R)
 μMor'Id P (Q ⊞ R) {i}{⊞₁ x} = cong ⊞₁ (μMor'Id P Q)
 μMor'Id P (Q ⊞ R) {i}{⊞₂ x} = cong ⊞₂ (μMor'Id P R)
-μMor'Id P (▸ Q) {i}{►P x p} = cong₂-dep ►P refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
+μMor'Id P (▸ Q) {i}{▸ x p} = cong₂-dep ▸ refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
 \end{code}
 
 \begin{code}
@@ -142,7 +142,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 μMor'Comp P (Q ⊠ R) {x = x ⊠ y} = cong₂ _⊠_ (μMor'Comp P Q) (μMor'Comp P R)
 μMor'Comp P (Q ⊞ R) {x = ⊞₁ x} = cong ⊞₁ (μMor'Comp P Q)
 μMor'Comp P (Q ⊞ R) {x = ⊞₂ x} = cong ⊞₂ (μMor'Comp P R)
-μMor'Comp P (▸ Q) {x = ►P x p} = cong₂-dep ►P refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
+μMor'Comp P (▸ Q) {x = ▸ x p} = cong₂-dep ▸ refl (funext (λ { [ j ] → funext (λ { [ k ] → refl }) }))
 \end{code}
 }
 

@@ -57,7 +57,7 @@ cons₁' P I i t = I t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) ⊠ (cons₁' P R i u)
 cons₁' P (Q ⊞ R) i (inj₁ t) = ⊞₁ (cons₁' P Q i t)
 cons₁' P (Q ⊞ R) i (inj₂ t) = ⊞₂ (cons₁' P R i t)
-cons₁' P (▻ Q) i t = ►P c₁ c₂
+cons₁' P (▻ Q) i t = ▸ c₁ c₂
   where
     c₁ : Later (μObj' ⟦ P ⟧poly ⟦ Q ⟧poly) i
     c₁ [ j ] = cons₁' P Q j (►cone t [ j ])
@@ -69,7 +69,7 @@ cons₂' P (Q ⊠ R) i j (t , u) = cong₂ _⊠_ (cons₂' P Q i j t) (cons₂' 
 cons₂' P (Q ⊞ R) i j (inj₁ t) = cong ⊞₁ (cons₂' P Q i j t)
 cons₂' P (Q ⊞ R) i j (inj₂ t) = cong ⊞₂ (cons₂' P R i j t)
 cons₂' P (▻ Q) i j t =
-  cong₂-dep ►P (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
+  cong₂-dep ▸ (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
 
 conspsh : (P Q : Poly κ) (Γ : Ctx κ) → SemTm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → SemTm ⟦ Γ ⟧Γ (μpsh ⟦ P ⟧poly ⟦ Q ⟧poly)
 nat-map (conspsh P Q Γ t) i γ  = cons₁' P Q i (nat-map t i γ)
@@ -105,8 +105,8 @@ primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) = inj₁ (primrec-psh'�
 primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) = inj₂ (primrec-psh'₁₁ P Q₂ A i t j z)
 proj₁ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₁ A i t j z₁
 proj₂ (primrec-psh'₁₁ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂)) = primrec-psh'₁₁ P Q₂ A i t j z₂
-►cone (primrec-psh'₁₁ P (▻ Q) A i t j (►P z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q A i t k (z₁ [ k ]) 
-►com (primrec-psh'₁₁ P (▻ Q) A i t j (►P z₁ z₂)) [ k ] [ l ] = 
+►cone (primrec-psh'₁₁ P (▻ Q) A i t j (▸ z₁ z₂)) [ k ] = primrec-psh'₁₁ P Q A i t k (z₁ [ k ]) 
+►com (primrec-psh'₁₁ P (▻ Q) A i t j (▸ z₁ z₂)) [ k ] [ l ] = 
   trans (primrec-psh'₁₂ P Q A i t k (z₁ [ k ]) l)
         (cong (primrec-psh'₁₁ P Q A i t l) (z₂ [ k ] [ l ]))
 primrec-psh'₁₂ P (∁ X) A i t j (∁ps z) k = refl
@@ -118,7 +118,7 @@ primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₁ z) k = cong inj₁ (primrec
 primrec-psh'₁₂ P (Q₁ ⊞ Q₂) A i t j (⊞₂ z) k = cong inj₂ (primrec-psh'₁₂ P Q₂ A i t j z k)
 primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k = 
   cong₂ (_,_) (primrec-psh'₁₂ P Q₁ A i t j z₁ k) (primrec-psh'₁₂ P Q₂ A i t j z₂ k)
-primrec-psh'₁₂ P (▻ Q) A i t j (►P z₁ z₂) k = ►eq (λ {_ → refl})
+primrec-psh'₁₂ P (▻ Q) A i t j (▸ z₁ z₂) k = ►eq (λ {_ → refl})
 
 primrec-psh'₂ : (P Q : Poly κ) (Γ : SemCtx κ) (A : Ty κ) (t : SemTm Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
@@ -134,7 +134,7 @@ primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₁ z) = cong inj₁ (primr
 primrec-psh'₂ P (Q₁ ⊞ Q₂) Γ A t i j x k (⊞₂ z) = cong inj₂ (primrec-psh'₂ P Q₂ Γ A t i j x k z)
 primrec-psh'₂ P (Q₁ ⊠ Q₂) Γ A t i j x k (z₁ ⊠ z₂) =
   cong₂ (_,_) (primrec-psh'₂ P Q₁ Γ A t i j x k z₁) (primrec-psh'₂ P Q₂ Γ A t i j x k z₂)
-primrec-psh'₂ P (▻ Q) Γ A t i j x k (►P z₁ z₂) =
+primrec-psh'₂ P (▻ Q) Γ A t i j x k (▸ z₁ z₂) =
   ►eq (λ {l → primrec-psh'₂ P Q Γ A t i j x l (z₁ [ l ])})
 
 primrec-psh : (P : Poly κ) (Γ : Ctx κ) (A : Ty κ)
