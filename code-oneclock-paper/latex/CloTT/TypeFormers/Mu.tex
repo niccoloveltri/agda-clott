@@ -305,13 +305,13 @@ Given a semantic code \AB{P}, we are required to construct the action on objects
 A first naive attempt would be to define the action on objects
 \F{μObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
 \F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
-\IC{κ}. This try does not work, since \F{μObj} \AB{P} is a sized type
-while \F{sem-eval} \AB{P} expects a semantic type as its input.
+\IC{κ}. This does not work since \F{μObj} \AB{P} is a sized type
+while \F{sem-eval} \AB{P} expects a semantic type as input.
 
 Another possibility would be to define \F{μObj} \AB{P} by induction on \AB{P}.
 However, there is a problem when we arrive at the \IC{I} case.
-This is the case where we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, but this is unavailable at this point.
-We can solve the issue by introducing an auxiliary inductive type family \F{μObj'}, which depends on two codes instead of one.
+In this case, we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, but this is unavailable at this point.
+We solve the issue by introducing an auxiliary inductive type family \F{μObj'}, which depends on two codes instead of one.
 The first code is the original one used to define the guarded recursive type and we do induction on the second one.
 Then we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
 
