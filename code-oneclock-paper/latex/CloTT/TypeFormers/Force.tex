@@ -43,17 +43,18 @@
 \end{code}
 }
 
-Finally, we show how to interpret \AIC{force}. For this aim we
+Finally, we show how to interpret \AIC{force}. To this aim, we
 introduce an auxilliary function \AF{sem-force'}, which, given a type
 \AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), returns an
 term in \F{■} \AB{A}.  For the field \AFi{■cone} of \AF{sem-force'}
 \Ar{A} \AB{t}, we are required to construct an element of \AFi{Obj}
 \AB{A} \AB{i} for each size \AB{i}.
-Notice that the field \AFi{■cone} of \AB{t}, when applied to a size
-\Ar{i'}, gives a term \AB{t'} of type \F{►Obj} \AB{A} \AB{i'}. And the
-field \AFi{►cone} of \AB{t'}, when applied to a size \AB{j'} smaller
+Notice that \AFi{■cone} \AB{t}, when applied to a size
+\Ar{i'}, gives a term \AB{t'} of type \F{►Obj} \AB{A} \AB{i'}. Furthermore, the
+component \AFi{►cone} of \AB{t'}, when applied to a size \AB{j'} smaller
 than \AB{i'}, returns a term of type \AFi{Obj} \AB{A} \AB{j'}.
-Hence, in order to construct the required inhabitant of \AFi{Obj} \AB{A} \AB{i}, it suffices to find a size \AB{j} greater than \AB{i}. So we can take \Ar{j} to be \F{∞}. The definition of the field \AFi{■com} of \F{sem-force'} proceeds similarly.
+Hence, in order to construct the required inhabitant of \AFi{Obj} \AB{A} \AB{i}, it suffices to find a size \AB{j} greater than \AB{i}.
+One option for such a \AB{j}, would be \F{∞}. We take a similar approach to define the field \AFi{■com} of \F{sem-force'}.
 %is bigger than all sizes, we can define:
 
 %%  To obtain such an element, we use that the type of \AB{t} involves both the box and the later modality.

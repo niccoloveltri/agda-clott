@@ -59,7 +59,7 @@ Agda would have rightly rejected.
 %%In addition, the usage of \F{SizeLt} prevents infinite unfolding.
 %%If we used the same definition but with \F{Size<} \Ar{i} instead, we would have constructed a non-productive recursive definition that would have been correcly rejected by Agda's termination checker.
 
-The field \Fi{nat-map} of \F{sem-dfix} can be easily defined using \F{sem-dfix₁}. We omit the construction of the \Fi{nat-com}.
+The field \Fi{nat-map} of \F{sem-dfix} can easily be defined using \F{sem-dfix₁}. We omit the construction of the \Fi{nat-com}.
 \begin{code}
 sem-dfix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ (► A)
 nat-map (sem-dfix Γ A f) i γ = sem-dfix₁ A i (nat-map f i γ)
