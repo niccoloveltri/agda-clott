@@ -16,12 +16,10 @@ open ExpObj
 open NatTrans
 \end{code}
 }
-We omit the semantic equivalents of the terms \IC{next} and \IC{⊛}.
-Instead, we discuss the interpretation of the delayed fixpoint combinator \AIC{dfix}.
-%The \Fi{nat-map} component of \F{sem-dfix} depends on
-First we introduce an auxiliary term \F{sem-dfix₁}, which for each semantic \IC{κ}-type \Ar{A}, size \Ar{i} and returns a map of type \F{ExpObj} (\F{►} \Ar{A}) \Ar{A i} → \F{►Obj} \Ar{A i}.
-Here we only show the definition of the \Fi{►cone} component of \F{sem-dfix₁} \Ar{A i f}.
-Given an inhabitant of \F{SizeLt} \Ar{i}, we pattern matching on it obtaining a size \Ar{j} : \F{Size<} \Ar{i}.
+We omit the semantic equivalents of \IC{next} and \IC{⊛}.
+To interpret the delayed fixpoint combinator \AIC{dfix}, we introduce an auxiliary term \F{sem-dfix₁}, which for each semantic \IC{κ}-type \Ar{A} and size \Ar{i}, returns a map of type \F{ExpObj} (\F{►} \Ar{A}) \Ar{A i} → \F{►Obj} \Ar{A i}.
+Here we only show the definition of the field \Fi{►cone} of \F{sem-dfix₁} \Ar{A i f}.
+Given an inhabitant of \F{SizeLt} \Ar{i}, we obtain a size \Ar{j} : \F{Size<} \Ar{i} by pattern matching.
 Then we apply the function \AFi{fun} \Ar{f} \Ar{j} to \F{sem-dix₁} \AB{A} \AB{j} \AB{f}.
 %%Since \AFi{fun} \Ar{f} \Ar{j} is a function from \F{►Obj} \AB{A} \AB{j} to \AFi{Obj} \AB{A} \AB{j}, it suffices to define an inhabitant of type \F{►Obj} \AB{A} \AB{j}.
 %%For this, we use \F{sem-dix₁} \AB{A} \AB{j} \AB{f}.
@@ -43,6 +41,7 @@ sem-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
   ∎
 \end{code}
 }
+
 This definition is accepted by Agda's termination checker because
 every recursive call is applied to a strictly smaller size.  Moreover,
 the usage of \F{SizeLt} in the definition of \F{Later} prevents
@@ -56,7 +55,7 @@ Agda would have rightly rejected.
 %%In addition, the usage of \F{SizeLt} prevents infinite unfolding.
 %%If we used the same definition but with \F{Size<} \Ar{i} instead, we would have constructed a non-productive recursive definition that would have been correcly rejected by Agda's termination checker.
 
-The \Fi{nat-map} component of \F{sem-dfix} can be easily defined using \F{sem-dfix₁}. We omit the construction of the \Fi{nat-com} component.
+The field \Fi{nat-map} of \F{sem-dfix} can be easily defined using \F{sem-dfix₁}. We omit the construction of the \Fi{nat-com}.
 \begin{code}
 sem-dfix : (Γ : SemCtx κ) (A : SemTy κ) (f : SemTm Γ (► A ⇒ A)) → SemTm Γ (► A)
 nat-map (sem-dfix Γ A f) i γ = sem-dfix₁ A i (nat-map f i γ)

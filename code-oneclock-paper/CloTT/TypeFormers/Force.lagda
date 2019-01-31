@@ -15,15 +15,14 @@ open ►Obj
 \end{code}
 }
 
-Finally, we describe the interpretation of the \AIC{force} operation.
+Finally, we describe the interpretation of the term \AIC{force}.
 We first define an auxilliary function \AF{sem-force'}.  Given a type
-\AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), our goal is to
-construct an element of \F{■} \AB{A}. For the \AFi{■cone} component,
-we are given a size \AB{i} and we have to return an element of \AFi{Obj} \AB{A}
-\AB{i}. We know that \AFi{■cone} \AB{t} \F{∞} has type \F{►Obj} \Ar{A}
-\F{∞}. Therefore \Fi{►cone} (\Fi{■cone} \Ar{t} \F{∞}) \IC{[} \Ar{i}
-\IC{]} has type \AFi{Obj} \AB{A}
-\AB{i}, since the size \F{∞} is bigger than \AB{i}. The \AFi{■com} component of \F{sem-force'} is constructed similarly.
+\AB{A} and an inhabitant \AB{t} of \F{■}(\F{►} \Ar{A}), this map gives an element of \F{■} \AB{A}.
+For \AFi{■cone} (\AF{sem-force'} \AB{t}), we need to give an element of \AFi{Obj} \AB{A} for each size \AB{i}.
+By definition, \AFi{■cone} \AB{t} \F{∞} has type \F{►Obj} \Ar{A} \F{∞}.
+Since the size \F{∞} is bigger than \AB{i}, we can apply \Fi{►cone} (\Fi{■cone} \Ar{t} \F{∞}) to \IC{[} \Ar{i} \IC{]} to obtain an inhabitant of type \AFi{Obj} \AB{A}
+\AB{i}.
+We define the field \AFi{■com} of \F{sem-force'} similarly.
 %%Note that \AFi{■cone} \AB{t} gives for each size \AB{j} an inhabitant of \F{Later} \AB{A} \AB{j}.
 %%If we find a size greater than \AB{i}, then we can use \AFi{■cone} \AB{t} for the desired element.
 %%Since \F{∞} is bigger than \AB{i}, we define

@@ -108,7 +108,7 @@ module _ (A : Size → Set) (m : (i : Size) (j : Size< (↑ i)) → A i → A j)
   LaterLimMor i j x p [ k ] [ l ] = p [ k ] [ l ]
 \end{code}
 }
-Putting everything  together, we obtain the following definition of the object part of the semantic later modality \F{►}. We refer to the Agda formalization for the action on the morphisms and functor laws.
+Putting everything  together, we obtain the following definition of the object part of the semantic later modality \F{►}. We refer to the Agda formalization for the action on the morphisms and the functor laws.
 \begin{code}
 record ►Obj (A : SemTy κ) (i : Size) : Set where
   field
