@@ -50,18 +50,12 @@ data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
 \end{code}
 }
 
-\AgdaHide{
-\begin{code}
-mutual
-\end{code}
-}
-
 In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
 The interpretation of guarded recursive \AIC{∅}-type is similar.
 Given a semantic code \AB{P}, we are required to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
 %Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
 
-A first naive attempt would be to define the action on objects
+A first na\"{i}ve attempt would be to define the action on objects
 \F{μObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
 \F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
 \IC{κ}. This does not work since \F{μObj} \AB{P} is a sized type
@@ -81,20 +75,29 @@ In that case, a recursive call is made, so we need to refer back to original pol
 To solve that, we use a trick: we define a data type \F{μObj'}, which depends on two polynomials instead of one.
 The first polynomial is the polynomial used to define the guarded recursive type and we do induction on the second one.
 In the end, we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
-}
 
 The data type \F{μObj'} \AB{P} \AB{Q} is defined as an inductive type.
 The constructors say how to construct inhabitans depending on whether \AB{Q} is constant, a product, a sum, \etc.
 If \AB{Q} is a product or sum, they are pairs or injections respectively.
 For the identity, we need to use \AB{P} to make a recursive call.
+}
 
-
+The constructors of \F{μObj'} \AB{P} \AB{Q} follow the structure of
+\AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
+a sum we have the two injections. When \AB{Q} is the code for the
+identity functor we make a recursive call. The main difficulty comes
+with the \AIC{▸} case. We need \F{μ-κ} (\IC{▸}
+\Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{μ-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depend both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
+For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
+take in input only part of the data of a presheaf.
+\remove{
 However, the main difficulty is \AIC{▸}.
 This is because the later modality depends on both the object and morphism part of its argument.
 For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
 We define them formally as follows.
-
+}
 \begin{code}
+mutual
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
     const : {X : PSh} {i : Size} → Obj X i → μObj' P (∁ X) i
     rec : ∀{i} → μObj' P P i → μObj' P I i
@@ -158,12 +161,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \end{code}
 }
 
-Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{μ-κ}.
-\begin{code}
-μ-κ : SemPoly κ → SemPoly κ → SemTy κ
-\end{code}
+We define \AD{μMor} \Ar{P} to be \AD{μMor'} \Ar{P} \Ar{P}. 
+Since \AD{μMor} preserves identity and composition, we get a presheaf \AD{μ-κ} \Ar{P}, for each semantic code \Ar{P}. This is used for interpreting the type former \IC{μ} in the clock context \IC{κ}
 \AgdaHide{
 \begin{code}
+μ-κ : SemPoly κ → SemPoly κ → SemTy κ
 μ-κ P Q = record
   { Obj = μObj' P Q
   ; Mor = μMor' P Q
@@ -172,8 +174,9 @@ Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{
   }
 \end{code}
 }
+\remove{
 The presheaf \AD{μ-κ} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in the clock context \AIC{κ}.
-
+}
 \AgdaHide{
 \begin{code}
 mu : ∀ {Δ} → (P : SemPoly Δ) → SemTy Δ
