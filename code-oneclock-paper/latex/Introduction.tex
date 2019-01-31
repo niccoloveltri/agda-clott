@@ -1,6 +1,6 @@
 Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Coq, Agda \cite{norell} and Lean.  It is a total language,
+as Coq, Agda, and Lean \cite{barras1997coq,de2015lean,norell}. It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
@@ -16,7 +16,7 @@ In Agda's encoding of coinductive types using ``musical notation''
 definition of a corecursive function, the recursive
 call is required to appear directly under
 the application of a constructor. A similar syntactic
-check is employed in Coq.
+check is employed in Coq \cite{DBertotK08}.
 This restriction
 typically makes programming with coinductive types cumbersome,
 which spawned the search for alternative techniques for ensuring the

@@ -46,7 +46,7 @@ uip {A} {x} {y} {refl} {refl} = refl
 }
 
 Agda also natively support sized types
-\cite{AVW-normalization}. Intuitively, a sized type is a type
+\cite{A-sized,AVW-normalization}. Intuitively, a sized type is a type
 annotated with an abstract ordinal indicating the number of possible
 unfoldings that can be performed of elements of the type.  These
 abstract ordinals, called sizes, assist the termination checker in
