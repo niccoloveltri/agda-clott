@@ -326,17 +326,21 @@ For the identity, we need to use \AB{P} to make a recursive call.
 The constructors of \F{μObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
-identity functor, we make a recursive call. The main difficulty comes
-with the \AIC{▸} case. We need \F{μ-κ} (\IC{▸}
-\Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{μ-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depend both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
+identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \F{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
 For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
 take in input only part of the data of a presheaf.
+\remove{
+The main difficulty comes
+with the \AIC{▸} case. We need \F{μ-κ} (\IC{▸}
+\Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{μ-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}.
+}
 \remove{
 However, the main difficulty is \AIC{▸}.
 This is because the later modality depends on both the object and morphism part of its argument.
 For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
 We define them formally as follows.
 }
+sem-eval (► P) (μ-κ P)
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
 \\
