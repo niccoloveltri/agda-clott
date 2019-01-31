@@ -292,11 +292,11 @@ sem-primrec-psh P (▻P Q) Γ A t i x j z =
 
 μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : μObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i)
   → μweaken-help P Q (weakenμ-help P Q i x) i ≡ x
-μweakenμ-help P (∁ X) i (∁ps x) = refl
-μweakenμ-help P I i (I x) = cong I (μweakenμ-help P P i x)
-μweakenμ-help P (Q₁ ⊞ Q₂) i (⊞₁ x) = cong ⊞₁ (μweakenμ-help P Q₁ i x)
-μweakenμ-help P (Q₁ ⊞ Q₂) i (⊞₂ x) = cong ⊞₂ (μweakenμ-help P Q₂ i x)
-μweakenμ-help P (Q₁ ⊠ Q₂) i (x₁ ⊠ x₂) = cong₂ _⊠_ (μweakenμ-help P Q₁ i x₁) (μweakenμ-help P Q₂ i x₂)
+μweakenμ-help P (∁ X) i (const x) = refl
+μweakenμ-help P I i (rec x) = cong rec (μweakenμ-help P P i x)
+μweakenμ-help P (Q₁ ⊞ Q₂) i (in₁ x) = cong in₁ (μweakenμ-help P Q₁ i x)
+μweakenμ-help P (Q₁ ⊞ Q₂) i (in₂ x) = cong in₂ (μweakenμ-help P Q₂ i x)
+μweakenμ-help P (Q₁ ⊠ Q₂) i (x₁ , x₂) = cong₂ _,_ (μweakenμ-help P Q₁ i x₁) (μweakenμ-help P Q₂ i x₂)
 
 weakenμweaken-help : (P Q : Poly ∅) (i : Size) (x : μset ⟦ P ⟧poly ⟦ Q ⟧poly)
   → weakenμ-help P Q i (μweaken-help P Q x i) ≡ x

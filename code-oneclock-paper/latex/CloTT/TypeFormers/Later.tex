@@ -34,7 +34,7 @@ an operation \F{►} on semantic \IC{κ}-types.
 Recall that the usual definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
-Adapting this to our setting would lead to the following definition:
+Adapting this to our setting would lead to the following definition of \F{►}'s action on objects:
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
 \AgdaRecord{►ObjTry}\AgdaSpace{}%
@@ -199,7 +199,7 @@ Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified in terms o
 \AgdaBound{j}\<%
 \end{code}
 
-We define the object part of the semantic later modality similarly to \AD{►ObjTry} but with \F{SizeLt} in place of \F{Size<}.
+We define the action on objects of the semantic later modality similarly to \AD{►ObjTry} but with \F{SizeLt} in place of \F{Size<}.
 Before we do so, we introduce two auxiliary functions, which turn out to be handy when modelling guarded recursive types.
 The first is a function \F{Later}, which instead of a semantic \IC{κ}-type, takes a sized type as its input.
 Its definition is the same as the type of the field \AFi{►cone} in \AD{►ObjTry} but with \F{Size<} replaced by \F{SizeLt}.

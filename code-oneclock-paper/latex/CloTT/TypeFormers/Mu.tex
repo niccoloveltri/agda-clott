@@ -60,9 +60,9 @@
 \AgdaModule{PSh}\<%
 \end{code}
 }
-To define guarded recursive types, we define the semantics of polynomials.
-The reason why we cannot use the syntactic ones, is because the constant polynomial should depend on \AD{SemTy} rather than \AD{Ty}.
-This leads to the following definition.
+For semantic guarded recursive types we introduce a type of semantics codes for functors.
+We cannot directly reutilize the syntactic grammar \F{Poly}, since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
+This observation leads to the following definition.
 
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
@@ -297,24 +297,40 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \end{code}
 }
 
-In the remainder of this section, we only consider guarded recursive types in the clock context \AIC{κ}.
-Those in \AIC{∅} are interpreted similarly.
-Given a polynomial \AB{P}, we must define the object and morphism part of a presheaf \F{μpsh} \AB{P}.
-Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
+In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
+The interpretation of guarded recursive \AIC{∅}-type is similar.
+Given a semantic code \AB{P}, we are required to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
+%Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
 
-A first attempt to define \F{μObj} \AB{P}, would be using induction on \AB{P}.
+A first naive attempt would be to define the action on objects
+\F{μObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
+\F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
+\IC{κ}. This try does not work, since \F{μObj} \AB{P} is a sized type
+while \F{sem-eval} \AB{P} expects a semantic type as its input.
+
+Another possibility would be to define \F{μObj} \AB{P} by induction on \AB{P}.
+However, there is a problem when we arrive at the \IC{I} case.
+This is the case where we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, but this is unavailable at this point.
+We can solve the issue by introducing an auxiliary inductive type family \F{μObj'}, which depends on two codes instead of one.
+The first code is the original one used to define the guarded recursive type and we do induction on the second one.
+Then we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
+
+\remove{
+, would be using induction on \AB{P}.
 However, there is a problem when we arrive at the identity polynomial.
 In that case, a recursive call is made, so we need to refer back to original polynomial \AB{P}, which is unavailable at this point.
 To solve that, we use a trick: we define a data type \F{μObj'}, which depends on two polynomials instead of one.
 The first polynomial is the polynomial used to define the guarded recursive type and we do induction on the second one.
 In the end, we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
+}
 
 The data type \F{μObj'} \AB{P} \AB{Q} is defined as an inductive type.
 The constructors say how to construct inhabitans depending on whether \AB{Q} is constant, a product, a sum, \etc.
 If \AB{Q} is a product or sum, they are pairs or injections respectively.
 For the identity, we need to use \AB{P} to make a recursive call.
 
-However, the main difficulty is \AIC{►P}.
+
+However, the main difficulty is \AIC{▸}.
 This is because the later modality depends on both the object and morphism part of its argument.
 For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
 We define them formally as follows.
@@ -337,8 +353,8 @@ We define them formally as follows.
 \AgdaKeyword{where}\<%
 \\
 \>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaInductiveConstructor{∁ps}%
-\>[10]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{const}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{X}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaRecord{PSh}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -357,8 +373,8 @@ We define them formally as follows.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{I}%
-\>[10]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{rec}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
@@ -372,8 +388,8 @@ We define them formally as follows.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}%
-\>[9]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -396,8 +412,8 @@ We define them formally as follows.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{⊞₁}%
-\>[9]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -415,8 +431,8 @@ We define them formally as follows.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{⊞₂}%
-\>[9]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -434,8 +450,8 @@ We define them formally as follows.
 \AgdaBound{i}\<%
 \\
 %
-\>[4]\AgdaInductiveConstructor{▸}%
-\>[9]\AgdaSymbol{:}\AgdaSpace{}%
+\>[4]\AgdaInductiveConstructor{later}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
@@ -481,10 +497,8 @@ We define them formally as follows.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaOperator{\AgdaPostulate{Size<}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaOperator{\AgdaPostulate{↑}}\AgdaSpace{}%
-\AgdaBound{i}\AgdaSymbol{))}\<%
-\\
-\>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaBound{i}\AgdaSymbol{))}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -502,10 +516,10 @@ We define them formally as follows.
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}%
-\>[35]\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{const}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{const}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{Mor}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -518,10 +532,10 @@ We define them formally as follows.
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{I}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}%
-\>[35]\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{rec}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -538,16 +552,16 @@ We define them formally as follows.
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaBound{y}\AgdaSymbol{)}%
-\>[34]\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
+\AgdaBound{y}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
@@ -563,10 +577,10 @@ We define them formally as follows.
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}%
-\>[34]\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -582,10 +596,10 @@ We define them formally as follows.
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
-\AgdaBound{x}\AgdaSymbol{)}%
-\>[34]\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
+\AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
@@ -600,46 +614,23 @@ We define them formally as follows.
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
-\AgdaBound{p}\AgdaSymbol{)}%
-\>[33]\AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaBound{p}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
-\AgdaFunction{q}\<%
-\\
-\>[2][@{}l@{\AgdaIndent{0}}]%
-\>[4]\AgdaKeyword{where}\<%
-\\
-\>[4][@{}l@{\AgdaIndent{0}}]%
-\>[6]\AgdaFunction{q}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaFunction{LaterLim}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaDatatype{μObj'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
-\AgdaBound{P}\AgdaSpace{}%
-\AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaBound{j}\AgdaSpace{}%
-\AgdaBound{x}\<%
-\\
-%
-\>[6]\AgdaFunction{q}\AgdaSpace{}%
+\AgdaSymbol{(λ}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
-\AgdaBound{l}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{]}}\<%
+\AgdaSymbol{\})}\<%
 \end{code}
 
 \remove{
@@ -695,22 +686,22 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaInductiveConstructor{const}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaInductiveConstructor{const}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{MorId}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{rec}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaInductiveConstructor{rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\<%
@@ -721,11 +712,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaBound{x}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong₂}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
@@ -738,11 +729,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\<%
@@ -752,11 +743,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Id}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\<%
@@ -765,12 +756,12 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▸}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{i}\AgdaSymbol{\}\{}\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong₂{-}dep}\AgdaSpace{}%
-\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaPostulate{funext}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
@@ -846,11 +837,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaInductiveConstructor{const}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{∁ps}\AgdaSpace{}%
+\AgdaInductiveConstructor{const}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{MorComp}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\<%
 \\
@@ -859,11 +850,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaInductiveConstructor{rec}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSpace{}%
+\AgdaInductiveConstructor{rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Comp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\<%
@@ -876,11 +867,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong₂}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{}⊠\AgdaUnderscore{}}}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{\AgdaUnderscore{},\AgdaUnderscore{}}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Comp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
@@ -895,11 +886,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₁}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₁}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Comp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\<%
@@ -911,11 +902,11 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{R}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong}\AgdaSpace{}%
-\AgdaInductiveConstructor{⊞₂}\AgdaSpace{}%
+\AgdaInductiveConstructor{in₂}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{μMor'Comp}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSymbol{)}\<%
@@ -926,12 +917,12 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaArgument{x}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{p}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{cong₂{-}dep}\AgdaSpace{}%
-\AgdaInductiveConstructor{▸}\AgdaSpace{}%
+\AgdaInductiveConstructor{later}\AgdaSpace{}%
 \AgdaInductiveConstructor{refl}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaPostulate{funext}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
@@ -953,9 +944,9 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \end{code}
 }
 
-Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{μpsh}.
+Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{μ-κ}.
 \begin{code}%
-\>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
+\>[0]\AgdaFunction{μ{-}κ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
@@ -968,7 +959,7 @@ Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{
 \end{code}
 \AgdaHide{
 \begin{code}%
-\>[0]\AgdaFunction{μpsh}\AgdaSpace{}%
+\>[0]\AgdaFunction{μ{-}κ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
@@ -1010,7 +1001,7 @@ Since \AD{μMor'} preserves the identity and composition, we get a presheaf \AD{
 \>[2]\AgdaSymbol{\}}\<%
 \end{code}
 }
-The presheaf \AD{μpsh} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in the clock context \AIC{κ}.
+The presheaf \AD{μ-κ} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in the clock context \AIC{κ}.
 
 \AgdaHide{
 \begin{code}%
@@ -1031,7 +1022,7 @@ The presheaf \AD{μpsh} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in t
 \AgdaSymbol{\{}\AgdaInductiveConstructor{κ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{μpsh}\AgdaSpace{}%
+\AgdaFunction{μ{-}κ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\<%
 \end{code}
