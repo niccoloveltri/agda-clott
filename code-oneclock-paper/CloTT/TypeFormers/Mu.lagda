@@ -16,8 +16,8 @@ open import CloTT.TypeFormers.WeakenClock
 open PSh
 \end{code}
 }
-For semantic guarded recursive types we introduce a type of semantics codes for functors.
-We cannot directly reutilize the syntactic grammar \F{Poly}, since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
+For semantic guarded recursive types, we introduce a type of semantics codes for functors.
+We cannot directly reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
 This observation leads to the following definition.
 
 \begin{code}
@@ -51,7 +51,7 @@ data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
 }
 
 In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
-The interpretation of guarded recursive \AIC{∅}-type is similar.
+The interpretation of guarded recursive \AIC{∅}-types is similar.
 Given a semantic code \AB{P}, we are required to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
 %Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
 
@@ -85,7 +85,7 @@ For the identity, we need to use \AB{P} to make a recursive call.
 The constructors of \F{μObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
-identity functor we make a recursive call. The main difficulty comes
+identity functor, we make a recursive call. The main difficulty comes
 with the \AIC{▸} case. We need \F{μ-κ} (\IC{▸}
 \Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{μ-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depend both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
 For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
@@ -162,7 +162,8 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 }
 
 We define \AD{μMor} \Ar{P} to be \AD{μMor'} \Ar{P} \Ar{P}. 
-Since \AD{μMor} preserves identity and composition, we get a presheaf \AD{μ-κ} \Ar{P}, for each semantic code \Ar{P}. This is used for interpreting the type former \IC{μ} in the clock context \IC{κ}
+Since \AD{μMor} preserves identity and composition, we get a presheaf \AD{μ-κ} \Ar{P} for each semantic code \Ar{P}.
+This is used for interpreting the type former \IC{μ} in the clock context \IC{κ}
 \AgdaHide{
 \begin{code}
 μ-κ : SemPoly κ → SemPoly κ → SemTy κ
