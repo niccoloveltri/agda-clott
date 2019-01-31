@@ -25,7 +25,7 @@ mutual
   ⟦ I ⟧poly = I
   ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
-  ⟦ ▻ P ⟧poly = ►P ⟦ P ⟧poly
+  ⟦ ▻ P ⟧poly = ▸ ⟦ P ⟧poly
 
   ⟦_⟧A : {Δ : ClockCtx} → Ty Δ → SemTy Δ
   ⟦ 𝟙 ⟧A = Unit
