@@ -6,7 +6,7 @@ open import Data.Unit
 open import Data.Empty
 open import Data.Sum
 open import Data.Product
-open import Level renaming (suc to lsuc;_⊔_ to _l⊔_)
+open import Level --renaming (suc to lsuc;_⊔_ to _l⊔_)
 open import Prelude
 open import Prelude.Syntax
 open import Presheaves
@@ -20,7 +20,7 @@ In addition, definitional equality is interpreted as a relation on terms which i
 We define a record containing all this data, whose type declaration is given as
 
 \begin{code}
-record interpret-syntax {ℓ₁ ℓ₂} : Set (lsuc (ℓ₁ l⊔ ℓ₂)) where
+record interpret-syntax {ℓ₁ ℓ₂} : Set (suc (ℓ₁ ⊔ ℓ₂)) where
 \end{code}
 
 \AgdaHide{
