@@ -319,7 +319,8 @@ guarded recursive types.
 \input{CloTT/TypeFormers/Fix}
 \input{CloTT/TypeFormers/Force}
 
-\subsection{Guarded Recursive Types}
+\subsection
+{Guarded Recursive Types}
 \label{sec:grt}
 \input{CloTT/TypeFormers/Mu}
 
@@ -327,8 +328,36 @@ guarded recursive types.
 \label{sec:consistent}
 \input{GuardedTT}
 
-\section{Conclusion}
-We formally defined a syntax of guarded type theory with explicit substitutions and weakening, and we constructed denotational semantics for it in type theory extended with sized types.
+\section{Conclusions and Future Work}
+\label{sec:concl}
+We presented a simple type theory for guarded recursion that we called \GTT. We
+formalized its syntax and semantics in Agda. Crucially, sized types
+were employed for giving an interpretation to the characteristic
+features of guarded recursion. From this we conclude that guarded
+recursion can be simulated using sized types. We greatly benefited
+of the fact that sized types constitute a native feature of Agda, so
+we were able to fully develop our theory inside a proof assistent. 
+
+This work can be extended is several different directions.
+
+Various type theories for guarded recursion in the literature include
+dependent types. Currently, there exist two disciplines for mixing
+dependent types with guarded recursion: delayed substitutions
+\cite{bizjak2016guarded} and ticks \cite{BahrGM17}. We plan to extend
+the syntax and semantics of \GTT\ with dependent types following one
+of these two disciplines.
+
+Abel and Vezzosi \cite{AbelV14} formalized a simple type theory
+extended with the later modality in Agda. They focus on operational
+properties of the calculus and give a certified proof of strong
+normalization. In future work, we plan to investigate the metatheory
+and the dynamic behaviour of \GTT, for example by formalizing a  type
+checker and a normalization algorithm.
+
+
+
+\remove{
+and weakening, and we constructed denotational semantics for it in type theory extended with sized types.
 From this, we concluded that this theory is consistent and that guarded recursion can be defined via sized types.
 
 There are several possible ways to improve on this result.
@@ -336,6 +365,15 @@ First of all, one could define a dependent version of this type theory extended 
 This can be done in two ways.
 Either one extends the object theory with delayed substitutions \cite{bizjak2016guarded} or with ticks \cite{BahrGM17}.
 Second of all, with the deep embedding in place, one can further study the meta-theory by defining a formalized type checking and a normalization algorithm.
+}
+
+Finally, we want to understand weather it is possible to reduce sized types to guarded
+recursion.  This does not seems directly doable, since sizes are not uniquely employed with coinductive types as a
+tool for easing the productivity check of corecursive
+definitions, but they are also used as auxiliary arguments of inductive
+types for facilitating the termination check of recursive
+definitions. It seems that the existing type theories for guarded
+recursion are not capable of capturing this dual aspect of sizes. 
 
 %%
 %% Bibliography

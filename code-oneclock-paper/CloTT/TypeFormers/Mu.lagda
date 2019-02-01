@@ -99,7 +99,6 @@ This is because the later modality depends on both the object and morphism part 
 For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
 We define them formally as follows.
 }
-sem-eval (► P) (μ-κ P)
 \begin{code}
 mutual
   data μObj' (P : SemPoly κ) : SemPoly κ → Size → Set where

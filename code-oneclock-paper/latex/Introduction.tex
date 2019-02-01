@@ -41,7 +41,7 @@ later modality to \F{Str} \Ar{A}. Coinductive types can be constructed
 from guarded recursive types in type theories that additionally
 support clock variables and universal quantification over them
 \cite{atkey2013productive,BahrGM17}. Currently there is no
-implementation of a calculus with guarded recursion.
+implementation of a calculus for guarded recursion.
 %%  nor guarded recursion
 %% appears as a selectable feature in a proof assistant.
 
@@ -72,7 +72,7 @@ Agda using sized types.
 
 Utilizing techniques for representing ``type theory in type theory''
 \cite{AltenkirchK16,Chapman09}, we present an Agda formalization of
-the syntax of a simple type theory with guarded recursion. This object
+the syntax of a simple type theory for guarded recursion. This object
 language, which we call \GTT, is a variant of Atkey and McBride's type
 system for productive coprogramming \cite{atkey2013productive} in
 which the clock context can contain at most one clock. The types of
@@ -101,28 +101,24 @@ interpreted as antitone sized types.
 The well-order relation on sizes is fundamental for constructing a
 terminating definition of the semantic fixpoint combinator. 
 
-Abel and Vezzosi \cite{AbelV14} also formalized a simple type theory
-extended with the later modality in Agda. They focus on operational
-properties of the calculus and give a certified proof of strong
-normalization. In our work we consider a richer type system and we
-formalize its denotational semantics in Agda. Nevertheless, we do not
-investigate the dynamic behaviour of our calculus, which we leave to
-future work.
+%%Abel and Vezzosi \cite{AbelV14} also formalized a simple type theory
+%%extended with the later modality in Agda. They focus on operational
+%%properties of the calculus and give a certified proof of strong
+%%normalization. In our work we consider a richer type system and we
+%%formalize its denotational semantics in Agda. Nevertheless, we do not
+%%investigate the dynamic behaviour of our calculus, which we leave to
+%%future work.
 
-%% A detailed account of how to model the characteristic features of
-%% \GTT, consisting of the \IC{▻} and
-%% \IC{□}  modality together with guarded recursive types, is given in
-%% Section \ref{sec:guarded}. 
 
 To summarize, the contributions of this paper are twofold:
 \begin{enumerate}
-  \item We formalize syntax and semantics of a type theory with
+  \item We formalize syntax and semantics of a type theory for
     guarded recursion in Agda. This is the first such denotational model developed using an extension of Martin-L\"of intensional
     type theory as the metalanguage, in contrast with the previous
     set-theoretic models of guarded recursion.
 \item The interpretation of the characteristic features of guarded
   recursion crucially requires the employment of sized types. This shows that
-  guarded recursive types can be reduced to sized types and
+  guarded recursion can be reduced to sized types and
   constitutes a stepping stone towards a clear understanding of  the connections
   between different approaches to productive coprogramming.
 %	\item We formally prove the syntax is consistent.
@@ -135,12 +131,26 @@ uses Agda 2.5.4.1 and Agda standard library 0.16. The paper is
 extracted from a literate Agda file, which implies that all the
 displayed code has passed Agda's type and termination checker.
 
-The remainder is organized as follows.
-We discuss the meta-theory and recall sized types in \Cref{sec:prelim}.
-Then we give the syntax of guarded recursive type theory \Cref{sec:syntax}.
-In \Cref{sec:presheaf_sem,sec:guarded}, we define a denotational semantics of the syntax using sized types.  
-For that, we first define a presheaf model and give the Kripke semantics, and then we show how to interpret the additional type and term formers of guarded recursive type theory.
-Finally, we conclude that the syntax is consistent in \Cref{sec:consistent}.
+The material is organized in the following way.
+In \Cref{sec:prelim}, we discuss the metatheory and we give an
+overview of sized types.
+In \Cref{sec:syntax}, we introduce the syntax of \GTT, our object type theory for guarded recursion.
+Subsequently, we give a categorical semantics.
+In \Cref{sec:presheaf_sem}, we show how to implement presheaves over
+sizes and how to model the fragment of
+\GTT\ corresponding to simply typed lambda calculus.
+In \Cref{sec:guarded}, we discuss the semantics of the guarded
+recursive and coinductive features.
+In \Cref{sec:consistent}, we describe how to formally interpret the
+syntax into the model, which entails the consistency of the syntax.
+Finally, in \Cref{sec:concl}, we draw conclusions and suggest  future
+directions of work.
+
+
+%% give the Kripke semantics
+%%\GTT.
+%%For that, we first define a presheaf model and give the Kripke semantics, and then we show how to interpret the additional type and term formers of guarded recursive type theory.
+%%Finally, we conclude that the syntax is consistent in \Cref{sec:consistent}.
 
 %\NV{WIP from this point}
 
