@@ -185,24 +185,27 @@ valuable hints.}%optional
 \begin{abstract}
   In type theory, programming and reasoning with possibly
   non-terminating programs and potentially infinite objects is
-  achieved with coinductive types. Recursively defined
-  programs using such types need to be productive to guarantee consistency, and proof
-  assistants such as Agda and Coq use syntactic
-  productivity checks for that.
-  However, this convolutes programs with coinductive types.
-  
-  One way to overcome this issue, is by encoding productivity at
-  the level of types, so that the type system forbids the
-  implementation of non-productive corecursive programs.
+  achieved using coinductive types. Recursively defined programs of
+  these types are required to be productive to guarantee the
+  consistency of the type system. Proof assistants such as Agda and
+  Coq traditionally employ strict syntactic productivity checks, which
+  commonly make programming with coinductive types convoluted.  One
+  way to overcome this issue is by encoding productivity at the level
+  of types, so that the type system forbids the implementation of
+  non-productive corecursive programs.
 %%, meaning
 %%  that although their definitions can be unfolded \emph{ad infinitum},
 %%  finite unfoldings are guaranteed to produce . 
-  In this paper, we compare two such approaches: guarded recursion and sized types. More specifically,
+  In this paper we compare two different approaches to type-based
+  productivity: guarded recursion and sized types. More specifically,
   we show how to simulate guarded recursion in Agda using sized
-  types. We formalize the syntax of a simple type theory for
-  guarded recursion, which is a variant of Atkey and McBride's
-  type system for productive coprogramming. Then we give a denotational semantics
-  using presheaves over the preorder of sizes. 
+  types. We formalize the syntax of a simple type theory for guarded
+  recursion, corresponding to a variant of Atkey and McBride's
+  calculus for productive coprogramming
+  \cite{atkey2013productive}. Then we give a denotational semantics
+  using presheaves over the preorder of sizes. Sized types are
+  fundamentally employed in the interpretation of the characteristic
+  features of guarded recursion, notably the fixpoint combinator.
 %Sized types are fundamentally employed in the interpretation of the characteristic features of guarded recursion, notably the fixpoint combinator.
 %%extending type theory with
 %%  coinduction and coinductive types.  More specifically, we show that
@@ -393,9 +396,9 @@ since sizes are not uniquely employed with coinductive types as a tool
 for easing the productivity check of corecursive definitions, but they
 are also used as auxiliary arguments of inductive types for
 facilitating the termination check of recursive definitions. It seems
-that, in order to capture this dual aspect of sizes, one %needs to
-%extend the existing type theories for guarded recursion with
-%additional features.
+that, in order to capture this dual aspect of sizes, one needs to
+extend the existing type theories for guarded recursion with
+additional features.
 %%
 %% Bibliography
 %%
