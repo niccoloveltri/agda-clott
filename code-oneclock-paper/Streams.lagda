@@ -13,7 +13,7 @@ open import Prelude.Syntax
 
 \subsection{Example: Streams}
 We give a taste of how to program with streams in \GTT.
-First we define a function \F{decons} which destructs an element of an inductive type.
+First, we define a function \F{decons} which destructs an element of an inductive type.
 \begin{code}
 decons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
 \end{code}

@@ -34,7 +34,7 @@
 
 \subsection{Example: Streams}
 We give a taste of how to program with streams in \GTT.
-First we define a function \F{decons} which destructs an element of an inductive type.
+First, we define a function \F{decons} which destructs an element of an inductive type.
 \begin{code}%
 \>[0]\AgdaFunction{decons}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -289,7 +289,7 @@ Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded 
 \>[0]\AgdaFunction{g{-}const}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{fix}\AgdaSpace{}%
+\AgdaFunction{fix}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{cons}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
@@ -419,7 +419,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}\{}\AgdaBound{A}\AgdaSymbol{\}\{}\AgdaBound{B}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaInductiveConstructor{fix}\AgdaSpace{}%
+\AgdaFunction{fix}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
