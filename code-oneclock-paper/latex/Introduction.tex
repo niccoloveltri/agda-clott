@@ -1,25 +1,25 @@
 Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Agda and Coq \cite{norell,barras1997coq}. It is a total language,
+as Agda and Coq \cite{barras1997coq,norell}. It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
 
 Possibly non-terminating computations
-and infinite structures such as non-wellfounded trees can be
+and infinite structures, such as non-wellfounded trees, can be
 represented in type theory by extending the type system with
 coinductive types. Recursively defined elements of these types
-are required to be productive in the sense that every
+need to be productive in the sense that every
 finite unfolding can be computed in a finite number of steps \cite{Coquand93}.
 In Agda's encoding of coinductive types using ``musical notation''
 \cite{DA10}, productivity is enforced via a strict obligation: in the
-definition of a corecursive function, the recursive
-call is required to appear directly under
+definition of a corecursive function, recursive
+calls must appear directly under
 the application of a constructor. A similar syntactic
-check is employed in Coq \cite{DBertotK08}.
+check is used in Coq \cite{DBertotK08}.
 This restriction
 typically makes programming with coinductive types cumbersome,
-which spawned the search for alternative techniques for ensuring the
+which spawned the search for alternative techniques to ensure the
 well-definedness of corecursive definitions.
 
 We focus on two of these techniques in which productivity is encoded
