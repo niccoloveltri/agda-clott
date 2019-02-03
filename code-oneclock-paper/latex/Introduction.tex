@@ -29,12 +29,17 @@ elements of this type can undergo \cite{Hughes96}. Sized types have been impleme
 in Agda and can be used in
 combination with coinductive records to specify
 coinductive types \cite{Copatterns,AVW-normalization}, as exemplified
-by Abel and Chapman's work \cite{AC14}.  Guarded recursion \cite{Nakano}
+by Abel and Chapman's work \cite{AC14}.
+
+Guarded recursion \cite{Nakano}
 is a different approach where the type system is enhanced with a
 modality, called ``later'' and written \IC{▻}, encoding time delay in
 types. The later modality comes with a general fixpoint combinator for
 programming with productive recursive functions and allows the
-specification of guarded recursive types, \eg the type of guarded
+specification of guarded recursive types.
+These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,BahrGM17}. Currently there is no
+implementation of a calculus for guarded recursion.
+\remove{, \eg the type of guarded
 streams satisfying the isomorphism \F{Str} \Ar{A} \F{≃} \Ar{A} \F{×}
 \IC{▻} (\F{Str} \Ar{A}). The tail of a guarded stream is available only
 one time step ahead from now, as evidenced by the application of the
@@ -42,7 +47,7 @@ later modality to \F{Str} \Ar{A}. Coinductive types can be constructed
 from guarded recursive types in type theories that additionally
 support clock variables and universal quantification over them
 \cite{atkey2013productive,BahrGM17}. Currently there is no
-implementation of a calculus for guarded recursion.
+implementation of a calculus for guarded recursion.}
 %%  nor guarded recursion
 %% appears as a selectable feature in a proof assistant.
 
