@@ -17,8 +17,8 @@ open PSh
 \end{code}
 }
 For semantic guarded recursive types, we introduce a type of semantics codes for functors.
-We cannot directly reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
-This observation leads to the following definition.
+We cannot reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
+Instead we use the following definition.
 
 \begin{code}
 data SemPoly : ClockCtx → Set₁ where
@@ -52,7 +52,7 @@ data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
 
 In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
 The interpretation of guarded recursive \AIC{∅}-types is similar.
-Given a semantic code \AB{P}, we are required to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
+Given a semantic code \AB{P}, our goal is to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
 %Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
 
 A first na\"{i}ve attempt would be to define the action on objects
@@ -63,7 +63,7 @@ while \F{sem-eval} \AB{P} expects a semantic type as input.
 
 Another possibility would be to define \F{μObj} \AB{P} by induction on \AB{P}.
 However, there is a problem when we arrive at the \IC{I} case.
-In this case, we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, but this is unavailable at this point.
+In this case, we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, which is unavailable at this point.
 We solve the issue by introducing an auxiliary inductive type family \F{μObj'}, which depends on two codes instead of one.
 The first code is the original one used to define the guarded recursive type and we do induction on the second one.
 Then we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
@@ -85,7 +85,7 @@ For the identity, we need to use \AB{P} to make a recursive call.
 The constructors of \F{μObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
-identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \F{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
+identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
 For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
 take in input only part of the data of a presheaf.
 \remove{
@@ -165,8 +165,8 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 }
 
 We define \AD{μMor} \Ar{P} to be \AD{μMor'} \Ar{P} \Ar{P}. 
-Since \AD{μMor} preserves identity and composition, we get a presheaf \AD{μ-κ} \Ar{P} for each semantic code \Ar{P}.
-This is used for interpreting the type former \IC{μ} in the clock context \IC{κ}
+Since \AD{μMor} preserves the identity and composition, we get a presheaf \AD{μ-κ} \Ar{P} for each \Ar{P}.
+This is used to interpret \IC{μ} in the clock context \IC{κ}
 \AgdaHide{
 \begin{code}
 μ-κ : SemPoly κ → SemPoly κ → SemTy κ

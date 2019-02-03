@@ -13,9 +13,9 @@ extended with additional features for programming with guarded recursive and coi
 types. We call this language \GTT. It is a variant of Atkey and McBride's type system, which we call \AM, for
 productive coprogramming \cite{atkey2013productive}. In \AM, all judgements are indexed by a clock context,
 which may contain several different clocks. They extend the simply typed
-lambda calculus with two additional type formers: a later modality ▻ for
+lambda calculus with two additional type formers: a modality ▻ for
 encoding time delay into types and universal quantification over clock
-variables ∀, which is used in combination with ▻ for the specification of coinductive types.
+variables ∀, which is used in combination with ▻ to specify coinductive types.
 
 \GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
 well-formed types and contexts, well-typed terms and substitutions,
@@ -41,8 +41,8 @@ mutual
 \end{code}
 }
 We refer to types and contexts in the empty clock context as \IC{∅}-types and
-\IC{∅}-contexts respectively. Similarly, we talk about \IC{κ}-types and
-\IC{κ}-contexts for types and contexts if they depend on \IC{κ}.
+\IC{∅}-contexts respectively. Similarly,  \IC{κ}-types and
+\IC{κ}-contexts are types and contexts depending on \IC{κ}.
 
 \subsection{Types}
 
@@ -56,7 +56,7 @@ products, coproducts, and function spaces. Notice that \IC{𝟙} is a
     _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
 \end{code}
 
-We include a later modality \IC{▻} as an operation on \IC{κ}-types similar to the one in \AM.
+We include a modality \IC{▻} as an operation on \IC{κ}-types similar to the one in \AM.
 There is also a nameless analogue of clock quantification, which we call ``box'' and denote by \IC{□}
 following \cite{CloustonBGB15}. The box modality takes a
 \IC{κ}-type and returns a \IC{∅}-type. The well-formed types of \GTT\
@@ -105,7 +105,7 @@ weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 \end{code}
 }
-The constructors of \F{Poly} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless it would not be complicated to add exponentials with
+The constructors of \F{Poly} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
 constant domain and the box modality to the grammar.
 %% We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} a functor \F{eval}
 %% \Ar{P} acting on \F{Ty} \Ar{Δ} defined by induction on \Ar{P}.
@@ -199,6 +199,7 @@ The delayed fixpoint combinator \IC{dfix} \cite{BahrGM17,BirkedalBCGSV16} allows
     dfix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ (▻ A)
 \end{code}
 %     fix : {Γ : Ctx κ} {A : Ty κ} → Tm Γ (▻ A ⟶ A) → Tm Γ A
+
 We have introduction and elimination
 rules for the \IC{□} modality. The rule \IC{box} is the analogue in \GTT\ of 
 Atkey and McBride's rule for clock abstraction
@@ -223,7 +224,7 @@ elements of \F{Tm} \Ar{Γ A} can be embedded in \F{Tm} (\IC{⇡}
 \end{code}
 
 Atkey and McBride assume the existence of certain type equalities
-\cite{atkey2013productive}. M{\o}gelberg, working in a dependently typed setting, considers similar type isomorphisms \cite{Mogelberg14}. In \GTT, we
+\cite{atkey2013productive}. M{\o}gelberg, who works in a dependently typed setting, considers similar type isomorphisms \cite{Mogelberg14}. In \GTT, we
 follow the second approach. This means that we do not introduce an
 equivalence relation on types specifying which types should be
 considered equal as in Chapman's object type theory
@@ -234,8 +235,8 @@ isomorphisms. For example, the clock irrevelance axiom formulated in our setting
     □const : {Γ : Ctx ∅} (A : Ty ∅) → Tm Γ (□ (⇡ A) ⟶ A)
 \end{code}
 %in \F{Tm} \Ar{Γ} (\Ar{A} \IC{⟶} \IC{□} (\IC{⇡} \Ar{A}))
-We can define a function \F{const□} \Ar{A} in the other direction.
-In the definitional equality on terms, described in Section \ref{sec:defeq}, we
+We define a function \F{const□} \Ar{A} in the other direction.
+When defining definitional equality on terms, described in Section \ref{sec:defeq}, we
 ask for \IC{□const} and \F{const□} to be each other inverses.
 The other type isomorphisms are constructed in a similar way.
 \AgdaHide{
@@ -268,7 +269,7 @@ We also add rules for embedding substitutions between \IC{∅}-contexts into sub
     down : {Γ₁ Γ₂ : Ctx ∅} → Sub (⇡ Γ₁) (⇡ Γ₂) → Sub Γ₁ Γ₂
 \end{code}
 
-We also need two isomorphisms between contexts. The context \IC{⇡ •} needs
+In addition, we need context isomorphisms. The context \IC{⇡ •} needs
 to be isomorphic to \IC{•} and \IC{⇡} (\Ar{Γ} \IC{,} \Ar{A})
 needs to be isomorphic to \IC{⇡} \Ar{Γ} \IC{,} \IC{⇡}
 \Ar{A}. For both of them, we add a constructor representing the underlying functions.
@@ -443,7 +444,7 @@ mutual
 \end{code}
 
 The term equality includes rules for equivalence, congruence, and
-substitution. There are also $\beta$ and $\eta$ rules for the type
+substitution. There also are $\beta$ and $\eta$ rules for the type
 formers. Among these rules, here we only show the ones associated to the
 \IC{□} modality. The rules state that \IC{box} and \IC{unbox} are each
 other's inverses.

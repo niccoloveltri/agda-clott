@@ -185,26 +185,25 @@ valuable hints.}%optional
 \begin{abstract}
   In type theory, programming and reasoning with possibly
   non-terminating programs and potentially infinite objects is
-  achieved using coinductive types. Crucially, recursively defined
-  programs of coinductive types are required to be productive. Proof
-  assistants such as Agda and Coq traditionally employ strict syntactic
-  productivity checks, which commonly make programming with coinductive types
-  convoluted. One way to overcome this issue is by encoding productivity at
+  achieved with coinductive types. Recursively defined
+  programs using such types need to be productive to guarantee consistency, and proof
+  assistants such as Agda and Coq use syntactic
+  productivity checks for that.
+  However, this convolutes programs with coinductive types.
+  
+  One way to overcome this issue, is by encoding productivity at
   the level of types, so that the type system forbids the
   implementation of non-productive corecursive programs.
 %%, meaning
 %%  that although their definitions can be unfolded \emph{ad infinitum},
 %%  finite unfoldings are guaranteed to produce . 
-  In this paper we compare two different approaches to type-based
-  productivity: guarded recursion and sized types. More specifically,
+  In this paper, we compare two such approaches: guarded recursion and sized types. More specifically,
   we show how to simulate guarded recursion in Agda using sized
-  types. First we formalize the syntax of a simple type theory for
-  guarded recursion, corresponding to a variant of Atkey and McBride's
-  type system for productive coprogramming
-  \cite{atkey2013productive}. Then we give a denotational semantics
-  using presheaves over the preorder of sizes. Sized types are
-  fundamentally employed in the interpretation of the characteristic
-  features of guarded recursion, notably the fixpoint combinator.
+  types. We formalize the syntax of a simple type theory for
+  guarded recursion, which is a variant of Atkey and McBride's
+  type system for productive coprogramming. Then we give a denotational semantics
+  using presheaves over the preorder of sizes. 
+%Sized types are fundamentally employed in the interpretation of the characteristic features of guarded recursion, notably the fixpoint combinator.
 %%extending type theory with
 %%  coinduction and coinductive types.  More specifically, we show that
 %%  guarded recursion and guarded recursive types can be simulated with
@@ -259,12 +258,12 @@ Next we give a categorical semantics for the calculus introduced in
 \cite{Mogelberg14} in which a (simple) type in a clock context
 containing $n$ clocks is interpreted
 as a presheaf in $\Set^{(\omega^n)^{\text{op}}}$, where $\omega$ is
-the preorder of ordered natural numbers. In our model we replace the
-category $\omega$ with the preorder of sizes. Moreover we only
+the preorder of ordered natural numbers. In our model, we replace the
+category $\omega$ with the preorder of sizes. Moreover, we only
 consider the cases where either the clock context is empty or it
 contains exactly one clock. This means that a type in \GTT\ is either
 interpreted as an element of \F{Set} or as a presheaf over \F{Size}. 
-In this section we show how to implement presheaves and how to model
+In this section, we show how to implement presheaves and how to model
 the fragment of \GTT\ corresponding to simply typed lambda
 calculus. The interpretation of the guarded recursive and coinductive
 features of \GTT\ is given in Section \ref{sec:guarded}.
@@ -309,7 +308,7 @@ the context operations, the simple type formers and the operations on substituti
 Since their definitions are standard, we do not discuss them in detail.
 For each of them, we need to make a case distinction based on the clock context.
 For example, the empty variable context \IC{•} is interpreted either as the unit type
-or as the terminal presheaf, depending on the clock context.
+or as the terminal presheaf depending on the clock context.
 We use the operations on presheaves defined in \Cref{sec:presheaves} to interpret simple type formers.
 \input{CloTT/TypeFormers/FunctionType}
 
@@ -354,17 +353,16 @@ guarded recursive types.
 \section{Conclusions and Future Work}
 \label{sec:concl}
 We presented a simple type theory for guarded recursion that we called \GTT. We
-formalized its syntax and semantics in Agda. Crucially, sized types
-were employed for giving an interpretation to the characteristic
-features of guarded recursion. From this we conclude that guarded
+formalized its syntax and semantics in Agda. Sized types
+were employed to interpret the characteristic
+features of guarded recursion. From this, we conclude that guarded
 recursion can be simulated using sized types. We greatly benefited
 of the fact that sized types constitute a native feature of Agda, so
 we were able to fully develop our theory inside a proof assistent. 
 
 This work can be extended in several different directions.
 Various type theories for guarded recursion in the literature include
-dependent types. Currently, there exist two disciplines for mixing
-dependent types with guarded recursion: delayed substitutions
+dependent types. Currently, there are two disciplines for these two features: delayed substitutions
 \cite{bizjak2016guarded} and ticks \cite{BahrGM17}. It would be interesting to extend
 the syntax and semantics of \GTT\ with dependent types following one
 of these methods.
@@ -389,15 +387,15 @@ Either one extends the object theory with delayed substitutions \cite{bizjak2016
 Second of all, with the deep embedding in place, one can further study the meta-theory by defining a formalized type checking and a normalization algorithm.
 }
 
-Finally, we want to understand weather it is possible to reduce sized
+Finally, we want to understand whether it is possible to reduce sized
 types to guarded recursion.  This does not seems directly doable,
 since sizes are not uniquely employed with coinductive types as a tool
 for easing the productivity check of corecursive definitions, but they
 are also used as auxiliary arguments of inductive types for
 facilitating the termination check of recursive definitions. It seems
-that, in order to capture this dual aspect of sizes, one needs to
-extend the existing type theories for guarded recursion with
-additional features.
+that, in order to capture this dual aspect of sizes, one %needs to
+%extend the existing type theories for guarded recursion with
+%additional features.
 %%
 %% Bibliography
 %%
