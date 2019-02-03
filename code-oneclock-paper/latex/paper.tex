@@ -353,17 +353,16 @@ guarded recursive types.
 \section{Conclusions and Future Work}
 \label{sec:concl}
 We presented a simple type theory for guarded recursion that we called \GTT. We
-formalized its syntax and semantics in Agda. Crucially, sized types
-were employed for giving an interpretation to the characteristic
-features of guarded recursion. From this we conclude that guarded
+formalized its syntax and semantics in Agda. Sized types
+were employed to interpret the characteristic
+features of guarded recursion. From this, we conclude that guarded
 recursion can be simulated using sized types. We greatly benefited
 of the fact that sized types constitute a native feature of Agda, so
 we were able to fully develop our theory inside a proof assistent. 
 
 This work can be extended in several different directions.
 Various type theories for guarded recursion in the literature include
-dependent types. Currently, there exist two disciplines for mixing
-dependent types with guarded recursion: delayed substitutions
+dependent types. Currently, there are two disciplines for these two features: delayed substitutions
 \cite{bizjak2016guarded} and ticks \cite{BahrGM17}. It would be interesting to extend
 the syntax and semantics of \GTT\ with dependent types following one
 of these methods.
@@ -388,15 +387,15 @@ Either one extends the object theory with delayed substitutions \cite{bizjak2016
 Second of all, with the deep embedding in place, one can further study the meta-theory by defining a formalized type checking and a normalization algorithm.
 }
 
-Finally, we want to understand weather it is possible to reduce sized
+Finally, we want to understand whether it is possible to reduce sized
 types to guarded recursion.  This does not seems directly doable,
 since sizes are not uniquely employed with coinductive types as a tool
 for easing the productivity check of corecursive definitions, but they
 are also used as auxiliary arguments of inductive types for
 facilitating the termination check of recursive definitions. It seems
-that, in order to capture this dual aspect of sizes, one needs to
-extend the existing type theories for guarded recursion with
-additional features.
+that, in order to capture this dual aspect of sizes, one %needs to
+%extend the existing type theories for guarded recursion with
+%additional features.
 %%
 %% Bibliography
 %%
