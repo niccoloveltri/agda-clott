@@ -390,6 +390,7 @@ Either one extends the object theory with delayed substitutions \cite{bizjak2016
 Second of all, with the deep embedding in place, one can further study the meta-theory by defining a formalized type checking and a normalization algorithm.
 }
 
+\remove{
 Finally, we want to understand whether it is possible to reduce sized
 types to guarded recursion.  This does not seems directly doable,
 since sizes are not uniquely employed with coinductive types as a tool
@@ -399,6 +400,11 @@ facilitating the termination check of recursive definitions. It seems
 that, in order to capture this dual aspect of sizes, one needs to
 extend the existing type theories for guarded recursion with
 additional features.
+}
+
+Finally, we would like to understand whether sized types can be simulated using guarded recursion.
+The difficulty is representing coinductive types.
+One could represent sizes by the conatural numbers, but this might not be sufficient to model infinitary coinductive types.
 %%
 %% Bibliography
 %%
