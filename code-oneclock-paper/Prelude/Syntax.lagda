@@ -11,7 +11,7 @@ open import Data.Empty
 The object language we consider, is the simply typed lambda calculus
 extended with additional features for programming with guarded recursive and coinductive
 types. We call this language \GTT. It is a variant of Atkey and McBride's type system, which we call \AM, for
-productive coprogramming \cite{atkey2013productive}. In \AM, all judgements are indexed by a clock context,
+productive coprogramming \cite{atkey2013productive}. In \AM, all judgments are indexed by a clock context,
 which may contain several different clocks. They extend the simply typed
 lambda calculus with two additional type formers: a modality ▻ for
 encoding time delay into types and universal quantification over clock
@@ -230,7 +230,7 @@ equivalence relation on types specifying which types should be
 considered equal as in Chapman's object type theory
 \cite{Chapman09}. Instead, we include additional term constructors
 corresponding to functions underlying the required type
-isomorphisms. For example, the clock irrevelance axiom formulated in our setting states that every \IC{∅}-type \Ar{A} is isomorphic to \IC{□} (\IC{⇡} \Ar{A}). This is obtained by adding to \AD{Tm} a constructor \IC{□const}.
+isomorphisms. For example, the clock irrelevance axiom formulated in our setting states that every \IC{∅}-type \Ar{A} is isomorphic to \IC{□} (\IC{⇡} \Ar{A}). This is obtained by adding to \AD{Tm} a constructor \IC{□const}.
 \begin{code}
     □const : {Γ : Ctx ∅} (A : Ty ∅) → Tm Γ (□ (⇡ A) ⟶ A)
 \end{code}
@@ -496,7 +496,7 @@ other's inverses.
 \end{code}
 
 We have definitional equalities which say that \IC{▻} is an applicative functor with the operations \IC{next} and \IC{⊛}.
-Furhermore, the fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
+Furthermore, the fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
 %% There is also the
 %% characteristic equality of the fixpoint combinator, stating that
 %% \IC{fix} \Ar{f} is equal to the application of the function term

@@ -7,7 +7,7 @@ open import Presheaves public
 \end{code}
 }
 
-Semantic judgements, similar to their syntactic counterparts, are indexed by
+Semantic judgments, similar to their syntactic counterparts, are indexed by
 a clock context. We reuse the type \AD{ClockCtx} for the semantic
 clock contexts.
 The semantic variable contexts are sets if the clock context is empty, and
