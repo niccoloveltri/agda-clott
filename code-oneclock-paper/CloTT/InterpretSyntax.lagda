@@ -18,6 +18,7 @@ open NatTrans
 \end{code}
 }
 
+\AgdaHide{
 \begin{code}
 mutual
   ⟦_⟧poly : {Δ : ClockCtx} → Poly Δ → SemPoly Δ
@@ -26,17 +27,24 @@ mutual
   ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
   ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
   ⟦ ▻ P ⟧poly = ▸ ⟦ P ⟧poly
+\end{code}
+}
 
+\begin{code}
   ⟦_⟧A : {Δ : ClockCtx} → Ty Δ → SemTy Δ
   ⟦ 𝟙 ⟧A = Unit
-  ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
-  ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-  ⟦ ⇡ A ⟧A = ⇑ ⟦ A ⟧A
   ⟦ ▻ A ⟧A = ►(⟦ A ⟧A)
   ⟦ □ A ⟧A = ■(⟦ A ⟧A)
   ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
-  
+\end{code}
+
+\AgdaHide{
+\begin{code}
+  ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
+  ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
+  ⟦ ⇡ A ⟧A = ⇑ ⟦ A ⟧A
+
 ⟦_⟧Γ : {Δ : ClockCtx} → Ctx Δ → SemCtx Δ
 ⟦ • ⟧Γ = ∙ _
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
@@ -324,3 +332,4 @@ mutual
   funcom (nat-map ⟦ weakenμ P ⟧tm i x) j k y = weakenμ-eq P P j y k
   nat-com ⟦ weakenμ P ⟧tm i j x = funeq (λ _ _ → refl)
 \end{code}
+}

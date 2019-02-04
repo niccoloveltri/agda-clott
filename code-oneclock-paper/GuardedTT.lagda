@@ -6,41 +6,14 @@ open import Data.Unit
 open import Data.Empty
 open import Data.Sum
 open import Data.Product
-open import Level --renaming (suc to lsuc;_⊔_ to _l⊔_)
+open import Level
 open import Prelude
 open import Prelude.Syntax
+open import Prelude.Interpretation
 open import Presheaves
 open import CloTT
-\end{code}
-}
 
-Now let us put everything together and define the notion of an interpretation of \GTT.
-To give an interpretation, one must give a type of semantical types, contexts, terms, substitutions, and functions mapping the syntactic objects to their semantical counterparts.
-In addition, definitional equality is interpreted as a relation on terms which includes the relation \D{∼} defined in \Cref{sec:syntax}, and the same is be done for substitutions.
-We define a record containing all this data, whose type declaration is given as
-
-\begin{code}
-record interpret-syntax : Set₂ where
-  field
-    semTy : ClockCtx → Set₁
-    _⟦_⟧Ty : ∀ {Δ} → Ty Δ → semTy Δ
-\end{code}
-
-\AgdaHide{
-\begin{code}
-    semCtx : ClockCtx → Set₁
-    semTm : ∀ {Δ} → semCtx Δ → semTy Δ → Set
-    semSub : ∀ {Δ} → semCtx Δ → semCtx Δ → Set
-    _[_sem∼_] : ∀ {Δ} {Γ : semCtx Δ} {A : semTy Δ}
-      → semTm Γ A → semTm Γ A → Set
-    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semCtx Δ} → semSub Γ₁ Γ₂ → semSub Γ₁ Γ₂ → Set
-    _⟦_⟧Ctx : ∀ {Δ} → Ctx Δ → semCtx Δ
-    _⟦_⟧Tm : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → semTm (_⟦_⟧Ctx Γ) (_⟦_⟧Ty A)
-    _⟦_⟧Sub : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} → Sub Γ₁ Γ₂ → semSub (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
-    _⟦_⟧∼ : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} {t t' : Tm Γ A}
-      → t ∼ t' → _[_sem∼_] (_⟦_⟧Tm t) (_⟦_⟧Tm t')
-    _⟦_⟧≈ : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {s s' : Sub Γ₁ Γ₂}
-      → s ≈ s' → _[_sem≈_] (_⟦_⟧Sub s) (_⟦_⟧Sub s')
+open interpret-syntax
 \end{code}
 }
 
@@ -50,51 +23,10 @@ The primary example is the syntax itself.
 Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 This gives rise to the initial interpretation.
 }
-\AgdaHide{
-\begin{code}
-open interpret-syntax
-
--- initial-interpretation : interpret-syntax
--- semTy initial-interpretation = Ty
--- semCtx initial-interpretation = Ctx
--- semSub initial-interpretation = Sub
--- semTm initial-interpretation = Tm
--- _[_sem∼_] initial-interpretation = _∼_
--- _[_sem≈_] initial-interpretation = _≈_
--- _⟦_⟧Ty initial-interpretation x = x 
--- _⟦_⟧Ctx initial-interpretation x = x
--- _⟦_⟧Sub initial-interpretation x = x
--- _⟦_⟧Tm initial-interpretation x = x
--- _⟦_⟧∼ initial-interpretation x = x
--- _⟦_⟧≈ initial-interpretation x = x
-\end{code}
-}
 
 We also define categorical semantics of the syntax by using the material in \Cref{sec:presheaf_sem,sec:guarded}.
 Types and contexts are interpreted as presheaves, and terms are interpreted as natural transformations.
 Formally, we define an interpretation \F{sem}.
-\AgdaHide{
-\begin{code}
-mutual
-  ⟦_⟧poly' : {Δ : ClockCtx} → Poly Δ → SemPoly Δ
-  ⟦_⟧poly' (∁ A) = ∁ ⟦ A ⟧A
-  ⟦ I ⟧poly' = I
-  ⟦ P ⊞ Q ⟧poly' = ⟦ P ⟧poly' ⊞ ⟦ Q ⟧poly'
-  ⟦ P ⊠ Q ⟧poly' = ⟦ P ⟧poly' ⊠ ⟦ Q ⟧poly'
-  ⟦ ▻ P ⟧poly' = ▸ ⟦ P ⟧poly'
-\end{code}
-}
-\begin{code}
-  ⟦_⟧A' : {Δ : ClockCtx} → Ty Δ → SemTy Δ
-  ⟦ 𝟙 ⟧A' = Unit
-  ⟦ A ⊞ B ⟧A' = ⟦ A ⟧A' ⊕ ⟦ B ⟧A'
-  ⟦ A ⊠ B ⟧A' = ⟦ A ⟧A' ⊗ ⟦ B ⟧A'
-  ⟦ A ⟶ B ⟧A' = ⟦ A ⟧A' ⇒ ⟦ B ⟧A'
-  ⟦ ⇡ A ⟧A' = ⇑ ⟦ A ⟧A'
-  ⟦ ▻ A ⟧A' = ► ⟦ A ⟧A'
-  ⟦ □ A ⟧A' = ■ ⟦ A ⟧A'
-  ⟦ μ P ⟧A' = mu ⟦ P ⟧poly'  
-\end{code}
 
 \begin{code}
 sem : interpret-syntax
