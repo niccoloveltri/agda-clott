@@ -49,9 +49,9 @@ sem-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
 This definition is accepted by Agda's termination checker because
 every recursive call is applied to a strictly smaller size.  Moreover,
 the usage of \F{SizeLt} in the definition of \F{Later} prevents
-infinite unfolding.  By using \F{►ObjTry} instead of \F{►Obj}, we
-would have constructed a non-productive recursive definition that
-Agda would have rightly rejected.
+infinite unfolding.  By using \F{►ObjTry} instead of \F{►Obj}, the field \AFi{►cone}
+would have been defined by lambda abstraction meaning that we could unfold it indefinitely.
+This is a non-productive recursive definition, which Agda would rightly have rejected.
 
 %%Note the recursive call of \F{sem-dfix₁}.
 %%The termination is guaranteed by the usage of \F{SizeLt} \Ar{i} in the definition of \F{Later} \Ar{A i}.
