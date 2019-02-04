@@ -91,7 +91,7 @@ However, with this definition, we are unable to
 implement a terminating semantic fixpoint combinator.
 Later in this section we discuss why this is the case.
 
-There are several ways to modify the above definiton and implement a
+There are several ways to modify the above definition and implement a
 terminating fixpoint operation. A possible solution, which was
 suggested to us by Andrea Vezzosi, is using an inductive analogue of the predicate \F{Size<}, which we call \F{SizeLt}.
 %%solution to this problem 
@@ -200,7 +200,7 @@ Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified in terms o
 \end{code}
 
 We define the action on objects of the semantic later modality similarly to \AD{►ObjTry} but with \F{SizeLt} in place of \F{Size<}.
-Before we do so, we introduce two auxiliary functions, which turn out to be handy when modelling guarded recursive types.
+Before we do so, we introduce two auxiliary functions, which turn out to be handy when modeling guarded recursive types.
 The first is a function \F{Later}, which instead of a semantic \IC{κ}-type, takes a sized type as its input.
 Its definition is the same as the type of the field \AFi{►cone} in \AD{►ObjTry} but with \F{Size<} replaced by \F{SizeLt}.
 %, and again we use a record for the definition.
