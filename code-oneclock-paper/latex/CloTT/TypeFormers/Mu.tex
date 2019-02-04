@@ -293,51 +293,51 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 
 In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
 The interpretation of guarded recursive \AIC{∅}-types is similar.
-Given a semantic code \AB{P}, our goal is to construct the action on objects and morphisms of a presheaf \F{μ-κ} \AB{P}.
-%Since both parts are defined with a similar technique, we only explain how to define the object part \F{μObj} \AB{P}.
+Given a semantic code \AB{P}, our goal is to construct the action on objects and morphisms of a presheaf \F{mu-κ} \AB{P}.
+%Since both parts are defined with a similar technique, we only explain how to define the object part \F{muObj} \AB{P}.
 
 A first na\"{i}ve attempt would be to define the action on objects
-\F{μObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
+\F{muObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
 \F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
-\IC{κ}. This does not work since \F{μObj} \AB{P} is a sized type
+\IC{κ}. This does not work since \F{muObj} \AB{P} is a sized type
 while \F{sem-eval} \AB{P} expects a semantic type as input.
 
-Another possibility would be to define \F{μObj} \AB{P} by induction on \AB{P}.
+Another possibility would be to define \F{muObj} \AB{P} by induction on \AB{P}.
 However, there is a problem when we arrive at the \IC{I} case.
-In this case, we would like to make a recursive call to \F{μObj} applied to the original code \AB{P}, which is unavailable at this point.
-We solve the issue by introducing an auxiliary inductive type family \F{μObj'}, which depends on two codes instead of one.
+In this case, we would like to make a recursive call to \F{muObj} applied to the original code \AB{P}, which is unavailable at this point.
+We solve the issue by introducing an auxiliary inductive type family \F{muObj'}, which depends on two codes instead of one.
 The first code is the original one used to define the guarded recursive type and we do induction on the second one.
-Then we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
+Then we define \F{muObj} \AB{P} to be \F{muObj'} \AB{P} \AB{P}.
 
 \remove{
 , would be using induction on \AB{P}.
 However, there is a problem when we arrive at the identity polynomial.
 In that case, a recursive call is made, so we need to refer back to original polynomial \AB{P}, which is unavailable at this point.
-To solve that, we use a trick: we define a data type \F{μObj'}, which depends on two polynomials instead of one.
+To solve that, we use a trick: we define a data type \F{muObj'}, which depends on two polynomials instead of one.
 The first polynomial is the polynomial used to define the guarded recursive type and we do induction on the second one.
-In the end, we define \F{μObj} \AB{P} to be \F{μObj'} \AB{P} \AB{P}.
+In the end, we define \F{muObj} \AB{P} to be \F{muObj'} \AB{P} \AB{P}.
 
-The data type \F{μObj'} \AB{P} \AB{Q} is defined as an inductive type.
+The data type \F{muObj'} \AB{P} \AB{Q} is defined as an inductive type.
 The constructors say how to construct inhabitans depending on whether \AB{Q} is constant, a product, a sum, \etc.
 If \AB{Q} is a product or sum, they are pairs or injections respectively.
 For the identity, we need to use \AB{P} to make a recursive call.
 }
 
-The constructors of \F{μObj'} \AB{P} \AB{Q} follow the structure of
+The constructors of \F{muObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
-identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{μObj'} mutually with its own proof of antitonicity \F{μMor'}.
+identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{muObj'} mutually with its own proof of antitonicity \F{muMor'}.
 For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
 take in input only part of the data of a presheaf.
 \remove{
 The main difficulty comes
-with the \AIC{▸} case. We need \F{μ-κ} (\IC{▸}
-\Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{μ-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}.
+with the \AIC{▸} case. We need \F{mu-κ} (\IC{▸}
+\Ar{P}) to be equivalent (as a presheaf) to \F{►} (\F{mu-κ} \Ar{P}), for each semantic code \Ar{P}. To this end, the constructor \IC{later} takes two arguments with the same types as the two fields of \F{►Obj}.
 }
 \remove{
 However, the main difficulty is \AIC{▸}.
 This is because the later modality depends on both the object and morphism part of its argument.
-For this reason, we need to define \F{μObj'} and \F{μMor'} mutually.
+For this reason, we need to define \F{muObj'} and \F{muMor'} mutually.
 We define them formally as follows.
 }
 \begin{code}%
@@ -345,7 +345,7 @@ We define them formally as follows.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{SemPoly}\AgdaSpace{}%
@@ -373,7 +373,7 @@ We define them formally as follows.
 \AgdaBound{X}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
@@ -384,12 +384,12 @@ We define them formally as follows.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀\{}\AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaBound{i}\<%
@@ -401,17 +401,17 @@ We define them formally as follows.
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
@@ -425,12 +425,12 @@ We define them formally as follows.
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
@@ -444,12 +444,12 @@ We define them formally as follows.
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
@@ -464,7 +464,7 @@ We define them formally as follows.
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaFunction{Later}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\<%
@@ -472,16 +472,16 @@ We define them formally as follows.
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{LaterLim}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▸}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
@@ -490,7 +490,7 @@ We define them formally as follows.
 
 \begin{code}%
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -506,18 +506,18 @@ We define them formally as follows.
 \AgdaSymbol{(}\AgdaOperator{\AgdaPostulate{↑}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaBound{X}\AgdaSymbol{)}\AgdaSpace{}%
@@ -534,7 +534,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -543,7 +543,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{rec}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -551,7 +551,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
@@ -562,14 +562,14 @@ We define them formally as follows.
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{y}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -577,7 +577,7 @@ We define them formally as follows.
 \AgdaBound{y}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
@@ -588,7 +588,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{in₁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -596,7 +596,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
@@ -607,7 +607,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{in₂}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -615,7 +615,7 @@ We define them formally as follows.
 \AgdaBound{x}\AgdaSymbol{)}\<%
 \\
 %
-\>[2]\AgdaFunction{μMor'}\AgdaSpace{}%
+\>[2]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{▸}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSymbol{)}\AgdaSpace{}%
@@ -674,12 +674,12 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaPostulate{Size}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -812,26 +812,26 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaBound{j}\AgdaSymbol{)\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{\}}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaOperator{\AgdaDatatype{≡}}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -951,9 +951,9 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \end{code}
 }
 
-We define \AD{μMor} \Ar{P} to be \AD{μMor'} \Ar{P} \Ar{P}. 
-Since \AD{μMor} preserves the identity and composition, we get a presheaf \AD{μ-κ} \Ar{P} for each \Ar{P}.
-This is used to interpret \IC{μ} in the clock context \IC{κ}
+We define \AD{muMor} \Ar{P} to be \AD{muMor'} \Ar{P} \Ar{P}. 
+Since \AD{muMor} preserves the identity and composition, we get a presheaf \AD{mu-κ} \Ar{P} for each \Ar{P}.
+This is used to interpret \IC{μ} in the clock context \IC{κ}. We write \F{mu} for the interpretation of \IC{μ} in a general clock context.
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{μ{-}κ}\AgdaSpace{}%
@@ -977,7 +977,7 @@ This is used to interpret \IC{μ} in the clock context \IC{κ}
 \>[2]\AgdaSymbol{\{}\AgdaSpace{}%
 \AgdaField{Obj}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaDatatype{μObj'}\AgdaSpace{}%
+\AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\<%
 \\
@@ -985,7 +985,7 @@ This is used to interpret \IC{μ} in the clock context \IC{κ}
 \>[2]\AgdaSymbol{;}\AgdaSpace{}%
 \AgdaField{Mor}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{μMor'}\AgdaSpace{}%
+\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\<%
 \\
