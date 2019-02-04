@@ -44,7 +44,7 @@ record interpret-syntax {ℓ₁ ℓ₂} : Set (suc (ℓ₁ ⊔ ℓ₂)) where
 \end{code}
 }
 
-If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{t}.
+%If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{t}.
 The primary example is the syntax itself.
 Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 This gives rise to the initial interpretation.
@@ -52,15 +52,8 @@ This gives rise to the initial interpretation.
 \AgdaHide{
 \begin{code}
 open interpret-syntax
-\end{code}
-}
 
-\begin{code}
 initial-interpretation : interpret-syntax
-\end{code}
-
-\AgdaHide{
-\begin{code}
 semTy initial-interpretation = Ty
 semCtx initial-interpretation = Ctx
 semSub initial-interpretation = Sub
@@ -101,11 +94,11 @@ _⟦_⟧≈ sem = ⟦_⟧sub-eq
 \end{code}
 }
 
-Now we show that the syntax is consistent.
-Consistency means that not every defitional equality holds.
-For this, we define a type \F{bool} : \F{Ty} \IC{∅} by \IC{𝟙 ⊞ 𝟙} and two terms \F{TRUE} and \F{FALSE} by \IC{in₁ 𝟙 tt} and \IC{in₂ 𝟙 tt} respectively.
-Now we say that an interpretation is consistent if \AF{TRUE} and \AF{FALSE} do not have the same interpretation.
-
+Now we show that \GTT\ is consistent, meaning that
+not every definitional equality is deducible. 
+%that not every definitional equality holds.
+We first define a type \F{bool} : \F{Ty} \IC{∅} as \IC{𝟙 ⊞ 𝟙} and two terms \F{TRUE} and \F{FALSE} as \IC{in₁ tt} and \IC{in₂ tt} respectively.
+We say that \GTT\ is consistent if \AF{TRUE} and \AF{FALSE} are not definitionally equal.
 \AgdaHide{
 \begin{code}
 bool : Ty ∅
@@ -118,41 +111,40 @@ FALSE : Tm • bool
 FALSE = in₂ 𝟙 tt
 \end{code}
 }
-
 \begin{code}
-consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
-consistent sem = sem [ sem ⟦ TRUE ⟧Tm sem∼ sem ⟦ FALSE ⟧Tm ] → ⊥
+consistent : Set
+consistent = TRUE ∼ FALSE → ⊥
 \end{code}
-
+This can be proved by noticing that if \F{TRUE} were definitionally equal to \F{FALSE}, then \AIC{inj₁} \AIC{tt} would be propositionally equal to \AIC{inj₂} \AIC{tt}, which is absurd.
 \AgdaHide{
 \begin{code}
+--consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
+--consistent sem = sem [ sem ⟦ TRUE ⟧Tm sem∼ sem ⟦ FALSE ⟧Tm ] → ⊥
 sem-consistent-help : ⊤ ⊎ ⊤ → Set
 sem-consistent-help (inj₁ x) = ⊤
 sem-consistent-help (inj₂ y) = ⊥
 \end{code}
 
 \begin{code}
-sem-consistent : consistent sem
+--sem-consistent : consistent sem
 \end{code}
 
 \begin{code}
-sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
+--sem-consistent p = subst sem-consistent-help (p ⊤.tt) ⊤.tt
 \end{code}
 }
-
+\remove{
 Note that the categorical semantics gives rises to a consistent interpretation of the syntax, because \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} are unequal where \AIC{tt} is the constructor of \AD{⊤}.
 From this, we conclude that the initial interpretation is consistent.
 This is because whenever we have a definitional equality between \AF{TRUE} and \AF{FALSE}, we could interpret that equality in \AF{sem}.
 Since the latter leads to a contradiction, the former does so too.
 All in all, we get
-
-\begin{code}
-syntax-consistent : consistent initial-interpretation
-\end{code}
-
+}
 \AgdaHide{
 \begin{code}
-syntax-consistent p = sem-consistent (sem ⟦ p ⟧∼)
+syntax-consistent : consistent
+syntax-consistent p with (sem ⟦ p ⟧∼) tt
+syntax-consistent p | ()
 \end{code}
 
 \begin{code}
