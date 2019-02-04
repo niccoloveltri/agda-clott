@@ -18,6 +18,10 @@ open NatTrans
 \end{code}
 }
 
+Now let us define categorical semantics for the syntax.
+For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
+We only show how to interpret the types.
+
 \AgdaHide{
 \begin{code}
 mutual
@@ -31,7 +35,7 @@ mutual
 }
 
 \begin{code}
-  ⟦_⟧A : {Δ : ClockCtx} → Ty Δ → SemTy Δ
+  ⟦_⟧A : ∀ {Δ} → Ty Δ → SemTy Δ
   ⟦ 𝟙 ⟧A = Unit
   ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
   ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
