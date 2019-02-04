@@ -290,7 +290,7 @@ sem-primrec-psh P (▻P Q) Γ A t i x j z =
                                         (cong (nat-map ⟦ Pmap Q (primrec P t) ⟧tm k) (MorComp ⟦ Γ ⟧Γ))))}))
 -}
 
-μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : muObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i)
+μweakenμ-help : (P Q : Poly ∅) (i : Size) (x : muObj' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code i)
   → μweaken-help P Q (weakenμ-help P Q i x) i ≡ x
 μweakenμ-help P (∁ X) i (const x) = refl
 μweakenμ-help P I i (rec x) = cong rec (μweakenμ-help P P i x)
@@ -298,7 +298,7 @@ sem-primrec-psh P (▻P Q) Γ A t i x j z =
 μweakenμ-help P (Q₁ ⊞ Q₂) i (in₂ x) = cong in₂ (μweakenμ-help P Q₂ i x)
 μweakenμ-help P (Q₁ ⊠ Q₂) i (x₁ , x₂) = cong₂ _,_ (μweakenμ-help P Q₁ i x₁) (μweakenμ-help P Q₂ i x₂)
 
-weakenμweaken-help : (P Q : Poly ∅) (i : Size) (x : μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+weakenμweaken-help : (P Q : Poly ∅) (i : Size) (x : μset ⟦ P ⟧code ⟦ Q ⟧code)
   → weakenμ-help P Q i (μweaken-help P Q x i) ≡ x
 weakenμweaken-help P (∁ X) i (∁s x) = refl
 weakenμweaken-help P I i (I x) = cong I (weakenμweaken-help P P i x)

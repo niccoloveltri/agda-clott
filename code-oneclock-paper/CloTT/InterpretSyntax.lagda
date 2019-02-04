@@ -25,26 +25,38 @@ We only show how to interpret the types.
 \AgdaHide{
 \begin{code}
 mutual
-  ⟦_⟧poly : {Δ : ClockCtx} → Poly Δ → SemPoly Δ
-  ⟦_⟧poly (∁ A) = ∁ ⟦ A ⟧A
-  ⟦ I ⟧poly = I
-  ⟦ P ⊞ Q ⟧poly = ⟦ P ⟧poly ⊞ ⟦ Q ⟧poly
-  ⟦ P ⊠ Q ⟧poly = ⟦ P ⟧poly ⊠ ⟦ Q ⟧poly
-  ⟦ ▻ P ⟧poly = ▸ ⟦ P ⟧poly
+\end{code}
+
+\begin{code}
+  ⟦_⟧code : ∀ {Δ} → Poly Δ → SemPoly Δ
+  ⟦_⟧code (∁ A) = ∁ ⟦ A ⟧A
+\end{code}
+
+\AgdaHide{
+\begin{code}
+  ⟦ I ⟧code = I
+  ⟦ P ⊞ Q ⟧code = ⟦ P ⟧code ⊞ ⟦ Q ⟧code
+  ⟦ P ⊠ Q ⟧code = ⟦ P ⟧code ⊠ ⟦ Q ⟧code
+  ⟦ ▻ P ⟧code = ▸ ⟦ P ⟧code
 \end{code}
 }
 
 \begin{code}
   ⟦_⟧A : ∀ {Δ} → Ty Δ → SemTy Δ
-  ⟦ 𝟙 ⟧A = Unit
-  ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
-  ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
   ⟦ ▻ A ⟧A = ►(⟦ A ⟧A)
   ⟦ □ A ⟧A = ■(⟦ A ⟧A)
-  ⟦ ⇡ A ⟧A = ⇑ ⟦ A ⟧A
-  ⟦ μ P ⟧A = mu ⟦ P ⟧poly  
+  ⟦ μ P ⟧A = mu ⟦ P ⟧code  
 \end{code}
+
+\AgdaHide{
+\begin{code}
+  ⟦ 𝟙 ⟧A = Unit
+  ⟦ A ⊠ B ⟧A = ⟦ A ⟧A ⊗ ⟦ B ⟧A
+  ⟦ A ⊞ B ⟧A = ⟦ A ⟧A ⊕ ⟦ B ⟧A
+  ⟦ ⇡ A ⟧A = ⇑ ⟦ A ⟧A
+\end{code}
+}
 
 \AgdaHide{
 \begin{code}
@@ -53,16 +65,16 @@ mutual
 ⟦ Γ , A ⟧Γ = (⟦ Γ ⟧Γ) ,, ⟦ A ⟧A
 ⟦ ⇡ Γ ⟧Γ = ⇑ ⟦ Γ ⟧Γ
 
-consset' : (P Q : Poly ∅) → ⟦ eval Q (μ P) ⟧A → μset ⟦ P ⟧poly ⟦ Q ⟧poly
+consset' : (P Q : Poly ∅) → ⟦ eval Q (μ P) ⟧A → μset ⟦ P ⟧code ⟦ Q ⟧code
 consset' P (∁ x) t = ∁s t -- ∁s t
 consset' P I t = I t -- I t
 consset' P (Q ⊞ Q₁) (inj₁ x) = ⊞₁ (consset' P Q x)
 consset' P (Q ⊞ Q₁) (inj₂ y) = ⊞₂ (consset' P Q₁ y)
 consset' P (Q₁ ⊠ Q₂) t = consset' P Q₁ (proj₁ t) ⊠ consset' P Q₂ (proj₂ t)
 
-cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ eval Q (μ P) ⟧A i → muObj' ⟦ P ⟧poly ⟦ Q ⟧poly i
+cons₁' : (P Q : Poly κ) (i : Size) → Obj ⟦ eval Q (μ P) ⟧A i → muObj' ⟦ P ⟧code ⟦ Q ⟧code i
 cons₂' : (P Q : Poly κ) (i : Size) (j : Size< (↑ i)) (t : Obj ⟦ eval Q (μ P) ⟧A i)
-  → muMor' ⟦ P ⟧poly ⟦ Q ⟧poly i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor ⟦ eval Q (μ P) ⟧A i j t)
+  → muMor' ⟦ P ⟧code ⟦ Q ⟧code i j (cons₁' P Q i t) ≡ cons₁' P Q j (Mor ⟦ eval Q (μ P) ⟧A i j t)
 cons₁' P (∁ X) i t = const t
 cons₁' P I i t = rec t
 cons₁' P (Q ⊠ R) i (t , u) = (cons₁' P Q i t) , (cons₁' P R i u)
@@ -70,9 +82,9 @@ cons₁' P (Q ⊞ R) i (inj₁ t) = in₁ (cons₁' P Q i t)
 cons₁' P (Q ⊞ R) i (inj₂ t) = in₂ (cons₁' P R i t)
 cons₁' P (▻ Q) i t = later c₁ c₂
   where
-    c₁ : Later (muObj' ⟦ P ⟧poly ⟦ Q ⟧poly) i
+    c₁ : Later (muObj' ⟦ P ⟧code ⟦ Q ⟧code) i
     c₁ [ j ] = cons₁' P Q j (►cone t [ j ])
-    c₂ : LaterLim (muObj' ⟦ P ⟧poly ⟦ Q ⟧poly) (muMor' ⟦ P ⟧poly ⟦ Q ⟧poly) i c₁
+    c₂ : LaterLim (muObj' ⟦ P ⟧code ⟦ Q ⟧code) (muMor' ⟦ P ⟧code ⟦ Q ⟧code) i c₁
     c₂ [ j ] [ k ] = trans (cons₂' P Q j k (►cone t [ j ])) (cong (cons₁' P Q k) (►com t [ j ] [ k ]))
 cons₂' P (∁ X) i j t = refl
 cons₂' P I i j t = refl
@@ -82,13 +94,13 @@ cons₂' P (Q ⊞ R) i j (inj₂ t) = cong in₂ (cons₂' P R i j t)
 cons₂' P (▻ Q) i j t =
   cong₂-dep later (funext (λ { [ _ ] → refl})) (funext (λ { [ _ ] → funext (λ { [ _ ] → uip }) }))
 
-conspsh : (P Q : Poly κ) (Γ : Ctx κ) → SemTm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → SemTm ⟦ Γ ⟧Γ (μ-κ ⟦ P ⟧poly ⟦ Q ⟧poly)
+conspsh : (P Q : Poly κ) (Γ : Ctx κ) → SemTm ⟦ Γ ⟧Γ ⟦ eval Q (μ P) ⟧A → SemTm ⟦ Γ ⟧Γ (μ-κ ⟦ P ⟧code ⟦ Q ⟧code)
 nat-map (conspsh P Q Γ t) i γ  = cons₁' P Q i (nat-map t i γ)
 nat-com (conspsh P Q Γ t) i j γ = trans (cons₂' P Q i j (nat-map t i γ)) (cong (cons₁' P Q j) (nat-com t i j γ))
 
 primrec-set' : (P Q : Poly ∅) (A : Ty ∅)
   → ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
-  → (μset ⟦ P ⟧poly ⟦ Q ⟧poly)
+  → (μset ⟦ P ⟧code ⟦ Q ⟧code)
   → ⟦ eval Q (μ P ⊠ A) ⟧A
 primrec-set' P (∁ X) A y (∁s z) = z
 primrec-set' P I A y (I z) = z , y (primrec-set' P P A y z)
@@ -99,17 +111,17 @@ proj₂ (primrec-set' P (Q₁ ⊠ Q₂) A y (z₁ ⊠ z₂)) = primrec-set' P Q�
 
 primrec-set : (P : Poly ∅) (Γ : Ctx ∅) (A : Ty ∅)
   → SemTm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
-  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧code ⇒ ⟦ A ⟧A)
 primrec-set P Γ A t x a = t x (primrec-set' P P A (t x) a)
 
 primrec-psh'₁₁ : (P Q : Poly κ) (A : Ty κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
-  → (j : Size< (↑ i)) (z : muObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
+  → (j : Size< (↑ i)) (z : muObj' ⟦ P ⟧code ⟦ Q ⟧code j)
   → Obj ⟦ eval Q (μ P ⊠ A) ⟧A j
 primrec-psh'₁₂ : (P Q : Poly κ) (A : Ty κ) (i : Size) (t : Obj ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A i)
-  → (j : Size< (↑ i)) (z : muObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
+  → (j : Size< (↑ i)) (z : muObj' ⟦ P ⟧code ⟦ Q ⟧code j) (k : Size< (↑ j))
   → Mor ⟦ eval Q (μ P ⊠ A) ⟧A j k (primrec-psh'₁₁ P Q A i t j z)
     ≡
-    primrec-psh'₁₁ P Q A i t k (muMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
+    primrec-psh'₁₁ P Q A i t k (muMor' ⟦ P ⟧code ⟦ Q ⟧code j k z)
 primrec-psh'₁₁ P (∁ X) A i t j (const z) = z
 primrec-psh'₁₁ P I A i t j (rec z) = (z , fun t j (primrec-psh'₁₁ P P A i t j z))
 primrec-psh'₁₁ P (Q₁ ⊞ Q₂) A i t j (in₁ z) = inj₁ (primrec-psh'₁₁ P Q₁ A i t j z)
@@ -132,7 +144,7 @@ primrec-psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ , z₂) k =
 primrec-psh'₁₂ P (▻ Q) A i t j (later z₁ z₂) k = ►eq (λ {_ → refl})
 
 primrec-psh'₂ : (P Q : Poly κ) (Γ : SemCtx κ) (A : Ty κ) (t : SemTm Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A)
-  → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : muObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
+  → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : muObj' ⟦ P ⟧code ⟦ Q ⟧code k)
   → primrec-psh'₁₁ P Q A i (nat-map t i x) k z
     ≡
     primrec-psh'₁₁ P Q A j (nat-map t j (Mor Γ i j x)) k z
@@ -150,7 +162,7 @@ primrec-psh'₂ P (▻ Q) Γ A t i j x k (later z₁ z₂) =
 
 primrec-psh : (P : Poly κ) (Γ : Ctx κ) (A : Ty κ)
   → SemTm ⟦ Γ ⟧Γ ⟦ eval P (μ P ⊠ A) ⟶ A ⟧A
-  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+  → SemTm ⟦ Γ ⟧Γ (mu ⟦ P ⟧code ⇒ ⟦ A ⟧A)
 fun (nat-map (primrec-psh P Γ A f) i x) j y = fun (nat-map f i x) j (primrec-psh'₁₁ P P A i (nat-map f i x) j y)
 funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
   trans (funcom (nat-map f i x) j k _)
@@ -246,15 +258,15 @@ funcom (nat-map (primrec-psh P Γ A f) i x) j k y =
 nat-com (primrec-psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun a k b) (nat-com t i j x) (primrec-psh'₂ P P ⟦ Γ ⟧Γ A t i j x k z))
 -}
 
-μweaken-help : (P Q : Poly ∅) → μset ⟦ P ⟧poly ⟦ Q ⟧poly → (i : Size) → muObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i
+μweaken-help : (P Q : Poly ∅) → μset ⟦ P ⟧code ⟦ Q ⟧code → (i : Size) → muObj' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code i
 μweaken-help P (∁ X) (∁s x) i = const x
 μweaken-help P I (I x) i = rec (μweaken-help P P x i)
 μweaken-help P (Q₁ ⊞ Q₂) (⊞₁ x) i = in₁ (μweaken-help P Q₁ x i)
 μweaken-help P (Q₁ ⊞ Q₂) (⊞₂ x) i = in₂ (μweaken-help P Q₂ x i)
 μweaken-help P (Q₁ ⊠ Q₂) (x₁ ⊠ x₂) i = μweaken-help P Q₁ x₁ i , μweaken-help P Q₂ x₂ i
 
-μweaken-eq : (P Q : Poly ∅) (x : μset ⟦ P ⟧poly ⟦ Q ⟧poly) (i : Size) (j : Size< (↑ i)) (k : Size< (↑ j))
-  → muMor' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly j k
+μweaken-eq : (P Q : Poly ∅) (x : μset ⟦ P ⟧code ⟦ Q ⟧code) (i : Size) (j : Size< (↑ i)) (k : Size< (↑ j))
+  → muMor' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code j k
           (μweaken-help P Q x j)
     ≡
     μweaken-help P Q x k
@@ -265,17 +277,17 @@ nat-com (primrec-psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b → fun
 μweaken-eq P (Q₁ ⊠ Q₂) (x₁ ⊠ x₂) i j k =
   cong₂ _,_ (μweaken-eq P Q₁ x₁ i j k) (μweaken-eq P Q₂ x₂ i j k)
 
-weakenμ-help : (P Q : Poly ∅) → (i : Size) → muObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i → μset ⟦ P ⟧poly ⟦ Q ⟧poly
+weakenμ-help : (P Q : Poly ∅) → (i : Size) → muObj' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code i → μset ⟦ P ⟧code ⟦ Q ⟧code
 weakenμ-help P (∁ X) i (const x) = ∁s x
 weakenμ-help P I i (rec x) = I (weakenμ-help P P i x)
 weakenμ-help P (Q₁ ⊞ Q₂) i (in₁ x) = ⊞₁ (weakenμ-help P Q₁ i x)
 weakenμ-help P (Q₁ ⊞ Q₂) i (in₂ x) = ⊞₂ (weakenμ-help P Q₂ i x)
 weakenμ-help P (Q₁ ⊠ Q₂) i (x₁ , x₂) = weakenμ-help P Q₁ i x₁ ⊠ weakenμ-help P Q₂ i x₂
 
-weakenμ-eq : (P Q : Poly ∅) (i : Size) (x : muObj' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i) (j : Size< (↑ i))
+weakenμ-eq : (P Q : Poly ∅) (i : Size) (x : muObj' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code i) (j : Size< (↑ i))
   → weakenμ-help P Q i x
     ≡
-    weakenμ-help P Q j (muMor' ⟦ weakenP P ⟧poly ⟦ weakenP Q ⟧poly i j x)
+    weakenμ-help P Q j (muMor' ⟦ weakenP P ⟧code ⟦ weakenP Q ⟧code i j x)
 weakenμ-eq P (∁ X) i (const x) j = refl
 weakenμ-eq P I i (rec x) j = cong I (weakenμ-eq P P i x j)
 weakenμ-eq P (Q₁ ⊞ Q₂) i (in₁ x) j = cong ⊞₁ (weakenμ-eq P Q₁ i x j)
