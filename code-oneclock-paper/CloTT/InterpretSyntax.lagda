@@ -26,6 +26,7 @@ We only show how to interpret the types.
 \begin{code}
 mutual
 \end{code}
+}
 
 \begin{code}
   ⟦_⟧code : ∀ {Δ} → Poly Δ → SemPoly Δ
