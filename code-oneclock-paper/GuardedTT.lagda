@@ -20,20 +20,20 @@ In addition, definitional equality is interpreted as a relation on terms which i
 We define a record containing all this data, whose type declaration is given as
 
 \begin{code}
-record interpret-syntax {ℓ₁ ℓ₂} : Set (suc (ℓ₁ ⊔ ℓ₂)) where
+record interpret-syntax : Set₂ where
+  field
+    semTy : ClockCtx → Set₁
+    _⟦_⟧Ty : ∀ {Δ} → Ty Δ → semTy Δ
 \end{code}
 
 \AgdaHide{
 \begin{code}
-  field
-    semTy : ClockCtx → Set ℓ₁
-    semCtx : ClockCtx → Set ℓ₁
-    semTm : ∀ {Δ} → semCtx Δ → semTy Δ → Set ℓ₂
-    semSub : ∀ {Δ} → semCtx Δ → semCtx Δ → Set ℓ₂
+    semCtx : ClockCtx → Set₁
+    semTm : ∀ {Δ} → semCtx Δ → semTy Δ → Set
+    semSub : ∀ {Δ} → semCtx Δ → semCtx Δ → Set
     _[_sem∼_] : ∀ {Δ} {Γ : semCtx Δ} {A : semTy Δ}
-      → semTm Γ A → semTm Γ A → Set ℓ₂
-    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semCtx Δ} → semSub Γ₁ Γ₂ → semSub Γ₁ Γ₂ → Set ℓ₂
-    _⟦_⟧Ty : ∀ {Δ} → Ty Δ → semTy Δ
+      → semTm Γ A → semTm Γ A → Set
+    _[_sem≈_] : ∀ {Δ} {Γ₁ Γ₂ : semCtx Δ} → semSub Γ₁ Γ₂ → semSub Γ₁ Γ₂ → Set
     _⟦_⟧Ctx : ∀ {Δ} → Ctx Δ → semCtx Δ
     _⟦_⟧Tm : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → semTm (_⟦_⟧Ctx Γ) (_⟦_⟧Ty A)
     _⟦_⟧Sub : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} → Sub Γ₁ Γ₂ → semSub (_⟦_⟧Ctx Γ₁) (_⟦_⟧Ctx Γ₂)
@@ -45,47 +45,70 @@ record interpret-syntax {ℓ₁ ℓ₂} : Set (suc (ℓ₁ ⊔ ℓ₂)) where
 }
 
 %If \AB{sem} is an interpretation of the syntax and \AB{t} is a term, then we write \AB{sem} \AFi{⟦} \AB{t} \AFi{⟧} for the interpretation of \AB{t}.
+\remove{
 The primary example is the syntax itself.
 Types, contexts, substitutions, terms, and so on are interpreted by themselves.
 This gives rise to the initial interpretation.
-
+}
 \AgdaHide{
 \begin{code}
 open interpret-syntax
 
-initial-interpretation : interpret-syntax
-semTy initial-interpretation = Ty
-semCtx initial-interpretation = Ctx
-semSub initial-interpretation = Sub
-semTm initial-interpretation = Tm
-_[_sem∼_] initial-interpretation = _∼_
-_[_sem≈_] initial-interpretation = _≈_
-_⟦_⟧Ty initial-interpretation x = x 
-_⟦_⟧Ctx initial-interpretation x = x
-_⟦_⟧Sub initial-interpretation x = x
-_⟦_⟧Tm initial-interpretation x = x
-_⟦_⟧∼ initial-interpretation x = x
-_⟦_⟧≈ initial-interpretation x = x
+-- initial-interpretation : interpret-syntax
+-- semTy initial-interpretation = Ty
+-- semCtx initial-interpretation = Ctx
+-- semSub initial-interpretation = Sub
+-- semTm initial-interpretation = Tm
+-- _[_sem∼_] initial-interpretation = _∼_
+-- _[_sem≈_] initial-interpretation = _≈_
+-- _⟦_⟧Ty initial-interpretation x = x 
+-- _⟦_⟧Ctx initial-interpretation x = x
+-- _⟦_⟧Sub initial-interpretation x = x
+-- _⟦_⟧Tm initial-interpretation x = x
+-- _⟦_⟧∼ initial-interpretation x = x
+-- _⟦_⟧≈ initial-interpretation x = x
 \end{code}
 }
 
 We also define categorical semantics of the syntax by using the material in \Cref{sec:presheaf_sem,sec:guarded}.
 Types and contexts are interpreted as presheaves, and terms are interpreted as natural transformations.
 Formally, we define an interpretation \F{sem}.
+\AgdaHide{
+\begin{code}
+mutual
+  ⟦_⟧poly' : {Δ : ClockCtx} → Poly Δ → SemPoly Δ
+  ⟦_⟧poly' (∁ A) = ∁ ⟦ A ⟧A
+  ⟦ I ⟧poly' = I
+  ⟦ P ⊞ Q ⟧poly' = ⟦ P ⟧poly' ⊞ ⟦ Q ⟧poly'
+  ⟦ P ⊠ Q ⟧poly' = ⟦ P ⟧poly' ⊠ ⟦ Q ⟧poly'
+  ⟦ ▻ P ⟧poly' = ▸ ⟦ P ⟧poly'
+\end{code}
+}
+\begin{code}
+  ⟦_⟧A' : {Δ : ClockCtx} → Ty Δ → SemTy Δ
+  ⟦ 𝟙 ⟧A' = Unit
+  ⟦ A ⊞ B ⟧A' = ⟦ A ⟧A' ⊕ ⟦ B ⟧A'
+  ⟦ A ⊠ B ⟧A' = ⟦ A ⟧A' ⊗ ⟦ B ⟧A'
+  ⟦ A ⟶ B ⟧A' = ⟦ A ⟧A' ⇒ ⟦ B ⟧A'
+  ⟦ ⇡ A ⟧A' = ⇑ ⟦ A ⟧A'
+  ⟦ ▻ A ⟧A' = ► ⟦ A ⟧A'
+  ⟦ □ A ⟧A' = ■ ⟦ A ⟧A'
+  ⟦ μ P ⟧A' = mu ⟦ P ⟧poly'  
+\end{code}
 
 \begin{code}
 sem : interpret-syntax
 semTy sem = SemTy
-semCtx sem = SemCtx
-semTm sem = SemTm
+_⟦_⟧Ty sem = ⟦_⟧A
 \end{code}
 
 \AgdaHide{
 \begin{code}
+semCtx sem = SemCtx
+semTm sem = SemTm
 semSub sem = SemSub
 _[_sem∼_] sem = def-eq _ _
 _[_sem≈_] sem = subst-eq _ _
-_⟦_⟧Ty sem = ⟦_⟧A
 _⟦_⟧Ctx sem = ⟦_⟧Γ
 _⟦_⟧Sub sem = ⟦_⟧sub
 _⟦_⟧Tm sem = ⟦_⟧tm

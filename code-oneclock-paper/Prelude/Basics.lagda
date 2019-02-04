@@ -18,8 +18,8 @@ that we employ in our formalization.
 
 We write \Ar{=} for judgemental equality and \F{≡} for propositional
 equality. Implicit arguments of functions are delimited by curly
-brackets. We write \F{Set} and \F{Set₁} for the first and second
-universe of types. In addition, Agda supports higher universes and
+brackets. We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of types.
+In addition, Agda supports higher universes and
 these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
 
 The principle of functional extensionality states that every two
