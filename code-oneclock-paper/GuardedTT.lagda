@@ -115,7 +115,9 @@ FALSE = in₂ 𝟙 tt
 consistent : Set
 consistent = TRUE ∼ FALSE → ⊥
 \end{code}
-This can be proved by noticing that if \F{TRUE} were definitionally equal to \F{FALSE}, then \AIC{inj₁} \AIC{tt} would be propositionally equal to \AIC{inj₂} \AIC{tt}, which is absurd.
+
+This is proved by noticing that if \F{TRUE} were definitionally equal to \F{FALSE}, then their interpretations in \AD{sem} would be equal.
+However, they are interpreted as \AIC{inj₁} \AIC{tt} and \AIC{inj₂} \AIC{tt} respectively, and those are unequal.
 \AgdaHide{
 \begin{code}
 --consistent : ∀ {ℓ₁ ℓ₂} → interpret-syntax {ℓ₁} {ℓ₂} → Set ℓ₂
