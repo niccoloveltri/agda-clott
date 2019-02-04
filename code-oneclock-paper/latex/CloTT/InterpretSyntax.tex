@@ -54,6 +54,10 @@
 \end{code}
 }
 
+Now let us define categorical semantics for the syntax.
+For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
+We only show how to interpret the types.
+
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
@@ -135,9 +139,8 @@
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧A}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSpace{}%
-\AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{ClockCtx}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{∀}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Ty}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
@@ -203,9 +206,10 @@
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{►}\AgdaSymbol{(}\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaFunction{►}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -213,9 +217,10 @@
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaRecord{■}\AgdaSymbol{(}\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaRecord{■}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -1177,7 +1182,7 @@
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[954I]\AgdaField{Mor}\AgdaSpace{}%
+\>[955I]\AgdaField{Mor}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{eval}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -1197,7 +1202,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[954I]%
+\>[.]\<[955I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -1396,7 +1401,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[1148I]\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
+\>[1149I]\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1409,7 +1414,7 @@
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1148I]%
+\>[.]\<[1149I]%
 \>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1454,16 +1459,16 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1196I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1197I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1196I]%
+\>[.]\<[1197I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1202I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1203I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
@@ -1476,7 +1481,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1202I]%
+\>[.]\<[1203I]%
 \>[14]\AgdaSymbol{((}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
@@ -1662,7 +1667,7 @@
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[1377I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\>[1378I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1674,7 +1679,7 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{z}\<%
 \\
-\>[.]\<[1377I]%
+\>[.]\<[1378I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -1726,16 +1731,16 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1428I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1429I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1428I]%
+\>[.]\<[1429I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1434I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
+\>[1435I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -1759,7 +1764,7 @@
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1434I]%
+\>[.]\<[1435I]%
 \>[14]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
@@ -2019,7 +2024,7 @@
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[1684I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1685I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -2028,7 +2033,7 @@
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})}\<%
 \\
-\>[.]\<[1684I]%
+\>[.]\<[1685I]%
 \>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
@@ -2329,7 +2334,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[1877I]\AgdaFunction{muMor'}\AgdaSpace{}%
+\>[1878I]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{weakenP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -2341,14 +2346,14 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\<%
 \\
-\>[1877I][@{}l@{\AgdaIndent{0}}]%
+\>[1878I][@{}l@{\AgdaIndent{0}}]%
 \>[10]\AgdaSymbol{(}\AgdaFunction{μweaken{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1877I]%
+\>[.]\<[1878I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -2606,13 +2611,13 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[2111I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
+\>[2112I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\<%
 \\
-\>[.]\<[2111I]%
+\>[.]\<[2112I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %

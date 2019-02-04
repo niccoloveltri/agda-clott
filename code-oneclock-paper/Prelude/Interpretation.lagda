@@ -5,12 +5,12 @@ module Prelude.Interpretation where
 open import Prelude.Syntax
 \end{code}
 }
-\remove{
+
 Now let us put everything together and define the notion of an interpretation of \GTT.
-To give an interpretation, one must give a type of semantical types, contexts, terms, substitutions, and functions mapping the syntactic objects to their semantical counterparts.
-In addition, definitional equality is interpreted as a relation on terms which includes the relation \D{∼} defined in \Cref{sec:syntax}, and the same is be done for substitutions.
-We define a record containing all this data, whose type declaration is given as
-}
+To interpret types, one must give a type of semantical types and a function mapping the syntactic objects to their semantical counterparts.
+Contexts, terms, substitutions, and definitional equality is done similarly.
+This leads the the following record where we only show the fields related to interpreting types.
+
 \begin{code}
 record interpret-syntax : Set₂ where
   field
