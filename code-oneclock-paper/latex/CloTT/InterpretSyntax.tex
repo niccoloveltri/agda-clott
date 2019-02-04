@@ -54,18 +54,15 @@
 \end{code}
 }
 
-Now let us define categorical semantics for the syntax.
-For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
-We only show how to interpret the types.
+We are now able to formally specify the categorical semantics.
+%For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
+We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are inductively defined mutually with codes for functors, then the interpretation of types has to be recursively defined simultaneously with the interpretation of codes, which we do not display here.
 
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaKeyword{mutual}\<%
-\end{code}
-}
-
-\begin{code}%
-\>[0][@{}l@{\AgdaIndent{1}}]%
+\\
+\>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧code}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
@@ -86,10 +83,7 @@ We only show how to interpret the types.
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\<%
-\end{code}
-
-\AgdaHide{
-\begin{code}%
+\\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{I}\AgdaSpace{}%
@@ -174,9 +168,10 @@ We only show how to interpret the types.
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaFunction{►}\AgdaSymbol{(}\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaFunction{►}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -184,9 +179,10 @@ We only show how to interpret the types.
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
-\AgdaRecord{■}\AgdaSymbol{(}\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
+\AgdaRecord{■}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧A}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -1189,7 +1185,7 @@ We only show how to interpret the types.
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[952I]\AgdaField{Mor}\AgdaSpace{}%
+\>[954I]\AgdaField{Mor}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{eval}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
@@ -1209,7 +1205,7 @@ We only show how to interpret the types.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[952I]%
+\>[.]\<[954I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -1408,7 +1404,7 @@ We only show how to interpret the types.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[1146I]\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
+\>[1148I]\AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1421,7 +1417,7 @@ We only show how to interpret the types.
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1146I]%
+\>[.]\<[1148I]%
 \>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1466,16 +1462,16 @@ We only show how to interpret the types.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1194I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1196I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1194I]%
+\>[.]\<[1196I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1200I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1202I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
@@ -1488,7 +1484,7 @@ We only show how to interpret the types.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1200I]%
+\>[.]\<[1202I]%
 \>[14]\AgdaSymbol{((}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
@@ -1674,7 +1670,7 @@ We only show how to interpret the types.
 \\
 %
 \>[2]\AgdaSymbol{→}%
-\>[1375I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
+\>[1377I]\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
@@ -1686,7 +1682,7 @@ We only show how to interpret the types.
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaBound{z}\<%
 \\
-\>[.]\<[1375I]%
+\>[.]\<[1377I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -1738,16 +1734,16 @@ We only show how to interpret the types.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{cong}%
-\>[1426I]\AgdaSymbol{(λ}\AgdaSpace{}%
+\>[1428I]\AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{z}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{,}}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1426I]%
+\>[.]\<[1428I]%
 \>[7]\AgdaSymbol{(}\AgdaFunction{trans}%
-\>[1432I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
+\>[1434I]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{q}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -1771,7 +1767,7 @@ We only show how to interpret the types.
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSymbol{))}\<%
 \\
-\>[.]\<[1432I]%
+\>[.]\<[1434I]%
 \>[14]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(λ}\AgdaSpace{}%
 \AgdaBound{z}\AgdaSpace{}%
@@ -2031,7 +2027,7 @@ We only show how to interpret the types.
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaFunction{trans}%
-\>[1682I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
+\>[1684I]\AgdaSymbol{(}\AgdaField{funcom}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
@@ -2040,7 +2036,7 @@ We only show how to interpret the types.
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{})}\<%
 \\
-\>[.]\<[1682I]%
+\>[.]\<[1684I]%
 \>[8]\AgdaSymbol{(}\AgdaFunction{cong}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{fun}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
@@ -2341,7 +2337,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[1875I]\AgdaFunction{muMor'}\AgdaSpace{}%
+\>[1877I]\AgdaFunction{muMor'}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaFunction{weakenP}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -2353,14 +2349,14 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\<%
 \\
-\>[1875I][@{}l@{\AgdaIndent{0}}]%
+\>[1877I][@{}l@{\AgdaIndent{0}}]%
 \>[10]\AgdaSymbol{(}\AgdaFunction{μweaken{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{x}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[1875I]%
+\>[.]\<[1877I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %
@@ -2618,13 +2614,13 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}%
-\>[2109I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
+\>[2111I]\AgdaFunction{weakenμ{-}help}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{x}\<%
 \\
-\>[.]\<[2109I]%
+\>[.]\<[2111I]%
 \>[4]\AgdaOperator{\AgdaDatatype{≡}}\<%
 \\
 %

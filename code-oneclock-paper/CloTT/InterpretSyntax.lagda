@@ -18,23 +18,15 @@ open NatTrans
 \end{code}
 }
 
-Now let us define categorical semantics for the syntax.
-For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
-We only show how to interpret the types.
+We are now able to formally specify the categorical semantics.
+%For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
+We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are inductively defined mutually with codes for functors, then the interpretation of types has to be recursively defined simultaneously with the interpretation of codes, which we do not display here.
 
 \AgdaHide{
 \begin{code}
 mutual
-\end{code}
-}
-
-\begin{code}
   ⟦_⟧code : ∀ {Δ} → Poly Δ → SemPoly Δ
   ⟦_⟧code (∁ A) = ∁ ⟦ A ⟧A
-\end{code}
-
-\AgdaHide{
-\begin{code}
   ⟦ I ⟧code = I
   ⟦ P ⊞ Q ⟧code = ⟦ P ⟧code ⊞ ⟦ Q ⟧code
   ⟦ P ⊠ Q ⟧code = ⟦ P ⟧code ⊠ ⟦ Q ⟧code
@@ -45,8 +37,8 @@ mutual
 \begin{code}
   ⟦_⟧A : ∀ {Δ} → Ty Δ → SemTy Δ
   ⟦ A ⟶ B ⟧A = ⟦ A ⟧A ⇒ ⟦ B ⟧A
-  ⟦ ▻ A ⟧A = ►(⟦ A ⟧A)
-  ⟦ □ A ⟧A = ■(⟦ A ⟧A)
+  ⟦ ▻ A ⟧A = ► ⟦ A ⟧A
+  ⟦ □ A ⟧A = ■ ⟦ A ⟧A
   ⟦ μ P ⟧A = mu ⟦ P ⟧code  
 \end{code}
 
