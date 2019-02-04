@@ -50,7 +50,7 @@ _⟦_⟧≈ sem = ⟦_⟧sub-eq
 \end{code}
 }
 
-Now we show that \GTT\ is consistent, meaning that
+With these semantics, we show that \GTT\ is consistent, meaning that
 not every definitional equality is deducible. 
 %that not every definitional equality holds.
 We first define a type \F{bool} : \F{Ty} \IC{∅} as \IC{𝟙 ⊞ 𝟙} and two terms \F{TRUE} and \F{FALSE} as \IC{in₁ tt} and \IC{in₂ tt} respectively.
