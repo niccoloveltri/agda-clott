@@ -51,7 +51,7 @@ data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
 }
 
 In the remainder of this section, we only discuss guarded recursive \AIC{κ}-types. %in the clock context \AIC{κ}.
-The interpretation of guarded recursive \AIC{∅}-types is similar.
+The interpretation of \IC{μ} in the clock context \IC{∅} is standard and therefore omitted.
 Given a semantic code \AB{P}, our goal is to construct the action on objects and morphisms of a presheaf \F{mu-κ} \AB{P}.
 %Since both parts are defined with a similar technique, we only explain how to define the object part \F{muObj} \AB{P}.
 

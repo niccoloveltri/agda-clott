@@ -127,7 +127,9 @@ In Agda, there is a type \AD{Size} of sizes and a type \AD{Size<} \AB{i} of
 sizes strictly smaller than \AB{i}.  Every size \AB{j} : \AD{Size<}
 \AB{i} is coerced to \AB{j} : \AD{Size}. The order relation on sizes
 is transitive, which means that whenever \AB{j} : \AD{Size<} \AB{i} and \AB{k} : \AD{Size<}
-\AB{j}, then \AB{k} : \AD{Size<} \AB{i}.  The order relation is also
+\AB{j}, then \AB{k} : \AD{Size<} \AB{i}.
+%The productivity of corecursively defined functions is established by well-founded induction on sizes. 
+The order relation is also
 well-founded, and we use that to define productive corecursive
 functions.
 \remove{We will see this principle at work on the
