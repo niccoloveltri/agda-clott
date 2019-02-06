@@ -13,16 +13,13 @@ open import Prelude.Syntax
 
 \subsection{Example: Streams}
 We give a taste of how to program with streams in \GTT.
-First, we define a function \F{decons} which destructs an element of an inductive type.
-\begin{code}
-decons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
-\end{code}
+%First, we define a function \F{decons} which destructs an element of an inductive type.
 \AgdaHide{
 \begin{code}
+decons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
 decons {Γ = Γ} {P} = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
 \end{code}
 }
-
 To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
 It is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻ I}.
 \begin{code}
@@ -48,7 +45,7 @@ Str : Ty ∅ → Ty ∅
 Str A = □ (g-Str A)
 \end{code}
 
-We compute the head and tail of a stream via \F{decons}.
+We compute the head and tail of a stream using a function \F{decons}, which destructs an element of an inductive type. The term \F{decons} is derivable using \IC{primrec}.
 Note that in both cases, we need to use \IC{unbox}, because of the application of the box modality.
 For the tail, we also use \IC{force}.
 
@@ -60,6 +57,9 @@ hd xs = down (π₁ (decons (unbox xs)))
 tl : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ (Str A)
 tl xs = force (box (π₂ (decons (unbox xs))))
 \end{code}
+
+In our Agda formalization, we also construct a function returning the constant stream over a given element of \Ar{A} and a function removing the elements at even indices out of a given stream.
+
 
 \AgdaHide{
 Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
