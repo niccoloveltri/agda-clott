@@ -18,27 +18,30 @@ that we employ in our formalization.
 
 We write \Ar{=} for judgmental equality and \F{≡} for propositional
 equality. Implicit arguments of functions are delimited by curly
-brackets. We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of types.
-In addition, Agda supports higher universes and
-these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
+brackets. We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of types. We write \F{⊥} for the empty type.
+%In addition, Agda supports higher universes and
+%these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
 
 The principle of functional extensionality states that every two
 functions \Ar{f} and \Ar{g} in the same function space are
  equal whenever \Ar{f x} and \Ar{g x} are equal for all
 inputs \Ar{x}. This principle is not provable in Agda, so we need to
 postulate it.
+\AgdaHide{
 \begin{code}
 postulate
   funext : {A : Set} {B : A → Set} {f g : (x : A) → B x} → ((x : A) → f x ≡ g x) → f ≡ g
 \end{code}
-
+}
 UIP states that all proofs of an identity are propositionally
 equal. Agda natively supports this principle, which is therefore easily derivable.
 %and we can prove it by
 %pattern matching on the two equality proofs \Ar{p} and \Ar{q}.
+\AgdaHide{
 \begin{code}
 uip : {A : Set} {x y : A} {p q : x ≡ y} → p ≡ q
 \end{code}
+}
 \AgdaHide{
 \begin{code}
 uip {A} {x} {y} {refl} {refl} = refl
