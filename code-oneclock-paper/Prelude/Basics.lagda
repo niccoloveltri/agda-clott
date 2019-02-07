@@ -23,7 +23,7 @@ We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of typ
 %In addition, Agda supports higher universes and
 %these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
 
-We make extensive use of record types. These are like iterated $\Sigma$-types, in which each component, also called field, has been given a name. A field of a record type can be accessed by function application. For example, given a record type \F{R} containing a field \Fi{f}
+We make extensive use of record types. These are like iterated $\Sigma$-types, in which each component, also called field, has been given a name. We open each record we introduce, which allows us to access a field  by function application. For example, given a record type \F{R} containing a field \Fi{f}
  of type \Ar{A}, we have \Fi{f} \F{R} : \Ar{A}.
  
 The principle of functional extensionality states that every two
