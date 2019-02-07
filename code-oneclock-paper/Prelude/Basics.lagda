@@ -34,7 +34,7 @@ postulate
 \end{code}
 }
 UIP states that all proofs of an identity are propositionally
-equal. Agda natively supports this principle, which is therefore easily derivable.
+equal. Agda natively supports this principle, which is therefore derivable.
 %and we can prove it by
 %pattern matching on the two equality proofs \Ar{p} and \Ar{q}.
 \AgdaHide{
