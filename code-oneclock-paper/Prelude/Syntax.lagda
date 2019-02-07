@@ -10,8 +10,9 @@ open import Data.Empty
 
 The object language we consider is simply typed lambda calculus
 extended with additional features for programming with guarded recursive and coinductive
-types. We call this language \GTT. It is a variant of Atkey and McBride's type system, which we call \AM, for
-productive coprogramming \cite{atkey2013productive}. In \AM, all judgments are indexed by a clock context,
+types. We call this language \GTT. It is a variant of Atkey and McBride's type system %, which we call \AM,
+for
+productive coprogramming \cite{atkey2013productive}. In Atkey and McBride's calculus, all judgments are indexed by a clock context,
 which may contain several different clocks. They extend simply typed
 lambda calculus with two additional type formers: a modality ▻ for
 encoding time delay into types and universal quantification over clock
@@ -56,7 +57,7 @@ products, coproducts, and function spaces. Notice that \IC{𝟙} is a
     _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
 \end{code}
 
-We include a modality \IC{▻} as an operation on \IC{κ}-types similar to the one in \AM.
+We include a modality \IC{▻} as an operation on \IC{κ}-types similar to the one in Atkey and McBride's system.
 There is also a nameless analogue of clock quantification, which we call ``box'' and denote by \IC{□}
 following \cite{CloustonBGB15}. The box modality takes a
 \IC{κ}-type and returns a \IC{∅}-type. The well-formed types of \GTT\
