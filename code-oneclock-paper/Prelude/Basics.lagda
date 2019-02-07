@@ -18,10 +18,14 @@ that we employ in our formalization.
 
 We write \Ar{=} for judgmental equality and \F{≡} for propositional
 equality. Implicit arguments of functions are delimited by curly
-brackets. We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of types. We write \F{⊥} for the empty type.
+brackets. We write \Ar{∀} \{\Ar{Δ}\} for an implicit argument \Ar{Δ} whose type can be inferred by Agda.
+We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of types. We write \F{⊥} for the empty type.
 %In addition, Agda supports higher universes and
 %these are denoted by \F{Set} \AB{ℓ} for universe levels \AB{ℓ}.
 
+We make extensive use of record types. These are like iterated $\Sigma$-types, in which each component, also called field, has been given a name. A field of a record type can be accessed by function application. For example, given a record type \F{R} containing a field \Fi{f}
+ of type \Ar{A}, we have \Fi{f} \F{R} : \Ar{A}.
+ 
 The principle of functional extensionality states that every two
 functions \Ar{f} and \Ar{g} in the same function space are
  equal whenever \Ar{f x} and \Ar{g x} are equal for all
