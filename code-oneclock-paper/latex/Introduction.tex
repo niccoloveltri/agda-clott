@@ -1,6 +1,6 @@
 Dependent type theory is an expressive functional programming
 language that underlies the deductive system of proof assistants such
-as Agda and Coq \cite{barras1997coq,norell}. It is a total language,
+as Agda \cite{norell} and Coq \cite{barras1997coq}. It is a total language,
 meaning that every program definable inside type theory is necessarily
 terminating. This is an important requirement that ensures the
 consistency of the type system. 
@@ -37,7 +37,7 @@ modality, called ``later'' and written \IC{▻}, encoding time delay in
 types. The later modality comes with a general fixpoint combinator for
 programming with productive recursive functions and allows the
 specification of guarded recursive types.
-These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,BahrGM17}. Currently there is no
+These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,bizjak2016guarded,BahrGM17}. Currently there is no
 implementation of a calculus for guarded recursion.
 \remove{, \eg the type of guarded
 streams satisfying the isomorphism \F{Str} \Ar{A} \F{≃} \Ar{A} \F{×}
