@@ -235,7 +235,7 @@ isomorphisms. For example, the clock irrelevance axiom formulated in our setting
     □const : {Γ : Ctx ∅} (A : Ty ∅) → Tm Γ (□ (⇡ A) ⟶ A)
 \end{code}
 %in \F{Tm} \Ar{Γ} (\Ar{A} \IC{⟶} \IC{□} (\IC{⇡} \Ar{A}))
-We define a function \F{const□} \Ar{A} in the other direction.
+A function \F{const□} \Ar{A} in the other direction is derivable.
 When defining definitional equality on terms, described in Section \ref{sec:defeq}, we
 ask for \IC{□const} and \F{const□} to be each other inverses.
 The other type isomorphisms are constructed in a similar way.
@@ -269,7 +269,7 @@ We also add rules for embedding substitutions between \IC{∅}-contexts into sub
     down : {Γ₁ Γ₂ : Ctx ∅} → Sub (⇡ Γ₁) (⇡ Γ₂) → Sub Γ₁ Γ₂
 \end{code}
 
-In addition, we need context isomorphisms. The context \IC{⇡ •} needs
+In addition, we require the existence of two context isomorphisms. The context \IC{⇡ •} needs
 to be isomorphic to \IC{•} and \IC{⇡} (\Ar{Γ} \IC{,} \Ar{A})
 needs to be isomorphic to \IC{⇡} \Ar{Γ} \IC{,} \IC{⇡}
 \Ar{A}. For both of them, we add a constructor representing the underlying functions.
@@ -279,8 +279,8 @@ needs to be isomorphic to \IC{⇡} \Ar{Γ} \IC{,} \IC{⇡}
     ,⇡ : (Γ : Ctx ∅) (A : Ty ∅) → Sub (⇡ Γ , ⇡ A) (⇡ (Γ , A))
 \end{code}
 \end{AgdaAlign}
-It is possible to define an element \F{⇡•} in \F{Sub}
-(\IC{⇡ •}) \IC{•}. In the definitional
+An element \F{⇡•} in \F{Sub}
+(\IC{⇡ •}) \IC{•} is derivable. In the definitional
 equality on substitutions, we ask for \IC{•⇡} and
 \F{⇡•} to be each other inverses. We proceed similarly with
 \IC{,⇡}.
@@ -496,7 +496,7 @@ other's inverses.
 \end{code}
 
 We have definitional equalities which say that \IC{▻} is an applicative functor with the operations \IC{next} and \IC{⊛}.
-Furthermore, the fixpoint combinator \IC{fix} must satisfy its characteristic unfolding equation.
+Furthermore, the delayed fixpoint combinator \IC{dfix} must satisfy its characteristic unfolding equation.
 %% There is also the
 %% characteristic equality of the fixpoint combinator, stating that
 %% \IC{fix} \Ar{f} is equal to the application of the function term

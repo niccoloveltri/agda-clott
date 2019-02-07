@@ -310,7 +310,7 @@ the context operations, the simple type formers and the operations on substituti
 Since their definitions are standard, we do not discuss them in detail.
 For each of them, we need to make a case distinction based on the clock context.
 For example, the empty variable context \IC{•} is interpreted either as the unit type
-or as the terminal presheaf depending on the clock context.
+or as the terminal presheaf, depending on the state of the clock context.
 We use the operations on presheaves defined in \Cref{sec:presheaves} to interpret simple type formers.
 \input{CloTT/TypeFormers/FunctionType}
 
@@ -369,17 +369,19 @@ we were able to fully develop our theory inside a proof assistent.
 
 This work can be extended in several different directions.
 Various type theories for guarded recursion in the literature include
-dependent types. Currently, there are two disciplines for these two features: delayed substitutions
+dependent types. Currently, there exist two disciplines for mixing
+dependent types with guarded recursion: delayed substitutions
 \cite{bizjak2016guarded} and ticks \cite{BahrGM17}. It would be interesting to extend
 the syntax and semantics of \GTT\ with dependent types following one
-of these methods.
+of these two methods.
 
 Abel and Vezzosi \cite{AbelV14} formalized a simple type theory
 extended with the later modality in Agda. They focus on operational
 properties of the calculus and give a certified proof of strong
 normalization. As future work, we plan to investigate the metatheory
 and the dynamic behavior of \GTT\ by formalizing a  type
-checker and a normalization algorithm.
+checker and a normalization algorithm. This would also set up the
+basis for a usable implementation of \GTT.
 
 
 

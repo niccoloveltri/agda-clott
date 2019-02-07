@@ -16,7 +16,7 @@ open import CloTT.TypeFormers.WeakenClock
 open PSh
 \end{code}
 }
-For semantic guarded recursive types, we introduce a type of semantics codes for functors.
+For semantic guarded recursive types, we introduce a type of semantic codes for functors.
 We cannot reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
 Instead we use the following definition.
 

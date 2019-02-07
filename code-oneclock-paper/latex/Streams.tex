@@ -87,7 +87,7 @@ We give a taste of how to program with streams in \GTT.
 \end{code}
 }
 To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
-It is the least fixpoint of the functor with code \IC{∁} (\IC{⇑} \Ar{A}) \IC{⊠} \IC{▻ I}.
+It is the least fixpoint of the functor with code \IC{∁} (\IC{⇡} \Ar{A}) \IC{⊠} \IC{▻ I}.
 \begin{code}%
 \>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -194,7 +194,7 @@ The usual type of streams over \Ar{A} is then obtained by applying the \IC{□} 
 \end{code}
 
 We compute the head and tail of a stream using a function \F{decons}, which destructs an element of an inductive type. The term \F{decons} is derivable using \IC{primrec}.
-Note that in both cases, we need to use \IC{unbox}, because of the application of the box modality.
+Note that in both cases we need to use \IC{unbox}, because of the application of the box modality in the definition of \F{Str}.
 For the tail, we also use \IC{force}.
 
 \begin{code}%
@@ -260,7 +260,7 @@ For the tail, we also use \IC{force}.
 \AgdaBound{xs}\AgdaSymbol{))))}\<%
 \end{code}
 
-In our Agda formalization, we construct a function returning the constant stream over a given element of \Ar{A} and a function returning the stream of elements at odd indices of a given input stream.
+In our Agda formalization, we also construct a function returning the constant stream over a given element of \Ar{A} and a function removing the elements at even indices out of a given stream.
 
 
 \AgdaHide{

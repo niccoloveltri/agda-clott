@@ -11,7 +11,7 @@ open PSh
 \end{code}
 }
 
-We now provide a semantic description of the later modality. This is
+The semantic later modality is
 an operation \F{►} on semantic \IC{κ}-types.
 Recall that the usual definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
