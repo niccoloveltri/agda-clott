@@ -252,7 +252,7 @@ The other type isomorphisms are constructed in a similar way.
 
 \subsection{Substitutions}
 For substitutions, we need the canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
-substitutions, the empty substitution, the extension with an additional term and the projection which forgets the last term.
+substitutions, the empty substitution, the extension with an additional term, and the projection which forgets the last term.
 \begin{code}
   data Sub : ∀ {Δ} → Ctx Δ → Ctx Δ → Set where
     ε : ∀ {Δ} (Γ : Ctx Δ) → Sub Γ •
