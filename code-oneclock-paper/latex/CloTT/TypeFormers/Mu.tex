@@ -300,7 +300,7 @@ A first na\"{i}ve attempt would be to define the action on objects
 \F{muObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
 \F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
 \IC{κ}. This does not work since \F{muObj} \AB{P} is a sized type
-while \F{sem-eval} \AB{P} expects a semantic type as input.
+while \F{sem-eval} \AB{P} expects a semantic type.
 
 Another possibility would be to define \F{muObj} \AB{P} by induction on \AB{P}.
 However, there is a problem when we arrive at the \IC{I} case.
