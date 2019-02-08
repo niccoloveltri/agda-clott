@@ -64,7 +64,7 @@ pattern matching.
 size : ∀ {i} → SizeLt i → Size
 size [ j ] = j
 \end{code}
-Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified with functions on \F{Size<} \Ar{i}.
+Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified using functions on \F{Size<} \Ar{i}.
 %Furthermore, functions with domain \F{SizeLt} \Ar{i} can be specified in terms of functions with domain \F{Size<} \Ar{i}.
 \begin{code}
 elimLt : {A : Size → Set₁} {i : Size} → ((j : Size< i) → A j)
