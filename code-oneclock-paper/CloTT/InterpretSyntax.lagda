@@ -20,7 +20,7 @@ open NatTrans
 
 Now we define the categorical semantics.
 %For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
-We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes for functors, the interpretation of types has to be defined simultaneously with the interpretation of codes, which we do not display here.
+We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes for functors, the interpretation of types has to be defined simultaneously with the interpretation of codes, which we do not show here.
 
 \AgdaHide{
 \begin{code}

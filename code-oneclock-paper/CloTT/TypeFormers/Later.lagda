@@ -16,7 +16,7 @@ an operation \F{►} on semantic \IC{κ}-types.
 Recall that the usual definition of the later modality in
 the topos of trees \cite{BMSS-synthetic} is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
-Adapting this to our setting would lead to the following definition of \F{►}'s action on objects:
+Adapting this to our setting would lead to the following action of \F{►} on objects:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
