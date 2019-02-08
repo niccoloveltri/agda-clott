@@ -50,17 +50,8 @@
 \end{code}
 }
 We omit the semantic equivalents of \IC{next} and \IC{⊛}.
-To interpret the delayed fixpoint combinator \AIC{dfix}, we introduce an auxiliary term \F{sem-dfix₁}, for which we only show the definition of the field \Fi{►cone}.
-\remove{
-We omit the semantic equivalents of \IC{next} and \IC{⊛}.
-To interpret the delayed fixpoint combinator \AIC{dfix}, we introduce an auxiliary term \F{sem-dfix₁}, which for each semantic \IC{κ}-type \Ar{A} and size \Ar{i}, returns a map of type \F{ExpObj} (\F{►} \Ar{A}) \Ar{A i} → \F{►Obj} \Ar{A i}.
-Here we only show the definition of the field \Fi{►cone} of \F{sem-dfix₁} \Ar{A i f}.
-Given an inhabitant of \F{SizeLt} \Ar{i}, we obtain a size \Ar{j} : \F{Size<} \Ar{i} by pattern matching.
-Then we apply the function \AFi{fun} \Ar{f} \Ar{j} to \F{sem-dix₁} \AB{A} \AB{j} \AB{f}.
-}
-%%Since \AFi{fun} \Ar{f} \Ar{j} is a function from \F{►Obj} \AB{A} \AB{j} to \AFi{Obj} \AB{A} \AB{j}, it suffices to define an inhabitant of type \F{►Obj} \AB{A} \AB{j}.
-%%For this, we use \F{sem-dix₁} \AB{A} \AB{j} \AB{f}.
-%%This leads to the following definition.
+To interpret the delayed fixpoint combinator \AIC{dfix}, we introduce an auxiliary term \F{sem-dfix₁}, for which we only show how the field \Fi{►cone} is defined.
+This function computes the fixpoint by repeatedly applying the map.
 
 \begin{code}%
 \>[0]\AgdaFunction{sem{-}dfix₁}\AgdaSpace{}%
