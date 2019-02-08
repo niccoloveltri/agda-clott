@@ -18,7 +18,7 @@ open NatTrans
 }
 We omit the semantic equivalents of \IC{next} and \IC{⊛}.
 To interpret the delayed fixpoint combinator \AIC{dfix}, we introduce an auxiliary term \F{sem-dfix₁}, for which we only show how the field \Fi{►cone} is defined.
-This function computes the fixpoint by repeatedly applying the map.
+This function is defined using self-application.
 
 \begin{code}
 sem-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
