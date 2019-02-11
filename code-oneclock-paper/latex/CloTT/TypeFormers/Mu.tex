@@ -299,11 +299,12 @@ Given a semantic code \AB{P}, our goal is to construct the action on objects and
 A first na\"{i}ve attempt would be to define the action on objects
 \F{muObj} \AB{P} as the initial algebra of \F{sem-eval} \AB{P}, where
 \F{sem-eval} evaluates a code as an endofunctor on \F{SemTy}
-\IC{κ}. This does not work since \F{muObj} \AB{P} is a sized type
-while \F{sem-eval} \AB{P} expects a semantic type.
+\IC{κ}.
+This means defining \F{muObj} \Ar{P} as an inductive type with one constructor taking in input \F{sem-eval} \Ar{P} (\F{muObj} \Ar{P}). This idea does not work, since \F{muObj} \AB{P} is a sized type
+while \F{sem-eval} \AB{P} expects a semantic \IC{κ}-type.
 
 Another possibility would be to define \F{muObj} \AB{P} by induction on \AB{P}.
-However, there is a problem when we arrive at the \IC{I} case.
+However, there is a problem when we arrive at the \IC{I} constructor.
 In this case, we would like to make a recursive call to \F{muObj} applied to the original code \AB{P}, which is unavailable at this point.
 We solve the issue by introducing an auxiliary inductive type family \F{muObj'}, which depends on two codes instead of one.
 The first code is the original one used to define the guarded recursive type and we do induction on the second one.
@@ -327,8 +328,8 @@ The constructors of \F{muObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
 identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{muObj'} mutually with its own proof of antitonicity \F{muMor'}.
-For this construction to work, it is crucial that \F{Later} and \F{LaterLim}
-take in input only part of the data of a presheaf.
+This construction works since \F{Later} and \F{LaterLim}
+take in input part of the data of a presheaf and they crucially do not depend on the functor laws.
 \remove{
 The main difficulty comes
 with the \AIC{▸} case. We need \F{mu-κ} (\IC{▸}

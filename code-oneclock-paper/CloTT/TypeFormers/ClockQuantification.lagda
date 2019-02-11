@@ -43,8 +43,8 @@ open ■
 
 The semantic box modality is right adjoint to context
 weakening. In other words, the types \F{Tm} (\F{⇑} \Ar{Γ})
-\Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic. The function
-underlying the isomorphism is \F{sem-box} and its inverse is \F{sem-unbox}, which are used to model \IC{box} and \IC{unbox}.
+\Ar{A} and \F{Tm} \Ar{Γ} (\F{■} \Ar{A}) are isomorphic for all \Ar{Γ} and \Ar{A}. The function
+underlying the isomorphism is \F{sem-box} and its inverse is \F{sem-unbox}, modeling \IC{box} and \IC{unbox} respectively.
 \begin{code}
 sem-box : (Γ : SemCtx ∅) (A : SemTy κ) (t : SemTm (⇑ Γ) A) → SemTm Γ (■ A)
 ■cone (sem-box Γ A t x) i        = nat-map t i x
