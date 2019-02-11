@@ -173,7 +173,11 @@ This is defined using self-application.
 \>[2]\AgdaOperator{\AgdaFunction{∎}}\<%
 \end{code}
 }
-This definition is accepted by Agda's termination checker for two reasons: 1) every recursive call is applied to a strictly smaller size; 2) we use \F{SizeLt} in place of \F{Size<} in the definition of \F{Later}, preventing the above definition from unfolding indefinitely.
+This definition is accepted by Agda's termination checker for two reasons:
+\begin{itemize}
+  \item every recursive call is applied to a strictly smaller size;
+  \item the usage \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding.
+\end{itemize}
 \remove{
 This definition is accepted by Agda's termination checker because
 every recursive call is applied to a strictly smaller size.  Moreover,

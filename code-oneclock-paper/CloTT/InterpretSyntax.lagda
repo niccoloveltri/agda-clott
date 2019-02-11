@@ -21,7 +21,7 @@ open NatTrans
 Now we prove \GTT\ sound \wrt the categorical semantics.
 %define the categorical semantics.
 %For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
-We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes for functors, the interpretation of types \F{⟦\_⟧type} has to be defined simultaneously with the interpretation of codes \F{⟦\_⟧code}, which we omit here.
+We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes, the interpretation of types \F{⟦\_⟧type} has to be defined simultaneously with the interpretation of codes \F{⟦\_⟧code}, which we omit here.
 
 \AgdaHide{
 \begin{code}
