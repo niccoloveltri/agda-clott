@@ -66,7 +66,7 @@ is transitive, which means that whenever \AB{j} : \AD{Size<} \AB{i} and \AB{k} :
 \AB{j}, then \AB{k} : \AD{Size<} \AB{i}.
 %The productivity of corecursively defined functions is established by well-founded induction on sizes. 
 The order relation is also
-well-founded, and we use that to define productive corecursive
+well-founded, which is used to define productive corecursive
 functions.
 \remove{We will see this principle at work on the
 construction of the semantic fixpoint operation in Section

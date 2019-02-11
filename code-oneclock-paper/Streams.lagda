@@ -45,9 +45,9 @@ Str : Ty ∅ → Ty ∅
 Str A = □ (g-Str A)
 \end{code}
 
-We compute the head and tail of a stream using a function \F{decons}, which destructs an element of an inductive type. The term \F{decons} is derivable using \IC{primrec}.
+We compute the head and tail of a stream using a function \F{decons}, which destructs an element of an inductive type. The term \F{decons} is the inverse of \IC{cons} and it is derivable using \IC{primrec}.
 Note that in both cases we need to use \IC{unbox}, because of the application of the box modality in the definition of \F{Str}.
-For the tail, we also use \IC{force}.
+For the tail, we also use \IC{box} and \IC{force}. The operations \IC{π₁} and \IC{π₂} are the projections associated to the product type former \IC{⊠}.
 
 \begin{code}
 hd : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ A

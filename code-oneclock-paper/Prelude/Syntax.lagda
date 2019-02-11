@@ -132,7 +132,7 @@ eval (▻ P) X = ▻ (eval P X)
 
 \subsection{Contexts}
 The well-formed contexts of \GTT\ are built from the empty context, context extension, and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts. 
-Notice that we are overloading the symbol \IC{⇡}, used also for type weakening.
+Notice that we are overloading the symbol \IC{⇡}, also used for type weakening.
 \begin{AgdaAlign}
 \begin{code}
 data Ctx : ClockCtx → Set where
@@ -445,7 +445,7 @@ mutual
 \end{code}
 
 The term equality includes rules for equivalence, congruence, and
-substitution. There also are $\beta$ and $\eta$ rules for the type
+substitution. There are also $\beta$ and $\eta$ rules for the type
 formers. Among these rules, here we only show the ones associated to the
 \IC{□} modality. The rules state that \IC{box} and \IC{unbox} are each
 other's inverses.
@@ -496,7 +496,7 @@ other's inverses.
     □-η : ∀ {Γ} {A} (t : Tm Γ (□ A)) → box (unbox t) ∼ t
 \end{code}
 
-We have definitional equalities which say that \IC{▻} is an applicative functor with the operations \IC{next} and \IC{⊛}.
+We include definitional equalities stating that \IC{▻} is an applicative functor \wrt the operations \IC{next} and \IC{⊛}.
 Furthermore, the delayed fixpoint combinator \IC{dfix} must satisfy its characteristic unfolding equation.
 %% There is also the
 %% characteristic equality of the fixpoint combinator, stating that
@@ -557,7 +557,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
 \end{code}
 }
 
-For the type isomorphisms, we need term equalities which exhibit that certain maps are mutual inverses.
+For the type isomorphisms, we require term equalities exhibiting that certain maps are mutual inverses.
 For example, we have the following two equalities about \IC{□const} and \F{const□}:
 
 \begin{code}

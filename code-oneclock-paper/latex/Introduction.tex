@@ -88,9 +88,10 @@ quantification. Clouston \etal \cite{CloustonBGB15} studied a
 guarded variant of lambda calculus extended with a \IC{□} operation,
 which they call ``constant''.  Our object calculus differs from
 theirs in that our judgments are indexed by a clock context, which can
-be empty or containing exactly one clock. In this respect \GTT\ is
-closer in spirit to Atkey and McBride's language. The design of \GTT\
-also has the benefit of allowing a more appealing introduction rule for
+be empty or containing exactly one clock. 
+%In this respect \GTT\ is closer in spirit to Atkey and McBride's
+%language.
+The design of \GTT\ has the benefit of allowing a more appealing introduction rule for
 \IC{□} than Clouston et al.'s.
 
 
@@ -133,7 +134,7 @@ To summarize, the contributions of this paper are twofold:
 This paper only include the essential parts of our Agda
 formalization. The full code is available at
 \url{https://github.com/niccoloveltri/agda-clott}. The formalization
-uses Agda 2.5.4.1 and Agda standard library 0.16. The paper is
+uses Agda 2.5.4.2 and Agda standard library 0.16. The paper is
 extracted from a literate Agda file, which implies that all the
 displayed code has passed Agda's type and termination checker.
 
@@ -147,8 +148,10 @@ sizes and how to model the fragment of
 \GTT\ corresponding to simply typed lambda calculus.
 In \Cref{sec:guarded}, we discuss the semantics of the guarded
 recursive and coinductive features.
-In \Cref{sec:consistent}, we describe how to formally interpret the
-syntax into the model, which entails the consistency of the syntax.
+In \Cref{sec:consistent}, we prove the object language sound \wrt the
+categorical model,
+%describe how to formally interpret the syntax into the model, 
+which in turn entails the consistency of the syntax.
 Finally, in \Cref{sec:concl}, we draw conclusions and suggest  future
 directions of work.
 
