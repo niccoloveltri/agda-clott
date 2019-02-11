@@ -11,7 +11,7 @@ open PSh
 \end{code}
 }
 
-The semantic terms of type $A$ in context $\Gamma$ are functions from $\Gamma$ to $A$ if the clock context is empty, otherwise they are natural transformations between $\Gamma$ and $A$.
+The semantic terms of type $A$ in context $\Gamma$ are functions from $\Gamma$ to $A$ if the clock context is empty, and they are natural transformations between $\Gamma$ and $A$ otherwise.
 %% Again we need to distinguish two cases, because morphisms between sets are something different than morphisms between presheaves.
 %% For sets, we just use functions. 
 %% For presheaves, we use natural transformations instead.

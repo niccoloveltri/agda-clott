@@ -308,9 +308,12 @@ We also need to provide a semantic version of
 %To interpret simple type theory, we also need to give 
 the context operations, the simple type formers and the operations on substitutions.
 Since their definitions are standard, we do not discuss them in detail.
-For each of them, we need to make a case distinction based on the clock context.
-For example, the empty variable context \IC{•} is interpreted either as the unit type
-or as the terminal presheaf, depending on the state of the clock context.
+For each of them, we need to make a case distinction based on the
+state of the clock context.
+For example, the empty variable context \IC{•} is interpreted
+as the unit type in the clock context \IC{∅}, and it is interpreted as 
+the terminal presheaf in the clock context \IC{κ}.
+%, depending on the state of the clock context.
 We use the operations on presheaves defined in \Cref{sec:presheaves} to interpret simple type formers.
 \input{CloTT/TypeFormers/FunctionType}
 
