@@ -160,7 +160,7 @@ type former \IC{μ}.
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Ty}\AgdaSpace{}%
@@ -169,17 +169,17 @@ type former \IC{μ}.
 \end{AgdaAlign}
 For \IC{μ} to be well-defined, one typically limits
 its applicability to strictly positive functors. We instead consider
-a grammar \F{Poly} \Ar{Δ} for functors, which has codes for constant functors,
+a grammar \F{Code} \Ar{Δ} for functors, which has codes for constant functors,
 the identity, products, coproducts, and the later modality.
 Since there is a code for constant functors, the type family
-\F{Poly} needs to be defined simultaneously with \F{Ty}.
-%% The type \F{Poly} \Ar{Δ} specifies a grammar for functors we allow 
-%% The constructor \IC{μ} takes an element of \F{Poly} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
-%% \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
+\F{Code} needs to be defined simultaneously with \F{Ty}.
+%% The type \F{Code} \Ar{Δ} specifies a grammar for functors we allow 
+%% The constructor \IC{μ} takes an element of \F{Code} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
+%% \F{Code} \Ar{Δ} as its input. We call these elements polynomials. 
 \begin{code}%
 %
 \>[2]\AgdaKeyword{data}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{ClockCtx}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -195,7 +195,7 @@ Since there is a code for constant functors, the type family
 \AgdaDatatype{Ty}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
@@ -204,7 +204,7 @@ Since there is a code for constant functors, the type family
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
@@ -214,32 +214,32 @@ Since there is a code for constant functors, the type family
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
 \>[4]\AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
 \AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{weakenP}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \\
 \>[0]\AgdaFunction{weakenP}\AgdaSpace{}%
@@ -278,12 +278,12 @@ Since there is a code for constant functors, the type family
 \AgdaBound{Q}\<%
 \end{code}
 }
-The constructors of \F{Poly} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
+The constructors of \F{Code} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
 constant domain and the box modality to the grammar.
-%% We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} a functor \F{eval}
+%% We associate to each code \Ar{P} in \F{Code} \Ar{Δ} a functor \F{eval}
 %% \Ar{P} acting on \F{Ty} \Ar{Δ} defined by induction on \Ar{P}.
 %% Then \IC{μ} \Ar{P} is then the least fixed point of \F{eval} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
-%% the type family \F{Poly} so that the functor \F{eval} \Ar{P} is
+%% the type family \F{Code} so that the functor \F{eval} \Ar{P} is
 %% strictly positive, for all \Ar{P}.  Here we consider a grammar for
 %% polynomials consisting of constant functors, the identity functor,
 %% products, coproducts and the later modality. Exponentials with
@@ -298,7 +298,7 @@ constant domain and the box modality to the grammar.
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Ty}\AgdaSpace{}%
@@ -492,7 +492,7 @@ include constructors for variables and substitutions.
 We have lambda abstraction and application, plus the usual
 introduction and elimination rules for the unit types, products, 
 coproducts, and guarded recursive types. Here we only show the typing rules associated to function types and guarded recursive types.
-The function \F{eval} evaluates codes in \F{Poly} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
+The function \F{eval} evaluates codes in \F{Code} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
 We use a categorical combinator \IC{app} for application.
 The conventional application, which we call \F{\$}, taking additionally an element
 in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, is derivable.
@@ -562,7 +562,7 @@ in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, i
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Tm}\AgdaSpace{}%
@@ -584,7 +584,7 @@ in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, i
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1128,7 +1128,7 @@ The other type isomorphisms are constructed in a similar way.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Tm}\AgdaSpace{}%
@@ -1146,7 +1146,7 @@ The other type isomorphisms are constructed in a similar way.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{Tm}\AgdaSpace{}%
@@ -1862,7 +1862,7 @@ equality on substitutions, we ask for \IC{•⇡} and
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2793,11 +2793,11 @@ subst{-}μ{-}help : ∀ \{Δ\} (Γ : Ctx Δ) (A B : Ty Δ)
   → Sub (Γ , (A ⊠ B)) (Γ , A)
 subst{-}μ{-}help = \{!!\}
 
-weaken{-}eval : \{Γ : Ctx ∅\} (P : Poly ∅) (A : Ty ∅)
+weaken{-}eval : \{Γ : Ctx ∅\} (P : Code ∅) (A : Ty ∅)
   → Tm (⇡ Γ) (⇡ (eval P A) ⟶ eval (weakenP P) (⇡ A))
 weaken{-}eval \{Γ\} P A = lambda (sub (var (⇡ Γ) \AgdaUnderscore{}) \{!!\})
 
-weakenμ : (P : Poly ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
+weakenμ : (P : Code ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
 weakenμ P =
   primrec (weakenP P)
           (lambda (sub (up (cons P (var • \AgdaUnderscore{})))
@@ -3599,7 +3599,7 @@ other's inverses.
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{t₁}\AgdaSpace{}%
 \AgdaBound{t₂}\AgdaSpace{}%
@@ -3630,7 +3630,7 @@ other's inverses.
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -4312,7 +4312,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5000,7 +5000,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5037,7 +5037,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ₁}\AgdaSpace{}%
 \AgdaBound{Γ₂}\AgdaSpace{}%
@@ -5328,7 +5328,7 @@ interested reader to the Agda formalization.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -5355,7 +5355,7 @@ interested reader to the Agda formalization.
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{t}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%

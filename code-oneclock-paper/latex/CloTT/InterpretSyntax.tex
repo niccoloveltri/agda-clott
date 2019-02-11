@@ -54,9 +54,10 @@
 \end{code}
 }
 
-Now we define the categorical semantics.
+Now we prove \GTT\ sound \wrt the categorical semantics.
+%define the categorical semantics.
 %For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
-We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes for functors, the interpretation of types has to be defined simultaneously with the interpretation of codes, which we do not show here.
+We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes for functors, the interpretation of types \F{⟦\_⟧type} has to be defined simultaneously with the interpretation of codes \F{⟦\_⟧code}, which we omit here.
 
 \AgdaHide{
 \begin{code}%
@@ -68,10 +69,10 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
@@ -82,7 +83,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaInductiveConstructor{∁}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -136,7 +137,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 
 \begin{code}%
 %
-\>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧A}}\AgdaSpace{}%
+\>[2]\AgdaOperator{\AgdaFunction{⟦\AgdaUnderscore{}⟧type}}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
@@ -152,43 +153,43 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⇒}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{▻}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{►}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{□}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaRecord{■}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{mu}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -201,7 +202,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{𝟙}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{Unit}\<%
 \\
@@ -210,41 +211,41 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⊗}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊞}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⊕}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{⇑}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \end{code}
 }
 
@@ -281,7 +282,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaOperator{\AgdaFunction{,,}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 \>[0]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaInductiveConstructor{⇡}\AgdaSpace{}%
@@ -300,7 +301,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -308,7 +309,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -391,7 +392,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -403,7 +404,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{muObj'}\AgdaSpace{}%
@@ -420,7 +421,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -438,7 +439,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
@@ -468,7 +469,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSymbol{)}\<%
@@ -772,7 +773,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -788,7 +789,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{μ}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{SemTm}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -858,7 +859,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -876,7 +877,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
@@ -897,7 +898,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}set'}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1008,7 +1009,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1034,7 +1035,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
@@ -1049,7 +1050,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaOperator{\AgdaFunction{⇒}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}set}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%
@@ -1076,7 +1077,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1097,7 +1098,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
@@ -1128,7 +1129,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{j}\<%
 \\
 \>[0]\AgdaFunction{primrec{-}psh'₁₂}\AgdaSpace{}%
@@ -1136,7 +1137,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1157,7 +1158,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{i}\AgdaSymbol{)}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
@@ -1193,7 +1194,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{P}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaBound{j}\AgdaSpace{}%
 \AgdaBound{k}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaFunction{primrec{-}psh'₁₁}\AgdaSpace{}%
@@ -1612,7 +1613,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1635,7 +1636,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSymbol{)}\<%
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
@@ -1938,7 +1939,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -1964,7 +1965,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{⟶}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaSymbol{→}\AgdaSpace{}%
@@ -1979,7 +1980,7 @@ We only show the interpretation of the types whose semantics has been explicitly
 \AgdaOperator{\AgdaFunction{⇒}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSymbol{)}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSymbol{)}\<%
 \\
 \>[0]\AgdaField{fun}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaField{nat{-}map}\AgdaSpace{}%
@@ -2103,12 +2104,12 @@ We only show the interpretation of the types whose semantics has been explicitly
 %
 \\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaComment{\{{-}
-primrec{-}psh'₁₁ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A i)
+primrec{-}psh'₁₁ : (P Q : Code κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧type i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j)
-  → Obj ⟦ eval Q (μ P) ⊠ eval Q A ⟧A j
-primrec{-}psh'₁₂ : (P Q : Poly κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A i)
+  → Obj ⟦ eval Q (μ P) ⊠ eval Q A ⟧type j
+primrec{-}psh'₁₂ : (P Q : Code κ) (A : Type κ) (i : Size) (t : Obj ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧type i)
   → (j : Size< (↑ i)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly j) (k : Size< (↑ j))
-  → Mor ⟦ eval Q (μ P) ⊠ eval Q A ⟧A j k (primrec{-}psh'₁₁ P Q A i t j z)
+  → Mor ⟦ eval Q (μ P) ⊠ eval Q A ⟧type j k (primrec{-}psh'₁₁ P Q A i t j z)
     ≡
     primrec{-}psh'₁₁ P Q A i t k (μMor' ⟦ P ⟧poly ⟦ Q ⟧poly j k z)
 proj₁ (primrec{-}psh'₁₁ P (∁ X) A i t j (∁ps z)) = z
@@ -2150,7 +2151,7 @@ primrec{-}psh'₁₂ P (Q₁ ⊠ Q₂) A i t j (z₁ ⊠ z₂) k =
                (cong (λ z → proj₂ z) (primrec{-}psh'₁₂ P Q₂ A i t j z₂ k)))
 primrec{-}psh'₁₂ P (▻P Q) A i t j (►P z₁ z₂) k = cong₂ (\AgdaUnderscore{},\AgdaUnderscore{}) (►eq (λ \{\AgdaUnderscore{} → refl\})) (►eq (λ \{\AgdaUnderscore{} → refl\}))
 
-primrec{-}psh'₂ : (P Q : Poly κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A)
+primrec{-}psh'₂ : (P Q : Code κ) (Γ : Ctx κ) (A : Type κ) (t : Tm Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧type)
   → (i : Size) (j : Size< (↑ i)) (x : Obj Γ i) (k : Size< (↑ j)) (z : μObj' ⟦ P ⟧poly ⟦ Q ⟧poly k)
   → primrec{-}psh'₁₁ P Q A i (nat{-}map t i x) k z
     ≡
@@ -2181,9 +2182,9 @@ primrec{-}psh'₂ P (▻P Q) Γ A t i j x k (►P z₁ z₂) =
         (►eq (λ \{l → cong proj₁ (primrec{-}psh'₂ P Q Γ A t i j x l (z₁ [ l ]))\}))
         (►eq (λ \{l → cong proj₂ (primrec{-}psh'₂ P Q Γ A t i j x l (z₁ [ l ]))\}))
 
-primrec{-}psh : (P : Poly κ) (Γ : Ctx κ) (A : Type κ)
-  → Tm ⟦ Γ ⟧Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧A
-  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧A)
+primrec{-}psh : (P : Code κ) (Γ : Ctx κ) (A : Type κ)
+  → Tm ⟦ Γ ⟧Γ ⟦ (eval P (μ P) ⊠ eval P A) ⟶ A ⟧type
+  → Tm ⟦ Γ ⟧Γ (mu ⟦ P ⟧poly ⇒ ⟦ A ⟧type)
 fun (nat{-}map (primrec{-}psh P Γ A f) i x) j y = fun (nat{-}map f i x) j (primrec{-}psh'₁₁ P P A i (nat{-}map f i x) j y)
 funcom (nat{-}map (primrec{-}psh P Γ A f) i x) j k y =
   trans (funcom (nat{-}map f i x) j k \AgdaUnderscore{})
@@ -2198,7 +2199,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
@@ -2310,7 +2311,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{x}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2477,7 +2478,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
@@ -2589,7 +2590,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{Poly}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -2840,7 +2841,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{s}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧sub}}\<%
@@ -2954,7 +2955,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -2987,7 +2988,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -3022,7 +3023,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3038,7 +3039,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
@@ -3058,7 +3059,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\AgdaSpace{}%
@@ -3182,7 +3183,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3201,7 +3202,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3220,7 +3221,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3241,10 +3242,10 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\AgdaSpace{}%
@@ -3266,7 +3267,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{f}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3285,7 +3286,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaOperator{\AgdaFunction{⟧Γ}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{t}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟧tm}}\<%
@@ -3367,7 +3368,7 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
@@ -3380,10 +3381,10 @@ nat{-}com (primrec{-}psh P Γ A t) i j x = funeq (λ k z → cong₂ (λ a b →
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\AgdaSpace{}%
+\AgdaOperator{\AgdaFunction{⟧type}}\AgdaSpace{}%
 \AgdaOperator{\AgdaFunction{⟦}}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSpace{}%
-\AgdaOperator{\AgdaFunction{⟧A}}\<%
+\AgdaOperator{\AgdaFunction{⟧type}}\<%
 \\
 %
 \>[2]\AgdaField{fun}\AgdaSpace{}%

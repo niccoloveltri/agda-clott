@@ -17,20 +17,20 @@ open PSh
 \end{code}
 }
 For semantic guarded recursive types, we introduce a type of semantic codes for functors.
-We cannot reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
+We cannot reutilize the syntactic grammar \F{Code} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
 Instead we use the following definition.
 
 \begin{code}
-data SemPoly : ClockCtx → Set₁ where
-    ∁ : ∀ {Δ} → SemTy Δ → SemPoly Δ
-    I : ∀ {Δ} → SemPoly Δ
-    _⊞_ _⊠_ : ∀ {Δ} → SemPoly Δ → SemPoly Δ → SemPoly Δ
-    ▸ : SemPoly κ → SemPoly κ
+data SemCode : ClockCtx → Set₁ where
+    ∁ : ∀ {Δ} → SemTy Δ → SemCode Δ
+    I : ∀ {Δ} → SemCode Δ
+    _⊞_ _⊠_ : ∀ {Δ} → SemCode Δ → SemCode Δ → SemCode Δ
+    ▸ : SemCode κ → SemCode κ
 \end{code}
 \AgdaHide{
 Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \begin{code}
-sem-eval : ∀ {Δ} → SemPoly Δ → SemTy Δ → SemTy Δ
+sem-eval : ∀ {Δ} → SemCode Δ → SemTy Δ → SemTy Δ
 sem-eval (∁ A) X = A
 sem-eval I X = X
 sem-eval (P ⊞ Q) X = sem-eval P X ⊕ sem-eval Q X
@@ -41,12 +41,12 @@ sem-eval (▸ P) X = ►(sem-eval P X)
 
 \AgdaHide{
 \begin{code}
-data μset (P : SemPoly ∅) : SemPoly ∅ → Set where
+data μset (P : SemCode ∅) : SemCode ∅ → Set where
   ∁s : {X : Set} → X → μset P (∁ X)
   I : μset P P → μset P I
-  _⊠_ : {Q R : SemPoly ∅} → μset P Q → μset P R → μset P (Q ⊠ R)
-  ⊞₁ : {Q R : SemPoly ∅} → μset P Q → μset P (Q ⊞ R)
-  ⊞₂ : {Q R : SemPoly ∅} → μset P R → μset P (Q ⊞ R)
+  _⊠_ : {Q R : SemCode ∅} → μset P Q → μset P R → μset P (Q ⊠ R)
+  ⊞₁ : {Q R : SemCode ∅} → μset P Q → μset P (Q ⊞ R)
+  ⊞₂ : {Q R : SemCode ∅} → μset P R → μset P (Q ⊞ R)
 \end{code}
 }
 
@@ -102,7 +102,7 @@ We define them formally as follows.
 }
 \begin{code}
 mutual
-  data muObj' (P : SemPoly κ) : SemPoly κ → Size → Set where
+  data muObj' (P : SemCode κ) : SemCode κ → Size → Set where
     const : {X : PSh} {i : Size} → Obj X i → muObj' P (∁ X) i
     rec : ∀{i} → muObj' P P i → muObj' P I i
     _,_ : ∀{Q R i} → muObj' P Q i → muObj' P R i → muObj' P (Q ⊠ R) i
@@ -113,7 +113,7 @@ mutual
 \end{code}
 
 \begin{code}
-  muMor' : (P Q : SemPoly κ) (i : Size) (j : Size< (↑ i)) → muObj' P Q i → muObj' P Q j
+  muMor' : (P Q : SemCode κ) (i : Size) (j : Size< (↑ i)) → muObj' P Q i → muObj' P Q j
   muMor' P (∁ X) i j (const x) = const (Mor X i j x)
   muMor' P I i j (rec x) = rec (muMor' P P i j x)
   muMor' P (Q ⊠ R) i j (x , y) = muMor' P Q i j x , muMor' P R i j y
@@ -144,7 +144,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 
 \AgdaHide{
 \begin{code}
-μMor'Id : (P Q : SemPoly κ) {i : Size} {x : muObj' P Q i} → muMor' P Q i i x ≡ x
+μMor'Id : (P Q : SemCode κ) {i : Size} {x : muObj' P Q i} → muMor' P Q i i x ≡ x
 μMor'Id P (∁ X) {i} {const x} = cong const (MorId X)
 μMor'Id P I {i}{rec x} = cong rec (μMor'Id P P)
 μMor'Id P (Q ⊠ R) {i}{x , y} = cong₂ _,_ (μMor'Id P Q) (μMor'Id P R)
@@ -154,7 +154,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \end{code}
 
 \begin{code}
-μMor'Comp : (P Q : SemPoly κ) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : muObj' P Q i}
+μMor'Comp : (P Q : SemCode κ) {i : Size} {j : Size< (↑ i)} {k : Size< (↑ j)} {x : muObj' P Q i}
   → muMor' P Q i k x ≡ muMor' P Q j k (muMor' P Q i j x)
 μMor'Comp P (∁ X) {x = const x} = cong const (MorComp X)
 μMor'Comp P I {x = rec x} = cong rec (μMor'Comp P P)
@@ -170,7 +170,7 @@ Since \AD{muMor} preserves the identity and composition, we get a presheaf \AD{m
 This is used to interpret \IC{μ} in the clock context \IC{κ}. We write \F{mu} for the interpretation of \IC{μ} in a general clock context.
 \AgdaHide{
 \begin{code}
-μ-κ : SemPoly κ → SemPoly κ → SemTy κ
+μ-κ : SemCode κ → SemCode κ → SemTy κ
 μ-κ P Q = record
   { Obj = muObj' P Q
   ; Mor = muMor' P Q
@@ -184,7 +184,7 @@ The presheaf \AD{μ-κ} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in t
 }
 \AgdaHide{
 \begin{code}
-mu : ∀ {Δ} → (P : SemPoly Δ) → SemTy Δ
+mu : ∀ {Δ} → (P : SemCode Δ) → SemTy Δ
 mu {κ} P = μ-κ P P
 \end{code}
 }

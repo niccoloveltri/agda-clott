@@ -61,12 +61,12 @@
 \end{code}
 }
 For semantic guarded recursive types, we introduce a type of semantic codes for functors.
-We cannot reutilize the syntactic grammar \F{Poly} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
+We cannot reutilize the syntactic grammar \F{Code} since the code for the constant functor should depend on \AD{SemTy} rather than \AD{Ty}.
 Instead we use the following definition.
 
 \begin{code}%
 \>[0]\AgdaKeyword{data}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{ClockCtx}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
@@ -82,7 +82,7 @@ Instead we use the following definition.
 \AgdaFunction{SemTy}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
@@ -91,7 +91,7 @@ Instead we use the following definition.
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
@@ -101,22 +101,22 @@ Instead we use the following definition.
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\<%
 \\
 %
 \>[4]\AgdaInductiveConstructor{▸}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\<%
 \end{code}
 \AgdaHide{
@@ -127,7 +127,7 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \AgdaSymbol{∀}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{SemTy}\AgdaSpace{}%
@@ -194,10 +194,10 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \AgdaDatatype{μset}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\AgdaSpace{}%
@@ -234,7 +234,7 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \AgdaSymbol{\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
@@ -257,7 +257,7 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \AgdaSymbol{\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
@@ -276,7 +276,7 @@ Again we can evaluate polynomials as endofunctors on \F{SemTy} \AB{Δ}.
 \AgdaSymbol{\{}\AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{R}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{∅}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaDatatype{μset}\AgdaSpace{}%
@@ -349,10 +349,10 @@ We define them formally as follows.
 \AgdaDatatype{muObj'}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPostulate{Size}\AgdaSpace{}%
@@ -496,7 +496,7 @@ We define them formally as follows.
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -668,7 +668,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -796,7 +796,7 @@ The morphism part \AD{μMor'} also depends on two polynomials and it is defined 
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{i}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -959,10 +959,10 @@ This is used to interpret \IC{μ} in the clock context \IC{κ}. We write \F{mu} 
 \begin{code}%
 \>[0]\AgdaFunction{μ{-}κ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaInductiveConstructor{κ}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{SemTy}\AgdaSpace{}%
@@ -1022,7 +1022,7 @@ The presheaf \AD{μ-κ} \AB{P} \AB{P} gives the interpretation for \AIC{μ} in t
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaBound{P}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
-\AgdaDatatype{SemPoly}\AgdaSpace{}%
+\AgdaDatatype{SemCode}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaFunction{SemTy}\AgdaSpace{}%

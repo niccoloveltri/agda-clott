@@ -32,7 +32,7 @@ Formally, we define an interpretation \F{sem}.
 \begin{code}
 sem : interpret-syntax
 semTy sem = SemTy
-_⟦_⟧Ty sem = ⟦_⟧A
+_⟦_⟧Ty sem = ⟦_⟧type
 \end{code}
 
 \AgdaHide{

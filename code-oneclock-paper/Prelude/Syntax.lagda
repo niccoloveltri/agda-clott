@@ -78,40 +78,40 @@ include a weakening type former \IC{⇡}, which maps \IC{∅}-types to
 Guarded recursive types are defined using a least fixpoint
 type former \IC{μ}.
 \begin{code}
-    μ : ∀ {Δ} → Poly Δ → Ty Δ
+    μ : ∀ {Δ} → Code Δ → Ty Δ
 \end{code}
 \end{AgdaAlign}
 For \IC{μ} to be well-defined, one typically limits
 its applicability to strictly positive functors. We instead consider
-a grammar \F{Poly} \Ar{Δ} for functors, which has codes for constant functors,
+a grammar \F{Code} \Ar{Δ} for functors, which has codes for constant functors,
 the identity, products, coproducts, and the later modality.
 Since there is a code for constant functors, the type family
-\F{Poly} needs to be defined simultaneously with \F{Ty}.
-%% The type \F{Poly} \Ar{Δ} specifies a grammar for functors we allow 
-%% The constructor \IC{μ} takes an element of \F{Poly} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
-%% \F{Poly} \Ar{Δ} as its input. We call these elements polynomials. 
+\F{Code} needs to be defined simultaneously with \F{Ty}.
+%% The type \F{Code} \Ar{Δ} specifies a grammar for functors we allow 
+%% The constructor \IC{μ} takes an element of \F{Code} and returnA guarded recursive type in a clock context \Ar{Δ} takes an element of
+%% \F{Code} \Ar{Δ} as its input. We call these elements polynomials. 
 \begin{code}
-  data Poly : ClockCtx → Set where
-    ∁ : ∀ {Δ} → Ty Δ → Poly Δ
-    I : ∀ {Δ} → Poly Δ
-    _⊠_ _⊞_ : ∀ {Δ} → Poly Δ → Poly Δ → Poly Δ
-    ▻ : Poly κ → Poly κ
+  data Code : ClockCtx → Set where
+    ∁ : ∀ {Δ} → Ty Δ → Code Δ
+    I : ∀ {Δ} → Code Δ
+    _⊠_ _⊞_ : ∀ {Δ} → Code Δ → Code Δ → Code Δ
+    ▻ : Code κ → Code κ
 \end{code}
 \AgdaHide{
 \begin{code}
-weakenP : Poly ∅ → Poly κ
+weakenP : Code ∅ → Code κ
 weakenP (∁ X) = ∁ (⇡ X)
 weakenP I = I
 weakenP (P ⊞ Q) = weakenP P ⊞ weakenP Q
 weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 \end{code}
 }
-The constructors of \F{Poly} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
+The constructors of \F{Code} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
 constant domain and the box modality to the grammar.
-%% We associate to each code \Ar{P} in \F{Poly} \Ar{Δ} a functor \F{eval}
+%% We associate to each code \Ar{P} in \F{Code} \Ar{Δ} a functor \F{eval}
 %% \Ar{P} acting on \F{Ty} \Ar{Δ} defined by induction on \Ar{P}.
 %% Then \IC{μ} \Ar{P} is then the least fixed point of \F{eval} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
-%% the type family \F{Poly} so that the functor \F{eval} \Ar{P} is
+%% the type family \F{Code} so that the functor \F{eval} \Ar{P} is
 %% strictly positive, for all \Ar{P}.  Here we consider a grammar for
 %% polynomials consisting of constant functors, the identity functor,
 %% products, coproducts and the later modality. Exponentials with
@@ -121,7 +121,7 @@ constant domain and the box modality to the grammar.
 
 \AgdaHide{
 \begin{code}
-eval : ∀ {Δ} → Poly Δ → Ty Δ → Ty Δ
+eval : ∀ {Δ} → Code Δ → Ty Δ → Ty Δ
 eval (∁ Y) X = Y
 eval I X = X
 eval (P ⊞ Q) X = eval P X ⊞ eval Q X
@@ -167,15 +167,15 @@ include constructors for variables and substitutions.
 We have lambda abstraction and application, plus the usual
 introduction and elimination rules for the unit types, products, 
 coproducts, and guarded recursive types. Here we only show the typing rules associated to function types and guarded recursive types.
-The function \F{eval} evaluates codes in \F{Poly} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
+The function \F{eval} evaluates codes in \F{Code} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
 We use a categorical combinator \IC{app} for application.
 The conventional application, which we call \F{\$}, taking additionally an element
 in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, is derivable.
 \begin{code}
     lambda : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm (Γ , A) B → Tm Γ (A ⟶ B)
     app : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ (A ⟶ B) → Tm (Γ , A) B
-    cons : ∀ {Δ} {Γ : Ctx Δ} (P : Poly Δ) → Tm Γ (eval P (μ P)) → Tm Γ (μ P)
-    primrec : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A : Ty Δ}
+    cons : ∀ {Δ} {Γ : Ctx Δ} (P : Code Δ) → Tm Γ (eval P (μ P)) → Tm Γ (μ P)
+    primrec : ∀ {Δ} (P : Code Δ) {Γ : Ctx Δ} {A : Ty Δ}
       → Tm Γ (eval P (μ P ⊠ A) ⟶ A) → Tm Γ (μ P ⟶ A)
 \end{code}
 \AgdaHide{
@@ -246,8 +246,8 @@ The other type isomorphisms are constructed in a similar way.
       → Tm Γ (□ (A ⊞ B) ⟶ (□ A ⊞ □ B))
     ⟶weaken : (A B : Ty ∅)
       → Tm • (((⇡ A) ⟶ (⇡ B)) ⟶ ⇡(A ⟶ B))
-    μweaken : (P : Poly ∅) → Tm • (⇡ (μ P) ⟶ μ (weakenP P))
-    weakenμ : (P : Poly ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
+    μweaken : (P : Code ∅) → Tm • (⇡ (μ P) ⟶ μ (weakenP P))
+    weakenμ : (P : Code ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
 \end{code}
 }
 
@@ -328,7 +328,7 @@ pairmap {Δ} {Γ} {A} {B₁} {B₂} f g  = lambda [ app f & app g ]
 ▻Pmap {Γ} {A} {B} f =
   lambda (wk (next f) ⊛ var Γ (▻ A))
 
-Pmap : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A B : Ty Δ}
+Pmap : ∀ {Δ} (P : Code Δ) {Γ : Ctx Δ} {A B : Ty Δ}
   → Tm Γ (A ⟶ B) → Tm Γ (eval P A ⟶ eval P B)
 Pmap (∁ X) f = idmap X
 Pmap I f = f
@@ -412,11 +412,11 @@ subst-μ-help : ∀ {Δ} (Γ : Ctx Δ) (A B : Ty Δ)
   → Sub (Γ , (A ⊠ B)) (Γ , A)
 subst-μ-help = {!!}
 
-weaken-eval : {Γ : Ctx ∅} (P : Poly ∅) (A : Ty ∅)
+weaken-eval : {Γ : Ctx ∅} (P : Code ∅) (A : Ty ∅)
   → Tm (⇡ Γ) (⇡ (eval P A) ⟶ eval (weakenP P) (⇡ A))
 weaken-eval {Γ} P A = lambda (sub (var (⇡ Γ) _) {!!})
 
-weakenμ : (P : Poly ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
+weakenμ : (P : Code ∅) → Tm • (μ (weakenP P) ⟶ ⇡ (μ P))
 weakenμ P =
   primrec (weakenP P)
           (lambda (sub (up (cons P (var • _)))
@@ -475,8 +475,8 @@ other's inverses.
     cong-_⊛_ : {Γ : Ctx κ} {A B : Ty κ} {t₁ t₂ : Tm Γ (▻ (A ⟶ B))} {u₁ u₂ : Tm Γ (▻ A)} → t₁ ∼ t₂ → u₁ ∼ u₂ → t₁ ⊛ u₁ ∼ t₂ ⊛ u₂
     cong-dfix  : {Γ : Ctx κ} {A : Ty κ} {t₁ t₂ : Tm Γ (▻ A ⟶ A)} → t₁ ∼ t₂ → dfix t₁ ∼ dfix t₂
     cong-force : {Γ : Ctx ∅} {A : Ty κ} {t₁ t₂ : Tm Γ (□(▻ A))} → t₁ ∼ t₂ → force t₁ ∼ force t₂
-    cong-cons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} {t₁ t₂ : Tm Γ (eval P (μ P))} → t₁ ∼ t₂ → cons P t₁ ∼ cons P t₂
-    cong-primrec : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A : Ty Δ} {t₁ t₂ : Tm Γ (eval P (μ P ⊠ A) ⟶ A)}
+    cong-cons : ∀ {Δ} {Γ : Ctx Δ} {P : Code Δ} {t₁ t₂ : Tm Γ (eval P (μ P))} → t₁ ∼ t₂ → cons P t₁ ∼ cons P t₂
+    cong-primrec : ∀ {Δ} (P : Code Δ) {Γ : Ctx Δ} {A : Ty Δ} {t₁ t₂ : Tm Γ (eval P (μ P ⊠ A) ⟶ A)}
       → t₁ ∼ t₂ → primrec P t₁ ∼ primrec P t₂
     λ-β : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} (t : Tm (Γ , A) B) → app (lambda t) ∼ t
     λ-η : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} (t : Tm Γ (A ⟶ B)) → lambda (app t) ∼ t
@@ -515,7 +515,7 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
       → f ⊛ next t ∼ next (lambda ((var _ _) $ (wk t))) ⊛ f
     dfix-f : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) → dfix f ∼ next (f $ dfix f) --f $ (next (fix f))
     dfix-u : {Γ : Ctx κ} {A : Ty κ} (f : Tm Γ (▻ A ⟶ A)) (u : Tm Γ (▻ A)) → next (f $ u) ∼ u → dfix f ∼ u
-    primrec-cons : ∀ {Δ} (P : Poly Δ) {Γ : Ctx Δ} {A : Ty Δ} (t : Tm Γ (eval P (μ P ⊠ A) ⟶ A)) (a : Tm Γ (eval P (μ P)))
+    primrec-cons : ∀ {Δ} (P : Code Δ) {Γ : Ctx Δ} {A : Ty Δ} (t : Tm Γ (eval P (μ P ⊠ A) ⟶ A)) (a : Tm Γ (eval P (μ P)))
       → (primrec P t) $ (cons P a) ∼ t $ ((Pmap P (pairmap (idmap (μ P)) (primrec P t))) $ a)
       --app-map (primrec P t) (cons P a) ∼ app-map t [ a & app-map (Pmap P (primrec P t)) a ]
     sub-id : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} (t : Tm Γ A)
@@ -550,9 +550,9 @@ We refer to M{\o}gelberg's paper \cite{Mogelberg14} for a complete list of the r
       → sub (□const A) s ∼ □const A
     sub-□sum : {Γ₁ Γ₂ : Ctx ∅} (A B : Ty κ) (s : Sub Γ₂ Γ₁)
       → sub (□sum A B) s ∼ □sum A B
-    sub-cons : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {P : Poly Δ} (t : Tm Γ₁ (eval P (μ P))) (s : Sub Γ₂ Γ₁)
+    sub-cons : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {P : Code Δ} (t : Tm Γ₁ (eval P (μ P))) (s : Sub Γ₂ Γ₁)
       → sub (cons P t) s ∼ cons P (sub t s)
-    sub-primrec : ∀ {Δ} (P : Poly Δ) {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} (t : Tm Γ₁ (eval P (μ P ⊠ A) ⟶ A)) (s : Sub Γ₂ Γ₁)
+    sub-primrec : ∀ {Δ} (P : Code Δ) {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} (t : Tm Γ₁ (eval P (μ P ⊠ A) ⟶ A)) (s : Sub Γ₂ Γ₁)
       → sub (primrec P t) s ∼ primrec P (sub t s)
 \end{code}
 }
@@ -582,9 +582,9 @@ interested reader to the Agda formalization.
       → (⟶weaken A B) $ ((weaken⟶ A B) $ t) ∼ t
     weaken⟶weaken : (A B : Ty ∅) (t : Tm • (⇡ A ⟶ ⇡ B))
       → (weaken⟶ A B) $ ((⟶weaken A B) $ t) ∼ t
-    μweakenμ : (P : Poly ∅) (t : Tm • (μ (weakenP P)))
+    μweakenμ : (P : Code ∅) (t : Tm • (μ (weakenP P)))
       → (μweaken P) $ ((weakenμ P) $ t) ∼ t
-    weakenμweaken : (P : Poly ∅) (t : Tm • (⇡ (μ P)))
+    weakenμweaken : (P : Code ∅) (t : Tm • (⇡ (μ P)))
       → (weakenμ P) $ ((μweaken P) $ t) ∼ t
     updown : {Γ : Ctx ∅} {A : Ty ∅} (t : Tm (⇡ Γ) (⇡ A)) → up(down t) ∼ t
     downup : {Γ : Ctx ∅} {A : Ty ∅} (t : Tm Γ A) → down(up t) ∼ t
