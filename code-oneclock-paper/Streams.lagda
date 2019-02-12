@@ -16,7 +16,7 @@ We give a taste of how to program with streams in \GTT.
 %First, we define a function \F{decons} which destructs an element of an inductive type.
 \AgdaHide{
 \begin{code}
-decons : ∀ {Δ} {Γ : Ctx Δ} {P : Poly Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
+decons : ∀ {Δ} {Γ : Ctx Δ} {P : Code Δ} → Tm Γ (μ P) → Tm Γ (eval P (μ P))
 decons {Γ = Γ} {P} = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ eval P (μ P))))))) 
 \end{code}
 }
@@ -58,7 +58,7 @@ tl : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ (Str A)
 tl xs = force (box (π₂ (decons (unbox xs))))
 \end{code}
 
-In our Agda formalization, we also construct a function returning the constant stream over a given element of \Ar{A} and a function removing the elements at even indices out of a given stream.
+In our Agda formalization, we also construct a function returning the constant stream over a given element and a function removing the elements at even indices out of a given stream.
 
 
 \AgdaHide{

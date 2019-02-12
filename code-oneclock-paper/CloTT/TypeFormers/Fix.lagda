@@ -39,7 +39,7 @@ sem-dfix₁ : (A : SemTy κ) (i : Size) → ExpObj (► A) A i → ►Obj A i
 This definition is accepted by Agda's termination checker for two reasons:
 \begin{itemize}
   \item every recursive call is applied to a strictly smaller size;
-  \item the usage \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding.
+  \item the usage of \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding.
 \end{itemize}
 \remove{
 This definition is accepted by Agda's termination checker because

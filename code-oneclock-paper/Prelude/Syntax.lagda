@@ -263,7 +263,7 @@ substitutions, the empty substitution, the extension with an additional term, an
     pr : ∀ {Δ} {Γ₁ Γ₂ : Ctx Δ} {A : Ty Δ} → Sub Γ₁ (Γ₂ , A) → Sub Γ₁ Γ₂
 \end{code}
 
-We also add rules for embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ} contexts and vice versa.
+We also add rules for embedding substitutions between \IC{∅}-contexts into substitutions between \IC{κ}-contexts and vice versa.
 
 \begin{code}
     up : {Γ₁ Γ₂ : Ctx ∅} → Sub Γ₁ Γ₂ → Sub (⇡ Γ₁) (⇡ Γ₂)
