@@ -1,0 +1,231 @@
+% easychair.tex,v 3.5 2017/03/15
+
+\documentclass{easychair}
+%\documentclass[EPiC]{easychair}
+%\documentclass[EPiCempty]{easychair}
+%\documentclass[debug]{easychair}
+%\documentclass[verbose]{easychair}
+%\documentclass[notimes]{easychair}
+%\documentclass[withtimes]{easychair}
+%\documentclass[a4paper]{easychair}
+%\documentclass[letterpaper]{easychair}
+
+\usepackage{doc}
+
+% use this if you have a long article and want to create an index
+% \usepackage{makeidx}
+
+% In order to save space or manage large tables or figures in a
+% landcape-like text, you can use the rotating and pdflscape
+% packages. Uncomment the desired from the below.
+%
+% \usepackage{rotating}
+% \usepackage{pdflscape}
+
+% Some of our commands for this guide.
+%
+\newcommand{\easychair}{\textsf{easychair}}
+\newcommand{\miktex}{MiK{\TeX}}
+\newcommand{\texniccenter}{{\TeX}nicCenter}
+\newcommand{\makefile}{\texttt{Makefile}}
+\newcommand{\latexeditor}{LEd}
+
+\newcommand{\remove}[1]{}
+
+\newcommand{\ie}{\emph{i.e.,} }
+\newcommand{\cf}{\emph{c.f.} }
+\newcommand{\eg}{\emph{e.g.,} }
+\newcommand{\etal}{\emph{et~al.}}
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\wrt}{w.r.t.~}
+\newcommand{\resp}{resp.~}
+\newcommand{\loccit}{\emph{loc. cit.} }
+
+\newcommand{\GTT}{\textbf{GTT}}
+
+%\makeindex
+
+%% Front Matter
+%%
+% Regular title as in the article class.
+%
+\title{Guarded Recursion in Agda via Sized Type}
+
+% Authors are joined by \and. Their affiliations are given by \inst, which indexes
+% into the list defined using \institute
+%
+\author{
+Niccol\`o Veltri\inst{1}
+\and
+Niels van der Weide\inst{2}
+}
+
+% Institutes for affiliations are also joined by \and,
+\institute{
+  Department of Computer Science, IT
+  University of Copenhagen, Denmark \\
+  \email{nive@itu.dk}
+\and
+   Institute for Computation and Information Sciences, Radboud University, Nijmegen, The Netherlands \\
+   \email{nweide@cs.ru.nl}
+ }
+
+%  \authorrunning{} has to be set for the shorter version of the authors' names;
+% otherwise a warning will be rendered in the running heads. When processed by
+% EasyChair, this command is mandatory: a document without \authorrunning
+% will be rejected by EasyChair
+
+\authorrunning{Veltri and van der Weide}
+
+% \titlerunning{} has to be set to either the main title or its shorter
+% version for the running heads. When processed by
+% EasyChair, this command is mandatory: a document without \titlerunning
+% will be rejected by EasyChair
+\titlerunning{Guarded Recursion in Agda via Sized Types}
+
+\begin{document}
+
+\maketitle
+
+Dependent type theory is an expressive functional programming
+language that underlies the deductive system of proof assistants such
+as Agda \cite{norell} and Coq \cite{barras1997coq}. It is a total language,
+meaning that every program definable inside type theory is necessarily
+terminating. This is an important requirement that ensures the
+consistency of the type system. 
+
+Possibly non-terminating computations
+and infinite structures, such as non-wellfounded trees, can be
+represented in type theory by extending the type system with
+coinductive types. Recursively defined elements of these types
+need to be productive in the sense that every
+finite unfolding can be computed in a finite number of steps \cite{Coquand93}.
+In Agda's encoding of coinductive types using ``musical notation''
+\cite{DA10}, productivity is enforced via a strict obligation: in the
+definition of a corecursive function, recursive
+calls must appear directly under
+the application of a constructor. A similar syntactic
+check is used in Coq. % \cite{DBertotK08}.
+This restriction
+typically makes programming with coinductive types cumbersome,
+which spawned the search for alternative techniques to ensure the
+well-definedness of corecursive definitions.
+
+We focus on two of these techniques in which productivity is encoded
+at the level of types: sized types and guarded recursion. A sized type
+ is a type annotated with the number of unfolding that
+elements of this type can undergo \cite{Hughes96}. Sized types have been implemented
+in Agda and can be used in
+combination with coinductive records to specify
+coinductive types \cite{Copatterns,AVW-normalization}, as exemplified
+by Abel and Chapman's work \cite{AC14}.
+
+Guarded recursion \cite{Nakano}
+is a different approach where the type system is enhanced with a
+modality, called ``later'' and written $\triangleright$, encoding time delay in
+types. The later modality comes with a general fixpoint combinator for
+programming with productive recursive functions and allows the
+specification of guarded recursive types.
+These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,bizjak2016guarded,BahrGM17}. Currently there is no
+implementation of a calculus for guarded recursion.
+\remove{, \eg the type of guarded
+streams satisfying the isomorphism $\mathsf{Str} A \simeq A \times
+\triangleright (\mathsf{Str} A)$. The tail of a guarded stream is available only
+one time step ahead from now, as evidenced by the application of the
+later modality to $\mathsf{Str} A$. Coinductive types can be constructed
+from guarded recursive types in type theories that additionally
+support clock variables and universal quantification over them
+\cite{atkey2013productive,BahrGM17}. Currently there is no
+implementation of a calculus for guarded recursion.}
+%%  nor guarded recursion
+%% appears as a selectable feature in a proof assistant.
+
+%% In recent years we witnessed
+%% the development of several type theories with primitive support for guarded
+%% recursion \cite{atkey2013productive,BahrGM17}. 
+
+
+%% In dependent type theory, one usually works with terminating
+%% computations to ensure consistency.  Yet many interesting programs are
+%% not terminating and use possibly infinite data types.  To remain
+%% consistent, the computations must be productive.  This means: every
+%% finite part of an infinite object can be computed in a finite number
+%% of steps.
+
+%% To allow convenient programming and reasoning with infinite objects, we need to extend our type theory with productivity checks.
+%% To this end, various approaches have been developed.
+%% One is based on sized types \cite{A-sized,AVW-normalization}, where types are assigned a size to indicate the number of unfoldings.
+%% These are implemented in Agda \cite{norell2008}.
+%% Another is based on guarded recursion \cite{atkey2013productive,BahrGM17}, where the type theory is extended with a general fixpoint combinator.
+%% At the current moment, there is no proof assistant based on guarded recursion.
+
+Sized types and guarded recursion are different solutions to the same
+problem, but a thorough study of the relation between these two
+disciplines is still missing. In this paper we take a first step in
+this direction by showing how guarded recursion can be simulated in
+Agda using sized types. 
+
+Utilizing techniques for representing ``type theory in type theory''
+\cite{AltenkirchK16,Chapman09}, we present an Agda formalization of
+the syntax of a simple type theory for guarded recursion. This object
+language, which we call \GTT, is a variant of Atkey and McBride's type
+system for productive coprogramming \cite{atkey2013productive} in
+which the clock context can contain at most one clock. The types of
+\GTT\ include the aforementioned $\triangleright$ modality and a box modality,
+a nameless analogue of Atkey and McBride's universal clock
+quantification. Clouston \etal \cite{CloustonBGB15} studied a
+guarded variant of lambda calculus extended with a box operation,
+which they call ``constant''.  Our object calculus differs from
+theirs in that our judgments are indexed by a clock context, which can
+be empty or containing exactly one clock. 
+%In this respect \GTT\ is closer in spirit to Atkey and McBride's
+%language.
+The design of \GTT\ has the benefit of allowing a more appealing introduction rule for
+box than Clouston et al.'s.
+
+
+Afterwards we develop a categorical semantics
+for \GTT\ using sized types. More precisely, we define a presheaf
+model where the type formers of simply typed lambda calculus are
+evaluated using the standard Kripke semantics. Typically the semantics
+of type theories for guarded recursion is given in the topos of
+trees or variations thereof \cite{BMSS-synthetic,MannaaM18,Mogelberg14}.
+Here, to clarify the connection between guarded recursion and
+sized types, we take the preorder of sizes as the indexing
+category of our presheaves. This means that types and contexts of \GTT\ are
+interpreted as antitone sized types. 
+The well-order relation on sizes is fundamental for constructing a
+terminating definition of the semantic fixpoint combinator. 
+
+%%Abel and Vezzosi \cite{AbelV14} also formalized a simple type theory
+%%extended with the later modality in Agda. They focus on operational
+%%properties of the calculus and give a certified proof of strong
+%%normalization. In our work we consider a richer type system and we
+%%formalize its denotational semantics in Agda. Nevertheless, we do not
+%%investigate the dynamic behaviour of our calculus, which we leave to
+%%future work.
+
+
+To summarize, the contributions of this paper are twofold:
+\begin{enumerate}
+  \item We formalize syntax and semantics of a type theory for
+    guarded recursion in Agda. This is the first such denotational model developed using an extension of Martin-L\"of intensional
+    type theory as the metalanguage, in contrast with the previous
+    set-theoretic models of guarded recursion.
+\item The interpretation of the characteristic features of guarded
+  recursion crucially requires the employment of sized types. This shows that
+  guarded recursion can be reduced to sized types and
+  constitutes a stepping stone towards a clear understanding of  the connections
+  between different approaches to productive coprogramming.
+%	\item We formally prove the syntax is consistent.
+\end{enumerate}
+
+This paper only include the essential parts of our Agda
+formalization. The full code is available at
+\url{https://github.com/niccoloveltri/agda-gtt}. The formalization
+uses Agda 2.5.4.2 and Agda standard library 0.16.
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}
+
