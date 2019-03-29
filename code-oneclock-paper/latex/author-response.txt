@@ -1,0 +1,21 @@
+
+
+We thank the reviewers for their comments.
+
+Reviewers 1 and 2 ask why we restrict the clock context to contain at
+most one single clock variable. It is indeed true that GTT is strictly
+less expressive than Atkey and McBride's calculus, since we are unable
+to implement nested coinductive types. The restriction to the one
+clock case was dictated by our choice to use Agda with sized types as
+the metatheory. In Agda, it is in principle possible to encode
+semantic clock contexts containing multiple clocks as lists of sizes
+or as functions from a finite interval of natural numbers into
+sizes. But Agda's support for sized types is tailored to the case of
+types depending on exactly one size or on a finite but precise number
+of sizes, which makes it very cumbersome to work with types depending
+on clock contexts containing an indefinite number of multiple
+clocks. More explicitly, Agda's type inference works properly only in
+the case of first-order size contraints.  We believe though that if
+future Agda releases will add the capability of handling multiple
+sizes, then it would be possible to extend the semantics of GTT to a
+model for the full Atkey and McBride's type theory.
