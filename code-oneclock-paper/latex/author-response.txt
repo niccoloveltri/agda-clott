@@ -3,19 +3,67 @@
 We thank the reviewers for their comments.
 
 Reviewers 1 and 2 ask why we restrict the clock context to contain at
-most one single clock variable. It is indeed true that GTT is strictly
-less expressive than Atkey and McBride's calculus, since we are unable
-to implement nested coinductive types. The restriction to the one
-clock case was dictated by our choice to use Agda with sized types as
-the metatheory. In Agda, it is in principle possible to encode
-semantic clock contexts containing multiple clocks as lists of sizes
-or as functions from a finite interval of natural numbers into
-sizes. But Agda's support for sized types is tailored to the case of
-types depending on exactly one size or on a finite but precise number
-of sizes, which makes it very cumbersome to work with types depending
-on clock contexts containing an indefinite number of multiple
-clocks. More explicitly, Agda's type inference works properly only in
-the case of first-order size contraints.  We believe though that if
-future Agda releases will add the capability of handling multiple
-sizes, then it would be possible to extend the semantics of GTT to a
-model for the full Atkey and McBride's type theory.
+most one single clock variable. The restriction to the one clock case
+was dictated by our choice to use Agda with sized types as the
+metatheory. In Agda, it is possible to encode semantic clock contexts
+containing multiple clocks as lists of sizes or as functions from a
+finite interval of natural numbers into sizes. But Agda's support for
+sized types is tailored to the case of types depending on exactly one
+size or on a finite but precise number of sizes, which makes it very
+cumbersome to work with types depending on clock contexts containing
+an indefinite number of multiple clocks. More technically, as it was
+privately communicated to us by Agda implementors, Agda's type
+inference works properly only in the case of first-order size
+contraints.  We believe though that if future Agda releases will add
+the capability of handling multiple sizes, then it would be possible
+to extend the semantics of GTT to a model for the full Atkey and
+McBride's type theory. We also believe that extending the
+formalization to the multiclock case, while technically challenging,
+will not be conceptually harder than the work done so far for GTT.
+
+GTT is strictly less expressive than Atkey and McBride's calculus,
+since we are unable to implement nested coinductive types. But the one
+clock variant of the calculus still allows the construction of a large
+class of coinductive types and it is the subject of active research
+in Aarhus, e.g. in Clouston et al. [14]. 
+
+Reviewer 2 is concerned about our restriction of the least fixpoint
+operator to strictly positive functors. This restriction is already
+present in Atkey and McBride's calculus, which is aimed at the
+encoding of coinductive types using the Nakano modality and it does
+not allow the possibility of solving guarded recursive domain
+equations such as D = ▻ D → Nat. GTT is a variant of Atkey and
+McBride's type theory, therefore the similar restriction to stricly
+positive functors. From the formalization perspective, this
+restriction allows us to use Agda's inductive types to model the
+guarded recursive types of GTT, as shown in Section 5.3.
+TO FINISH
+
+
+We now comment on more specific questions raised by Reviewers 2 and 3.
+
+REVIEWER 3
+
+"Could you include a reference to presheaf semantics of type theory? "
+
+We will add a reference.
+
+"You define records by giving an equation for each record field
+applied to the record"
+
+We will add an explanation of Agda's copatterns  in Section 2.
+
+
+REVIEWER 2
+
+"The next operator can type certain programs that cannot be typed with
+size types as Sacchini shows"
+
+Agda's sized types are much more liberal than Sachini's ones.
+
+"For me it would be better if you explicitly define the typed lambda
+calculi that are compared and make the translation from one calculus
+to the other explicit"
+
+We will add a typed lambda calculus notation presentation of GTT in
+the Appendix.
