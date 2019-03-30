@@ -13,7 +13,7 @@ size or on a finite but precise number of sizes, which makes it very
 cumbersome to work with types depending on clock contexts containing
 an indefinite number of multiple clocks. More technically, as it was
 privately communicated to us by Agda implementors, Agda's type
-inference works properly only in the case of first-order size
+inference only works properly only in the case of first-order size
 contraints.  We believe though that if future Agda releases will add
 the capability of handling multiple sizes, then it would be possible
 to extend the semantics of GTT to a model for the full Atkey and
@@ -40,7 +40,10 @@ guarded recursive types of GTT, as shown in Section 5.3.
 TO FINISH
 
 
+Reviewer 2 also added several points for which we need to provide more
+explanation/clarification. We will add those in the next version.
 We now comment on more specific questions raised by Reviewers 2 and 3.
+
 
 REVIEWER 3
 
@@ -59,7 +62,8 @@ REVIEWER 2
 "The next operator can type certain programs that cannot be typed with
 size types as Sacchini shows"
 
-Agda's sized types are much more liberal than Sachini's ones.
+Agda's sized types are much more liberal than Sachini's ones and more
+terms can be typed by Agda.
 
 "For me it would be better if you explicitly define the typed lambda
 calculi that are compared and make the translation from one calculus
@@ -67,3 +71,12 @@ to the other explicit"
 
 We will add a typed lambda calculus notation presentation of GTT in
 the Appendix.
+
+"Moreover, in order to conclude that guarded recursion can be reduced
+to sized types one would need to prove something more refined about
+the correspondence between the equalities. Not just that True and
+False are semantically different."
+
+Definitional equality (of terms) is interpreted as propositional
+equality, and thus we have such correspondence. We will add a remark
+on this to make this point clearer.
