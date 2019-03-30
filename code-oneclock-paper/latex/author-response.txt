@@ -71,6 +71,10 @@ to the other explicit"
 
 We will add a typed lambda calculus notation presentation of GTT in
 the Appendix.
+Note that our result has a different flavour. We construct a deep and
+shallow embedding of a simple type theory with guarded recursion in a
+type theory with sized types. The usage of sized types in this model
+explains how to simulate guarded recursion with sized types.
 
 "Moreover, in order to conclude that guarded recursion can be reduced
 to sized types one would need to prove something more refined about
