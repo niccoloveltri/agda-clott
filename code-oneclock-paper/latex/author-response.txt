@@ -24,10 +24,10 @@ will not be conceptually harder than the work done so far for GTT.
 GTT is strictly less expressive than Atkey and McBride's calculus,
 since we are unable to implement nested coinductive types. But the one
 clock variant of the calculus still allows the construction of a large
-class of coinductive types and it is the subject of active research
-in Aarhus, e.g. in Clouston et al. [14]. 
+class of coinductive types and it is the subject of active research,
+e.g. Clouston et al. [14].
 
-Reviewer 2 is concerned about our restriction of the least fixpoint
+Reviewer 2 is concerned with our restriction of the least fixpoint
 operator to strictly positive functors. This restriction is already
 present in Atkey and McBride's calculus, which is aimed at the
 encoding of coinductive types using the Nakano modality and it does
@@ -36,9 +36,16 @@ equations such as D = ▻ D → Nat. GTT is a variant of Atkey and
 McBride's type theory, therefore the similar restriction to stricly
 positive functors. From the formalization perspective, this
 restriction allows us to use Agda's inductive types to model the
-guarded recursive types of GTT, as shown in Section 5.3.
-TO FINISH
-
+guarded recursive types of GTT, as shown in Section 5.3.  In future
+work we will extend GTT with the possibility of constructing types
+such as D = ▻ D → Nat. This can be done in two ways: by extending the
+language with a universe, which allows the encoding of guarded
+recursive types as fixpoints in the universe as shown e.g. in
+Møgelberg [19]; or considering a μ type former which, on top of acting
+on stricly positive functors, also operates on functors where all
+variables are guarded by an occurrence of the Nakano modality. In the
+second option we have to consider strictly positive functors if we
+want to encode usual inductive types, such as the natural numbers.
 
 Reviewer 2 also added several points for which we need to provide more
 explanation/clarification. We will add those in the next version.
@@ -76,11 +83,52 @@ shallow embedding of a simple type theory with guarded recursion in a
 type theory with sized types. The usage of sized types in this model
 explains how to simulate guarded recursion with sized types.
 
-"Moreover, in order to conclude that guarded recursion can be reduced
-to sized types one would need to prove something more refined about
-the correspondence between the equalities. Not just that True and
-False are semantically different."
+"In order to conclude that guarded recursion can be reduced to sized
+types one would need to prove something more refined about the
+correspondence between the equalities. Not just that True and False
+are semantically different."
 
 Definitional equality (of terms) is interpreted as propositional
 equality, and thus we have such correspondence. We will add a remark
 on this to make this point clearer.
+
+"guarded recursive types  =  coinductive types"
+
+These are not the same.
+The type of guarded streams of natural numbers satisfies the
+isomorphism gStr ≅ Nat × ▻ gStr, while the type of coinductive streams
+satisfies the isomorphism Str ≅ Nat × Str. The tail of a term in gStr
+is only available one time step ahead from now, while all the element
+of a term in Str are available in the present.
+
+"If mu is a least fixed point former, you can only build inductive
+data types which are finite.  How can you build streams using a least
+fixed point operator?"
+
+Following Atkey and McBride, the μ type former of GTT allows the
+presence of the Nakano modality in the grammar for strictly positive
+functors. This is visible at page 4, where we have a constructor ▻ in
+the definition of Code. We construct the type of guarded recursive
+streams and the type of coinductive streams in Section 3.6.
+
+"Are you restricting T for mu X. T in some way using the family Code?
+Is the code you are using here even more restrictive than positivity?"
+
+It is indeed more restricting that just positivity.
+In the paper, we already comment on the possibility of adding
+exponentials with constant domain and the box modality as constructors
+of Code. We regret not to have commented on the fact that the codes we
+are using disallow the possibility of defining nested inductive
+types. We will make sure to add a remark on this.
+
+"PThat is not the definition of the delay functor in the topos of
+trees. The delay functor in the topos of trees shifts all and sets
+A(0) into {*}, it is not a limit as your definition shows."
+
+At line 386 we remark that our definition is equivalent to the usual
+definition of the delay functor in the topos of trees. The equivalence
+is already present in Birkedal et al. [11]. The definition as a limit
+is convenient in our case, since the preorder of sizes does not have a
+least element, which makes the usual "shifting" definition of the
+delay functor not replicable. We will make the equivalence between the
+two constructions more explcit.
