@@ -115,4 +115,4 @@ is already present in Birkedal et al. [11]. The definition as a limit
 is convenient in our case, since the preorder of sizes does not have a
 least element, which makes the usual "shifting" definition of the
 delay functor not replicable. We will make the equivalence between the
-two constructions more explcit.
+two constructions more explicit.
