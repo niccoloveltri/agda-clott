@@ -22,7 +22,6 @@ Now we prove \GTT\ sound \wrt the categorical semantics.
 %define the categorical semantics.
 %For this, we use the operations defined in \Cref{sec:presheaf_sem,sec:guarded}.
 We only show the interpretation of the types whose semantics has been explicitly discussed in \Cref{sec:presheaf_sem,sec:guarded}. Since syntactic types are defined mutually with codes, the interpretation of types \F{⟦\_⟧type} has to be defined simultaneously with the interpretation of codes \F{⟦\_⟧code}, which we omit here.
-
 \AgdaHide{
 \begin{code}
 mutual
@@ -34,7 +33,6 @@ mutual
   ⟦ ▻ P ⟧code = ▸ ⟦ P ⟧code
 \end{code}
 }
-
 \begin{code}
   ⟦_⟧type : ∀ {Δ} → Ty Δ → SemTy Δ
   ⟦ A ⟶ B ⟧type = ⟦ A ⟧type ⇒ ⟦ B ⟧type
@@ -42,6 +40,11 @@ mutual
   ⟦ □ A ⟧type = ■ ⟦ A ⟧type
   ⟦ μ P ⟧type = mu ⟦ P ⟧code  
 \end{code}
+Similarly, \F{Ctx}, \F{Tm} and \F{Sub} are mapped into \F{SemCtx},
+\F{SemTm} and \F{SemSub} respectively. Definitional equality of terms
+is interpreted as Agda's propositional equality, the same for
+definitional equality of substitutions.
+
 
 \AgdaHide{
 \begin{code}
