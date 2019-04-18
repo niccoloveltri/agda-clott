@@ -10,7 +10,7 @@ and infinite structures, such as non-wellfounded trees, can be
 represented in type theory by extending the type system with
 coinductive types. Recursively defined elements of these types
 need to be productive in the sense that every
-finite unfolding can be computed in a finite number of steps \cite{Coquand93}.
+finite part of the output can be computed in a finite number of steps \cite{Coquand93}.
 In Agda's encoding of coinductive types using ``musical notation''
 \cite{DA10}, productivity is enforced via a strict obligation: in the
 definition of a corecursive function, recursive
@@ -30,6 +30,8 @@ in Agda and can be used in
 combination with coinductive records to specify
 coinductive types \cite{Copatterns,AVW-normalization}, as exemplified
 by Abel and Chapman's work \cite{AC14}.
+There also are other approaches to sized types, one of those is developed by Sacchini
+\cite{Sacchini13}, but they allow less terms to be typed compared to Agda.
 
 Guarded recursion \cite{Nakano}
 is a different approach where the type system is enhanced with a
@@ -37,7 +39,7 @@ modality, called ``later'' and written \IC{▻}, encoding time delay in
 types. The later modality comes with a general fixpoint combinator for
 programming with productive recursive functions and allows the
 specification of guarded recursive types.
-These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,bizjak2016guarded,BahrGM17}. Currently there is no
+These types can be used in combination with clock quantification to define  coinductive types \cite{atkey2013productive,BahrGM17,bizjak2016guarded}. Currently there is no
 implementation of a calculus for guarded recursion.
 \remove{, \eg the type of guarded
 streams satisfying the isomorphism \F{Str} \Ar{A} \F{≃} \Ar{A} \F{×}
@@ -84,7 +86,7 @@ system for productive coprogramming \cite{atkey2013productive} in
 which the clock context can contain at most one clock. The types of
 \GTT\ include the aforementioned \IC{▻} modality and a \IC{□} modality,
 a nameless analogue of Atkey and McBride's universal clock
-quantification. Clouston \etal\ \cite{CloustonBGB15} studied a
+quantification. Clouston \etal \ \cite{CloustonBGB15} studied a
 guarded variant of lambda calculus extended with a \IC{□} operation,
 which they call ``constant''.  Our object calculus differs from
 theirs in that our judgments are indexed by a clock context, which can
@@ -98,8 +100,8 @@ The design of \GTT\ has the benefit of allowing a more appealing introduction ru
 Afterwards we develop a categorical semantics
 for \GTT\ using sized types. More precisely, we define a presheaf
 model where the type formers of simply typed lambda calculus are
-evaluated using the standard Kripke semantics. Typically the semantics
-of type theories for guarded recursion is given in the topos of
+evaluated using the standard Kripke semantics. Typically, the semantics
+of a type theory for guarded recursion is given in the topos of
 trees or variations thereof \cite{BMSS-synthetic,MannaaM18,Mogelberg14}.
 Here, to clarify the connection between guarded recursion and
 sized types, we take the preorder of sizes as the indexing
@@ -159,7 +161,7 @@ formalization. The full code is available at
 \url{https://github.com/niccoloveltri/agda-gtt}. The formalization
 uses Agda 2.5.4.2 and Agda standard library 0.16. The paper is
 extracted from a literate Agda file, which implies that all the
-displayed code has passed Agda's type and termination checker.
+displayed code passed Agda's type and termination checker.
 
 The material is organized in the following way.
 In \Cref{sec:prelim}, we discuss the metatheory and we give an

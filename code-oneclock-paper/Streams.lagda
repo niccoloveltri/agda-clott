@@ -13,6 +13,7 @@ open import Prelude.Syntax
 
 \subsection{Example: Streams}
 We give a taste of how to program with streams in \GTT.
+Our implementation is based on Atkey and McBride's approach to coinductive types \cite{atkey2013productive}.
 %First, we define a function \F{decons} which destructs an element of an inductive type.
 \AgdaHide{
 \begin{code}
