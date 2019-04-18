@@ -115,18 +115,19 @@ most one clock variable was dictated by
 our choice to use Agda with sized types as the metatheory. In Agda, 
 it is possible to encode semantic clock contexts containing multiple 
 clocks as lists of sizes or as functions from a finite interval of 
-natural numbers into sizes. But Agda's support for sized types is 
+natural numbers into sizes. However, Agda's support for sized types is 
 tailored to types depending on exactly one size, or on a finite but 
 precise number of sizes, which makes it cumbersome to work with types 
 depending on clock contexts containing an indefinite number of clocks. 
 More technically, as it was privately communicated to us by Agda 
 implementors, Agda's type inference only works properly for 
-first-order size contraints. We believe that if future Agda 
-releases will add the capability of handling multiple sizes, then it would 
-be possible to extend the semantics of \GTT\ to a model for the full 
+first-order size constraints. We believe that if future Agda 
+releases add the capability of handling multiple sizes, it would 
+be possible to extend the semantics of \GTT\ to include the full 
 Atkey and McBride's type theory. We also believe that extending our 
 formalization to the multiclock case, while technically challenging, 
-will not be conceptually harder. 
+would not be conceptually harder. 
+
 \GTT\ is stricly less expressive than Atkey and McBride's calculus, since we are 
 unable to implement nested coinductive types. But the one clock 
 variant of the calculus still allows the construction of a large 
