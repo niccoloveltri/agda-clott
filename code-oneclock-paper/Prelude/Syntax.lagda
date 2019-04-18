@@ -17,6 +17,10 @@ which may contain several different clocks. They extend simply typed
 lambda calculus with two additional type formers: a modality ▻ for
 encoding time delay into types and universal quantification over clock
 variables ∀, which is used in combination with ▻ to specify coinductive types.
+In \GTT, judgments are also indexed by a clock context, but in our case the latter can contain at most one clock variable \IC{κ}. The type system of \GTT\ also includes a ▻ modality, plus a box modality corresponding to Atkey and McBride's quantification over the clock variable \IC{κ}.
+
+
+
 
 \GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
 well-formed types and contexts, well-typed terms and substitutions,
@@ -32,7 +36,8 @@ In \GTT, the clock context can either be empty or contain a single clock \IC{κ}
 %% a single clock \IC{κ}.
 \begin{code}
 data ClockCtx : Set where
-  ∅ κ : ClockCtx
+  ∅ : ClockCtx
+  κ : ClockCtx
 \end{code}
 %% Moreover we employ explicit substitutions \cite{AbadiCCL91}, so on top of the usual we
 %% define four sorts
@@ -54,7 +59,9 @@ products, coproducts, and function spaces. Notice that \IC{𝟙} is a
 \begin{code}
   data Ty : ClockCtx → Set where
     𝟙 : Ty ∅
-    _⊠_ _⊞_ _⟶_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
+    _⊠_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
+    _⊞_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
+    _⟶_ : ∀ {Δ} → Ty Δ → Ty Δ → Ty Δ
 \end{code}
 
 We include a modality \IC{▻} as an operation on \IC{κ}-types similar to the one in Atkey and McBride's system.
@@ -94,7 +101,8 @@ Since there is a code for constant functors, the type family
   data Code : ClockCtx → Set where
     ∁ : ∀ {Δ} → Ty Δ → Code Δ
     I : ∀ {Δ} → Code Δ
-    _⊠_ _⊞_ : ∀ {Δ} → Code Δ → Code Δ → Code Δ
+    _⊠_ : ∀ {Δ} → Code Δ → Code Δ → Code Δ
+    _⊞_ : ∀ {Δ} → Code Δ → Code Δ → Code Δ 
     ▻ : Code κ → Code κ
 \end{code}
 \AgdaHide{
@@ -108,6 +116,7 @@ weakenP (P ⊠ Q) = weakenP P ⊠ weakenP Q
 }
 The constructors of \F{Code} \Ar{Δ} suffice for the specification of interesting examples of guarded recursive types such as streams. Nevertheless, it would not be complicated to add exponentials with
 constant domain and the box modality to the grammar.
+In future work, we will also consider extending the grammar with the possibility of defining nested inductive types.
 %% We associate to each code \Ar{P} in \F{Code} \Ar{Δ} a functor \F{eval}
 %% \Ar{P} acting on \F{Ty} \Ar{Δ} defined by induction on \Ar{P}.
 %% Then \IC{μ} \Ar{P} is then the least fixed point of \F{eval} \Ar{P}. Notice that for this kind of fixed points to exist, one typically restricts the constructors of
@@ -132,7 +141,7 @@ eval (▻ P) X = ▻ (eval P X)
 
 \subsection{Contexts}
 The well-formed contexts of \GTT\ are built from the empty context, context extension, and context weakening. The last operation embeds \IC{∅}-contexts into \IC{κ}-contexts. 
-Notice that we are overloading the symbol \IC{⇡}, also used for type weakening.
+Notice that we are overloading the symbol \IC{⇡}, which is used for both type and context weakening.
 \begin{AgdaAlign}
 \begin{code}
 data Ctx : ClockCtx → Set where

@@ -29,7 +29,7 @@
 
 \acknowledgements{We are thankful to Andreas Abel, Guillaume Allais, Herman Geuvers,
   Rasmus Ejlers M{\o}gelberg and Andrea Vezzosi for discussions and
-valuable hints.}%optional
+valuable hints. We thank the anonymous referees for their useful comments.}%optional
 
 \nolinenumbers %uncomment to disable line numbering
 
@@ -410,6 +410,27 @@ that, in order to capture this dual aspect of sizes, one needs to
 extend the existing type theories for guarded recursion with
 additional features.
 }
+
+In \GTT\, we restrict the least fixpoint 
+operator \IC{μ} to act exclusively on strictly positive functors. This restriction is already 
+present in Atkey and McBride's calculus, which is aimed at 
+encoding coinductive types using the later modality and it does 
+not allow solving general guarded recursive domain equations.
+% such as\Ar{D} = ▻ \Ar{D → D}.
+\GTT\ is a variant of Atkey and McBride's type theory, therefore the
+similar restriction to stricly positive functors.  From the
+formalization perspective, this restriction allows us to use Agda's
+inductive types to model the guarded recursive types of GTT, as shown
+in Section \ref{sec:grt}. In future work, we plan to extend \GTT\ with
+the possibility of solving general guarded recursive domain
+equations. This could be done in two ways: extending the language with
+a universe, which allows the encoding of guarded recursive types as
+fixpoints in the universe as shown e.g. by M{\o}gelberg
+\cite{Mogelberg14}; or considering a \IC{μ} type former which, besides
+stricly positive functors, also operates on functors where all
+variables are guarded by an occurrence of the later modality. In the
+second option we have to consider strictly positive functors to encode
+usual inductive types, such as the natural numbers.
 
 Finally, we would like to understand whether sized types can be
 simulated using guarded recursion.

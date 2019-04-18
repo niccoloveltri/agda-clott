@@ -84,7 +84,7 @@ system for productive coprogramming \cite{atkey2013productive} in
 which the clock context can contain at most one clock. The types of
 \GTT\ include the aforementioned \IC{▻} modality and a \IC{□} modality,
 a nameless analogue of Atkey and McBride's universal clock
-quantification. Clouston \etal \cite{CloustonBGB15} studied a
+quantification. Clouston \etal\ \cite{CloustonBGB15} studied a
 guarded variant of lambda calculus extended with a \IC{□} operation,
 which they call ``constant''.  Our object calculus differs from
 theirs in that our judgments are indexed by a clock context, which can
@@ -107,6 +107,29 @@ category of our presheaves. This means that types and contexts of \GTT\ are
 interpreted as antitone sized types. 
 The well-order relation on sizes is fundamental for constructing a
 terminating definition of the semantic fixpoint combinator. 
+
+The decision to restrict the clock context of \GTT\ to contain at 
+most one clock variable was dictated by 
+our choice to use Agda with sized types as the metatheory. In Agda, 
+it is possible to encode semantic clock contexts containing multiple 
+clocks as lists of sizes or as functions from a finite interval of 
+natural numbers into sizes. But Agda's support for sized types is 
+tailored to types depending on exactly one size, or on a finite but 
+precise number of sizes, which makes it cumbersome to work with types 
+depending on clock contexts containing an indefinite number of clocks. 
+More technically, as it was privately communicated to us by Agda 
+implementors, Agda's type inference only works properly for 
+first-order size contraints. We believe that if future Agda 
+releases will add the capability of handling multiple sizes, then it would 
+be possible to extend the semantics of \GTT\ to a model for the full 
+Atkey and McBride's type theory. We also believe that extending our 
+formalization to the multiclock case, while technically challenging, 
+will not be conceptually harder. 
+\GTT\ is stricly less expressive than Atkey and McBride's calculus, since we are 
+unable to implement nested coinductive types. But the one clock 
+variant of the calculus still allows the construction of a large 
+class of coinductive types and it is the subject of active research
+\cite{CloustonBGB15}. 
 
 %%Abel and Vezzosi \cite{AbelV14} also formalized a simple type theory
 %%extended with the later modality in Agda. They focus on operational

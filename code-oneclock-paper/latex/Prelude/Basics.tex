@@ -37,6 +37,9 @@ We write \F{Set}, \F{Set₁} and \F{Set₂} for the first three universes of typ
 
 We make extensive use of record types. These are like iterated $\Sigma$-types, in which each component, also called field, has been given a name. We open each record we introduce, which allows us to access a field  by function application. For example, given a record type \F{R} containing a field \Fi{f}
  of type \Ar{A}, we have \Fi{f} \F{R} : \Ar{A}.
+We use Agda's copatterns for defining elements of a record type. If a record type \F{R} contains fields \Fi{f₁} : \Ar{A₁} and \Fi{f₂} : \Ar{A₂}, we construct a term \F{r} : \F{R} by specifying its components \Fi{f₁} \F{r} : \Ar{A₁} and \Fi{f₂} \F{r} : \Ar{A₂}.
+
+
  
 The principle of functional extensionality states that every two
 functions \Ar{f} and \Ar{g} in the same function space are
