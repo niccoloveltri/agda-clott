@@ -31,9 +31,11 @@
 
 The semantic later modality is
 an operation \F{►} on semantic \IC{κ}-types.
-Recall that the usual definition of the later modality in
-the topos of trees \cite{BMSS-synthetic} is equivalent to
+Recall that the later modality in the topos of trees \cite{BMSS-synthetic} is recursively defined as
+$(\blacktriangleright A) (0) = \{ * \}$ and $(\blacktriangleright A) (n+1) = A(n)$. 
+This definition is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$.
+
 Adapting this to our setting would lead to the following action of \F{►} on objects:
 \begin{code}%
 \>[0]\AgdaKeyword{record}\AgdaSpace{}%
