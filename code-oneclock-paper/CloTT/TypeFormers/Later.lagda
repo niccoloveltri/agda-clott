@@ -13,17 +13,16 @@ open PSh
 
 The semantic later modality is
 an operation \F{►} on semantic \IC{κ}-types.
-Recall that the later modality in the topos of trees \cite{BMSS-synthetic} is recursively defined as
+Recall that the later modality in the topos of trees \cite{BMSS-synthetic} is defined as
 \begin{align*}
 %\label{eq:latertot}
 (\blacktriangleright A) (0) & = \{ * \} \\
 (\blacktriangleright A) (n+1) & = A(n)
 \end{align*}
-We cannot directly replicate the latter in our setting, since the preorder of sized does not possess a least element. 
-But we know from \cite{BMSS-synthetic} that the definition above is equivalent to
+We cannot directly replicate the latter in our setting since the preorder of sized does not possess a least element. 
+However, we know from \cite{BMSS-synthetic} that the definition above is equivalent to
 $(\blacktriangleright A) (n) = \lim_{k < n} A (k)$. 
-
-Adapting this to our setting would lead to the following action of \F{►} on objects:
+Adapting this to our setting leads to the following action of \F{►} on objects:
 \begin{code}
 record ►ObjTry (A : SemTy κ) (i : Size) : Set where
   field
