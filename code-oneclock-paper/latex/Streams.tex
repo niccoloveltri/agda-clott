@@ -90,6 +90,26 @@ Our implementation is based on Atkey and McBride's approach to coinductive types
 To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
 It is the least fixpoint of the functor with code \IC{∁} (\IC{⇡} \Ar{A}) \IC{⊠} \IC{▻ I}.
 \begin{code}%
+\>[0]\AgdaFunction{F}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
+\AgdaDatatype{Ty}\AgdaSpace{}%
+\AgdaInductiveConstructor{∅}\AgdaSpace{}%
+\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaDatatype{Code}\AgdaSpace{}%
+\AgdaInductiveConstructor{κ}\<%
+\\
+\>[0]\AgdaFunction{F}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSpace{}%
+\AgdaSymbol{=}\AgdaSpace{}%
+\AgdaInductiveConstructor{∁}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
+\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaInductiveConstructor{I}\<%
+\\
+%
+\\[\AgdaEmptyExtraSkip]%
 \>[0]\AgdaFunction{g{-}Str}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Ty}\AgdaSpace{}%
@@ -102,12 +122,8 @@ It is the least fixpoint of the functor with code \IC{∁} (\IC{⇡} \Ar{A}) \IC
 \AgdaBound{A}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{μ}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{∁}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
-\AgdaOperator{\AgdaInductiveConstructor{⊠}}\AgdaSpace{}%
-\AgdaInductiveConstructor{▻}\AgdaSpace{}%
-\AgdaInductiveConstructor{I}\AgdaSymbol{)}\<%
+\AgdaSymbol{(}\AgdaFunction{F}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\<%
 \end{code}
 \AgdaHide{
 The head of a guarded stream \Ar{xs} is computed in three steps. First
@@ -261,13 +277,9 @@ For the tail, we also use \IC{box} and \IC{force}. The operations \IC{π₁} and
 \AgdaBound{xs}\AgdaSymbol{))))}\<%
 \end{code}
 
-In our Agda formalization, we also construct a function returning the constant stream over a given element and a function removing the elements at even indices out of a given stream.
-
-
-\AgdaHide{
 Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
 \begin{code}%
-\>[0]\AgdaFunction{g{-}const}\AgdaSpace{}%
+\>[0]\AgdaFunction{g{-}const{-}str}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSpace{}%
 \AgdaSymbol{:}\AgdaSpace{}%
@@ -288,24 +300,30 @@ Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded 
 \AgdaSymbol{(}\AgdaFunction{g{-}Str}\AgdaSpace{}%
 \AgdaBound{A}\AgdaSymbol{)}\<%
 \\
-\>[0]\AgdaFunction{g{-}const}\AgdaSpace{}%
+\>[0]\AgdaFunction{g{-}const{-}str}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{Γ}\AgdaSymbol{\}}\AgdaSpace{}%
+\AgdaSymbol{\{}\AgdaBound{A}\AgdaSymbol{\}}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{fix}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{lambda}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{cons}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{F}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{[}}\AgdaSpace{}%
 \AgdaFunction{wk}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{\&}}\AgdaSpace{}%
 \AgdaInductiveConstructor{var}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
-\AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\AgdaBound{Γ}\AgdaSymbol{)}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaInductiveConstructor{▻}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{g{-}Str}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{))}\AgdaSpace{}%
 \AgdaOperator{\AgdaInductiveConstructor{]}}\AgdaSymbol{))}\<%
 \end{code}
-\NV{Here we use wk, which we have not introduced. Also, it would be nice to have the first argument of cons implicit. Similarly, the two arguments of varTm should be implicit.}
+%\NV{Here we use wk, which we have not introduced. Also, it would be nice to have the first argument of cons implicit. Similarly, the two arguments of varTm should be implicit.}
 The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-const} \Ar{a}.
 \begin{code}%
 \>[0]\AgdaFunction{const{-}str}\AgdaSpace{}%
@@ -332,10 +350,10 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaBound{a}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{box}\AgdaSpace{}%
-\AgdaSymbol{(}\AgdaFunction{g{-}const}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaFunction{g{-}const{-}str}\AgdaSpace{}%
 \AgdaBound{a}\AgdaSymbol{)}\<%
 \end{code}
-}
+In our Agda formalization, we also construct a function removing the elements at even indices out of a given stream, which is an example of a non-causal function.
 
 \AgdaHide{
 \begin{code}%
@@ -494,7 +512,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \\
 \>[0][@{}l@{\AgdaIndent{0}}]%
 \>[2]\AgdaKeyword{let}%
-\>[379I]\AgdaBound{s}\AgdaSpace{}%
+\>[395I]\AgdaBound{s}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaInductiveConstructor{,⇡}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}}\AgdaSpace{}%
@@ -506,7 +524,7 @@ The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-co
 \AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaSymbol{\AgdaUnderscore{}))}\<%
 \\
-\>[.]\<[379I]%
+\>[.]\<[395I]%
 \>[6]\AgdaBound{f}\AgdaSpace{}%
 \AgdaSymbol{=}\AgdaSpace{}%
 \AgdaFunction{wk}\AgdaSpace{}%

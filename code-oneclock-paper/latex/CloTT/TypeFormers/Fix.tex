@@ -176,7 +176,7 @@ This is defined using self-application.
 This definition is accepted by Agda's termination checker for two reasons:
 \begin{itemize}
   \item every recursive call is applied to a strictly smaller size;
-  \item the usage of \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding.
+  \item the usage of \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding, which would not have been avoided by employing \F{►ObjTry} instead of \F{►Obj}.
 \end{itemize}
 \remove{
 This definition is accepted by Agda's termination checker because

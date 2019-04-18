@@ -24,8 +24,11 @@ decons {Γ = Γ} {P} = _$_ (primrec P (Pmap P (lambda (π₁ (var Γ (μ P ⊠ e
 To define a type of streams, we first define guarded streams over a \IC{∅}-type \Ar{A}.
 It is the least fixpoint of the functor with code \IC{∁} (\IC{⇡} \Ar{A}) \IC{⊠} \IC{▻ I}.
 \begin{code}
+F : Ty ∅ → Code κ
+F A = ∁ (⇡ A) ⊠ ▻ I
+
 g-Str : Ty ∅ → Ty κ
-g-Str A = μ (∁ (⇡ A) ⊠ ▻ I)
+g-Str A = μ (F A)
 \end{code}
 \AgdaHide{
 The head of a guarded stream \Ar{xs} is computed in three steps. First
@@ -59,22 +62,18 @@ tl : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ (Str A) → Tm Γ (Str A)
 tl xs = force (box (π₂ (decons (unbox xs))))
 \end{code}
 
-In our Agda formalization, we also construct a function returning the constant stream over a given element and a function removing the elements at even indices out of a given stream.
-
-
-\AgdaHide{
 Given a \GTT\ term \Ar{a} of type \Ar{A}, we can construct the constant guarded stream over \Ar{a} using the fixpoint combinator.
 \begin{code}
-g-const : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ A → Tm (⇡ Γ) (g-Str A)
-g-const a = fix (lambda (cons _ [ wk (up a) & var _ _ ]))
+g-const-str : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ A → Tm (⇡ Γ) (g-Str A)
+g-const-str {Γ} {A} a = fix (lambda (cons (F A) [ wk (up a) & var (⇡ Γ) (▻ (g-Str A)) ]))
 \end{code}
-\NV{Here we use wk, which we have not introduced. Also, it would be nice to have the first argument of cons implicit. Similarly, the two arguments of varTm should be implicit.}
+%\NV{Here we use wk, which we have not introduced. Also, it would be nice to have the first argument of cons implicit. Similarly, the two arguments of varTm should be implicit.}
 The constant stream over \Ar{a} is obtained by boxing the guarded stream \F{g-const} \Ar{a}.
 \begin{code}
 const-str : {Γ : Ctx ∅} {A : Ty ∅} → Tm Γ A → Tm Γ (Str A)
-const-str a = box (g-const a)
+const-str a = box (g-const-str a)
 \end{code}
-}
+In our Agda formalization, we also construct a function removing the elements at even indices out of a given stream, which is an example of a non-causal function.
 
 \AgdaHide{
 \begin{code}

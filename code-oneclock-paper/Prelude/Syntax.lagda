@@ -178,8 +178,8 @@ introduction and elimination rules for the unit types, products,
 coproducts, and guarded recursive types. Here we only show the typing rules associated to function types and guarded recursive types.
 The function \F{eval} evaluates codes in \F{Code} \Ar{Δ} into endofunctors on \F{Ty} \Ar{Δ}.
 We use a categorical combinator \IC{app} for application.
-The conventional application, which we call \F{\$}, taking additionally an element
-in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, is derivable.
+We derive the conventional application, taking additionally an element
+in \F{Tm} \Ar{Γ} \Ar{A} and returning an inhabitant of \F{Tm} \Ar{Γ} \Ar{B}, in Section \ref{sec:subst}.
 \begin{code}
     lambda : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm (Γ , A) B → Tm Γ (A ⟶ B)
     app : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ (A ⟶ B) → Tm (Γ , A) B
@@ -260,7 +260,7 @@ The other type isomorphisms are constructed in a similar way.
 \end{code}
 }
 
-\subsection{Substitutions}
+\subsection{Substitutions}\label{sec:subst}
 For substitutions, we need the canonical necessary operations \cite{AltenkirchK16,Chapman09}: identity and composition of
 substitutions, the empty substitution, the extension with an additional term, and the projection which forgets the last term.
 \begin{code}
@@ -295,6 +295,15 @@ equality on substitutions, we ask for \IC{•⇡} and
 \F{⇡•} to be each other inverses. We proceed similarly with
 \IC{,⇡}.
 
+Using the term constructor \IC{sub}, we can derive a weakening operation for terms and the conventional application combinator.
+\begin{code}
+wk  : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ B → Tm (Γ , A) B
+wk {Δ} {Γ} {A} x = sub x (pr (id (Γ , A)))
+
+_$_ : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ (A ⟶ B) → Tm Γ A → Tm Γ B
+_$_ {Δ} {Γ} f x = sub (app f) (id Γ , x)
+\end{code}
+
 \AgdaHide{
 \begin{code}
 ⇡• : Sub (⇡ •) •
@@ -305,12 +314,6 @@ equality on substitutions, we ask for \IC{•⇡} and
 
 upA : ∀ {Δ} {Γ Γ' : Ctx Δ} (A : Ty Δ) → Sub Γ Γ' → Sub (Γ , A) (Γ' , A)
 upA {_} {Γ} {Γ'} A s = (s ∘ pr (id (Γ , A))) , var Γ A
-
-wk  : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ B → Tm (Γ , A) B
-wk x = sub x (pr (id (_ , _)))
-
-_$_ : ∀ {Δ} {Γ : Ctx Δ} {A B : Ty Δ} → Tm Γ (A ⟶ B) → Tm Γ A → Tm Γ B
-_$_ {_} {Γ} {A} {B} f x = sub (app f) (id Γ , x)
 
 idmap : ∀ {Δ} {Γ : Ctx Δ} (A : Ty Δ) → Tm Γ (A ⟶ A)
 idmap {_} {Γ} A = lambda (var Γ A)

@@ -24,7 +24,8 @@ Instead we use the following definition.
 data SemCode : ClockCtx → Set₁ where
     ∁ : ∀ {Δ} → SemTy Δ → SemCode Δ
     I : ∀ {Δ} → SemCode Δ
-    _⊞_ _⊠_ : ∀ {Δ} → SemCode Δ → SemCode Δ → SemCode Δ
+    _⊞_ : ∀ {Δ} → SemCode Δ → SemCode Δ → SemCode Δ
+    _⊠_ : ∀ {Δ} → SemCode Δ → SemCode Δ → SemCode Δ 
     ▸ : SemCode κ → SemCode κ
 \end{code}
 \AgdaHide{
@@ -86,7 +87,7 @@ For the identity, we need to use \AB{P} to make a recursive call.
 The constructors of \F{muObj'} \AB{P} \AB{Q} follow the structure of
 \AB{Q}. If \AB{Q} is a product we have a pairing constructor, if it is
 a sum we have the two injections. When \AB{Q} is the code for the
-identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLem} depends both on a sized type and a proof that it is antitone, we need to define \F{muObj'} mutually with its own proof of antitonicity \F{muMor'}.
+identity functor, we make a recursive call. For the \AIC{▸} case, we have a constructor \AIC{later} taking two arguments with the same types as the two fields of \F{►Obj}. Since \F{LaterLim} depends both on a sized type and a proof that it is antitone, we need to define \F{muObj'} mutually with its own proof of antitonicity \F{muMor'}.
 This construction works since \F{Later} and \F{LaterLim}
 take in input part of the data of a presheaf and they crucially do not depend on the functor laws.
 \remove{
