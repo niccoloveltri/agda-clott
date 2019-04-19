@@ -65,3 +65,5 @@ Exp P Q = record
   }
 \end{code}
 }
+
+All in all, we get an operation \AF{Exp} : \AF{PSh} → \AF{PSh} → \AF{PSh}.

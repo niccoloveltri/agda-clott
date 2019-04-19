@@ -15,18 +15,11 @@ open NatTrans
 In the next section, we use the interpretation of function types, whose action of objects in the clock context \IC{κ} is given by \F{ExpObj}.
 This is denoted by \AB{A} \F{⇒} \AB{B} for semantic types \AB{A} and \AB{B}.
 
-\AgdaHide{
 \begin{code}
 _⇒_ : ∀ {Δ} (A B : SemTy Δ) → SemTy Δ
-\end{code}
-}
-
-\AgdaHide{
-\begin{code}
 _⇒_ {∅} A B = A → B
 _⇒_ {κ} A B = Exp A B
 \end{code}
-}
 
 \AgdaHide{
 \begin{code}
