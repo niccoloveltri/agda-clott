@@ -41,7 +41,7 @@ This definition is accepted by Agda's termination checker for two reasons:
   \item every recursive call is applied to a strictly smaller size;
   \item the usage of \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding, which would have happened if we used \F{►ObjTry} instead of \F{►Obj}.
 \end{itemize}
-In fact, replacing \F{►Obj} for \F{►ObjTry} as the return type of \F{sem-dfix₁} but keeping the same definition, with \Ar{j} in place of \IC{[} \Ar{j} \IC{]}, we would obtain the following non-terminating sequence of reductions:
+In fact, if we would replace \F{►Obj} by \F{►ObjTry} as the return type of \F{sem-dfix₁} while keeping the same definition (with \Ar{j} in place of \IC{[} \Ar{j} \IC{]}), we would obtain the following non-terminating sequence of reductions:
 \begin{align*}
 & \text{\Fi{►cone} (\F{sem-dfix₁} \Ar{A i f})} \\
 & \qquad = \text{λ \Ar{j} → \Fi{fun} \Ar{f j} (\F{sem-dfix₁} \Ar{A j f})} \\
