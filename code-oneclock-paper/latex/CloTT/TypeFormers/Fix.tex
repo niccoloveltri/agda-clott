@@ -178,6 +178,14 @@ This definition is accepted by Agda's termination checker for two reasons:
   \item every recursive call is applied to a strictly smaller size;
   \item the usage of \F{SizeLt} in place of \F{Size<} in the definition of \F{Later} prevents indefinite unfolding, which would have happened if we used \F{►ObjTry} instead of \F{►Obj}.
 \end{itemize}
+In fact, replacing \F{►Obj} for \F{►ObjTry} as the return type of \F{sem-dfix₁} but keeping the same definition, with \Ar{j} in place of \IC{[} \Ar{j} \IC{]}, we would obtain the following non-terminating sequence of reductions:
+\begin{align*}
+& \text{\Fi{►cone} (\F{sem-dfix₁} \Ar{A i f})} \\
+& \qquad = \text{λ \Ar{j} → \Fi{fun} \Ar{f j} (\F{sem-dfix₁} \Ar{A j f})} \\
+& \qquad = \text{λ \Ar{j} → \Fi{fun} \Ar{f j} (\AgdaRecord{record} \{ \Fi{►cone} = λ \Ar{k} → \Fi{fun} \Ar{f k} (\F{sem-dfix₁} \Ar{A k f}) ; \Fi{►com} = \dots \})} \\
+& \qquad =  \dots
+\end{align*}
+
 \remove{
 This definition is accepted by Agda's termination checker because
 every recursive call is applied to a strictly smaller size.  Moreover,
@@ -188,7 +196,7 @@ the usage of \F{SizeLt} in the definition of \F{Later} prevents the definition f
 %unfolded indefinitely.
 This is a non-terminating recursive definition, which Agda would have rightly rejected.
 }
-The termination of the \Fi{►com} component of \F{sem-dfix₁} also relies on the presence of \F{elimLt} in the definition of \F{LaterLim}.
+The termination of the \Fi{►com} component of \F{sem-dfix₁} additionally relies on the presence of \F{elimLt} in the definition of \F{LaterLim}.
 
 %%Note the recursive call of \F{sem-dfix₁}.
 %%The termination is guaranteed by the usage of \F{SizeLt} \Ar{i} in the definition of \F{Later} \Ar{A i}.
