@@ -1,0 +1,136 @@
+\clearpage
+\appendix
+
+\section{Syntax of \GTT}
+%% \documentclass{article}
+%% 
+%% 
+\newcommand{\type}{\text{ type}}
+\newcommand{\poly}{\text{ code}}
+\newcommand{\Nat}{\mathsf{Nat}}
+\newcommand{\later}{\triangleright}
+\newcommand{\suc}{\mathsf{S}}
+\newcommand{\natrec}{\mathsf{natrec}}
+\newcommand{\boxtm}{\mathsf{box}}
+\newcommand{\unboxtm}{\mathsf{unbox}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\next}{\mathsf{next}}
+\newcommand{\force}{\mathsf{force}}
+\newcommand{\up}{{\uparrow}}
+\newcommand{\down}{{\downarrow}}
+%% 
+%% \begin{document}
+%% 
+\subsection*{Contexts}
+\[\arraycolsep=15pt\def\arraystretch{2.8}
+\begin{array}{ccc}
+\infer{- \vdash_{\Delta}}{} 
+&
+\infer{\Gamma, x : A \vdash_{\Delta}}{\Gamma \vdash_{\Delta} & \Gamma \vdash_{\Delta} A \type}
+&
+\infer{\Gamma \up \vdash_{\kappa} }{\Gamma \vdash_{\varnothing}}
+\end{array}
+\]
+%%\begin{center}
+%%\textbf{Polynomials:}
+%%\end{center}
+%%\begin{gather*}
+%%\infer{\Gamma \vdash_{\Delta} \mathsf{Const} \, A \poly}{\Gamma \vdash_{\Delta} A \type} 
+%%\qquad
+%%\infer{\Gamma \vdash_{\Delta} \mathsf{Id} \poly}{}
+%%\qquad
+%%\infer{\Gamma \vdash_{\Delta} P \times Q \poly}{\Gamma \vdash_{\Delta} P \poly & \Gamma \vdash_{\Delta} Q \poly} 
+%%\qquad
+%%\infer{\Gamma \vdash_{\Delta} A \to P \poly}{\Gamma \vdash_{\Delta} A \type & \Gamma \vdash_{\Delta} P \poly} 
+%%\\
+%%\infer{\Gamma \vdash_{\varnothing} \square P \poly}{\Gamma \up \vdash_{\kappa} P \poly}
+%%\qquad
+%%\infer{\Gamma \up \vdash_{\kappa} P \up \poly}{\Gamma \vdash_{\varnothing} P \poly}
+%%\qquad
+%%\infer{\Gamma \vdash_{\kappa} \later P \poly}{\Gamma \vdash_{\kappa} P \poly}
+%%\end{gather*}
+
+\subsection*{Types}
+\[\arraycolsep=15pt\def\arraystretch{2.8}
+\begin{array}{cc}
+\infer{\Gamma \vdash_{\varnothing} 1 \type}{} 
+&
+\infer{\Gamma \vdash_{\Delta} A \times B \type}{\Gamma \vdash_{\Delta} A \type & \Gamma \vdash_{\Delta} B \type}
+\\
+\infer{\Gamma \vdash_{\Delta} A + B \type}{\Gamma \vdash_{\Delta} A \type & \Gamma \vdash_{\Delta} B \type}
+&
+\infer{\Gamma \vdash_{\Delta} A \to B \type}{\Gamma \vdash_{\Delta} A \type & \Gamma \vdash_{\Delta} B \type} 
+\\
+\infer{\Gamma \vdash_{\varnothing} \square A \type}{\Gamma \up \vdash_{\kappa} A \type}
+&
+\infer{\Gamma \up \vdash_{\kappa} A \up \type}{\Gamma \vdash_{\varnothing} A \type}
+\\
+\infer{\Gamma \vdash_{\kappa} \later A \type}{\Gamma \vdash_{\kappa} A \type}
+&
+\infer{\Gamma \vdash_{\Delta} \mu F \type}{\Gamma \vdash_{\Delta} F \poly}
+\end{array}
+\]
+
+\subsection*{Terms}
+
+\[\arraycolsep=15pt\def\arraystretch{2.8}
+\begin{array}{cc}
+\infer{\Gamma \vdash_{\Delta} x : A}{x : A \in \Gamma}
+&
+\infer{\Gamma \vdash_{\Delta} \lambda x.\, t : A \to B}{\Gamma , x : A \vdash_{\Delta} t : B} 
+\\
+\infer{\Gamma \vdash_{\Delta} f\,t : B}{\Gamma \vdash_{\Delta} f : A \to B & \Gamma \vdash_{\Delta} t : A}
+&
+\infer{\Gamma \vdash_{\varnothing} {\mathsf{tt}} : 1}{}
+\\
+\infer{\Gamma \vdash_{\Delta} \pi_1 t : A}{\Gamma \vdash_{\Delta} t : A \times B}
+&
+\infer{\Gamma \vdash_{\Delta} \pi_2 t : B}{\Gamma \vdash_{\Delta} t : A \times B}
+\\
+\infer{\Gamma \vdash_{\Delta} (t_1,t_2) : A \times B}{\Gamma \vdash_{\Delta} t_1 : A & \Gamma \vdash_{\Delta} t_2 : B} 
+&
+\infer{\Gamma \vdash_{\varnothing} \boxtm\,t : \square A}{\Gamma \up \vdash_{\kappa} : t : A}
+\\
+\infer{\Gamma \up \vdash_{\kappa} \unboxtm\,t : A}{\Gamma \vdash_{\varnothing} : t : \square A}
+&
+\infer{\Gamma \up \vdash_{\kappa} \mathsf{up} \,t : A \up}{\Gamma \vdash_{\varnothing} t : A}
+\\
+\infer {\Gamma \vdash_{\varnothing} \mathsf{down}\,t : A}{\Gamma \up \vdash_{\kappa} t : A \up}
+&
+\infer{\Gamma \vdash_{\kappa} \next\,t : \later A}{\Gamma \vdash_{\kappa} t : A} 
+\\
+\infer{\Gamma \vdash_{\kappa} f \circledast t : \later B}{\Gamma \vdash_{\kappa} f : \later (A \to B) & \Gamma \vdash_{\kappa} t : \later A}
+&
+\infer{\Gamma \vdash_{\kappa} \fix \,f : A}{\Gamma \vdash_{\kappa} f : \later A \to A}
+\\
+\infer{\Gamma \vdash_{\varnothing} \force\,t : \square A}{\Gamma \vdash_{\varnothing} t : \square \later A}
+\end{array}
+\]
+
+%% \begin{center}
+%% \textbf{Context equalities:}
+%% \end{center}
+%% \begin{align*}
+%% - \up & = - 
+%% \\
+%% (\Gamma , x : A) \up & = \Gamma \up , x : A \up
+%% \end{align*}
+%% \begin{center}
+%% \textbf{Type equalities:}
+%% \end{center}
+%% \begin{align*}
+%% \square (A \up) & = A
+%% \\
+%% \square (A \times B) & = \square A \times \square B
+%% \\
+%% \square (A \up \to B) & = A \to \square B
+%% \\
+%% (A \times B) \up & = A \up \times B \up
+%% \end{align*}
+
+%%\begin{center}
+%%Term equalities:
+%%\end{center}
+%%\begin{gather*}
+%%\end{gather*}
+%\end{document}
