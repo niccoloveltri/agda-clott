@@ -32,7 +32,10 @@
 \>[2]\AgdaKeyword{open}\AgdaSpace{}%
 \AgdaModule{PSh}\<%
 \end{code}
+}
 
+Products and sums of presheaves are defined pointwise.
+More precisely, we define the product as follows
   \begin{code}%
 %
 \>[2]\AgdaFunction{ProdObj}\AgdaSpace{}%
@@ -53,7 +56,8 @@
 \AgdaBound{Q}\AgdaSpace{}%
 \AgdaBound{i}\<%
 \end{code}
-
+The sum is defined similarly.
+\AgdaHide{
   \begin{code}%
 %
 \>[2]\AgdaFunction{ProdMor}\AgdaSpace{}%
@@ -317,10 +321,6 @@
 %
 \>[4]\AgdaOperator{\AgdaFunction{∎}}\<%
 \end{code}
-}
-
-The product is defined similarly.
-On each size, we take the product and for the morphisms, we use the functoriality of the product.
 
 \begin{code}%
 \>[0]\AgdaFunction{Prod}\AgdaSpace{}%
@@ -332,7 +332,6 @@ On each size, we take the product and for the morphisms, we use the functorialit
 \AgdaRecord{PSh}\<%
 \end{code}
 
-\AgdaHide{
 \begin{code}%
 \>[0]\AgdaFunction{Prod}\AgdaSpace{}%
 \AgdaBound{P}\AgdaSpace{}%

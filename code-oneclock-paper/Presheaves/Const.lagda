@@ -34,8 +34,6 @@ module _ (A : Set) where
   \end{code}
 }
 
-Products and sums of presheaves are defined pointwise.
-The weakening type former \IC{↑} of \GTT\ is modeled using the constant presheaf, which we denote by \AF{Const}.
 \AgdaHide{
 \begin{code}
 Const : Set → PSh

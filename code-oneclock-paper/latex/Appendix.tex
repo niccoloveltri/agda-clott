@@ -7,6 +7,7 @@
 %% 
 \newcommand{\type}{\text{ type}}
 \newcommand{\poly}{\text{ code}}
+\newcommand{\sub}{\text{ sub}}
 \newcommand{\Nat}{\mathsf{Nat}}
 \newcommand{\later}{\triangleright}
 \newcommand{\suc}{\mathsf{S}}
@@ -18,6 +19,11 @@
 \newcommand{\force}{\mathsf{force}}
 \newcommand{\up}{{\uparrow}}
 \newcommand{\down}{{\downarrow}}
+\newcommand{\idpoly}{\text{I}}
+\newcommand{\cons}{\mathsf{cons}}
+\newcommand{\primrec}{\mathsf{pimrec}}
+\newcommand{\subid}{\mathsf{subid}}
+\newcommand{\subpr}{\mathsf{subpr}}
 %% 
 %% \begin{document}
 %% 
@@ -50,6 +56,21 @@
 %%\infer{\Gamma \vdash_{\kappa} \later P \poly}{\Gamma \vdash_{\kappa} P \poly}
 %%\end{gather*}
 
+\subsection*{Codes}
+\[\arraycolsep=15pt\def\arraystretch{2.8}
+\begin{array}{ccc}
+\infer{\Gamma \vdash_{\Delta} \idpoly \poly}{} 
+&
+\infer{\Gamma \vdash_{\Delta} 1 \type}{\Gamma \vdash_{\Delta} A \type} 
+\\
+\infer{\Gamma \vdash_{\Delta} P \times Q \poly}{\Gamma \vdash_{\Delta} P \poly & \Gamma \vdash_{\Delta} Q \poly}
+&
+\infer{\Gamma \vdash_{\Delta} P + Q \poly}{\Gamma \vdash_{\Delta} P \poly & \Gamma \vdash_{\Delta} Q \poly}
+&
+\infer{\Gamma \vdash_{\kappa} \later P \poly}{\Gamma \vdash_{\kappa} P \poly}
+\end{array}
+\]
+
 \subsection*{Types}
 \[\arraycolsep=15pt\def\arraystretch{2.8}
 \begin{array}{cc}
@@ -67,7 +88,23 @@
 \\
 \infer{\Gamma \vdash_{\kappa} \later A \type}{\Gamma \vdash_{\kappa} A \type}
 &
-\infer{\Gamma \vdash_{\Delta} \mu F \type}{\Gamma \vdash_{\Delta} F \poly}
+\infer{\Gamma \vdash_{\Delta} \mu P \type}{\Gamma \vdash_{\Delta} P \poly}
+\end{array}
+\]
+
+\subsection*{Substitutions}
+\[\arraycolsep=15pt\def\arraystretch{2.8}
+\begin{array}{cc}
+\infer{\vdash_{\Delta} \varepsilon : \Gamma \to -}{\Gamma \vdash_{\Delta}}
+&
+\infer{\vdash_{\Delta} \subid : \Gamma \to \Gamma}{\Gamma \vdash_{\Delta}}
+\\
+\infer{\vdash_{\Delta} s , t : \Gamma_1 \to \Gamma_2 , A}{\vdash_{\Delta} s : \Gamma_1 \to \Gamma_2 & \Gamma_1 \vdash_{\Delta} t : A}
+&
+\infer{\vdash_{\Delta} s_2 \circ s_1 : \Gamma_1 \to \Gamma_3}{\vdash_{\Delta} s_1 : \Gamma_1 \to \Gamma_2 & \vdash_{\Delta} s_2 : \Gamma_2 \to \Gamma_3}
+\\
+\infer{\vdash_{\Delta} \subpr \, s : \Gamma_1 \to \Gamma_2}{\vdash_{\Delta} s : \Gamma_1 \to \Gamma_2 , A}
+&
 \end{array}
 \]
 
@@ -104,6 +141,12 @@
 \infer{\Gamma \vdash_{\kappa} \fix \,f : A}{\Gamma \vdash_{\kappa} f : \later A \to A}
 \\
 \infer{\Gamma \vdash_{\varnothing} \force\,t : \square A}{\Gamma \vdash_{\varnothing} t : \square \later A}
+&
+\infer{\Gamma_1 \vdash_{\Delta} t[s] : A}{\vdash_{\Delta} s :  \Gamma_1 \to \Gamma_2 & \Gamma_2 \vdash_{\Delta} t : A}
+\\
+\infer{\Gamma \vdash_{\Delta} \cons \, t : \mu P}{\Gamma \vdash_{\Delta} P \poly & \Gamma \vdash_{\Delta} t : P(\mu P)}
+&
+\infer{\Gamma \vdash_{\Delta} \primrec \, f : \mu P \to A}{\Gamma \vdash_{\Delta} P \poly & \Gamma \vdash_{\Delta} A \type & \Gamma \vdash f : P(\mu P \times A) \to A}
 \end{array}
 \]
 

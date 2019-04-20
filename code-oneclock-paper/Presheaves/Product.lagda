@@ -9,12 +9,16 @@ open import Presheaves.Presheaves
 module _  (P Q : PSh) where
   open PSh
 \end{code}
+}
 
+Products and sums of presheaves are defined pointwise.
+More precisely, we define the product as follows
   \begin{code}
   ProdObj : Size → Set
   ProdObj i = Obj P i × Obj Q i
   \end{code}
-
+The sum is defined similarly.
+\AgdaHide{
   \begin{code}
   ProdMor : (i : Size) (j : Size< (↑ i))
     → ProdObj i → ProdObj j
@@ -47,16 +51,11 @@ module _  (P Q : PSh) where
       (Mor P j k (Mor P i j (proj₁ x)) , Mor Q j k (Mor Q i j (proj₂ x)))
     ∎
   \end{code}
-}
-
-The product is defined similarly.
-On each size, we take the product and for the morphisms, we use the functoriality of the product.
 
 \begin{code}
 Prod : PSh → PSh → PSh
 \end{code}
 
-\AgdaHide{
 \begin{code}
 Prod P Q = record
   { Obj = ProdObj P Q
