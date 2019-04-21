@@ -20,7 +20,7 @@ variables ∀, which is used in combination with ▻ to specify coinductive type
 In \GTT, judgments are also indexed by a clock context, but in our case the latter can contain at most one clock variable \IC{κ}. The type system of \GTT\ also includes a ▻ modality, plus a box modality corresponding to Atkey and McBride's quantification over the clock variable \IC{κ}.
 
 
-
+In this section we introduce the syntax of \GTT\ as in our Agda formalization. We give a more standard presentation of the calculus in \cref{appendix}.
 
 \GTT\ is a type theory with explicit substitutions \cite{AbadiCCL91}. It comprises
 well-formed types and contexts, well-typed terms and substitutions,
@@ -248,7 +248,7 @@ isomorphisms. For example, the clock irrelevance axiom formulated in our setting
 A function \F{const□} \Ar{A} in the other direction is derivable.
 When defining definitional equality on terms, described in Section \ref{sec:defeq}, we
 ask for \IC{□const} and \F{const□} to be each other inverses.
-The other type isomorphisms are constructed in a similar way.
+The other type isomorphisms, listed in \cref{appendix} are constructed in a similar way.
 \AgdaHide{
 \begin{code}
     □sum : {Γ : Ctx ∅} (A B : Ty κ)

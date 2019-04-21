@@ -2,6 +2,7 @@
 \appendix
 
 \section{Syntax of \GTT}
+\label{appendix}
 %% \documentclass{article}
 %% 
 %% 
@@ -113,10 +114,6 @@
 &
 \infer{\vdash_{\varnothing} \mathsf{down} \,s : \Gamma_1 \to
   \Gamma_2}{\vdash_{\kappa} s : \up \Gamma_1 \to \up \Gamma_2}
-\\
-\infer{\vdash_{\kappa} \mathsf{empty}\up : - \to \up -}{}
-&
-\infer{\vdash_{\kappa} \mathsf{comma}\up : \up \Gamma , \up A \to \up (\Gamma , A)}{}
 \end{array}
 \]
 
@@ -184,13 +181,25 @@ definitional equalities of terms and substitutions, which can be found
 in our Agda formalization.
 
 \subsection*{Type Isomorphisms}
-\[\arraycolsep=15pt\def\arraystretch{2.8}
-\begin{array}{cc}
-\square(\up A) \cong A & \square(A + B) \cong \square A + \square B \\
+\[\arraycolsep=10pt\def\arraystretch{2.8}
+\begin{array}{cccc}
+\square(\up A) \cong A & \square(A + B) \cong \square A + \square B &
 \up(A \to B) \cong \up A \to \up B & \up(\mu P) \cong \mu(\up P)
 \end{array}
 \]
 
+\subsection*{Context Isomorphisms}
+\[\arraycolsep=10pt\def\arraystretch{2.8}
+\begin{array}{cc}
+- \cong \up -
+&
+\up \Gamma , \up A \cong \up (\Gamma , A)
+\end{array}
+\]
+
+%In the Agda formalization, as already discussed in \cref{sec:syntax}, 
+%type and context isomorphisms are witnessed by additional term and
+%substitution constructors underlying the isomorphisms.
 
 %% \begin{center}
 %% \textbf{Context equalities:}
