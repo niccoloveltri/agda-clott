@@ -453,7 +453,7 @@ mutual
 }
 \begin{AgdaAlign}
 \begin{code}
-  data _∼_ : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} → Tm Γ A → Tm Γ A → Set where
+  data _∼_ : ∀ {Δ} {Γ : Ctx Δ} {A : Ty Δ} (t₁ t₂ : Tm Γ A) → Set where
 \end{code}
 
 The term equality includes rules for equivalence, congruence, and

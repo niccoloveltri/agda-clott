@@ -1120,7 +1120,7 @@ isomorphisms. For example, the clock irrelevance axiom formulated in our setting
 A function \F{const□} \Ar{A} in the other direction is derivable.
 When defining definitional equality on terms, described in Section \ref{sec:defeq}, we
 ask for \IC{□const} and \F{const□} to be each other inverses.
-The other type isomorphisms are constructed in a similar way.
+The other type isomorphisms, listed in \cref{appendix} are constructed in a similar way.
 \AgdaHide{
 \begin{code}%
 %
@@ -2893,14 +2893,12 @@ Here we only discuss equality on terms and we refer to the formalization for the
 \AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Ty}\AgdaSpace{}%
 \AgdaBound{Δ}\AgdaSymbol{\}}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
+\AgdaSymbol{(}\AgdaBound{t₁}\AgdaSpace{}%
+\AgdaBound{t₂}\AgdaSpace{}%
+\AgdaSymbol{:}\AgdaSpace{}%
 \AgdaDatatype{Tm}\AgdaSpace{}%
 \AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
-\AgdaSymbol{→}\AgdaSpace{}%
-\AgdaDatatype{Tm}\AgdaSpace{}%
-\AgdaBound{Γ}\AgdaSpace{}%
-\AgdaBound{A}\AgdaSpace{}%
+\AgdaBound{A}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{→}\AgdaSpace{}%
 \AgdaPrimitiveType{Set}\AgdaSpace{}%
 \AgdaKeyword{where}\<%
@@ -6045,21 +6043,21 @@ interested reader to the Agda formalization.
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4900I]\AgdaInductiveConstructor{up}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4898I]\AgdaInductiveConstructor{up}\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4900I]%
+\>[.]\<[4898I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{sub}%
-\>[4904I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
-\>[4905I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
+\>[4902I]\AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}%
+\>[4903I]\AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4905I]%
+\>[.]\<[4903I]%
 \>[18]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
@@ -6075,7 +6073,7 @@ interested reader to the Agda formalization.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[.]\<[4904I]%
+\>[.]\<[4902I]%
 \>[12]\AgdaSymbol{((}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
@@ -6150,19 +6148,19 @@ interested reader to the Agda formalization.
 \\
 \>[4][@{}l@{\AgdaIndent{0}}]%
 \>[6]\AgdaSymbol{→}%
-\>[4984I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
+\>[4982I]\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{down}\AgdaSpace{}%
 \AgdaBound{l}\AgdaSymbol{)}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{down}\AgdaSpace{}%
 \AgdaBound{r}\AgdaSymbol{)}\<%
 \\
-\>[.]\<[4984I]%
+\>[.]\<[4982I]%
 \>[8]\AgdaOperator{\AgdaDatatype{∼}}\<%
 \\
 %
 \>[8]\AgdaInductiveConstructor{down}%
-\>[4990I]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
+\>[4988I]\AgdaSymbol{(}\AgdaInductiveConstructor{sub}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⊞rec}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{⇡}\AgdaSpace{}%
 \AgdaBound{C}\AgdaSymbol{)}\AgdaSpace{}%
@@ -6177,7 +6175,7 @@ interested reader to the Agda formalization.
 \AgdaBound{Γ}\AgdaSpace{}%
 \AgdaBound{B}\AgdaSymbol{)))}\<%
 \\
-\>[4990I][@{}l@{\AgdaIndent{0}}]%
+\>[4988I][@{}l@{\AgdaIndent{0}}]%
 \>[15]\AgdaSymbol{(}\AgdaInductiveConstructor{up}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{pr}\AgdaSpace{}%
 \AgdaSymbol{(}\AgdaInductiveConstructor{id}\AgdaSpace{}%
