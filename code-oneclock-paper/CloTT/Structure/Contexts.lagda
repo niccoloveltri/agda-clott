@@ -7,7 +7,7 @@ open import Presheaves public
 \end{code}
 }
 
-To interpret \GTT, we use Kripke semantics \cite{maclane1992sheaves}.
+To interpret the fragment of \GTT\ corresponding to simply typed lambda calculus, we use Kripke semantics \cite{maclane1992sheaves}.
 Semantic judgments, similar to their syntactic counterparts, are indexed by
 a clock context. We reuse the type \AD{ClockCtx} for the semantic
 clock contexts.
