@@ -147,7 +147,7 @@ products, coproducts, and function spaces. Notice that \IC{𝟙} is a
 \end{code}
 
 We include a modality \IC{▻} as an operation on \IC{κ}-types similar to the one in Atkey and McBride's system.
-There is also a nameless analogue of clock quantification, which we call ``box'' and denote by \IC{□}
+There also is a nameless analogue of clock quantification, which we call ``box'' and denote by \IC{□}
 following \cite{CloustonBGB15}. The box modality takes a
 \IC{κ}-type and returns a \IC{∅}-type. The well-formed types of \GTT\
 include a weakening type former \IC{⇡}, which maps \IC{∅}-types to
@@ -965,8 +965,8 @@ rules for the \IC{□} modality. The rule \IC{box} is the analogue in \GTT\ of
 Atkey and McBride's rule for clock abstraction
 \cite{atkey2013productive}. Notice that \IC{box} can only be applied
 to terms of type \Ar{A} over a weakened context \IC{⇡}
-\Ar{Γ}. This is in analogy with Atkey and McBride's side condition
-requiring the universally quantified clock variable to not appear free
+\Ar{Γ}. This is analogous to Atkey and McBride's side condition
+requiring the universally quantified clock variable to not appear freely
 in the context \Ar{Γ}. Similarly, the rule \IC{unbox} corresponds to
 clock application. The operation \IC{force} is used for removing occurrences of \IC{▻} protected by the \IC{□} modality.
 \begin{code}%
@@ -2905,9 +2905,9 @@ Here we only discuss equality on terms and we refer to the formalization for the
 \end{code}
 
 The term equality includes rules for equivalence, congruence, and
-substitution. There are also $\beta$ and $\eta$ rules for the type
-formers. Among these rules, here we only show the ones associated to the
-\IC{□} modality. The rules state that \IC{box} and \IC{unbox} are each
+substitution. There also are $\beta$ and $\eta$ rules for the type
+formers. We only show the ones associated to the
+\IC{□} modality here. The rules state that \IC{box} and \IC{unbox} are each
 other's inverses.
 %up to \AD{∼}.
 \AgdaHide{
