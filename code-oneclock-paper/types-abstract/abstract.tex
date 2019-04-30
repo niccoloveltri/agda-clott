@@ -183,6 +183,15 @@ be empty or containing exactly one clock.
 The design of \GTT\ has the benefit of allowing a more appealing introduction rule for
 box than Clouston et al.'s.
 
+The decision to restrict the clock context of \GTT\ to contain at most
+one clock variable was dictated by our choice to use Agda with sized
+types as the metatheory. In Agda, it is possible to encode semantic
+clock contexts containing multiple clocks as lists of sizes or as
+functions from a finite interval of natural numbers into
+sizes. However, Agda's support for sized types is tailored to types
+depending on exactly one size, or on a finite but precise number of
+sizes, which makes it cumbersome to work with types depending on clock
+contexts containing an indefinite number of clocks.
 
 Afterwards we develop a categorical semantics
 for \GTT\ using sized types. More precisely, we define a presheaf
